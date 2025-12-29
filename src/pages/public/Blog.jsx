@@ -1,57 +1,58 @@
-import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
 
 export function Blog() {
-    const [activeCategory, setActiveCategory] = useState("All");
+    const { t } = useTranslation();
+    const [activeCategory, setActiveCategory] = useState(t('blog.categories.all'));
 
     const categories = [
-        "All",
-        "Coffee Tips",
-        "Barista Life",
-        "Business Advice",
-        "Community News"
+        t('blog.categories.all'),
+        t('blog.categories.tips'),
+        t('blog.categories.life'),
+        t('blog.categories.business'),
+        t('blog.categories.news')
     ];
 
-    // Dummy Data
+    // Translated Data
     const posts = [
         {
             id: 1,
-            title: "The Secret to Perfect Micro-Foam",
-            category: "Coffee Tips",
+            title: t('blog.posts.p1.title'),
+            category: t('blog.categories.tips'),
             date: "Dec 12, 2024",
             image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=2574&auto=format&fit=crop",
-            snippet: "Mastering the vortex is key to creating that silky, paint skills needed for latte art."
+            snippet: t('blog.posts.p1.snippet')
         },
         {
             id: 2,
-            title: "Must-Know Startup Tips for Your First Coffee Shop",
-            category: "Business Advice",
+            title: t('blog.posts.p2.title'),
+            category: t('blog.categories.business'),
             date: "Nov 28, 2024",
             image: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=2694&auto=format&fit=crop",
-            snippet: "From location scouting to menu pricing, here are the 5 pillars of a successful café launch."
+            snippet: t('blog.posts.p2.snippet')
         },
         {
             id: 3,
-            title: "Spotlight on Our Latest Graduating Class",
-            category: "Community News",
+            title: t('blog.posts.p3.title'),
+            category: t('blog.categories.news'),
             date: "Nov 15, 2024",
             image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2670&auto=format&fit=crop",
-            snippet: "Celebrating the hard work and dedication of the Batch 12 graduates."
+            snippet: t('blog.posts.p3.snippet')
         },
         {
             id: 4,
-            title: "How to Ace Your First Barista Interview",
-            category: "Barista Life",
+            title: t('blog.posts.p4.title'),
+            category: t('blog.categories.life'),
             date: "Oct 30, 2024",
             image: "https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?q=80&w=2670&auto=format&fit=crop",
-            snippet: "Confidence, hygiene, and coffee knowledge. Here is what employers are really looking for."
+            snippet: t('blog.posts.p4.snippet')
         }
     ];
 
-    const filteredPosts = activeCategory === "All"
+    const filteredPosts = activeCategory === t('blog.categories.all')
         ? posts
-        : posts.filter(post => post.category.includes(activeCategory.split(" ")[0])); // Simple filter match
+        : posts.filter(post => post.category === activeCategory);
 
     return (
         <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark font-display text-espresso dark:text-white pb-20 pt-24">
@@ -59,13 +60,13 @@ export function Blog() {
             {/* 1. Page Title */}
             <div className="container mx-auto px-6 text-center mb-12">
                 <h1 className="font-serif text-4xl md:text-5xl font-bold text-espresso dark:text-white mb-4 tracking-tight">
-                    Usafi Insights
+                    {t('blog.title')}
                 </h1>
                 <h2 className="text-xl md:text-2xl text-primary font-medium mb-6">
-                    Your Source for Coffee Tips, Industry News, and Business Advice
+                    {t('blog.subtitle')}
                 </h2>
                 <p className="text-lg text-espresso/80 dark:text-white/80 leading-relaxed max-w-3xl mx-auto">
-                    The Usafi Blog is where passion meets expertise. Stay updated on the latest trends in the coffee world, get valuable advice for your career, and find inspiration for your entrepreneurial journey.
+                    {t('blog.description')}
                 </p>
             </div>
 
@@ -109,7 +110,7 @@ export function Blog() {
                                     {post.snippet}
                                 </p>
                                 <Link to="#" className="inline-flex items-center text-primary font-bold text-sm group">
-                                    Read Article <span className="material-symbols-outlined text-lg ml-1 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                                    {t('blog.posts.read_more')} <span className="material-symbols-outlined text-lg ml-1 group-hover:translate-x-1 transition-transform">arrow_forward</span>
                                 </Link>
                             </div>
                         </article>
@@ -117,7 +118,7 @@ export function Blog() {
                 </div>
                 {filteredPosts.length === 0 && (
                     <div className="text-center py-20 text-espresso/50">
-                        No posts found in this category.
+                        {t('blog.posts.empty')}
                     </div>
                 )}
             </section>
@@ -126,19 +127,19 @@ export function Blog() {
             <section className="bg-espresso text-[#FAF5E8] py-20 px-6">
                 <div className="container mx-auto max-w-xl text-center">
                     <span className="material-symbols-outlined text-5xl text-primary mb-4">mail</span>
-                    <h2 className="font-serif text-3xl font-bold mb-4">Don't Miss an Update!</h2>
+                    <h2 className="font-serif text-3xl font-bold mb-4">{t('blog.newsletter.title')}</h2>
                     <p className="text-white/80 mb-8">
-                        Subscribe to the Usafi mailing list to receive our latest insights and job alerts directly in your inbox.
+                        {t('blog.newsletter.description')}
                     </p>
 
                     <form className="flex flex-col sm:flex-row gap-3">
                         <input
                             type="email"
-                            placeholder="Enter your email address"
+                            placeholder={t('blog.newsletter.placeholder')}
                             className="flex-1 px-6 py-4 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-primary"
                         />
                         <button type="submit" className="px-8 py-4 rounded-xl bg-primary text-white font-bold shadow-lg hover:bg-primary/90 transition-all">
-                            Subscribe
+                            {t('blog.newsletter.button')}
                         </button>
                     </form>
                 </div>

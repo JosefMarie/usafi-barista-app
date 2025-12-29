@@ -1,27 +1,29 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { GradientButton } from '../../components/ui/GradientButton';
 
 export function Equipment() {
+    const { t } = useTranslation();
     return (
         <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark font-display text-espresso dark:text-white pb-20 pt-24">
 
             {/* Page Title */}
             <div className="container mx-auto px-6 text-center mb-16">
                 <h1 className="font-serif text-4xl md:text-5xl font-bold text-espresso dark:text-white mb-4 tracking-tight">
-                    The Right Tools for the Job
+                    {t('equipment.title')}
                 </h1>
                 <h2 className="text-xl md:text-2xl text-primary font-medium mb-6">
-                    Essential Equipment for Your Professional Coffee Setup
+                    {t('equipment.subtitle')}
                 </h2>
                 <p className="text-lg text-espresso/80 dark:text-white/80 leading-relaxed max-w-3xl mx-auto">
-                    Starting a coffee shop requires more than just passion—it requires the right gear. This guide covers the foundational tools needed to ensure efficiency, quality, and consistency, whether you're setting up a full-scale café or a small espresso bar.
+                    {t('equipment.description')}
                 </p>
             </div>
 
             {/* Section 1: Core Machinery */}
             <section className="container mx-auto px-6 mb-20">
                 <h2 className="font-serif text-3xl font-bold text-espresso dark:text-white mb-8 border-b-2 border-primary/20 pb-2 inline-block">
-                    The Core Machinery
+                    {t('equipment.machinery.title')}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
@@ -34,17 +36,17 @@ export function Equipment() {
                             ></div>
                         </div>
                         <div className="p-8 flex-1">
-                            <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-2">Espresso Machine</h3>
-                            <p className="text-primary font-medium mb-4">The heart of your business.</p>
+                            <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-2">{t('equipment.machinery.espresso.title')}</h3>
+                            <p className="text-primary font-medium mb-4">{t('equipment.machinery.espresso.subtitle')}</p>
                             <p className="text-espresso/80 dark:text-white/80 leading-relaxed mb-4">
-                                Choose based on volume needs (single-group vs. multi-group). A reliable machine delivers consistent pressure and temperature for the perfect extraction every time.
+                                {t('equipment.machinery.espresso.description')}
                             </p>
                             <div>
-                                <span className="text-xs font-bold uppercase tracking-wider text-espresso/60 dark:text-white/60">Key Considerations:</span>
+                                <span className="text-xs font-bold uppercase tracking-wider text-espresso/60 dark:text-white/60">{t('equipment.machinery.espresso.considerations.label')}</span>
                                 <div className="flex flex-wrap gap-2 mt-2">
-                                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">Reliability</span>
-                                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">Boiler Capacity</span>
-                                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">Ease of Cleaning</span>
+                                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">{t('equipment.machinery.espresso.considerations.reliability')}</span>
+                                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">{t('equipment.machinery.espresso.considerations.boiler')}</span>
+                                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">{t('equipment.machinery.espresso.considerations.ease')}</span>
                                 </div>
                             </div>
                         </div>
@@ -59,17 +61,17 @@ export function Equipment() {
                             ></div>
                         </div>
                         <div className="p-8 flex-1">
-                            <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-2">Coffee Grinder</h3>
-                            <p className="text-primary font-medium mb-4">As important as the machine itself.</p>
+                            <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-2">{t('equipment.machinery.grinder.title')}</h3>
+                            <p className="text-primary font-medium mb-4">{t('equipment.machinery.grinder.subtitle')}</p>
                             <p className="text-espresso/80 dark:text-white/80 leading-relaxed mb-4">
-                                A quality grinder ensures uniform particle size for perfect extraction. Inconsistent grinds lead to uneven flavor and wasted beans.
+                                {t('equipment.machinery.grinder.description')}
                             </p>
                             <div>
-                                <span className="text-xs font-bold uppercase tracking-wider text-espresso/60 dark:text-white/60">Key Considerations:</span>
+                                <span className="text-xs font-bold uppercase tracking-wider text-espresso/60 dark:text-white/60">{t('equipment.machinery.grinder.considerations.label')}</span>
                                 <div className="flex flex-wrap gap-2 mt-2">
-                                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">Consistency</span>
-                                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">Burr Type (Flat/Conical)</span>
-                                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">Dosing</span>
+                                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">{t('equipment.machinery.grinder.considerations.consistency')}</span>
+                                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">{t('equipment.machinery.grinder.considerations.burr')}</span>
+                                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">{t('equipment.machinery.grinder.considerations.dosing')}</span>
                                 </div>
                             </div>
                         </div>
@@ -82,7 +84,7 @@ export function Equipment() {
             <section className="bg-[#FAF5E8] dark:bg-white/5 py-20 px-6 border-y border-[#e0dbd6] dark:border-white/10">
                 <div className="container mx-auto px-6">
                     <h2 className="font-serif text-3xl font-bold text-espresso dark:text-white mb-8 border-b-2 border-primary/20 pb-2 inline-block">
-                        Essential Smallwares
+                        {t('equipment.smallwares.title')}
                     </h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
@@ -91,9 +93,9 @@ export function Equipment() {
                             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4">
                                 <span className="material-symbols-outlined text-2xl">hardware</span>
                             </div>
-                            <h3 className="font-bold text-lg text-espresso dark:text-white mb-2">Tamper</h3>
+                            <h3 className="font-bold text-lg text-espresso dark:text-white mb-2">{t('equipment.smallwares.tamper.title')}</h3>
                             <p className="text-sm text-espresso/70 dark:text-white/70">
-                                Ensures a level and compacted coffee bed for even extraction. Calibrated tampers recommended for consistency.
+                                {t('equipment.smallwares.tamper.description')}
                             </p>
                         </div>
 
@@ -102,9 +104,9 @@ export function Equipment() {
                             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4">
                                 <span className="material-symbols-outlined text-2xl">local_cafe</span>
                             </div>
-                            <h3 className="font-bold text-lg text-espresso dark:text-white mb-2">Milk Pitcher</h3>
+                            <h3 className="font-bold text-lg text-espresso dark:text-white mb-2">{t('equipment.smallwares.pitcher.title')}</h3>
                             <p className="text-sm text-espresso/70 dark:text-white/70">
-                                Stainless steel required for steaming milk. Have various sizes (350ml, 600ml) for different drink orders.
+                                {t('equipment.smallwares.pitcher.description')}
                             </p>
                         </div>
 
@@ -113,9 +115,9 @@ export function Equipment() {
                             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4">
                                 <span className="material-symbols-outlined text-2xl">delete</span>
                             </div>
-                            <h3 className="font-bold text-lg text-espresso dark:text-white mb-2">Knock Box</h3>
+                            <h3 className="font-bold text-lg text-espresso dark:text-white mb-2">{t('equipment.smallwares.knock.title')}</h3>
                             <p className="text-sm text-espresso/70 dark:text-white/70">
-                                Used for disposing of used coffee pucks cleanly. Must be durable (stainless steel/rubber) and easy to wash.
+                                {t('equipment.smallwares.knock.description')}
                             </p>
                         </div>
 
@@ -124,9 +126,9 @@ export function Equipment() {
                             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4">
                                 <span className="material-symbols-outlined text-2xl">scale</span>
                             </div>
-                            <h3 className="font-bold text-lg text-espresso dark:text-white mb-2">Digital Scales</h3>
+                            <h3 className="font-bold text-lg text-espresso dark:text-white mb-2">{t('equipment.smallwares.scales.title')}</h3>
                             <p className="text-sm text-espresso/70 dark:text-white/70">
-                                Precision is vital. Used for dosing grounds accurately and measuring extraction yield by weight.
+                                {t('equipment.smallwares.scales.description')}
                             </p>
                         </div>
 
@@ -142,28 +144,28 @@ export function Equipment() {
                     <div>
                         <h2 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-6 flex items-center gap-3">
                             <span className="material-symbols-outlined text-primary text-3xl">inventory_2</span>
-                            Serving & Inventory
+                            {t('equipment.serving.title')}
                         </h2>
                         <ul className="space-y-6">
                             <li className="flex gap-4">
                                 <div className="h-2 w-2 rounded-full bg-primary mt-2 shrink-0"></div>
                                 <div>
-                                    <h4 className="font-bold text-espresso dark:text-white">Cups & Glasses</h4>
-                                    <p className="text-sm text-espresso/70 dark:text-white/70 mt-1">Ceramic mugs for dine-in. Demitasse for espresso. Insulated, eco-friendly cups for takeaway.</p>
+                                    <h4 className="font-bold text-espresso dark:text-white">{t('equipment.serving.cups.title')}</h4>
+                                    <p className="text-sm text-espresso/70 dark:text-white/70 mt-1">{t('equipment.serving.cups.description')}</p>
                                 </div>
                             </li>
                             <li className="flex gap-4">
                                 <div className="h-2 w-2 rounded-full bg-primary mt-2 shrink-0"></div>
                                 <div>
-                                    <h4 className="font-bold text-espresso dark:text-white">Inventory Storage</h4>
-                                    <p className="text-sm text-espresso/70 dark:text-white/70 mt-1">Airtight containers/hoppers to keep roasted beans fresh and away from moisture.</p>
+                                    <h4 className="font-bold text-espresso dark:text-white">{t('equipment.serving.storage.title')}</h4>
+                                    <p className="text-sm text-espresso/70 dark:text-white/70 mt-1">{t('equipment.serving.storage.description')}</p>
                                 </div>
                             </li>
                             <li className="flex gap-4">
                                 <div className="h-2 w-2 rounded-full bg-primary mt-2 shrink-0"></div>
                                 <div>
-                                    <h4 className="font-bold text-espresso dark:text-white">Point of Sale (POS)</h4>
-                                    <p className="text-sm text-espresso/70 dark:text-white/70 mt-1">Essential software for managing orders, tracking sales patterns, and accepting payments.</p>
+                                    <h4 className="font-bold text-espresso dark:text-white">{t('equipment.serving.pos.title')}</h4>
+                                    <p className="text-sm text-espresso/70 dark:text-white/70 mt-1">{t('equipment.serving.pos.description')}</p>
                                 </div>
                             </li>
                         </ul>
@@ -173,28 +175,28 @@ export function Equipment() {
                     <div>
                         <h2 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-6 flex items-center gap-3">
                             <span className="material-symbols-outlined text-primary text-3xl">cleaning_services</span>
-                            Hygiene & Safety
+                            {t('equipment.hygiene.title')}
                         </h2>
                         <ul className="space-y-6">
                             <li className="flex gap-4">
                                 <div className="h-2 w-2 rounded-full bg-primary mt-2 shrink-0"></div>
                                 <div>
-                                    <h4 className="font-bold text-espresso dark:text-white">Cleaning Kit</h4>
-                                    <p className="text-sm text-espresso/70 dark:text-white/70 mt-1">Dedicated kit for daily back-flushing, group head scrubbing, and steam wand cleaning.</p>
+                                    <h4 className="font-bold text-espresso dark:text-white">{t('equipment.hygiene.kit.title')}</h4>
+                                    <p className="text-sm text-espresso/70 dark:text-white/70 mt-1">{t('equipment.hygiene.kit.description')}</p>
                                 </div>
                             </li>
                             <li className="flex gap-4">
                                 <div className="h-2 w-2 rounded-full bg-primary mt-2 shrink-0"></div>
                                 <div>
-                                    <h4 className="font-bold text-espresso dark:text-white">Specialized Agents</h4>
-                                    <p className="text-sm text-espresso/70 dark:text-white/70 mt-1">Use only approved food-grade detergents and descaling chemicals safe for your machine.</p>
+                                    <h4 className="font-bold text-espresso dark:text-white">{t('equipment.hygiene.agents.title')}</h4>
+                                    <p className="text-sm text-espresso/70 dark:text-white/70 mt-1">{t('equipment.hygiene.agents.description')}</p>
                                 </div>
                             </li>
                             <li className="flex gap-4">
                                 <div className="h-2 w-2 rounded-full bg-primary mt-2 shrink-0"></div>
                                 <div>
-                                    <h4 className="font-bold text-espresso dark:text-white">Safety Gear</h4>
-                                    <p className="text-sm text-espresso/70 dark:text-white/70 mt-1">First aid kit immediately accessible. Non-slip floor mats behind the bar.</p>
+                                    <h4 className="font-bold text-espresso dark:text-white">{t('equipment.hygiene.gear.title')}</h4>
+                                    <p className="text-sm text-espresso/70 dark:text-white/70 mt-1">{t('equipment.hygiene.gear.description')}</p>
                                 </div>
                             </li>
                         </ul>
@@ -207,22 +209,22 @@ export function Equipment() {
             <section className="bg-espresso text-[#FAF5E8] py-20 px-6">
                 <div className="container mx-auto max-w-4xl text-center">
                     <h2 className="font-serif text-3xl md:text-4xl font-bold mb-6">
-                        Price Ranges & Aho Wabigura
+                        {t('equipment.pricing.title')}
                     </h2>
                     <p className="text-white/80 text-lg mb-12">
-                        Prices vary widely based on brand, capacity, and condition. Here are general guidelines for budgeting your startup:
+                        {t('equipment.pricing.description')}
                     </p>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
                         <div className="bg-white/10 rounded-2xl p-6 border border-white/10">
-                            <h3 className="font-bold text-xl mb-2">Espresso Machine</h3>
-                            <p className="text-sm text-white/60 uppercase tracking-widest mb-4">Entry-Level Commercial</p>
-                            <p className="text-2xl font-bold text-primary">Rwf 2M - 5M</p>
+                            <h3 className="font-bold text-xl mb-2">{t('equipment.machinery.espresso.title')}</h3>
+                            <p className="text-sm text-white/60 uppercase tracking-widest mb-4">{t('equipment.pricing.espresso.level')}</p>
+                            <p className="text-2xl font-bold text-primary">{t('equipment.pricing.espresso.price')}</p>
                         </div>
                         <div className="bg-white/10 rounded-2xl p-6 border border-white/10">
-                            <h3 className="font-bold text-xl mb-2">Commercial Grinder</h3>
-                            <p className="text-sm text-white/60 uppercase tracking-widest mb-4">Quality Burr Grinder</p>
-                            <p className="text-2xl font-bold text-primary">Rwf 300k - 800k</p>
+                            <h3 className="font-bold text-xl mb-2">{t('equipment.machinery.grinder.title')}</h3>
+                            <p className="text-sm text-white/60 uppercase tracking-widest mb-4">{t('equipment.pricing.grinder.level')}</p>
+                            <p className="text-2xl font-bold text-primary">{t('equipment.pricing.grinder.price')}</p>
                         </div>
                     </div>
 
@@ -230,24 +232,23 @@ export function Equipment() {
                         <p className="flex gap-3">
                             <span className="material-symbols-outlined text-primary shrink-0">lightbulb</span>
                             <span className="text-sm text-white/90">
-                                <strong>Sourcing Advice:</strong> Consider starting with high-quality refurbished equipment to manage initial costs. We provide students with a list of trusted local and international suppliers.
+                                <strong>{t('equipment.pricing.advice.title')}</strong> {t('equipment.pricing.advice.description')}
                             </span>
                         </p>
                     </div>
 
                     <div>
                         <p className="font-serif text-2xl italic text-white mb-6">
-                            "Ready to budget and build?"
+                            {t('equipment.pricing.cta_text')}
                         </p>
                         <p className="text-white/70 mb-8">
-                            Learn detailed business planning, sourcing, and cost analysis in our Coffee Shop Business module.
+                            {t('equipment.pricing.cta_sub')}
                         </p>
-                        <Link
+                        <GradientButton
                             to="/enroll"
-                            className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-primary text-white text-lg font-bold shadow-lg hover:bg-primary/90 hover:scale-105 transition-all"
                         >
-                            Register for the Course
-                        </Link>
+                            {t('equipment.pricing.cta_button')}
+                        </GradientButton>
                     </div>
 
                 </div>

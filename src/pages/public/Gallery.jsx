@@ -1,37 +1,38 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export function Gallery() {
+    const { t } = useTranslation();
     const photos = [
         {
             url: "https://images.unsplash.com/photo-1574914540608-f1c2b53b7549?q=80&w=2670&auto=format&fit=crop",
-            category: "Hands-On Practice",
-            desc: "Perfecting the grind"
+            category: t('gallery.categories.practice'),
+            desc: t('gallery.photos.grind')
         },
         {
             url: "https://images.unsplash.com/photo-1559526323-cb2f2fe2591b?q=80&w=2670&auto=format&fit=crop",
-            category: "Latte Art Mastery",
-            desc: "Pouring a heart"
+            category: t('gallery.categories.mastery'),
+            desc: t('gallery.photos.heart')
         },
         {
             url: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2670&auto=format&fit=crop",
-            category: "Classroom & Theory",
-            desc: "Group discussion"
+            category: t('gallery.categories.classroom'),
+            desc: t('gallery.photos.discussion')
         },
         {
             url: "https://images.unsplash.com/photo-1607619662634-3acce2e03cc1?q=80&w=2670&auto=format&fit=crop",
-            category: "Graduation",
-            desc: "Class of 2024"
+            category: t('gallery.categories.graduation'),
+            desc: t('gallery.photos.class2024')
         },
         {
             url: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=2670&auto=format&fit=crop",
-            category: "Hands-On Practice",
-            desc: "Tamping technique"
+            category: t('gallery.categories.practice'),
+            desc: t('gallery.photos.tamping')
         },
         {
             url: "https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=2837&auto=format&fit=crop",
-            category: "Classroom & Theory",
-            desc: "Notes and testing"
+            category: t('gallery.categories.classroom'),
+            desc: t('gallery.photos.testing')
         },
     ];
 
@@ -41,13 +42,13 @@ export function Gallery() {
             {/* 1. Page Title */}
             <div className="container mx-auto px-6 text-center mb-16">
                 <h1 className="font-serif text-4xl md:text-5xl font-bold text-espresso dark:text-white mb-4 tracking-tight">
-                    Our Community in Action
+                    {t('gallery.title')}
                 </h1>
                 <h2 className="text-xl md:text-2xl text-primary font-medium mb-6">
-                    Photos & Videos of Training Sessions
+                    {t('gallery.subtitle')}
                 </h2>
                 <p className="text-lg text-espresso/80 dark:text-white/80 leading-relaxed max-w-3xl mx-auto">
-                    Get a visual feel for the hands-on learning environment at Usafi Barista Training Center. This gallery captures the passion, focus, and camaraderie shared between our students and instructors.
+                    {t('gallery.description')}
                 </p>
             </div>
 
@@ -69,10 +70,9 @@ export function Gallery() {
                 </div>
             </section>
 
-            {/* 3. Section 2: Video Highlights */}
             <section className="bg-espresso text-[#FAF5E8] py-20 px-6">
                 <div className="container mx-auto px-6">
-                    <h2 className="font-serif text-3xl font-bold mb-12 text-center">Video Highlights</h2>
+                    <h2 className="font-serif text-3xl font-bold mb-12 text-center">{t('gallery.videos.title')}</h2>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {/* Clip 1 */}
@@ -83,8 +83,8 @@ export function Gallery() {
                                 </div>
                             </div>
                             <div>
-                                <h4 className="font-bold text-lg mb-1 group-hover:text-primary transition-colors">Daily Life at Usafi</h4>
-                                <p className="text-sm text-white/60">A fast-paced montage of the training center.</p>
+                                <h4 className="font-bold text-lg mb-1 group-hover:text-primary transition-colors">{t('gallery.videos.clip1.title')}</h4>
+                                <p className="text-sm text-white/60">{t('gallery.videos.clip1.desc')}</p>
                             </div>
                         </div>
 
@@ -96,8 +96,8 @@ export function Gallery() {
                                 </div>
                             </div>
                             <div>
-                                <h4 className="font-bold text-lg mb-1 group-hover:text-primary transition-colors">Perfect Extraction</h4>
-                                <p className="text-sm text-white/60">Instructor demonstrating espresso techniques.</p>
+                                <h4 className="font-bold text-lg mb-1 group-hover:text-primary transition-colors">{t('gallery.videos.clip2.title')}</h4>
+                                <p className="text-sm text-white/60">{t('gallery.videos.clip2.desc')}</p>
                             </div>
                         </div>
 
@@ -109,8 +109,8 @@ export function Gallery() {
                                 </div>
                             </div>
                             <div>
-                                <h4 className="font-bold text-lg mb-1 group-hover:text-primary transition-colors">Student Interview</h4>
-                                <p className="text-sm text-white/60">Thoughts on their favorite module.</p>
+                                <h4 className="font-bold text-lg mb-1 group-hover:text-primary transition-colors">{t('gallery.videos.clip3.title')}</h4>
+                                <p className="text-sm text-white/60">{t('gallery.videos.clip3.desc')}</p>
                             </div>
                         </div>
                     </div>
@@ -120,13 +120,13 @@ export function Gallery() {
             {/* 4. Section 3: Call to Action */}
             <section className="container mx-auto px-6 py-20 text-center">
                 <h2 className="font-serif text-3xl md:text-4xl font-bold text-espresso dark:text-white mb-6">
-                    See the Action for Yourself
+                    {t('gallery.cta.title')}
                 </h2>
                 <p className="text-lg text-espresso/80 dark:text-white/80 mb-10 max-w-2xl mx-auto">
-                    Schedule a visit to our Kimironko center to experience the training environment firsthand.
+                    {t('gallery.cta.description')}
                 </p>
                 <Link to="/contact" className="inline-flex items-center justify-center px-8 py-4 rounded-xl border-2 border-primary text-primary font-bold text-lg hover:bg-primary hover:text-white transition-all">
-                    Schedule a Visit
+                    {t('gallery.cta.button')}
                 </Link>
             </section>
 

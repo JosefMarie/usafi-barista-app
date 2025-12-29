@@ -1,0 +1,648 @@
+{
+    "nav": {
+        "home": "Ahabanza",
+        "about": "Amakuru yacu",
+        "courses": "Amasomo",
+        "explore": "Shaka",
+        "career": "Gushyigikira Umwuga",
+        "equipment": "Ibikoresho",
+        "testimonials": "Inkuru z'intsinzi",
+        "gallery": "Amafoto",
+        "blog": "Blog",
+        "inclusion": "Gushyigikira Ubwitange",
+        "certificates": "Impamyabumenyi",
+        "contact": "Twandikire",
+        "login": "Injira",
+        "enroll": "Saba kwiga ubu"
+    },
+    "home": {
+        "hero": {
+            "title": "Tegura Ejo Hazaza Hawe: Menya Ubuhanga bwo Gutegura Ikawa",
+            "subtitle": "Kuva ku kinyampeke kugera ku gikombe, no kuva mu mahugurwa kugera ku kazi. Injira mu kigo cya mbere cy'amahugurwa mu Rwanda kugira ngo ubone ubumenyi bw'isi mu byo gutegura ikawa no gushyigikirwa mu mwuga ukeneye kugira ngo ukore neza.",
+            "cta_enroll": "Saba kwiga Uyu munsi",
+            "cta_courses": "Shaka Amasomo yacu",
+            "cta_apply": "Saba kwiga ubu",
+            "cta_opportunities": "Amahirwe",
+            "cta_testimonials": "Ubuhamya",
+            "cta_business": "Amasomo y'Ubucuruzi"
+        },
+        "benefits": {
+            "title": "Kuki wahitamo ikigo cy'amahugurwa cya Usafi Barista?",
+            "subtitle": "Ntabwo dutanga impamyabumenyi gusa; dutanga inzira igana ku mwuga.",
+            "item1": {
+                "title": "Integanyanyigisho yuzuye",
+                "description": "Yigire ku mpuguke mu nganda nka Sandrine Gasarasi na Ishimwe Ebenezer. Integanyanyigisho yacu ikubiyemo byose kuva kuri Espresso & Milk kugeza ku micungire y'ubucuruzi bwa Coffee Shop, bituma uba witeguye ku isoko."
+            },
+            "item2": {
+                "title": "Uburyo bwo kwiga bworoshye",
+                "description": "Yiga ku masezerano yawe. Hitamo gahunda yacu ya Onsite muri Kimironko ku bumenyi ngiro, cyangwa gahunda yacu ya E-Learning kugira ngo wige inyigisho aho ariho hose ku muvuduko wawe."
+            },
+            "item3": {
+                "title": "Gushyigikira mu Mwuga Nyabyo",
+                "description": "Ntabwo twigisha gusa; turahuza. Bona uburyo bwihariye bwo kwimenyereza umwuga muri hoteli na café zikomeye mu gihugu, amakuru y'akazi binyuze mu muryango va Usafi, no kwitegura ibazwa ry'akazi ry'umwuga."
+            }
+        }
+    },
+    "about": {
+        "title": "Amakuru y'ikigo cy'amahugurwa cya Usafi Barista",
+        "hero": {
+            "title": "Guteza imbere ubuziranenge bw'ikawa mu Rwanda.",
+            "description": "Iherereye mu mutima v'Kimironko, ikigo cy'amahugurwa cya Usafi Barista ni ikirenze ishuri gusa; ni irembo rigana ku mirimo mu rwego r'amahoteli. Duhura icyuho kiri hagati va vubushake n'umwuga, duha ababa barista b'ejo hazaza ubumenyi ngiro n'ubumenyi bw'ubucuruzi bukenewe kugira ngo batsinde mu isi v'ikawa."
+        },
+        "mission": {
+            "title": "Intego yacu",
+            "description": "Gushoboza abantu kubona ubumenyi bw'isi mu byo gutegura ikawa n'ubumenyi bw'ubucuruzi bufatika, tubahuza n'akazi karambye n'amahirwe y'ubwisungane mu rwego r'ikawa ruri kwaguka."
+        },
+        "vision": {
+            "title": "Icyerekezo cyacu",
+            "description": "Kuba ahantu ha mbere hatoranywa mu kwigisha iby'ikawa mu Rwanda, tuzamura urwego rwa serivisi n'ubuziranenge bw'ikawa mu akarere kose."
+        },
+        "leadership": {
+            "title": "Menya impuguke ziguhugura",
+            "director": {
+                "name": "Sandrine Gasarasi",
+                "role": "Umuyobozi",
+                "description": "Nka moteri itwara Usafi, Sandrine ahagarariye ubwitange ku buziranenge n'intsinzi y'abanyeshuri. Ayobowe na we, iki kigo ntabwo cyibanda gusa ku gutegura ikawa nziza ahubwo no kubaka imico n'imikorere bya barista w'umwuga."
+            },
+            "mentorship": {
+                "title": "Ubuyobozi bw'impuguke",
+                "lead": "Irangajwe imbere na Ishimwe Ebenezer",
+                "description": "Itsinda ryacu ry'abatoza, riyobowe n'abanyamwuga bafite inararibonye nka Ishimwe Ebenezer, ryazanye amateka y'imyaka myinshi mu nganda mu ishuri. Ntabwo bigisha invigisho gusa; basangira ubumenyi nyabyo, tekinike, n'ibanga ry'umwuga utashobora kubona mu bitabo."
+            }
+        },
+        "represent": {
+            "title": "Icyo duhagarariye",
+            "description": "\"Usafi\" bishaka kuvuga isuku, ubuziranenge n'ubuhanga. Duhagarariye kizere gishya cya barista bamenya ko ikawa ari igihangano. Kuva ku isuku n'umutekano kugeza kuri latte art yateye imbere, abanyeshuri bacu barangiza biteguye gukora muri café, hoteli na restaurant zikomeye."
+        },
+        "cta": {
+            "title": "Witeguye kwinjira mu muryango wa Usafi?",
+            "button": "Reba amasomo yacu"
+        }
+    },
+    "courses": {
+        "title": "Amasomo y'Abanyamwuga ba Barista",
+        "subtitle": "Hitamo inzira yo kwiga ijyanye n'uburyo ubayeho n'intego zawe mu mwuga.",
+        "onsite": {
+            "badge": "Iyakunzwe cyane",
+            "title": "Amahugurwa kuri Site",
+            "location": "Imbonankubone • Kimironko",
+            "description": "Nziza ku banyeshuri bashaka imyitozo ihambaye, ifatika bakoresha ibikoresho by'abanyamwuga.",
+            "features": [
+                "Gukoresha mu buryo butaziguye imashini za Espresso n'izisya ikawa z'ubucuruzi",
+                "Guhugurwa imbonankubone n'abatoza",
+                "Guhora uhabwa amakuru ku buryo ukora Latte Art",
+                "Guhuza n'abandi banyeshuri mu ishuri"
+            ],
+            "button": "Hitamo Onsite"
+        },
+        "online": {
+            "title": "E-Learning",
+            "location": "Wigira aho uri • Woroshye",
+            "description": "Nziza ku banyeshuri bafite gahunda nyinshi cyangwa ababa kure ya Kigali.",
+            "features": [
+                "Wiga ku muvuduko wawe",
+                "Amashuri y'ikoranabuhanga (Zoom / Google Meet)",
+                "Kureba amasomo kuri videwo n'ibibazo by'isuzuma",
+                "Amasomo aboneka muri PDF washyira kuri mudasobwa yawe"
+            ],
+            "button": "Hitamo Online"
+        },
+        "curriculum": {
+            "title": "Incamake y'Integanyanyigisho yuzuye",
+            "description": "Twaba wiga Online cyangwa Onsite, integanyanyigisho yacu ikubiyemo inkingi za mwamba mu nganda z'ikawa.",
+            "modules": {
+                "m1": {
+                    "title": "Intangiriro ku Ikawa",
+                    "description": "Amateka y'ikawa, ubwoko bwihariye (Arabica vs. Robusta), n'uburyo bwo kuyitunganya."
+                },
+                "m2": {
+                    "title": "Iby'ibanze kuri Barista n'Ibikoresho",
+                    "description": "Gusobanukirwa imashini va espresso, gufata neza imashini isya, na tekinike zo gushyira ikawa mu gikoresho."
+                },
+                "m3": {
+                    "title": "Ubumenyi bwa Espresso n'Amata",
+                    "description": "Gutegura neza espresso (extraction) no kumenya uburyo bwo gutogosa amata (micro-foam)."
+                },
+                "m4": {
+                    "title": "Latte Art",
+                    "description": "Tekinike zo gushushanya imitima, rosettas, na tulips mu kawa."
+                },
+                "m5": {
+                    "title": "Isuku no Kwitaho",
+                    "description": "Amategeko yo gufata neza imashini n'ubuziranenge bw'isuku aho ukorera."
+                },
+                "m6": {
+                    "title": "Serivisi ku Bakiriya",
+                    "description": "Kubaka ubudahemuka bw'abakiriya, ibimenyetso by'umubiri, no guhuza serivisi n'abakiriya."
+                },
+                "m7": {
+                    "title": "Bonus: Ubucuruzi bwa Coffee Shop",
+                    "description": "Gutegura ubucuruzi, kugena ibiciro, kwamamaza, n'inama zo gutangira."
+                }
+            }
+        },
+        "tools": {
+            "title": "Ibikoresho by'Intsinzi Yawe",
+            "notes": {
+                "title": "Notes z'Abanyeshuri",
+                "description": "Abanyeshuri bose bahabwa notes muri PDF zikubiyemo Barista Basics, Serivisi ku Bakiriya, Isuku n'Umutekano, n'Inama z'Ubucuruzi.",
+                "badge": "Ziboneka kuri murandasi cyangwa ukazandukura."
+            },
+            "cert": {
+                "title": "Impamyabumenyi Yemewe",
+                "description": "Iyo urangije neza amasomo (ukatsinda n'isuzuma ryafashwe), uhabwa impamyabumenyi y'uko urangije amasomo ivuye muri Usafi Barista Training Center.",
+                "badge": "Impamyabumenyi yemewe izamura CV yawe."
+            }
+        },
+        "cta": {
+            "title": "Witeguye Gutangira Gutegura Ikawa?",
+            "description": "Imyanya ikunze kuzura vuba muri gahunda y'ahitwa Kimironko. Fata umwanya wawe uyu munsi cyangwa utangire kwiga online vuba.",
+            "register": "Saba kwiga Ubu",
+            "contact": "Twandikire",
+            "questions": "Ufite ibibazo ku buryo bwo kwishyura?"
+        }
+    },
+    "contact": {
+        "title": "Twandikire",
+        "subtitle": "Twishimiye kukwumva",
+        "description": "Twaba ufite ibibazo ku masomo yacu, ukeneye ubufasha mu gusaba kwiga, cyangwa ushaka gusura iki kigo, itsinda ryacu rirahari kugira ngo rikuvure.",
+        "info": {
+            "title": "Amakuru yacu",
+            "visit": {
+                "title": "Gusura",
+                "address": "Kimironko, Kigali",
+                "near": "Hafi y'isoko rya Kimironko"
+            },
+            "call": "Duhamagare",
+            "email": "Twandikire kuri Email"
+        },
+        "form": {
+            "title": "Ohereza ubutumwa",
+            "firstName": "Izina rya mbere",
+            "lastName": "Izina rya kabiri",
+            "email": "Email yawe",
+            "subject": {
+                "label": "Icyo utwandikiye",
+                "placeholder": "Hitamo icyo utwandikiye",
+                "options": {
+                    "enrollment": "Gusaba kwiga",
+                    "visit": "Gushaka gusura iki kigo",
+                    "consultation": "Kugisha inama ku bufasha ku bafite ubumuga",
+                    "partnership": "Gushaka ubufatanye",
+                    "other": "Ikindi"
+                }
+            },
+            "message": {
+                "label": "Ubutumwa",
+                "placeholder": "Twagufasha ute?"
+            },
+            "button": "Ohereza Ubutumwa"
+        }
+    },
+    "careerSupport": {
+        "title": "Zamura Umwuga Wawe",
+        "subtitle": "Kure y'Impamyabumenyi: Inzira Yawe Digana ku Ntsinzi y'Umwuga",
+        "description": "Muri Usafi Barista Training Center, ubwitange bwacu kuri wowe ntibushirira aho usoje amasomo yawe. Dutanga uburyo bukomeye bwo kugushyigikira bwagenewe kugufasha kuva mu mahugurwa ukajya mu kazi cyangwa mu kwihangira imirimo.",
+        "internship": {
+            "title": "Boneramo Inararibonye y'Akazi (Internship)",
+            "description": "Amahugurwa y'ubumenvingiro azuzuzwa n'inararibonye nyayo y'akazi. Gahunda yacu igushyira mu mibereho y'akazi aho ushobora gukoresha ubumenyi bwawe ukubaka n'umuyoboro w'abandi banyamwuga.",
+            "requirements": {
+                "title": "Ibisabwa",
+                "list": [
+                    "Kurangiza neza Integanyanyigisho y'Ibanze ya Barista.",
+                    "Kwitabira neza n'uburyo ukora mu gihe cy'amahugurwa.",
+                    "Kugaragara neza n'imyitwarire ya kinyamwuga."
+                ]
+            },
+            "partnerships": {
+                "title": "Ubufatanye",
+                "description": "Usafi Barista Training Center ifitanye ubufatanye n'ama café, hoteli, n'amatsinda y'amahoteli akomeye muri Kigali kugira ngo abone amahirwe meza yo kwimenyereza akazi."
+            },
+            "howToApply": {
+                "title": "Uburyo bwo Gusaba",
+                "description": "Imyanya yo kwimenyereza akazi ifite ipiganwa ryinshi. Abanyeshuri bagomba kuzuza ifishi yo gusaba y'imbere bakitabira n'ikiganiro cyo kwitoza kugira ngo bemererwe."
+            }
+        },
+        "market": {
+            "title": "Kumenya Isoko ry'Akazi",
+            "cv": {
+                "title": "Kwandika CV n'Ibyashyizweho",
+                "description": "Habwa inama zihariye ku gutegura CV ishimishije ijyanye n'urwego ry'amahoteli. Dutanga kandi amabaruwa y'ishimwe ku banyeshuri barangije neza kurusha abandi."
+            },
+            "alerts": {
+                "title": "Imiyoboro y'Amakuru y'Akazi",
+                "description": "Bona amahirwe binyuze mu muyoboro wacu wihariye n'amatsinda ya WhatsApp ya Usafi Community. Yiga gukoresha LinkedIn n'imbuga zishaka akazi k'amahoteli."
+            },
+            "interview": {
+                "title": "Kwitegura Ikiganiro (Interview)",
+                "description": "Yiga tekinike zo gushakashaka, uko wambara neza (Uko Wambara), n'itumanaho ritarimo amagambo. Reba videwo z'ingero z'ibiganiro kugira ngo utegure intsinzi yawe."
+            }
+        },
+        "business": {
+            "title": "Ubucuruzi bwa Coffee Shop",
+            "description": "Ku banyeshuri bifuza kugira ubucuruzi bwabo, aya masomo atanga ubumenyi bw'ibanze bwo guhindura icyerekezo cyawe impamo.",
+            "plan": {
+                "title": "Gutegura Business Plan",
+                "description": "Gutegura gahunda yuzuye y'ubucuruzi."
+            },
+            "location": {
+                "title": "Guhitamo Aho Gukorera",
+                "description": "Guhitamo ahantu heza ho gukorera."
+            },
+            "pricing": {
+                "title": "Ibiciro & Menu",
+                "description": "Kugena ibiciro byiza no gutegura menu."
+            },
+            "marketing": {
+                "title": "Marketing & Gutangira",
+                "description": "Tekinike nziza zo gutangira ubucuruzi."
+            }
+        },
+        "cta": {
+            "title": "Witeguye gutangira urugendo rwawe?",
+            "button": "Saba kwiga Ubu"
+        }
+    },
+    "certificates": {
+        "title": "Impamyabumenyi Zanjye",
+        "subtitle": "Reba kandi ubashe kumanura impamyabumenyi watsindiye.",
+        "filters": {
+            "all": "Zose",
+            "skills": "Ubumenyi bwa Barista",
+            "roasting": "Kotsa Ikawa",
+            "brewing": "Gutegura Ikawa"
+        },
+        "certified": "Yemejwe",
+        "completed": "Yarangiye:",
+        "download": "Manura Impamyabumenyi",
+        "empty": {
+            "title": "Nta mpamyabumenyi yabonetse",
+            "description": "Komeza ukore udushya kugira ngo ubone impamyabumenyi itaha ivuye muri Usafi!"
+        },
+        "items": {
+            "milk": "Urwego rwa 1: Gutegura amata (Milk Texturing)",
+            "intro_roasting": "Intangiriro ku Kotsa Ikawa",
+            "green_basics": "Iby'ibanze by'Ikawa Idokeje (Green Coffee)"
+        }
+    },
+    "inclusion": {
+        "title": "Amahugurwa Afungure, Imyuga Igarije Bose",
+        "subtitle": "Ubwitange mu Kwisungana no Guhuza",
+        "description": "Usafi Barista Training Center yemera ko ubushake bwo gutegura ikawa butagira imipaka. Twiyemeje gutanga ahantu haboneye ho kwigira no guhuza integanyanyigisho yacu kugira ngo twizere ko bose bashobora kubona ubumenyi n'intsinzi, harimo n'abafite ubumuga.",
+        "tailoptimized": {
+            "title": "Guhindura Uburyo bwo Guhugurwa",
+            "hearing": {
+                "title": "Ku Banyeshuri Badashobora Kumva no Kuvuga",
+                "list": [
+                    "<strong>Kwigisha binyuze mu kureba:</strong> Kwibanda cyane ku bimenyetso bigaragara, uburyo bwanditse bugaragaza intambwe ku yindi, n'ibishushanyo bisobanutse mu masomo ngiro.",
+                    "<strong>Ibikoresho by'itumanaho:</strong> Imbonerahamwe (whiteboards), tabuleti (digital tablets), n'itumanaho ryo kwandika kugira ngo uhite ubaza cyangwa usubize.",
+                    "<strong>Gushyigikirwa n'Abandi:</strong> Gufatanya n'abanyeshuri bumva kugira ngo bakore neza nk'itsinda."
+                ]
+            },
+            "mobility": {
+                "title": "Ku Bafite Ikibazo cy'Ingendo n'Imbaraga z'Umubiri",
+                "list": [
+                    "<strong>Isuzumwa ry'Imikorere:</strong> Inama ku bikoresho n'uburyo bwo guhindura aho ukorera (urugero: ameza magufi).",
+                    "<strong>Umutekano Mbere na Mbere:</strong> Gufashwa imbere yo gukoresha ibintu biremereye cyangwa gufata neza imashini."
+                ]
+            }
+        },
+        "service": {
+            "title": "Amahugurwa kuri Serivisi Igarije Bose",
+            "description": "Igice cy'ingenzi cy'amahugurwa yacu ni ukwizera ko abarangije bose bashobora guha serivisi nziza buri mukiriya.",
+            "ordering": {
+                "title": "Kwitaba Umukiriya mu buryo bugaragara",
+                "description": "Amahugurwa kuri gukoresha za screens cyangwa impapuro zanditseho mu kwakira komande z'abakiriya badashobora kumva cyangwa kuvuga."
+            },
+            "etiquette": {
+                "title": "Imyitwarire muri Serivisi",
+                "description": "Kwigisha uburyo bwo gusabana n'itumanaho rirangwa n'ubwubahane mu guha serivisi abantu bafite ubumuga butandukanye."
+            },
+            "awareness": {
+                "title": "Gusobanukirwa n'Uburyo bwo Kugera Ahantu Horoheye Bose",
+                "description": "Gusobanukirwa n'uburyo café iteye, imyanya yo kwicaramo, n'ibikenewe mu bwiherero kugira ngo byoroheye bose."
+            }
+        },
+        "consultation": {
+            "title": "Kuganira ku Byo Ukeneye",
+            "description": "Turashishikariza abanyeshuri bifuza kwiga gushyiraho igihe cyo kuganira n'Umuyobozi wacu, Sandrine Gasarasi, mbere yo gusaba kwiga. Ibi bituma dusobanukirwa ibyo ukeneye by'umwihariko tukemeza uko twahindura aho ukorera kugira ngo utsinde.",
+            "cta": "Gena Igihe cyo Kuganira"
+        }
+    },
+    "enrollment": {
+        "title": "Saba kwiga ubu: Fata Umwanya Wawe",
+        "subtitle": "Injira mu kigo cya Usafi Barista Training Center",
+        "description": "Fungura konti yawe nka munyeshuri wuzuze ubusabe bwawe. Nyuma yo kubyohereza, ubusabe bwawe buzasuzumwa kugira ngo bwemezwe.",
+        "form": {
+            "fullName": {
+                "label": "Amazina Yuzuye",
+                "placeholder": "Uko agomba kugaragara ku mpamyabumenyi yawe"
+            },
+            "phone": {
+                "label": "Inomero ya Terefone Y'ibanze",
+                "placeholder": "+250..."
+            },
+            "email": {
+                "label": "Email yawe",
+                "placeholder": "izina@rugero.com"
+            },
+            "password": {
+                "label": "Gena Ijambo ry'Ibanga",
+                "placeholder": "Gena ijambo ry'ibanga rikomeye (byibura inyuguti 6)",
+                "hint": "Uzajya ukoresha iri jambo ry'ibanga winjira ahabigenewe abanyeshuri."
+            },
+            "residence": {
+                "label": "Aho Utuye",
+                "placeholder": "Umujyi / Akarere"
+            },
+            "course": {
+                "label": "Amasomo Ahisemo (Course)",
+                "options": {
+                    "full-barista": "Impamyabumenyi Yuzuye ya Barista"
+                }
+            },
+            "studyMethod": {
+                "label": "Uburyo bwo Kwiga (Method)",
+                "placeholder": "Hitamo uburyo",
+                "options": {
+                    "onsite": "Onsite (Imbonankubone)",
+                    "online": "E-Learning (Kuri Murandasi)"
+                }
+            },
+            "onsite": {
+                "label": "Hitamo Isaha (Choose Shift)",
+                "placeholder": "Hitamo isaha",
+                "options": {
+                    "1st-shift": "Shift ya 1 (9am - 11am)",
+                    "2nd-shift": "Shift ya 2 (11:30am - 1:30pm)",
+                    "3rd-shift": "Shift ya 3 (2pm - 4pm)",
+                    "4th-shift": "Shift ya 4 (4:30pm - 6:30pm)",
+                    "5th-shift": "Shift ya 5 (7pm - 9pm)"
+                }
+            },
+            "online": {
+                "label": "Igihe Ashaka Gutangirira"
+            },
+            "referral": {
+                "label": "Wumvise he amakuru ya Usafi?",
+                "placeholder": "Hitamo uburyo",
+                "options": {
+                    "social-media": "Imbuga nkoranyambaga",
+                    "google": "Gushaka kuri Google",
+                    "referral": "Inshuti / Umuntu wakubwiye",
+                    "other": "Ikindi"
+                }
+            },
+            "submit": "Fungura Konti & Saba kwiga"
+        },
+        "loading": {
+            "init": "Gutangira...",
+            "auth": "Gukora imyirondoro yo kwinjira...",
+            "db": "Kubika imyirondoro yawe mu bubiko...",
+            "final": "Gusoza..."
+        },
+        "errors": {
+            "email_in_use": "Iyi email yaramaze kwiyandikisha. Ongera winjire ukoresheje iyo email.",
+            "weak_password": "Ijambo ry'ibanga rigomba kugira byibura inyuguti 6."
+        },
+        "payment": {
+            "title": "Ibyerekeye Kwishyura & Amategeko v'Imari",
+            "description": "Ubusabe bwemezwa iyo wishyuye. Tworohereza abantu kwishyura binyuze muri aya mayira:",
+            "momo": {
+                "title": "Mobile Money",
+                "description": "Amakuru ayamamazwa iyo umaze kuzuza ifishi."
+            },
+            "bank": {
+                "title": "Kuri Banki",
+                "description": "Amakuru ya banki ayamamazwa iyo umaze kuzuza ifishi."
+            },
+            "flexibility": {
+                "title": "Uburyo bwo Kwishyura Bworoshye",
+                "description": "Twemerera abanyeshuri kwishyura amafaranga y'ishuri mu bice, nk'uko amasezerano yacu ameze. Amakuru arambye azandikwa kuri email yawe umaze gusaba kwiga."
+            }
+        },
+        "policy": {
+            "title": "Icyitonderwa (Important Note)",
+            "highlight": "Amafaranga yishyuwe ntasubizwa.",
+            "subtext": "(All tuition fees paid are strictly non-refundable.)",
+            "details": "Nyamuneka menya neza ko wiyemeje neza amasomo n'uburyo bwo kwiga wahisemo mbere yo kwishyura."
+        }
+    },
+    "gallery": {
+        "title": "Umuryango Wacu mu Bikomeye",
+        "subtitle": "Amafoto & Videwo by'Amahugurwa",
+        "description": "Bona ishusho y'aho twigira imyitozo ngiro muri Usafi Barista Training Center. Aya mayungururwa yerekana ubwitange, kwibanda, n'ubucuti buri hagati y'abanyeshuri bacu n'abatoza bacu.",
+        "categories": {
+            "practice": "Imyitozo Ngiro",
+            "mastery": "Ubuhanga bwa Latte Art",
+            "classroom": "Ishuri & Inyigisho",
+            "graduation": "Gusoza Amasomo"
+        },
+        "photos": {
+            "grind": "Gusya neza",
+            "heart": "Gushushanya umutima",
+            "discussion": "Kuganira mu matsinda",
+            "class2024": "Icyiciro cya 2024",
+            "tamping": "Uburyo bwa tamping",
+            "testing": "Notes n'ibizamini"
+        },
+        "videos": {
+            "title": "Videwo z'Imena",
+            "clip1": {
+                "title": "Ubuzima bwa buri munsi muri Usafi",
+                "desc": "Incamake yihuse y'ikigo cy'amahugurwa."
+            },
+            "clip2": {
+                "title": "Extraction Itunganye",
+                "desc": "Umutoza yerekana tekinike za espresso."
+            },
+            "clip3": {
+                "title": "Ikiganiro n'Umunyeshuri",
+                "desc": "Ibitekerezo ku isomo yakunze kurusha ayandi."
+            }
+        },
+        "cta": {
+            "title": "Irebere mu Bikomeye",
+            "description": "Gena igihe cyo gusura ikigo cyacu cya Kimironko kugira ngo wibonere aho twigira.",
+            "button": "Gena Igihe cyo Gusura"
+        }
+    },
+    "equipment": {
+        "title": "Ibikoresho Bikwiye ku Kazi",
+        "subtitle": "Ibikoresho by'Imena ku Itangira ry'Ubucuruzi bwa Kawa",
+        "description": "Gutangira ubucuruzi bwa café bisaba ibirenze ubushake—bisaba ibikoresho bikwiye. Izi nama ziragaragaza ibikoresho by'ibanze bikenewe kugira ngo akazi kihute, kabe k'ubuziranenge, kandi gahoraho, twaba utangiye café nini cyangwa akazu gatanga espresso.",
+        "machinery": {
+            "title": "Imashini z'Imena",
+            "espresso": {
+                "title": "Imashini ya Espresso",
+                "subtitle": "Umutima w'ubucuruzi bwawe.",
+                "description": "Hitamo imashini ishingiye ku ngano y'ibyo ukora (single-group cyangwa multi-group). Imashini yizewe itanga amapuresha n'ubushyuhe bihoraho kugira ngo ubone ikawa itunganye buri gihe.",
+                "considerations": {
+                    "label": "Icyo Kwitaho:",
+                    "reliability": "Kwizerwa",
+                    "boiler": "Ububiko bw'amazi",
+                    "ease": "Kuryorohera kuyisukura"
+                }
+            },
+            "grinder": {
+                "title": "Imashini Isya Ikawa",
+                "subtitle": "Ifite akamaro nk'imashini nyirizina.",
+                "description": "Imashini isya nziza ituma ikawa isywa mu buryo bumwe kugira ngo itange uburyohe nyabwo. Ikawa isywe nabi ituma uburyohe butaba bwiza kandi ikawa ikayangizwa.",
+                "considerations": {
+                    "label": "Icyo Kwitaho:",
+                    "consistency": "Kusya mu buryo bumwe",
+                    "burr": "Ubwoko bwa Burr (Flat/Conical)",
+                    "dosing": "Kugena ingano (Dosing)"
+                }
+            }
+        },
+        "smallwares": {
+            "title": "Ibikoresho Bito",
+            "tamper": {
+                "title": "Tamper",
+                "description": "Ituma ikawa inanikwa neza mu gikoresho kugira ngo itange uburyohe bumwe. Calibrated tampers zirashishikarizwa kugira ngo akazi kabe kamwe."
+            },
+            "pitcher": {
+                "title": "Milk Pitcher",
+                "description": "Ibikoresho bya Stainless steel bikenewe mu gutogosa amata. Gira ingano zitandukanye (350ml, 600ml) bijyanye n'ibyo abakiriya baka."
+            },
+            "knock": {
+                "title": "Knock Box",
+                "description": "Ikoreshwa mu kujugunya ikawa imaze gukoreshwa mu buryo bw'isuku. Igomba kuba ikomeye kandi yoroheye kuyisukura."
+            },
+            "scales": {
+                "title": "Iminzani (Digital Scales)",
+                "description": "Kugena neza birakenewe cyane. Ikoreshwa mu gupima ingano y'ikawa n'umuvuduko w'ibyo ukora."
+            }
+        },
+        "serving": {
+            "title": "Serivisi & Ububiko",
+            "cups": {
+                "title": "Ibikombe & Birahuri",
+                "description": "Ibikombe by'ibumba ku banywera aha. Demitasse kuri espresso. Ibikombe birinda ubushyuhe kandi bitangiza ibidukikije ku batwara ikawa."
+            },
+            "storage": {
+                "title": "Ububiko",
+                "description": "Ibikoresho bifunga neza kugira ngo ikawa ishyizweho imiriro igume ari nshya kandi kure y'uburyuhe."
+            },
+            "pos": {
+                "title": "Point of Sale (POS)",
+                "description": "Porogaramu y'imena mu gucunga komande, gukurikirana imigendekere y'ibicuruzwa, no kwakira ubwishyu."
+            }
+        },
+        "hygiene": {
+            "title": "Isuku & Umutekano",
+            "kit": {
+                "title": "Ibikoresho by'Isuku",
+                "description": "Ibikoresho byagenewe isuku ya buri munsi y'imashini, group head, n'aho amata anyura."
+            },
+            "agents": {
+                "title": "Ibinyabutabire by'Isuku",
+                "description": "Koresha gusa imiti y'isuku yemewe n'izindi mbaraga zirinda imashini yawe kwangirika."
+            },
+            "gear": {
+                "title": "Ibikoresho by'Umutekano",
+                "description": "First aid kit igomba kuba iri hafi. Amashira (mats) arinda kunyerera inyuma ya bar."
+            }
+        },
+        "pricing": {
+            "title": "Ibiciro & Aho Wabigura",
+            "description": "Ibiciro biratandukanye bitewe n'ikirango, ubushobozi, n'uko imashini imeze. Dore amakuru y'ibanze mu gutegura ingengo y'imari yawe:",
+            "espresso": {
+                "level": "Entry-Level Commercial",
+                "price": "Miliyoni 2 - 5 Rwf"
+            },
+            "grinder": {
+                "level": "Imashini Isya Nziza",
+                "price": "300k - 800k Rwf"
+            },
+            "advice": {
+                "title": "Inama ku bwigura:",
+                "description": "Shaka ibikoresho byakoreshejwe ariko bimeze neza (refurbished) kugira ngo ucunge neza ingengo y y'imari yawe. Duha abanyeshuri bacu urutonde rw'aho bagura ibikoresho hizewe haba mu gihugu no hanze."
+            },
+            "cta_text": "\"Witeguye gutegura ingengo y'imari no kubaka?\"",
+            "cta_sub": "Yigire ku gutegura ubucuruzi, gushaka ibikoresho, n'isesengura ry'ibiciro mu isomo rya Coffee Shop Business.",
+            "cta_button": "Saba Kwiga mu Masomo"
+        }
+    },
+    "blog": {
+        "title": "Usafi Insights",
+        "subtitle": "Aho ukura inama kuri Kawa, Amakuru y'Inganda, n'Inama z'Ubucuruzi",
+        "description": "Blog ya Usafi ni aho ubushake buhurira n'ubuhanga. Guma uzi amakuru agezweho mu isi ya kawa, bona inama z'ingirakamaro mu mwuga wawe, kandi bone imbaraga mu rugendo rwawe rw'ubushabitsi.",
+        "categories": {
+            "all": "Zose",
+            "tips": "Inama kuri Kawa",
+            "life": "Ubuzima bwa Barista",
+            "business": "Inama z'Ubucuruzi",
+            "news": "Amakuru y'Umuryango"
+        },
+        "posts": {
+            "read_more": "Soma Inkuru",
+            "empty": "Nta nkuruyabonetse muri iki kiciro.",
+            "p1": {
+                "title": "Ibanga ryo Gutogosa Amata Itunganye (Micro-Foam)",
+                "snippet": "Kumenya uburyo bw'vortex ni ingenzi mu gukora amata yoroshye akoreshwa mu gushushanya (latte art)."
+            },
+            "p2": {
+                "title": "Inama ku Itangira ry'Ubucuruzi bwa Café",
+                "snippet": "Kuva ku gushaka aho gukorera kugeza ku kugena ibiciro, dore inkingi 5 z'intsinzi mu gufungura café."
+            },
+            "p3": {
+                "title": "Amashimwe ku Cyiciro Gisoje Amasomo",
+                "snippet": "Twishimira umuhate n'ubwitange bw'abanyeshuri basoje mu cyiciro cya 12."
+            },
+            "p4": {
+                "title": "Uburyo bwo Gutsinda Ikiganiro cya mbere cy'Akazi (Barista Interview)",
+                "snippet": "Kwigirira icyizere, isuku, n'ubumenyi bwa kawa. Dore icyo abakoresha bashaka koko."
+            }
+        },
+        "newsletter": {
+            "title": "Ntugacikwe n'Amakuru!",
+            "description": "Iyandikishe mu rutonde rwacu rwa email kugira ngo uhabwe amakuru n'amahirwe y'akazi mu buryo butaziguye.",
+            "placeholder": "Andika email yawe hano",
+            "button": "Iyandikishe"
+        }
+    },
+    "testimonials": {
+        "title": "Inkuru z'Intsinzi",
+        "subtitle": "Umva Ibyo Abanyeshuri bacu Bavuga",
+        "description": "Igipimo nyacyo cy'amahugurwa yacu ni intsinzi y'abanyeshuri bacu. Soma kandi urebe uburyo Usafi Barista Training Center yafashije guhindura vubushake mo umwuga ucuruzwa, bigafasha abanyeshuri kubona akazi mu mahoteli n'ama café akomeye cyangwa gufungura ubucuruzi bwabo.",
+        "featured": {
+            "badge": "Inkuru y'Imena",
+            "title": "Kuva ku Munyeshuri kugeza kuri Nyir'ubucuruzi: Inkuru ya Alex",
+            "description": "Alex asangira natwe uburyo amasomo ya Coffee Shop Business yamuhaye uburyo bufatika n'imiyoboro y'abagemuzi bakenewe kugira ngo afungure café ye nyuma y'amezi atandatu gusa asoje amasomo.",
+            "class": "Icyiciro cya 2024"
+        },
+        "tags": {
+            "placement": "Internship & Akazi",
+            "technical": "Ubumenyi Ngiro",
+            "online": "Kwiga Online"
+        },
+        "items": {
+            "grace": {
+                "text": "\"Mbere ya Usafi, nta kintu na kimwe nari nzi kuri coffee science. Nyuma y'amasomo ya Onsite, nizeye ubumenyi bwanjye maze nsaba kwimenyereza akazi. Usafi yanyohereje muri hoteli bafatanya, maze bampira akazi k'igihe cyose nyuma y'amezi abiri. Gushyigikirwa mu mwuga byari ingirakamaro cyane.\"",
+                "name": "Grace Mutesi",
+                "role": "Lead Barista"
+            },
+            "kevin": {
+                "text": "\"Kwitaho ku bintu bito muri espresso extraction no gutogosa amata byari bitangaje. Ubu nshobora gukora buri gihe ikawa y'ubuziranenge buhambaye, kandi abakiriya banjye barabibona. Ubumenyi bwa Latte Art bwonyine bunyubakira icyizere imbere y'abandi bakora aka kazi.\"",
+                "name": "Kevin Mugisha",
+                "role": "Freelance Consultant"
+            },
+            "patience": {
+                "text": "\"Nasoreje amasomo ya E-Learning mugihe nakoraga akazi ka nijoro. Videwo z'amasomo n'impapuro za PDF byari byiza cyane mu kwiga mbinyujije mu kwigisha. Ndashishikariza buri wese ushaka kwiga ariko akagira gahunda nyinshi guhitamo Usafi kuko bitabangamira ubuziranenge bw'ibyo wiga.\"",
+                "name": "Patience Uwamahoro",
+                "role": "Certified Barista"
+            }
+        },
+        "cta": {
+            "title": "Witeguye Kwandika Inkuru yawe y'Intsinzi?",
+            "button": "Tangira Gusaba"
+        }
+    },
+    "thankyou": {
+        "title": "Ubusabe Bwakiriwe!",
+        "description": "Urakoze gusaba kwiga muri Usafi Barista Training Center. Tukoherereje email ikubiyemo amakuru yo kwishyura n'intambwe zikurikira.",
+        "button": "Subira Ahabanza"
+    }
+}

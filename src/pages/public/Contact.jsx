@@ -1,20 +1,65 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export function Contact() {
+    const { t } = useTranslation();
+    const [formData, setFormData] = React.useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        subject: '',
+        message: ''
+    });
+    const [loading, setLoading] = React.useState(false);
+    const [status, setStatus] = React.useState({ type: '', message: '' });
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.id]: e.target.value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setStatus({ type: '', message: '' });
+
+        try {
+            const { collection, addDoc, serverTimestamp } = await import('firebase/firestore');
+            const { db } = await import('../../lib/firebase');
+
+            await addDoc(collection(db, 'contact_messages'), {
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                email: formData.email,
+                subject: formData.subject,
+                message: formData.message,
+                status: 'new',
+                createdAt: serverTimestamp()
+            });
+
+            setStatus({ type: 'success', message: 'Message sent successfully! We will get back to you soon.' });
+            setFormData({ firstName: '', lastName: '', email: '', subject: '', message: '' });
+        } catch (error) {
+            console.error("Error sending message:", error);
+            setStatus({ type: 'error', message: 'Failed to send message. Please try again later.' });
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark font-display text-espresso dark:text-white pb-20 pt-24">
 
             {/* Page Header */}
             <div className="container mx-auto px-6 text-center mb-16">
                 <h1 className="font-serif text-4xl md:text-5xl font-bold text-espresso dark:text-white mb-4 tracking-tight">
-                    Get in Touch
+                    {t('contact.title')}
                 </h1>
                 <h2 className="text-xl md:text-2xl text-primary font-medium mb-6">
-                    We'd Love to Hear From You
+                    {t('contact.subtitle')}
                 </h2>
                 <p className="text-lg text-espresso/80 dark:text-white/80 leading-relaxed max-w-2xl mx-auto">
-                    Whether you have questions about our courses, need support with enrollment, or want to schedule a visit, our team is here to help.
+                    {t('contact.description')}
                 </p>
             </div>
 
@@ -23,7 +68,7 @@ export function Contact() {
                 {/* Contact Information & Map */}
                 <div className="space-y-8">
                     <div className="bg-white dark:bg-white/5 p-8 rounded-2xl shadow-sm border border-[#e0dbd6] dark:border-white/10">
-                        <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-6">Contact Info</h3>
+                        <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-6">{t('contact.info.title')}</h3>
 
                         <div className="space-y-6">
                             <div className="flex items-start gap-4">
@@ -31,10 +76,10 @@ export function Contact() {
                                     <span className="material-symbols-outlined">location_on</span>
                                 </div>
                                 <div>
-                                    <h4 className="font-bold text-lg text-espresso dark:text-white mb-1">Visit Us</h4>
+                                    <h4 className="font-bold text-lg text-espresso dark:text-white mb-1">{t('contact.info.visit.title')}</h4>
                                     <p className="text-espresso/70 dark:text-white/70">
-                                        Kimironko, Kigali<br />
-                                        Near Kimironko Market
+                                        {t('contact.info.visit.address')}<br />
+                                        {t('contact.info.visit.near')}
                                     </p>
                                 </div>
                             </div>
@@ -44,7 +89,7 @@ export function Contact() {
                                     <span className="material-symbols-outlined">call</span>
                                 </div>
                                 <div>
-                                    <h4 className="font-bold text-lg text-espresso dark:text-white mb-1">Call Us</h4>
+                                    <h4 className="font-bold text-lg text-espresso dark:text-white mb-1">{t('contact.info.call')}</h4>
                                     <p className="text-espresso/70 dark:text-white/70">
                                         <a href="tel:+250788123456" className="hover:text-primary transition-colors">+250 788 123 456</a>
                                     </p>
@@ -56,7 +101,7 @@ export function Contact() {
                                     <span className="material-symbols-outlined">mail</span>
                                 </div>
                                 <div>
-                                    <h4 className="font-bold text-lg text-espresso dark:text-white mb-1">Email Us</h4>
+                                    <h4 className="font-bold text-lg text-espresso dark:text-white mb-1">{t('contact.info.email')}</h4>
                                     <p className="text-espresso/70 dark:text-white/70">
                                         <a href="mailto:info@usafibarista.com" className="hover:text-primary transition-colors">info@usafibarista.com</a>
                                     </p>
@@ -82,43 +127,94 @@ export function Contact() {
 
                 {/* Contact Form */}
                 <div className="bg-white dark:bg-white/5 p-8 rounded-2xl shadow-lg border border-[#e0dbd6] dark:border-white/10">
-                    <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-6">Send a Message</h3>
-                    <form className="space-y-6">
+                    <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-6">{t('contact.form.title')}</h3>
+                    <form className="space-y-6" onSubmit={handleSubmit}>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="space-y-2">
-                                <label htmlFor="firstName" className="text-sm font-bold text-espresso dark:text-white">First Name</label>
-                                <input type="text" id="firstName" className="w-full px-4 py-3 rounded-lg bg-background-light dark:bg-white/10 border border-primary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="John" />
+                                <label htmlFor="firstName" className="text-sm font-bold text-espresso dark:text-white">{t('contact.form.firstName')}</label>
+                                <input
+                                    type="text"
+                                    id="firstName"
+                                    required
+                                    value={formData.firstName}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-3 rounded-lg bg-background-light dark:bg-white/10 border border-primary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                                    placeholder="John"
+                                />
                             </div>
                             <div className="space-y-2">
-                                <label htmlFor="lastName" className="text-sm font-bold text-espresso dark:text-white">Last Name</label>
-                                <input type="text" id="lastName" className="w-full px-4 py-3 rounded-lg bg-background-light dark:bg-white/10 border border-primary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Doe" />
+                                <label htmlFor="lastName" className="text-sm font-bold text-espresso dark:text-white">{t('contact.form.lastName')}</label>
+                                <input
+                                    type="text"
+                                    id="lastName"
+                                    required
+                                    value={formData.lastName}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-3 rounded-lg bg-background-light dark:bg-white/10 border border-primary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                                    placeholder="Doe"
+                                />
                             </div>
                         </div>
 
                         <div className="space-y-2">
-                            <label htmlFor="email" className="text-sm font-bold text-espresso dark:text-white">Email Address</label>
-                            <input type="email" id="email" className="w-full px-4 py-3 rounded-lg bg-background-light dark:bg-white/10 border border-primary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="john@example.com" />
+                            <label htmlFor="email" className="text-sm font-bold text-espresso dark:text-white">{t('contact.form.email')}</label>
+                            <input
+                                type="email"
+                                id="email"
+                                required
+                                value={formData.email}
+                                onChange={handleChange}
+                                className="w-full px-4 py-3 rounded-lg bg-background-light dark:bg-white/10 border border-primary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                                placeholder="john@example.com"
+                            />
                         </div>
 
                         <div className="space-y-2">
-                            <label htmlFor="subject" className="text-sm font-bold text-espresso dark:text-white">Subject</label>
-                            <select id="subject" className="w-full px-4 py-3 rounded-lg bg-background-light dark:bg-white/10 border border-primary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all">
-                                <option value="">Select a topic</option>
-                                <option value="enrollment">Course Enrollment</option>
-                                <option value="visit">Schedule a Visit</option>
-                                <option value="consultation">Disability Support Consultation</option>
-                                <option value="partnership">Partnership Inquiry</option>
-                                <option value="other">Other</option>
+                            <label htmlFor="subject" className="text-sm font-bold text-espresso dark:text-white">{t('contact.form.subject.label')}</label>
+                            <select
+                                id="subject"
+                                required
+                                value={formData.subject}
+                                onChange={handleChange}
+                                className="w-full px-4 py-3 rounded-lg bg-background-light dark:bg-white/10 border border-primary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                            >
+                                <option value="">{t('contact.form.subject.placeholder')}</option>
+                                <option value="enrollment">{t('contact.form.subject.options.enrollment')}</option>
+                                <option value="visit">{t('contact.form.subject.options.visit')}</option>
+                                <option value="consultation">{t('contact.form.subject.options.consultation')}</option>
+                                <option value="partnership">{t('contact.form.subject.options.partnership')}</option>
+                                <option value="other">{t('contact.form.subject.options.other')}</option>
                             </select>
                         </div>
 
                         <div className="space-y-2">
-                            <label htmlFor="message" className="text-sm font-bold text-espresso dark:text-white">Message</label>
-                            <textarea id="message" rows="5" className="w-full px-4 py-3 rounded-lg bg-background-light dark:bg-white/10 border border-primary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-none" placeholder="How can we help you?"></textarea>
+                            <label htmlFor="message" className="text-sm font-bold text-espresso dark:text-white">{t('contact.form.message.label')}</label>
+                            <textarea
+                                id="message"
+                                rows="5"
+                                required
+                                value={formData.message}
+                                onChange={handleChange}
+                                className="w-full px-4 py-3 rounded-lg bg-background-light dark:bg-white/10 border border-primary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-none"
+                                placeholder={t('contact.form.message.placeholder')}
+                            ></textarea>
                         </div>
 
-                        <button type="submit" className="w-full py-4 rounded-xl bg-primary text-white font-bold text-lg shadow-lg hover:bg-primary/90 transition-all hover:scale-[1.02] active:scale-[0.98]">
-                            Send Message
+                        {status.message && (
+                            <div className={`p-4 rounded-lg text-sm font-bold text-center ${status.type === 'success'
+                                ? 'bg-green-50 text-green-700 border border-green-200'
+                                : 'bg-red-50 text-red-700 border border-red-200'
+                                }`}>
+                                {status.message}
+                            </div>
+                        )}
+
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full py-4 rounded-xl bg-primary text-white font-bold text-lg shadow-lg hover:bg-primary/90 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
+                        >
+                            {loading ? 'Sending...' : t('contact.form.button')}
                         </button>
                     </form>
                 </div>

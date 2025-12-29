@@ -1,29 +1,36 @@
 import React, { useState } from 'react';
 import { cn } from '../../lib/utils';
+import { useTranslation } from 'react-i18next';
 
 export function Certificates() {
+    const { t } = useTranslation();
     const [activeFilter, setActiveFilter] = useState('All');
 
-    const filters = ['All', 'Barista Skills', 'Roasting', 'Brewing'];
+    const filters = [
+        { id: 'All', label: t('certificates.filters.all') },
+        { id: 'Barista Skills', label: t('certificates.filters.skills') },
+        { id: 'Roasting', label: t('certificates.filters.roasting') },
+        { id: 'Brewing', label: t('certificates.filters.brewing') }
+    ];
 
     const certificates = [
         {
             id: 1,
-            title: 'Level 1: Milk Texturing',
+            title: t('certificates.items.milk'),
             date: 'Jan 15, 2024',
             category: 'Barista Skills',
             image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCxeIO-1V_lQXh0XvxBDdiTS3YsBSmd-NiVNOqcClhTvoYEwI_F40_0hhp8NdjFFanJNk8R-03Tiz3zLm-Myut4A6IW8kYTpkRWc6lynplTG4HJhYu67mllNCtmcz2swEDRI1XKobDUFEKbRiYC43Q0TbjO4jtEpZGwtZT4EEjzhS-rc5jkSTdh9wAUnIlYZ8N-5ljw4hPLW-L7qiPezX0QWxs1LErsUqemCqqC8ayJx5owWrdxQ1KvJI3x6F3DcBuLLd_YkGi_SjSn"
         },
         {
             id: 2,
-            title: 'Introduction to Roasting',
+            title: t('certificates.items.intro_roasting'),
             date: 'Nov 22, 2023',
             category: 'Roasting',
             image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBZpy9UopxnFXPCbMTrb6HLvTxWkYflNrsoY7JmqV4izTCi5KW6ugmfBYM9wuKYhl_DG1kBId9sDzF0wKppwFKLSpZXvphG1wnOYVdsS56x-UcY5JeI9TAVNESZaeACCeNwu4bm0bELun0vCUxZJfXiFg5YhAodu_S025S43-0DdVe6bOhWKcGbV6mpFD2stT8wGI7SzokqnFwnSdhI4oSh1w-cdz46MIv1ZYzjhhEWoNM_TBgfDPk4HSOZZx8JGXfQCpXgFnROub3G"
         },
         {
             id: 3,
-            title: 'Green Coffee Basics',
+            title: t('certificates.items.green_basics'),
             date: 'Sep 10, 2023',
             category: 'Roasting',
             image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAV2jmgK2bezZ8hh88r6MfSiNAhfxPa3ceK1x6LYJ5K7ewADCmphSe2WK4tOtkEZzCuxIzaRrUZvCK4qtGNVidg5PPVpbvmZyW0Go6bEMKRBPKQ3b_CuLWsExZiY3ZHPXpC5dEai1sgUf-rg-NH4bsbvNI1vlAeDaifVJhX8rQBuuOa3i2hkKYi9DyYRCSd50ttnYJCOO1A3R1U3ztuGc_V679AtXQflQUqLfNfgTNuMSzqWP4nfxkWn_IA5fqL46nTzPSNSajYyz6s"
@@ -41,10 +48,10 @@ export function Certificates() {
             <div className="container mx-auto px-6 mb-8 flex items-center justify-between">
                 <div>
                     <h1 className="font-serif text-3xl md:text-4xl font-bold text-espresso dark:text-white tracking-tight">
-                        My Certificates
+                        {t('certificates.title')}
                     </h1>
                     <p className="text-espresso/70 dark:text-white/70 mt-2">
-                        View and download your earned credentials.
+                        {t('certificates.subtitle')}
                     </p>
                 </div>
                 <div className="hidden md:flex items-center justify-center rounded-full h-12 w-12 bg-primary/10 text-primary">
@@ -57,16 +64,16 @@ export function Certificates() {
                 <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
                     {filters.map((filter) => (
                         <button
-                            key={filter}
-                            onClick={() => setActiveFilter(filter)}
+                            key={filter.id}
+                            onClick={() => setActiveFilter(filter.id)}
                             className={cn(
                                 "flex h-10 shrink-0 items-center justify-center px-6 rounded-full text-sm font-medium transition-all whitespace-nowrap",
-                                activeFilter === filter
+                                activeFilter === filter.id
                                     ? "bg-espresso text-[#FAF5E8] shadow-md"
                                     : "bg-white dark:bg-white/5 border border-primary/30 text-espresso hover:bg-primary/5 dark:text-white"
                             )}
                         >
-                            {filter}
+                            {filter.label}
                         </button>
                     ))}
                 </div>
@@ -91,10 +98,10 @@ export function Certificates() {
                                     <div>
                                         <div className="flex items-center gap-1.5 mb-1">
                                             <span className="material-symbols-outlined text-green-600 text-[16px] font-bold">verified</span>
-                                            <p className="text-green-600 text-xs font-bold uppercase tracking-wide">Certified</p>
+                                            <p className="text-green-600 text-xs font-bold uppercase tracking-wide">{t('certificates.certified')}</p>
                                         </div>
                                         <h3 className="text-espresso dark:text-white text-base font-bold leading-tight">{cert.title}</h3>
-                                        <p className="text-espresso/70 dark:text-white/70 text-xs font-normal mt-1">Completed: {cert.date}</p>
+                                        <p className="text-espresso/70 dark:text-white/70 text-xs font-normal mt-1">{t('certificates.completed')} {cert.date}</p>
                                     </div>
                                 </div>
                             </div>
@@ -102,7 +109,7 @@ export function Certificates() {
                             {/* Action */}
                             <button className="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white gap-2 text-sm font-bold hover:bg-primary/90 transition-colors shadow-sm active:scale-[0.98]">
                                 <span className="material-symbols-outlined text-[20px]">download</span>
-                                <span>Download Certificate</span>
+                                <span>{t('certificates.download')}</span>
                             </button>
                         </div>
                     ))}
@@ -114,8 +121,8 @@ export function Certificates() {
                             <span className="material-symbols-outlined text-[64px]">local_cafe</span>
                         </div>
                         <div className="flex max-w-[280px] flex-col items-center gap-2">
-                            <p className="text-espresso dark:text-white text-lg font-bold leading-tight">No certificates found</p>
-                            <p className="text-espresso/70 dark:text-white/70 text-sm font-normal leading-relaxed">Keep brewing to earn your next badge from Usafi!</p>
+                            <p className="text-espresso dark:text-white text-lg font-bold leading-tight">{t('certificates.empty.title')}</p>
+                            <p className="text-espresso/70 dark:text-white/70 text-sm font-normal leading-relaxed">{t('certificates.empty.description')}</p>
                         </div>
                     </div>
                 )}

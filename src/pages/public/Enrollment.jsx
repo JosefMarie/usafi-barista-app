@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export function Enrollment() {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         fullName: '',
@@ -20,7 +22,7 @@ export function Enrollment() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoadingMessage('Initializing...');
+        setLoadingMessage(t('enrollment.loading.init'));
         setError('');
 
         try {
@@ -30,12 +32,12 @@ export function Enrollment() {
             const { auth, db } = await import('../../lib/firebase');
 
             // 1. Create Authentication User
-            setLoadingMessage('Creating Login Credentials...');
+            setLoadingMessage(t('enrollment.loading.auth'));
             const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
             const user = userCredential.user;
 
             // 2. Create User Document in Firestore
-            setLoadingMessage('Saving Student Profile to Database...');
+            setLoadingMessage(t('enrollment.loading.db'));
             console.log("Attempting to write to Firestore users collection...");
 
             // Prepare user data
@@ -60,15 +62,15 @@ export function Enrollment() {
             await setDoc(doc(db, 'users', user.uid), userData);
 
             // 3. Redirect to Thank You / Pending Page
-            setLoadingMessage('Finalizing...');
+            setLoadingMessage(t('enrollment.loading.final'));
             navigate('/thank-you');
 
         } catch (err) {
             console.error("Enrollment error:", err);
             if (err.code === 'auth/email-already-in-use') {
-                setError('This email is already registered. Please log in instead.');
+                setError(t('enrollment.errors.email_in_use'));
             } else if (err.code === 'auth/weak-password') {
-                setError('Password should be at least 6 characters.');
+                setError(t('enrollment.errors.weak_password'));
             } else {
                 // Show the specific error message for debugging
                 setError(`Error: ${err.message}`);
@@ -94,13 +96,13 @@ export function Enrollment() {
                 {/* Header */}
                 <div className="text-center mb-12">
                     <h1 className="font-serif text-3xl md:text-5xl font-bold text-espresso dark:text-white mb-4">
-                        Enroll Now: Secure Your Spot
+                        {t('enrollment.title')}
                     </h1>
                     <h2 className="text-xl text-primary font-medium mb-4">
-                        Join the Usafi Barista Training Center
+                        {t('enrollment.subtitle')}
                     </h2>
                     <p className="text-espresso/70 dark:text-white/70 leading-relaxed max-w-2xl mx-auto">
-                        Create your student account and complete your enrollment. After submission, your application will be reviewed for approval.
+                        {t('enrollment.description')}
                     </p>
                 </div>
 
@@ -116,7 +118,7 @@ export function Enrollment() {
                         {/* Full Name */}
                         <div>
                             <label htmlFor="fullName" className="block text-espresso dark:text-white font-bold mb-2">
-                                Full Name <span className="text-red-500">*</span>
+                                {t('enrollment.form.fullName.label')} <span className="text-red-500">*</span>
                             </label>
                             <input
                                 type="text"
@@ -124,7 +126,7 @@ export function Enrollment() {
                                 name="fullName"
                                 required
                                 className="w-full px-4 py-3 rounded-xl bg-background-light dark:bg-black/20 border border-[#e0dbd6] dark:border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-                                placeholder="As it should appear on your certificate"
+                                placeholder={t('enrollment.form.fullName.placeholder')}
                                 value={formData.fullName}
                                 onChange={handleChange}
                             />
@@ -134,7 +136,7 @@ export function Enrollment() {
                             {/* Phone */}
                             <div>
                                 <label htmlFor="phone" className="block text-espresso dark:text-white font-bold mb-2">
-                                    Primary Phone Number <span className="text-red-500">*</span>
+                                    {t('enrollment.form.phone.label')} <span className="text-red-500">*</span>
                                 </label>
                                 <input
                                     type="tel"
@@ -142,7 +144,7 @@ export function Enrollment() {
                                     name="phone"
                                     required
                                     className="w-full px-4 py-3 rounded-xl bg-background-light dark:bg-black/20 border border-[#e0dbd6] dark:border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-                                    placeholder="+250..."
+                                    placeholder={t('enrollment.form.phone.placeholder')}
                                     value={formData.phone}
                                     onChange={handleChange}
                                 />
@@ -151,7 +153,7 @@ export function Enrollment() {
                             {/* Email */}
                             <div>
                                 <label htmlFor="email" className="block text-espresso dark:text-white font-bold mb-2">
-                                    Email Address <span className="text-red-500">*</span>
+                                    {t('enrollment.form.email.label')} <span className="text-red-500">*</span>
                                 </label>
                                 <input
                                     type="email"
@@ -159,7 +161,7 @@ export function Enrollment() {
                                     name="email"
                                     required
                                     className="w-full px-4 py-3 rounded-xl bg-background-light dark:bg-black/20 border border-[#e0dbd6] dark:border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-                                    placeholder="name@example.com"
+                                    placeholder={t('enrollment.form.email.placeholder')}
                                     value={formData.email}
                                     onChange={handleChange}
                                 />
@@ -169,7 +171,7 @@ export function Enrollment() {
                         {/* Password Field - NEW */}
                         <div>
                             <label htmlFor="password" className="block text-espresso dark:text-white font-bold mb-2">
-                                Create Password <span className="text-red-500">*</span>
+                                {t('enrollment.form.password.label')} <span className="text-red-500">*</span>
                             </label>
                             <input
                                 type="password"
@@ -178,19 +180,19 @@ export function Enrollment() {
                                 required
                                 minLength="6"
                                 className="w-full px-4 py-3 rounded-xl bg-background-light dark:bg-black/20 border border-[#e0dbd6] dark:border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-                                placeholder="Create a secure password (min 6 chars)"
+                                placeholder={t('enrollment.form.password.placeholder')}
                                 value={formData.password}
                                 onChange={handleChange}
                             />
                             <p className="text-xs text-espresso/50 dark:text-white/50 mt-1">
-                                You will use this password to log in to the student portal.
+                                {t('enrollment.form.password.hint')}
                             </p>
                         </div>
 
                         {/* Residence */}
                         <div>
                             <label htmlFor="residence" className="block text-espresso dark:text-white font-bold mb-2">
-                                Place of Residence <span className="text-red-500">*</span>
+                                {t('enrollment.form.residence.label')} <span className="text-red-500">*</span>
                             </label>
                             <input
                                 type="text"
@@ -198,7 +200,7 @@ export function Enrollment() {
                                 name="residence"
                                 required
                                 className="w-full px-4 py-3 rounded-xl bg-background-light dark:bg-black/20 border border-[#e0dbd6] dark:border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-                                placeholder="City / District"
+                                placeholder={t('enrollment.form.residence.placeholder')}
                                 value={formData.residence}
                                 onChange={handleChange}
                             />
@@ -207,7 +209,7 @@ export function Enrollment() {
                         {/* Course Ahisemo */}
                         <div>
                             <label htmlFor="course" className="block text-espresso dark:text-white font-bold mb-2">
-                                Course Ahisemo (Chosen Course) <span className="text-red-500">*</span>
+                                {t('enrollment.form.course.label')} <span className="text-red-500">*</span>
                             </label>
                             <div className="relative">
                                 <select
@@ -218,7 +220,7 @@ export function Enrollment() {
                                     value={formData.course}
                                     onChange={handleChange}
                                 >
-                                    <option value="full-barista">Full Barista Certificate</option>
+                                    <option value="full-barista">{t('enrollment.form.course.options.full-barista')}</option>
                                 </select>
                                 <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-espresso/50">expand_more</span>
                             </div>
@@ -228,7 +230,7 @@ export function Enrollment() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label htmlFor="studyMethod" className="block text-espresso dark:text-white font-bold mb-2">
-                                    Uburyo bwo Kwiga (Method) <span className="text-red-500">*</span>
+                                    {t('enrollment.form.studyMethod.label')} <span className="text-red-500">*</span>
                                 </label>
                                 <div className="relative">
                                     <select
@@ -239,9 +241,9 @@ export function Enrollment() {
                                         value={formData.studyMethod}
                                         onChange={handleChange}
                                     >
-                                        <option value="" disabled>Select method</option>
-                                        <option value="onsite">Onsite (In-Person)</option>
-                                        <option value="online">E-Learning (Online)</option>
+                                        <option value="" disabled>{t('enrollment.form.studyMethod.placeholder')}</option>
+                                        <option value="onsite">{t('enrollment.form.studyMethod.options.onsite')}</option>
+                                        <option value="online">{t('enrollment.form.studyMethod.options.online')}</option>
                                     </select>
                                     <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-espresso/50">expand_more</span>
                                 </div>
@@ -251,7 +253,7 @@ export function Enrollment() {
                             {/* Start Date OR Shift Selection */}
                             <div>
                                 <label htmlFor="startDate" className="block text-espresso dark:text-white font-bold mb-2">
-                                    {formData.studyMethod === 'onsite' ? 'Hitamo Isaha (Choose Shift)' : 'Igihe Ashaka Gutangirira'} <span className="text-red-500">*</span>
+                                    {formData.studyMethod === 'onsite' ? t('enrollment.form.onsite.label') : t('enrollment.form.online.label')} <span className="text-red-500">*</span>
                                 </label>
                                 {formData.studyMethod === 'onsite' ? (
                                     <div className="relative">
@@ -263,12 +265,12 @@ export function Enrollment() {
                                             value={formData.shift}
                                             onChange={handleChange}
                                         >
-                                            <option value="" disabled>Select a shift</option>
-                                            <option value="1st-shift">1st Shift (9am - 11am)</option>
-                                            <option value="2nd-shift">2nd Shift (11:30am - 1:30pm)</option>
-                                            <option value="3rd-shift">3rd Shift (2pm - 4pm)</option>
-                                            <option value="4th-shift">4th Shift (4:30pm - 6:30pm)</option>
-                                            <option value="5th-shift">5th Shift (7pm - 9pm)</option>
+                                            <option value="" disabled>{t('enrollment.form.onsite.placeholder')}</option>
+                                            <option value="1st-shift">{t('enrollment.form.onsite.options.1st-shift')}</option>
+                                            <option value="2nd-shift">{t('enrollment.form.onsite.options.2nd-shift')}</option>
+                                            <option value="3rd-shift">{t('enrollment.form.onsite.options.3rd-shift')}</option>
+                                            <option value="4th-shift">{t('enrollment.form.onsite.options.4th-shift')}</option>
+                                            <option value="5th-shift">{t('enrollment.form.onsite.options.5th-shift')}</option>
                                         </select>
                                         <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-espresso/50">expand_more</span>
                                     </div>
@@ -289,7 +291,7 @@ export function Enrollment() {
                         {/* Referral (Optional) */}
                         <div>
                             <label htmlFor="referral" className="block text-espresso dark:text-white font-bold mb-2">
-                                How did you hear about Usafi?
+                                {t('enrollment.form.referral.label')}
                             </label>
                             <div className="relative">
                                 <select
@@ -299,11 +301,11 @@ export function Enrollment() {
                                     value={formData.referral}
                                     onChange={handleChange}
                                 >
-                                    <option value="">Select an option</option>
-                                    <option value="social-media">Social Media</option>
-                                    <option value="google">Google Search</option>
-                                    <option value="referral">Friend / Referral</option>
-                                    <option value="other">Other</option>
+                                    <option value="">{t('enrollment.form.referral.placeholder')}</option>
+                                    <option value="social-media">{t('enrollment.form.referral.options.social-media')}</option>
+                                    <option value="google">{t('enrollment.form.referral.options.google')}</option>
+                                    <option value="referral">{t('enrollment.form.referral.options.referral')}</option>
+                                    <option value="other">{t('enrollment.form.referral.options.other')}</option>
                                 </select>
                                 <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-espresso/50">expand_more</span>
                             </div>
@@ -321,7 +323,7 @@ export function Enrollment() {
                                     {loadingMessage}
                                 </span>
                             ) : (
-                                "Create Account & Enroll"
+                                t('enrollment.form.submit')
                             )}
                         </button>
 
@@ -332,31 +334,31 @@ export function Enrollment() {
                 <div className="space-y-8">
                     <div>
                         <h2 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-4">
-                            Payment Details & Financial Policy
+                            {t('enrollment.payment.title')}
                         </h2>
                         <p className="text-espresso/80 dark:text-white/80 leading-relaxed mb-6">
-                            Enrollment is confirmed upon receipt of payment. We offer flexibility through the following channels:
+                            {t('enrollment.payment.description')}
                         </p>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                             <div className="bg-white dark:bg-white/5 p-4 rounded-xl border border-[#e0dbd6] dark:border-white/10">
                                 <h3 className="font-bold text-primary mb-2 flex items-center gap-2">
-                                    <span className="material-symbols-outlined">smartphone</span> Mobile Money
+                                    <span className="material-symbols-outlined">smartphone</span> {t('enrollment.payment.momo.title')}
                                 </h3>
-                                <p className="text-sm text-espresso/70 dark:text-white/70">Details provided upon form submission.</p>
+                                <p className="text-sm text-espresso/70 dark:text-white/70">{t('enrollment.payment.momo.description')}</p>
                             </div>
                             <div className="bg-white dark:bg-white/5 p-4 rounded-xl border border-[#e0dbd6] dark:border-white/10">
                                 <h3 className="font-bold text-primary mb-2 flex items-center gap-2">
-                                    <span className="material-symbols-outlined">account_balance</span> Bank Transfer
+                                    <span className="material-symbols-outlined">account_balance</span> {t('enrollment.payment.bank.title')}
                                 </h3>
-                                <p className="text-sm text-espresso/70 dark:text-white/70">Bank details provided upon submission.</p>
+                                <p className="text-sm text-espresso/70 dark:text-white/70">{t('enrollment.payment.bank.description')}</p>
                             </div>
                         </div>
 
                         <div className="bg-primary/5 p-4 rounded-xl border-l-4 border-primary">
-                            <h4 className="font-bold text-espresso dark:text-white mb-1">Payment Flexibility</h4>
+                            <h4 className="font-bold text-espresso dark:text-white mb-1">{t('enrollment.payment.flexibility.title')}</h4>
                             <p className="text-sm text-espresso/80 dark:text-white/80">
-                                We allow students to pay the tuition fee in installments, as per our standard agreement. Details will be sent to your email after registration.
+                                {t('enrollment.payment.flexibility.description')}
                             </p>
                         </div>
                     </div>
@@ -365,16 +367,16 @@ export function Enrollment() {
                     <div className="p-6 rounded-2xl bg-[#FFF5F5] dark:bg-red-900/10 border border-red-200 dark:border-red-900/30">
                         <h3 className="font-serif text-xl font-bold text-[#D32F2F] dark:text-red-400 mb-2 flex items-center gap-2">
                             <span className="material-symbols-outlined">warning</span>
-                            Icyitonderwa (Important Note)
+                            {t('enrollment.policy.title')}
                         </h3>
                         <p className="text-[#B71C1C] dark:text-red-200 font-bold text-lg mb-1">
-                            Amafaranga yishyuwe ntasubizwa.
+                            {t('enrollment.policy.highlight')}
                         </p>
                         <p className="text-red-800 dark:text-red-300">
-                            (All tuition fees paid are strictly non-refundable.)
+                            {t('enrollment.policy.subtext')}
                         </p>
                         <p className="text-sm text-red-700 dark:text-red-400 mt-2">
-                            Please ensure you are fully committed to your chosen course and study method before making a payment.
+                            {t('enrollment.policy.details')}
                         </p>
                     </div>
                 </div>

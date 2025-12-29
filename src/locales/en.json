@@ -1,0 +1,648 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About Us",
+    "courses": "Courses",
+    "explore": "Explore",
+    "career": "Career Support",
+    "equipment": "Equipment",
+    "testimonials": "Success Stories",
+    "gallery": "Gallery",
+    "blog": "Blog",
+    "inclusion": "Inclusion Support",
+    "certificates": "Certificates",
+    "contact": "Contact",
+    "login": "Login",
+    "enroll": "Apply Now"
+  },
+  "home": {
+    "hero": {
+      "title": "Brew Your Future: Master the Art of Coffee",
+      "subtitle": "From bean to cup, and from training to employment. Join Rwanda’s premier training center to gain world-class barista skills and the career support you need to succeed.",
+      "cta_enroll": "Apply Today",
+      "cta_courses": "Explore Our Courses",
+      "cta_apply": "Apply Now",
+      "cta_opportunities": "Opportunities",
+      "cta_testimonials": "Testimonials",
+      "cta_business": "Business Classes"
+    },
+    "benefits": {
+      "title": "Why Choose Usafi Barista Training Center?",
+      "subtitle": "We offer more than just a certificate; we offer a pathway to a career.",
+      "item1": {
+        "title": "Comprehensive Curriculum",
+        "description": "Learn from industry experts like Sandrine Gasarasi and Ishimwe Ebenezer. Our curriculum covers everything from Espresso & Milk techniques to Coffee Shop Business management, ensuring you are ready for the market."
+      },
+      "item2": {
+        "title": "Flexible Learning Options",
+        "description": "Study on your own terms. Choose our Onsite program in Kimironko for hands-on intensity, or our E-Learning platform to study theory from anywhere at your own pace."
+      },
+      "item3": {
+        "title": "Real Career Support",
+        "description": "We don't just teach; we connect. Gain access to exclusive internship opportunities at top local hotels and cafés, job alerts via the Usafi Community, and professional interview preparation."
+      }
+    }
+  },
+  "about": {
+    "title": "About Usafi Barista Training Center",
+    "hero": {
+      "title": "Cultivating Coffee Excellence in Rwanda.",
+      "description": "Located in the heart of Kimironko, Usafi Barista Training Center is more than just a school; it is a launchpad for careers in the hospitality industry. We bridge the gap between passion and profession, providing aspiring baristas with the technical skills, business knowledge, and confidence needed to thrive in the world of coffee."
+    },
+    "mission": {
+      "title": "Our Mission",
+      "description": "To empower individuals with world-class barista skills and practical business knowledge, connecting them to sustainable employment and entrepreneurship opportunities within the growing coffee industry."
+    },
+    "vision": {
+      "title": "Our Vision",
+      "description": "To become the premier destination for coffee education in Rwanda, raising the standard of service and coffee quality across the region."
+    },
+    "leadership": {
+      "title": "Meet the Experts Behind Your Training",
+      "director": {
+        "name": "Sandrine Gasarasi",
+        "role": "Director",
+        "description": "As the driving force behind Usafi, Sandrine represents a commitment to quality and student success. Under her leadership, the center focuses not only on making the perfect cup of coffee but on shaping the character and work ethic of professional baristas."
+      },
+      "mentorship": {
+        "title": "Expert Mentorship",
+        "lead": "Led by Ishimwe Ebenezer",
+        "description": "Our training team, led by experienced professionals like Ishimwe Ebenezer, brings years of industry experience directly to the classroom. They don't just teach theory; they share real-world insights, techniques, and the secrets of the trade that you won't find in textbooks."
+      }
+    },
+    "represent": {
+      "title": "What We Represent",
+      "description": "\"Usafi\" stands for cleanliness, purity, and excellence. We represent a new generation of baristas who understand that coffee is an art form. From hygiene and safety to advanced latte art, our students graduate ready to work in top-tier cafés, hotels, and restaurants."
+    },
+    "cta": {
+      "title": "Ready to join the Usafi family?",
+      "button": "View Our Courses"
+    }
+  },
+  "courses": {
+    "title": "Professional Barista Courses",
+    "subtitle": "Choose the learning path that fits your lifestyle and career goals.",
+    "onsite": {
+      "badge": "Most Popular",
+      "title": "Onsite Training",
+      "location": "In-Person • Kimironko",
+      "description": "Best for students who want intensive, hands-on practice with professional equipment.",
+      "features": [
+        "Direct access to commercial Espresso Machines & Grinders",
+        "Face-to-face coaching with instructors",
+        "Immediate feedback on Latte Art",
+        "Networking with peers in the classroom"
+      ],
+      "button": "Choose Onsite"
+    },
+    "online": {
+      "title": "E-Learning",
+      "location": "Remote • Flexible",
+      "description": "Best for students with busy schedules or those living outside Kigali.",
+      "features": [
+        "Study at your own pace",
+        "Virtual Classrooms (Zoom / Google Meet)",
+        "Access to video lessons & quizzes",
+        "Downloadable Course PDFs"
+      ],
+      "button": "Choose Online"
+    },
+    "curriculum": {
+      "title": "Comprehensive Module Breakdown",
+      "description": "Whether you study Online or Onsite, our curriculum covers the essential pillars of the coffee industry.",
+      "modules": {
+        "m1": {
+          "title": "Introduction to Coffee",
+          "description": "History of coffee, bean varieties (Arabica vs. Robusta), and processing methods."
+        },
+        "m2": {
+          "title": "Barista Basics & Equipment",
+          "description": "Understanding the espresso machine, grinder calibration, and tamping techniques."
+        },
+        "m3": {
+          "title": "Espresso & Milk Science",
+          "description": "Perfecting the espresso shot (extraction) and mastering milk steaming (micro-foam)."
+        },
+        "m4": {
+          "title": "Latte Art",
+          "description": "Techniques for pouring hearts, rosettas, and tulips."
+        },
+        "m5": {
+          "title": "Hygiene & Maintenance",
+          "description": "Machine cleaning protocols and workspace safety standards."
+        },
+        "m6": {
+          "title": "Customer Service",
+          "description": "Building customer loyalty, body language, and service adaptation."
+        },
+        "m7": {
+          "title": "Bonus: Coffee Shop Business",
+          "description": "Business planning, menu pricing, marketing, and startup tips."
+        }
+      }
+    },
+    "tools": {
+      "title": "Tools for Your Success",
+      "notes": {
+        "title": "Student Notes",
+        "description": "All students receive access to comprehensive PDF Notes covering Barista Basics, Customer Service, Hygiene & Safety, and Business Advice.",
+        "badge": "Available for view online or download."
+      },
+      "cert": {
+        "title": "Official Certification",
+        "description": "Upon successful completion of the course (and passing the final practical/theory tests), you will receive a Certificate of Completion from Usafi Barista Training Center.",
+        "badge": "A recognized credential to boost your CV."
+      }
+    },
+    "cta": {
+      "title": "Ready to Start Brewing?",
+      "description": "Seats fill up quickly for our Onsite classes. Secure your spot today or start learning online immediately.",
+      "register": "Apply Now",
+      "contact": "Contact Us",
+      "questions": "Have questions about payment plans?"
+    }
+  },
+  "contact": {
+    "title": "Get in Touch",
+    "subtitle": "We'd Love to Hear From You",
+    "description": "Whether you have questions about our courses, need support with your application, or want to schedule a visit, our team is here to help.",
+    "info": {
+      "title": "Contact Info",
+      "visit": {
+        "title": "Visit Us",
+        "address": "Kimironko, Kigali",
+        "near": "Near Kimironko Market"
+      },
+      "call": "Call Us",
+      "email": "Email Us"
+    },
+    "form": {
+      "title": "Send a Message",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email Address",
+      "subject": {
+        "label": "Subject",
+        "placeholder": "Select a topic",
+        "options": {
+          "enrollment": "Course Application",
+          "visit": "Schedule a Visit",
+          "consultation": "Disability Support Consultation",
+          "partnership": "Partnership Inquiry",
+          "other": "Other"
+        }
+      },
+      "message": {
+        "label": "Message",
+        "placeholder": "How can we help you?"
+      },
+      "button": "Send Message"
+    }
+  },
+  "careerSupport": {
+    "title": "Launch Your Career",
+    "subtitle": "Beyond the Certificate: Your Pathway to Professional Success",
+    "description": "At Usafi Barista Training Center, our commitment to you doesn't end when you finish your course. We provide a robust support system designed to transition you directly from training into employment or entrepreneurship.",
+    "internship": {
+      "title": "Gain Essential Work Experience (Internship)",
+      "description": "Hands-on training is complemented by real-world experience. Our program places you directly into working environments where you can apply your skills and build a professional network.",
+      "requirements": {
+        "title": "Requirements",
+        "list": [
+          "Successful completion of the Core Barista Curriculum.",
+          "Strong attendance and performance during training.",
+          "Professional presentation and attitude."
+        ]
+      },
+      "partnerships": {
+        "title": "Partnerships",
+        "description": "Usafi Barista Training Center actively partners with leading local cafés, hotels, and hospitality groups in Kigali to secure quality placement opportunities."
+      },
+      "howToApply": {
+        "title": "How to Apply",
+        "description": "Internship slots are competitive. Students must complete an internal application form and participate in a mock interview to qualify."
+      }
+    },
+    "market": {
+      "title": "Mastering the Job Market",
+      "cv": {
+        "title": "CV Writing & Recs",
+        "description": "Receive personalized coaching on crafting a compelling CV tailored to the hospitality sector. We also provide recommendation letters for top graduates."
+      },
+      "alerts": {
+        "title": "Job Alert Networks",
+        "description": "Access opportunities via our exclusive network and Usafi Community WhatsApp groups. Learn to leverage LinkedIn and Hospitality Jobs."
+      },
+      "interview": {
+        "title": "Interview Preparation",
+        "description": "Learn research techniques, proper attire, and non-verbal communication. Access sample interview videos to visualize success."
+      }
+    },
+    "business": {
+      "title": "Coffee Shop Business",
+      "description": "For students aspiring to own their business, this module provides the foundational knowledge to turn your vision into a reality.",
+      "plan": {
+        "title": "Business Plan Preparation",
+        "description": "Developing a comprehensive plan."
+      },
+      "location": {
+        "title": "Location Selection",
+        "description": "Selecting the perfect location."
+      },
+      "pricing": {
+        "title": "Pricing & Menu",
+        "description": "Strategic pricing and design."
+      },
+      "marketing": {
+        "title": "Marketing & Launch",
+        "description": "Effective startup strategies."
+      }
+    },
+    "cta": {
+      "title": "Ready to start your journey?",
+      "button": "Apply Now"
+    }
+  },
+  "certificates": {
+    "title": "My Certificates",
+    "subtitle": "View and download your earned credentials.",
+    "filters": {
+      "all": "All",
+      "skills": "Barista Skills",
+      "roasting": "Roasting",
+      "brewing": "Brewing"
+    },
+    "certified": "Certified",
+    "completed": "Completed:",
+    "download": "Download Certificate",
+    "empty": {
+      "title": "No certificates found",
+      "description": "Keep brewing to earn your next badge from Usafi!"
+    },
+    "items": {
+      "milk": "Level 1: Milk Texturing",
+      "intro_roasting": "Introduction to Roasting",
+      "green_basics": "Green Coffee Basics"
+    }
+  },
+  "inclusion": {
+    "title": "Accessible Training, Inclusive Careers",
+    "subtitle": "Commitment to Inclusion and Adaptation",
+    "description": "Usafi Barista Training Center believes that passion for coffee knows no limits. We are committed to fostering an inclusive learning environment and adapting our curriculum to ensure accessibility and success for all students, including those with disabilities.",
+    "tailoptimized": {
+      "title": "Tailoring the Training Experience",
+      "hearing": {
+        "title": "For Students Who Cannot Hear & Speak",
+        "list": [
+          "<strong>Visual-First Instruction:</strong> Heavy reliance on visual demonstrations, written step-by-step procedures, and clear diagrams for practical modules.",
+          "<strong>Communication Tools:</strong> Whiteboards, digital tablets, and written communication for immediate Q&A.",
+          "<strong>Peer Support:</strong> Partnership with hearing peers for seamless teamwork."
+        ]
+      },
+      "mobility": {
+        "title": "For Mobility & Physical Limitations",
+        "list": [
+          "<strong>Ergonomics Review:</strong> Guidance on adaptive tools and workspace modifications (e.g., lower counters).",
+          "<strong>Safety First:</strong> Physical assistance during heavy-lifting tasks or maintenance."
+        ]
+      }
+    },
+    "service": {
+      "title": "Inclusive Service Training",
+      "description": "A critical component of our training is ensuring that all graduates can effectively serve every customer.",
+      "ordering": {
+        "title": "Visual Ordering",
+        "description": "Training on using digital screens or written pads for taking orders from customers who are hard of hearing or non-verbal."
+      },
+      "etiquette": {
+        "title": "Service Etiquette",
+        "description": "Education on respectful interaction and communication best practices when serving people with various disabilities."
+      },
+      "awareness": {
+        "title": "Accessibility Awareness",
+        "description": "Understanding café layout, seating, and restroom accessibility requirements."
+      }
+    },
+    "consultation": {
+      "title": "Discussing Your Needs",
+      "description": "We encourage prospective students to schedule a private consultation with our Director, Sandrine Gasarasi, before applying. This allows us to understand your specific needs and confirm how we can best adapt the environment for your success.",
+      "cta": "Schedule a Consultation"
+    }
+  },
+  "enrollment": {
+    "title": "Apply Now: Secure Your Spot",
+    "subtitle": "Join the Usafi Barista Training Center",
+    "description": "Create your student account and complete your application. After submission, your application will be reviewed for approval.",
+    "form": {
+      "fullName": {
+        "label": "Full Name",
+        "placeholder": "As it should appear on your certificate"
+      },
+      "phone": {
+        "label": "Primary Phone Number",
+        "placeholder": "+250..."
+      },
+      "email": {
+        "label": "Email Address",
+        "placeholder": "name@example.com"
+      },
+      "password": {
+        "label": "Create Password",
+        "placeholder": "Create a secure password (min 6 characters)",
+        "hint": "You will use this password to log in to the student portal."
+      },
+      "residence": {
+        "label": "Place of Residence",
+        "placeholder": "City / District"
+      },
+      "course": {
+        "label": "Course Ahisemo (Chosen Course)",
+        "options": {
+          "full-barista": "Full Barista Certificate"
+        }
+      },
+      "studyMethod": {
+        "label": "Uburyo bwo Kwiga (Method)",
+        "placeholder": "Select method",
+        "options": {
+          "onsite": "Onsite (In-Person)",
+          "online": "E-Learning (Online)"
+        }
+      },
+      "onsite": {
+        "label": "Hitamo Isaha (Choose Shift)",
+        "placeholder": "Select a shift",
+        "options": {
+          "1st-shift": "1st Shift (9am - 11am)",
+          "2nd-shift": "2nd Shift (11:30am - 1:30pm)",
+          "3rd-shift": "3rd Shift (2pm - 4pm)",
+          "4th-shift": "4th Shift (4:30pm - 6:30pm)",
+          "5th-shift": "5th Shift (7pm - 9pm)"
+        }
+      },
+      "online": {
+        "label": "Igihe Ashaka Gutangirira"
+      },
+      "referral": {
+        "label": "How did you hear about Usafi?",
+        "placeholder": "Select an option",
+        "options": {
+          "social-media": "Social Media",
+          "google": "Google Search",
+          "referral": "Friend / Referral",
+          "other": "Other"
+        }
+      },
+      "submit": "Create Account & Apply"
+    },
+    "loading": {
+      "init": "Initializing...",
+      "auth": "Creating Login Credentials...",
+      "db": "Saving Student Profile to Database...",
+      "final": "Finalizing..."
+    },
+    "errors": {
+      "email_in_use": "This email is already registered. Please log in instead.",
+      "weak_password": "Password should be at least 6 characters."
+    },
+    "payment": {
+      "title": "Payment Details & Financial Policy",
+      "description": "Application is confirmed upon receipt of payment. We offer flexibility through the following channels:",
+      "momo": {
+        "title": "Mobile Money",
+        "description": "Details provided upon form submission."
+      },
+      "bank": {
+        "title": "Bank Transfer",
+        "description": "Bank details provided upon submission."
+      },
+      "flexibility": {
+        "title": "Payment Flexibility",
+        "description": "We allow students to pay the tuition fee in installments, as per our standard agreement. Details will be sent to your email after registration."
+      }
+    },
+    "policy": {
+      "title": "Icyitonderwa (Important Note)",
+      "highlight": "Amafaranga yishyuwe ntasubizwa.",
+      "subtext": "(All tuition fees paid are strictly non-refundable.)",
+      "details": "Please ensure you are fully committed to your chosen course and study method before making a payment."
+    }
+  },
+  "gallery": {
+    "title": "Our Community in Action",
+    "subtitle": "Photos & Videos of Training Sessions",
+    "description": "Get a visual feel for the hands-on learning environment at Usafi Barista Training Center. This gallery captures the passion, focus, and camaraderie shared between our students and instructors.",
+    "categories": {
+      "practice": "Hands-On Practice",
+      "mastery": "Latte Art Mastery",
+      "classroom": "Classroom & Theory",
+      "graduation": "Graduation"
+    },
+    "photos": {
+      "grind": "Perfecting the grind",
+      "heart": "Pouring a heart",
+      "discussion": "Group discussion",
+      "class2024": "Class of 2024",
+      "tamping": "Tamping technique",
+      "testing": "Notes and testing"
+    },
+    "videos": {
+      "title": "Video Highlights",
+      "clip1": {
+        "title": "Daily Life at Usafi",
+        "desc": "A fast-paced montage of the training center."
+      },
+      "clip2": {
+        "title": "Perfect Extraction",
+        "desc": "Instructor demonstrating espresso techniques."
+      },
+      "clip3": {
+        "title": "Student Interview",
+        "desc": "Thoughts on their favorite module."
+      }
+    },
+    "cta": {
+      "title": "See the Action for Yourself",
+      "description": "Schedule a visit to our Kimironko center to experience the training environment firsthand.",
+      "button": "Schedule a Visit"
+    }
+  },
+  "equipment": {
+    "title": "The Right Tools for the Job",
+    "subtitle": "Essential Equipment for Your Professional Coffee Setup",
+    "description": "Starting a coffee shop requires more than just passion—it requires the right gear. This guide covers the foundational tools needed to ensure efficiency, quality, and consistency, whether you're setting up a full-scale café or a small espresso bar.",
+    "machinery": {
+      "title": "The Core Machinery",
+      "espresso": {
+        "title": "Espresso Machine",
+        "subtitle": "The heart of your business.",
+        "description": "Choose based on volume needs (single-group vs. multi-group). A reliable machine delivers consistent pressure and temperature for the perfect extraction every time.",
+        "considerations": {
+          "label": "Key Considerations:",
+          "reliability": "Reliability",
+          "boiler": "Boiler Capacity",
+          "ease": "Ease of Cleaning"
+        }
+      },
+      "grinder": {
+        "title": "Coffee Grinder",
+        "subtitle": "As important as the machine itself.",
+        "description": "A quality grinder ensures uniform particle size for perfect extraction. Inconsistent grinds lead to uneven flavor and wasted beans.",
+        "considerations": {
+          "label": "Key Considerations:",
+          "consistency": "Consistency",
+          "burr": "Burr Type (Flat/Conical)",
+          "dosing": "Dosing"
+        }
+      }
+    },
+    "smallwares": {
+      "title": "Essential Smallwares",
+      "tamper": {
+        "title": "Tamper",
+        "description": "Ensures a level and compacted coffee bed for even extraction. Calibrated tampers recommended for consistency."
+      },
+      "pitcher": {
+        "title": "Milk Pitcher",
+        "description": "Stainless steel required for steaming milk. Have various sizes (350ml, 600ml) for different drink orders."
+      },
+      "knock": {
+        "title": "Knock Box",
+        "description": "Used for disposing of used coffee pucks cleanly. Must be durable (stainless steel/rubber) and easy to wash."
+      },
+      "scales": {
+        "title": "Digital Scales",
+        "description": "Precision is vital. Used for dosing grounds accurately and measuring extraction yield by weight."
+      }
+    },
+    "serving": {
+      "title": "Serving & Inventory",
+      "cups": {
+        "title": "Cups & Glasses",
+        "description": "Ceramic mugs for dine-in. Demitasse for espresso. Insulated, eco-friendly cups for takeaway."
+      },
+      "storage": {
+        "title": "Inventory Storage",
+        "description": "Airtight containers/hoppers to keep roasted beans fresh and away from moisture."
+      },
+      "pos": {
+        "title": "Point of Sale (POS)",
+        "description": "Essential software for managing orders, tracking sales patterns, and accepting payments."
+      }
+    },
+    "hygiene": {
+      "title": "Hygiene & Safety",
+      "node_modules": {
+        "title": "Cleaning Kit",
+        "description": "Dedicated kit for daily back-flushing, group head scrubbing, and steam wand cleaning."
+      },
+      "agents": {
+        "title": "Specialized Agents",
+        "description": "Use only approved food-grade detergents and descaling chemicals safe for your machine."
+      },
+      "gear": {
+        "title": "Safety Gear",
+        "description": "First aid kit immediately accessible. Non-slip floor mats behind the bar."
+      }
+    },
+    "pricing": {
+      "title": "Price Ranges & Sourcing",
+      "description": "Prices vary widely based on brand, capacity, and condition. Here are general guidelines for budgeting your startup:",
+      "espresso": {
+        "level": "Entry-Level Commercial",
+        "price": "Rwf 2M - 5M"
+      },
+      "grinder": {
+        "level": "Quality Burr Grinder",
+        "price": "Rwf 300k - 800k"
+      },
+      "advice": {
+        "title": "Sourcing Advice:",
+        "description": "Consider starting with high-quality refurbished equipment to manage initial costs. We provide students with a list of trusted local and international suppliers."
+      },
+      "cta_text": "\"Ready to budget and build?\"",
+      "cta_sub": "Learn detailed business planning, sourcing, and cost analysis in our Coffee Shop Business module.",
+      "cta_button": "Apply for the Course"
+    }
+  },
+  "blog": {
+    "title": "Usafi Insights",
+    "subtitle": "Your Source for Coffee Tips, Industry News, and Business Advice",
+    "description": "The Usafi Blog is where passion meets expertise. Stay updated on the latest trends in the coffee world, get valuable advice for your career, and find inspiration for your entrepreneurial journey.",
+    "categories": {
+      "all": "All",
+      "tips": "Coffee Tips",
+      "life": "Barista Life",
+      "business": "Business Advice",
+      "news": "Community News"
+    },
+    "posts": {
+      "read_more": "Read Article",
+      "empty": "No posts found in this category.",
+      "p1": {
+        "title": "The Secret to Perfect Micro-Foam",
+        "snippet": "Mastering the vortex is key to creating that silky, paint skills needed for latte art."
+      },
+      "p2": {
+        "title": "Must-Know Startup Tips for Your First Coffee Shop",
+        "snippet": "From location scouting to menu pricing, here are the 5 pillars of a successful café launch."
+      },
+      "p3": {
+        "title": "Spotlight on Our Latest Graduating Class",
+        "snippet": "Celebrating the hard work and dedication of the Batch 12 graduates."
+      },
+      "p4": {
+        "title": "How to Ace Your First Barista Interview",
+        "snippet": "Confidence, hygiene, and coffee knowledge. Here is what employers are really looking for."
+      }
+    },
+    "newsletter": {
+      "title": "Don't Miss an Update!",
+      "description": "Subscribe to the Usafi mailing list to receive our latest insights and job alerts directly in your inbox.",
+      "placeholder": "Enter your email address",
+      "button": "Subscribe"
+    }
+  },
+  "testimonials": {
+    "title": "Success Stories",
+    "subtitle": "Hear From Our Graduates",
+    "description": "The true measure of our training is the success of our alumni. Read and watch how Usafi Barista Training Center helped turn passion into a profitable profession, landing graduates jobs in top hospitality establishments or launching their own businesses.",
+    "featured": {
+      "badge": "Featured Story",
+      "title": "From Student to Shop Owner: Alex's Story",
+      "description": "Alex shares how the Coffee Shop Business module provided the practical framework and supplier connections needed to open their café just six months after graduation.",
+      "class": "Class of 2024"
+    },
+    "tags": {
+      "placement": "Internship & Job Placement",
+      "technical": "Technical Skills",
+      "online": "Online Learning"
+    },
+    "items": {
+      "grace": {
+        "text": "\"Before Usafi, I knew nothing about coffee science. After the Onsite course, I was confident enough to apply for the internship. Usafi placed me at a partner hotel, and they hired me full-time two months later. The career support was invaluable.\"",
+        "name": "Grace Mutesi",
+        "role": "Lead Barista"
+      },
+      "kevin": {
+        "text": "\"The attention to detail on espresso extraction and milk texturing was phenomenal. I can now consistently produce high-quality drinks, which is noticed by my customers. My Latte Art skills alone set me apart from other candidates.\"",
+        "name": "Kevin Mugisha",
+        "role": "Freelance Consultant"
+      },
+      "patience": {
+        "text": "\"I completed the E-Learning course while working my night shift. The video lessons and downloadable PDFs were perfect for self-study. I highly recommend Usafi for anyone who needs flexibility but doesn't want to compromise on quality.\"",
+        "name": "Patience Uwamahoro",
+        "role": "Certified Barista"
+      }
+    },
+    "cta": {
+      "title": "Ready to Write Your Own Success Story?",
+      "button": "Begin Your Application"
+    }
+  },
+  "thankyou": {
+    "title": "Application Received!",
+    "description": "Thank you for applying to Usafi Barista Training Center. We have sent an email with payment details and your next steps.",
+    "button": "Return Home"
+  }
+}

@@ -1,20 +1,22 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export function Inclusion() {
+    const { t } = useTranslation();
     return (
         <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark font-display text-espresso dark:text-white pb-20 pt-24">
 
             {/* 1. Page Title */}
             <div className="container mx-auto px-6 text-center mb-16">
                 <h1 className="font-serif text-4xl md:text-5xl font-bold text-espresso dark:text-white mb-4 tracking-tight">
-                    Accessible Training, Inclusive Careers
+                    {t('inclusion.title')}
                 </h1>
                 <h2 className="text-xl md:text-2xl text-primary font-medium mb-6">
-                    Commitment to Inclusion and Adaptation
+                    {t('inclusion.subtitle')}
                 </h2>
                 <p className="text-lg text-espresso/80 dark:text-white/80 leading-relaxed max-w-3xl mx-auto">
-                    Usafi Barista Training Center believes that passion for coffee knows no limits. We are committed to fostering an inclusive learning environment and adapting our curriculum to ensure accessibility and success for all students, including those with disabilities.
+                    {t('inclusion.description')}
                 </p>
             </div>
 
@@ -34,7 +36,7 @@ export function Inclusion() {
                         {/* Content Side */}
                         <div className="p-8 lg:p-12">
                             <h2 className="font-serif text-2xl md:text-3xl font-bold text-espresso dark:text-white mb-8">
-                                Tailoring the Training Experience
+                                {t('inclusion.tailoptimized.title')}
                             </h2>
 
                             <div className="space-y-8">
@@ -42,27 +44,15 @@ export function Inclusion() {
                                 <div>
                                     <h3 className="font-bold text-primary text-xl mb-3 flex items-center gap-2">
                                         <span className="material-symbols-outlined">visibility</span>
-                                        For Students Who Cannot Hear & Speak
+                                        {t('inclusion.tailoptimized.hearing.title')}
                                     </h3>
                                     <ul className="space-y-3">
-                                        <li className="flex gap-3 text-sm text-espresso/70 dark:text-white/70">
-                                            <span className="material-symbols-outlined text-primary shrink-0">check</span>
-                                            <span>
-                                                <strong>Visual-First Instruction:</strong> Heavy reliance on visual demonstrations, written step-by-step procedures, and clear diagrams for practical modules.
-                                            </span>
-                                        </li>
-                                        <li className="flex gap-3 text-sm text-espresso/70 dark:text-white/70">
-                                            <span className="material-symbols-outlined text-primary shrink-0">check</span>
-                                            <span>
-                                                <strong>Communication Tools:</strong> Whiteboards, digital tablets, and written communication for immediate Q&A.
-                                            </span>
-                                        </li>
-                                        <li className="flex gap-3 text-sm text-espresso/70 dark:text-white/70">
-                                            <span className="material-symbols-outlined text-primary shrink-0">check</span>
-                                            <span>
-                                                <strong>Peer Support:</strong> Partnership with hearing peers for seamless teamwork.
-                                            </span>
-                                        </li>
+                                        {t('inclusion.tailoptimized.hearing.list', { returnObjects: true }).map((item, idx) => (
+                                            <li key={idx} className="flex gap-3 text-sm text-espresso/70 dark:text-white/70">
+                                                <span className="material-symbols-outlined text-primary shrink-0">check</span>
+                                                <span dangerouslySetInnerHTML={{ __html: item }}></span>
+                                            </li>
+                                        ))}
                                     </ul>
                                 </div>
 
@@ -70,21 +60,15 @@ export function Inclusion() {
                                 <div>
                                     <h3 className="font-bold text-primary text-xl mb-3 flex items-center gap-2">
                                         <span className="material-symbols-outlined">accessible</span>
-                                        For Mobility & Physical Limitations
+                                        {t('inclusion.tailoptimized.mobility.title')}
                                     </h3>
                                     <ul className="space-y-3">
-                                        <li className="flex gap-3 text-sm text-espresso/70 dark:text-white/70">
-                                            <span className="material-symbols-outlined text-primary shrink-0">check</span>
-                                            <span>
-                                                <strong>Ergonomics Review:</strong> Guidance on adaptive tools and workspace modifications (e.g., lower counters).
-                                            </span>
-                                        </li>
-                                        <li className="flex gap-3 text-sm text-espresso/70 dark:text-white/70">
-                                            <span className="material-symbols-outlined text-primary shrink-0">check</span>
-                                            <span>
-                                                <strong>Safety First:</strong> Physical assistance during heavy-lifting tasks or maintenance.
-                                            </span>
-                                        </li>
+                                        {t('inclusion.tailoptimized.mobility.list', { returnObjects: true }).map((item, idx) => (
+                                            <li key={idx} className="flex gap-3 text-sm text-espresso/70 dark:text-white/70">
+                                                <span className="material-symbols-outlined text-primary shrink-0">check</span>
+                                                <span dangerouslySetInnerHTML={{ __html: item }}></span>
+                                            </li>
+                                        ))}
                                     </ul>
                                 </div>
                             </div>
@@ -97,10 +81,10 @@ export function Inclusion() {
             <section className="bg-[#FAF5E8] dark:bg-white/5 py-20 px-6 border-y border-[#e0dbd6] dark:border-white/10">
                 <div className="container mx-auto max-w-4xl text-center">
                     <h2 className="font-serif text-3xl font-bold text-espresso dark:text-white mb-8">
-                        Inclusive Service Training
+                        {t('inclusion.service.title')}
                     </h2>
                     <p className="text-lg text-espresso/80 dark:text-white/80 mb-12">
-                        A critical component of our training is ensuring that all graduates can effectively serve every customer.
+                        {t('inclusion.service.description')}
                     </p>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
@@ -108,22 +92,22 @@ export function Inclusion() {
                             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4">
                                 <span className="material-symbols-outlined text-2xl">touch_app</span>
                             </div>
-                            <h4 className="font-bold text-lg mb-2">Visual Ordering</h4>
-                            <p className="text-sm text-espresso/70 dark:text-white/70">Training on using digital screens or written pads for taking orders from customers who are hard of hearing or non-verbal.</p>
+                            <h4 className="font-bold text-lg mb-2">{t('inclusion.service.ordering.title')}</h4>
+                            <p className="text-sm text-espresso/70 dark:text-white/70">{t('inclusion.service.ordering.description')}</p>
                         </div>
                         <div className="bg-white dark:bg-white/5 p-6 rounded-2xl shadow-sm">
                             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4">
                                 <span className="material-symbols-outlined text-2xl">diversity_3</span>
                             </div>
-                            <h4 className="font-bold text-lg mb-2">Service Etiquette</h4>
-                            <p className="text-sm text-espresso/70 dark:text-white/70">Education on respectful interaction and communication best practices when serving people with various disabilities.</p>
+                            <h4 className="font-bold text-lg mb-2">{t('inclusion.service.etiquette.title')}</h4>
+                            <p className="text-sm text-espresso/70 dark:text-white/70">{t('inclusion.service.etiquette.description')}</p>
                         </div>
                         <div className="bg-white dark:bg-white/5 p-6 rounded-2xl shadow-sm">
                             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4">
                                 <span className="material-symbols-outlined text-2xl">door_open</span>
                             </div>
-                            <h4 className="font-bold text-lg mb-2">Accessibility Awareness</h4>
-                            <p className="text-sm text-espresso/70 dark:text-white/70">Understanding café layout, seating, and restroom accessibility requirements.</p>
+                            <h4 className="font-bold text-lg mb-2">{t('inclusion.service.awareness.title')}</h4>
+                            <p className="text-sm text-espresso/70 dark:text-white/70">{t('inclusion.service.awareness.description')}</p>
                         </div>
                     </div>
                 </div>
@@ -133,13 +117,13 @@ export function Inclusion() {
             <section className="container mx-auto px-6 py-20 text-center">
                 <div className="max-w-3xl mx-auto bg-primary/5 rounded-3xl p-10 border border-primary/10">
                     <h2 className="font-serif text-3xl font-bold text-espresso dark:text-white mb-4">
-                        Discussing Your Needs
+                        {t('inclusion.consultation.title')}
                     </h2>
                     <p className="text-lg text-espresso/80 dark:text-white/80 mb-8">
-                        We encourage prospective students to schedule a private consultation with our Director, Sandrine Gasarasi, before enrollment. This allows us to understand your specific needs and confirm how we can best adapt the environment for your success.
+                        {t('inclusion.consultation.description')}
                     </p>
                     <Link to="/contact" className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-primary text-white text-lg font-bold shadow-lg hover:bg-primary/90 hover:scale-105 transition-all">
-                        Schedule a Consultation
+                        {t('inclusion.consultation.cta')}
                     </Link>
                 </div>
             </section>

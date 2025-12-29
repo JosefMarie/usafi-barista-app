@@ -26,8 +26,14 @@ export function SetupAdmin() {
     useEffect(() => {
         if (user && isLoggingIn) {
             // User is now authenticated and we were trying to log in/register
-            if (user.role === 'admin' || user.role === 'instructor') {
-                navigate('/admin/dashboard');
+            if (user.role === 'admin' || user.role === 'instructor' || user.role === 'manager') {
+                if (user.role === 'manager') {
+                    navigate('/manager/dashboard');
+                } else if (user.role === 'instructor') {
+                    navigate('/instructor/dashboard');
+                } else {
+                    navigate('/admin/dashboard');
+                }
             } else {
                 // Determine where to send them if they aren't admin (e.g. they logged in with a student account)
                 setStatus({ type: 'error', message: 'This account is not authorized for the Staff Portal.' });
@@ -123,8 +129,8 @@ export function SetupAdmin() {
                     <button
                         onClick={() => { setMode('login'); setStatus({ type: '', message: '' }); }}
                         className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${mode === 'login'
-                                ? 'bg-white dark:bg-[#2c2825] text-primary shadow-sm'
-                                : 'text-espresso/60 dark:text-white/60 hover:text-espresso dark:hover:text-white'
+                            ? 'bg-white dark:bg-[#2c2825] text-primary shadow-sm'
+                            : 'text-espresso/60 dark:text-white/60 hover:text-espresso dark:hover:text-white'
                             }`}
                     >
                         Login
@@ -132,8 +138,8 @@ export function SetupAdmin() {
                     <button
                         onClick={() => { setMode('register'); setStatus({ type: '', message: '' }); }}
                         className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${mode === 'register'
-                                ? 'bg-white dark:bg-[#2c2825] text-primary shadow-sm'
-                                : 'text-espresso/60 dark:text-white/60 hover:text-espresso dark:hover:text-white'
+                            ? 'bg-white dark:bg-[#2c2825] text-primary shadow-sm'
+                            : 'text-espresso/60 dark:text-white/60 hover:text-espresso dark:hover:text-white'
                             }`}
                     >
                         Register
@@ -207,13 +213,13 @@ export function SetupAdmin() {
                         {mode === 'register' && (
                             <div>
                                 <label className="block text-sm font-medium text-espresso dark:text-white mb-1">Role Assignment</label>
-                                <div className="grid grid-cols-2 gap-4">
+                                <div className="grid grid-cols-3 gap-4">
                                     <button
                                         type="button"
                                         onClick={() => setFormData({ ...formData, role: 'instructor' })}
                                         className={`px-4 py-3 rounded-xl border text-sm font-bold flex items-center justify-center gap-2 transition-all ${formData.role === 'instructor'
-                                                ? 'bg-primary text-white border-primary shadow-md'
-                                                : 'bg-white dark:bg-white/5 text-espresso/70 dark:text-white/70 border-gray-200 dark:border-white/10 hover:bg-gray-50'
+                                            ? 'bg-primary text-white border-primary shadow-md'
+                                            : 'bg-white dark:bg-white/5 text-espresso/70 dark:text-white/70 border-gray-200 dark:border-white/10 hover:bg-gray-50'
                                             }`}
                                     >
                                         <span className="material-symbols-outlined text-lg">school</span>
@@ -221,10 +227,21 @@ export function SetupAdmin() {
                                     </button>
                                     <button
                                         type="button"
+                                        onClick={() => setFormData({ ...formData, role: 'manager' })}
+                                        className={`px-4 py-3 rounded-xl border text-sm font-bold flex items-center justify-center gap-2 transition-all ${formData.role === 'manager'
+                                            ? 'bg-blue-600 text-white border-blue-600 shadow-md'
+                                            : 'bg-white dark:bg-white/5 text-espresso/70 dark:text-white/70 border-gray-200 dark:border-white/10 hover:bg-gray-50'
+                                            }`}
+                                    >
+                                        <span className="material-symbols-outlined text-lg">campaign</span>
+                                        Manager
+                                    </button>
+                                    <button
+                                        type="button"
                                         onClick={() => setFormData({ ...formData, role: 'admin' })}
                                         className={`px-4 py-3 rounded-xl border text-sm font-bold flex items-center justify-center gap-2 transition-all ${formData.role === 'admin'
-                                                ? 'bg-espresso dark:bg-black text-white border-espresso shadow-md'
-                                                : 'bg-white dark:bg-white/5 text-espresso/70 dark:text-white/70 border-gray-200 dark:border-white/10 hover:bg-gray-50'
+                                            ? 'bg-espresso dark:bg-black text-white border-espresso shadow-md'
+                                            : 'bg-white dark:bg-white/5 text-espresso/70 dark:text-white/70 border-gray-200 dark:border-white/10 hover:bg-gray-50'
                                             }`}
                                     >
                                         <span className="material-symbols-outlined text-lg">admin_panel_settings</span>
@@ -237,8 +254,8 @@ export function SetupAdmin() {
 
                     {status.message && (
                         <div className={`p-4 rounded-xl text-sm font-bold text-center ${status.type === 'success'
-                                ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border border-green-200'
-                                : 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 border border-red-200'
+                            ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border border-green-200'
+                            : 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 border border-red-200'
                             }`}>
                             {status.message}
                         </div>

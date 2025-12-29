@@ -1,14 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export function About() {
+    const { t } = useTranslation();
     return (
         <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark font-display text-espresso dark:text-white pb-10">
 
             {/* 1. Page Title */}
             <div className="pt-24 pb-8 px-6 text-center">
                 <h1 className="font-serif text-4xl md:text-5xl font-bold text-espresso dark:text-white tracking-tight">
-                    About Usafi Barista Training Center
+                    {t('about.title')}
                 </h1>
             </div>
 
@@ -26,10 +28,10 @@ export function About() {
 
                 <div className="max-w-4xl mx-auto text-center">
                     <h2 className="font-serif text-3xl md:text-4xl font-bold text-primary mb-6">
-                        Cultivating Coffee Excellence in Rwanda.
+                        {t('about.hero.title')}
                     </h2>
                     <p className="text-lg text-espresso/80 dark:text-white/80 leading-relaxed font-normal">
-                        Located in the heart of Kimironko, Usafi Barista Training Center is more than just a school; it is a launchpad for careers in the hospitality industry. We bridge the gap between passion and profession, providing aspiring baristas with the technical skills, business knowledge, and confidence needed to thrive in the world of coffee.
+                        {t('about.hero.description')}
                     </p>
                 </div>
             </section>
@@ -45,9 +47,9 @@ export function About() {
                                 {/* Target Icon */}
                                 <span className="material-symbols-outlined text-4xl">ads_click</span>
                             </div>
-                            <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white">Our Mission</h3>
+                            <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white">{t('about.mission.title')}</h3>
                             <p className="text-espresso/70 dark:text-white/70 leading-relaxed">
-                                To empower individuals with world-class barista skills and practical business knowledge, connecting them to sustainable employment and entrepreneurship opportunities within the growing coffee industry.
+                                {t('about.mission.description')}
                             </p>
                         </div>
 
@@ -57,9 +59,9 @@ export function About() {
                                 {/* Compass Icon */}
                                 <span className="material-symbols-outlined text-4xl">explore</span>
                             </div>
-                            <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white">Our Vision</h3>
+                            <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white">{t('about.vision.title')}</h3>
                             <p className="text-espresso/70 dark:text-white/70 leading-relaxed">
-                                To become the premier destination for coffee education in Rwanda, raising the standard of service and coffee quality across the region.
+                                {t('about.vision.description')}
                             </p>
                         </div>
 
@@ -71,7 +73,7 @@ export function About() {
             <section className="container mx-auto px-6 py-20">
                 <div className="text-center mb-16">
                     <h2 className="font-serif text-3xl md:text-4xl font-bold text-espresso dark:text-white">
-                        Meet the Experts Behind Your Training
+                        {t('about.leadership.title')}
                     </h2>
                 </div>
 
@@ -88,10 +90,10 @@ export function About() {
                             />
                         </div>
                         <div className="flex flex-col text-center md:text-left">
-                            <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-1">Sandrine Gasarasi</h3>
-                            <p className="text-primary font-bold uppercase tracking-wider text-sm mb-4">Director</p>
+                            <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-1">{t('about.leadership.director.name')}</h3>
+                            <p className="text-primary font-bold uppercase tracking-wider text-sm mb-4">{t('about.leadership.director.role')}</p>
                             <p className="text-espresso/80 dark:text-white/80 leading-relaxed">
-                                As the driving force behind Usafi, Sandrine represents a commitment to quality and student success. Under her leadership, the center focuses not only on making the perfect cup of coffee but on shaping the character and work ethic of professional baristas.
+                                {t('about.leadership.director.description')}
                             </p>
                         </div>
                     </div>
@@ -107,10 +109,10 @@ export function About() {
                             />
                         </div>
                         <div className="flex flex-col text-center md:text-right">
-                            <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-1">Expert Mentorship</h3>
-                            <p className="text-primary font-bold uppercase tracking-wider text-sm mb-4">Led by Ishimwe Ebenezer</p>
+                            <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-1">{t('about.leadership.mentorship.title')}</h3>
+                            <p className="text-primary font-bold uppercase tracking-wider text-sm mb-4">{t('about.leadership.mentorship.lead')}</p>
                             <p className="text-espresso/80 dark:text-white/80 leading-relaxed">
-                                Our training team, led by experienced professionals like Ishimwe Ebenezer, brings years of industry experience directly to the classroom. They don't just teach theory; they share real-world insights, techniques, and the secrets of the trade that you won't find in textbooks.
+                                {t('about.leadership.mentorship.description')}
                             </p>
                         </div>
                     </div>
@@ -121,18 +123,18 @@ export function About() {
             {/* 5. Why We Exist */}
             <section className="bg-espresso text-[#FAF5E8] py-20 px-6">
                 <div className="container mx-auto max-w-4xl text-center">
-                    <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-6">What We Represent</h2>
+                    <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-6">{t('about.represent.title')}</h2>
                     <p className="text-lg md:text-xl font-light leading-relaxed opacity-90">
-                        "Usafi" stands for cleanliness, purity, and excellence. We represent a new generation of baristas who understand that coffee is an art form. From hygiene and safety to advanced latte art, our students graduate ready to work in top-tier cafés, hotels, and restaurants.
+                        {t('about.represent.description')}
                     </p>
                 </div>
             </section>
 
             {/* 6. CTA Section */}
             <section className="py-20 px-6 bg-background-light dark:bg-background-dark text-center">
-                <h2 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-6">Ready to join the Usafi family?</h2>
+                <h2 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-6">{t('about.cta.title')}</h2>
                 <Link to="/courses" className="inline-flex items-center justify-center h-14 px-8 rounded-xl bg-primary text-[#fbfaf9] text-lg font-bold tracking-wide shadow-lg shadow-primary/25 hover:bg-primary/90 hover:scale-105 transition-all duration-300">
-                    View Our Courses
+                    {t('about.cta.button')}
                 </Link>
             </section>
 

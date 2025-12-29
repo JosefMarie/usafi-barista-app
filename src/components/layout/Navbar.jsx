@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
+import { LanguageSwitcher } from '../LanguageSwitcher';
+import { GradientButton } from '../ui/GradientButton';
 
 export function Navbar() {
+    const { t } = useTranslation();
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [activeDropdown, setActiveDropdown] = useState(null);
@@ -24,23 +28,23 @@ export function Navbar() {
     }, [location.pathname]);
 
     const navLinks = [
-        { name: 'Home', path: '/' },
-        { name: 'About Us', path: '/about' },
-        { name: 'Courses', path: '/courses' },
+        { name: t('nav.home'), path: '/' },
+        { name: t('nav.about'), path: '/about' },
+        { name: t('nav.courses'), path: '/courses' },
         {
-            name: 'Explore',
+            name: t('nav.explore'),
             path: '#',
             dropdown: [
-                { name: 'Career Support', path: '/career' },
-                { name: 'Equipment', path: '/equipment' },
-                { name: 'Success Stories', path: '/testimonials' },
-                { name: 'Gallery', path: '/gallery' },
-                { name: 'Blog', path: '/blog' },
-                { name: 'Inclusion Support', path: '/inclusion' },
-                { name: 'Certificates', path: '/certificates' },
+                { name: t('nav.career'), path: '/career' },
+                { name: t('nav.equipment'), path: '/equipment' },
+                { name: t('nav.testimonials'), path: '/testimonials' },
+                { name: t('nav.gallery'), path: '/gallery' },
+                { name: t('nav.blog'), path: '/blog' },
+                { name: t('nav.inclusion'), path: '/inclusion' },
+                { name: t('nav.certificates'), path: '/certificates' },
             ]
         },
-        { name: 'Contact', path: '/contact' },
+        { name: t('nav.contact'), path: '/contact' },
     ];
 
     return (
@@ -123,14 +127,22 @@ export function Navbar() {
                             !isScrolled && location.pathname === '/' ? "text-white/90 hover:text-white" : "text-espresso dark:text-white"
                         )}
                     >
-                        Login
+                        {t('nav.login')}
                     </Link>
-                    <Link
-                        to="/enroll"
-                        className="px-5 py-2.5 rounded-full bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 hover:scale-105 transition-all active:scale-95"
-                    >
-                        Enroll Now
-                    </Link>
+                    <GradientButton to="/enroll" className="!p-[1px] !rounded-full !bg-none hover:!scale-105 hover:!shadow-lg">
+                        <div className="relative flex h-10 w-full items-center justify-center rounded-full bg-gradient-to-r from-orange-500 to-red-600 px-6 transition-all duration-300">
+                            <span className="text-sm font-bold tracking-wide text-white">
+                                {t('nav.enroll')}
+                            </span>
+                        </div>
+                    </GradientButton>
+
+                    {/* Language Switcher */}
+                    <div className="h-6 w-[1px] bg-espresso/10 dark:bg-white/10 mx-2"></div>
+                    <LanguageSwitcher
+                        isScrolled={isScrolled}
+                        isLightHero={location.pathname === '/'}
+                    />
                 </nav>
 
                 {/* Mobile Toggle */}
@@ -192,14 +204,22 @@ export function Navbar() {
                         to="/login"
                         className="text-lg font-medium p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors block text-espresso dark:text-white"
                     >
-                        Login
+                        {t('nav.login')}
                     </Link>
                     <Link
                         to="/enroll"
                         className="mt-4 w-full text-center py-3 rounded-xl bg-primary text-white font-bold shadow-lg"
                     >
-                        Enroll Now
+                        {t('nav.enroll')}
                     </Link>
+
+                    {/* Mobile Language Switcher */}
+                    <div className="mt-6 pt-6 border-t border-black/5 dark:border-white/5">
+                        <div className="text-xs font-bold text-espresso/40 dark:text-white/40 uppercase tracking-widest px-2 mb-3">
+                            Language / Ururimi / Langue
+                        </div>
+                        <LanguageSwitcher className="w-full" />
+                    </div>
                 </nav>
             </div>
 

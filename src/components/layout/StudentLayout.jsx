@@ -65,6 +65,7 @@ export function StudentLayout() {
     // Redoing without inline require
     const navItems = [
         { name: 'Dashboard', path: '/student/dashboard', icon: 'dashboard' },
+        { name: 'Opportunities', path: '/student/opportunities', icon: 'work' },
         { name: 'My Courses', path: '/student/courses', icon: 'school' },
         { name: 'E-Learning', path: '/student/e-learning', icon: 'video_library' },
         { name: 'Forum', path: '/student/forum', icon: 'forum' },
@@ -83,6 +84,9 @@ export function StudentLayout() {
     }
     if (user.role === 'instructor') {
         return <Navigate to="/instructor/dashboard" replace />;
+    }
+    if (user.role === 'job_seeker') {
+        return <Navigate to="/seeker/dashboard" replace />;
     }
 
     // Filter Navigation for Onsite Students

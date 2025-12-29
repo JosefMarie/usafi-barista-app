@@ -17,6 +17,12 @@ import { Blog } from './pages/public/Blog';
 import { Inclusion } from './pages/public/Inclusion';
 import { Contact } from './pages/public/Contact';
 import { Certificates } from './pages/public/Certificates';
+import { Opportunities } from './pages/public/Opportunities';
+import { PostOpportunity } from './pages/public/PostOpportunity';
+import { SeekerRegister } from './pages/public/SeekerRegister';
+import { SeekerLogin } from './pages/auth/SeekerLogin';
+import { PaymentPending } from './pages/seeker/PaymentPending';
+import { SeekerDashboard } from './pages/seeker/SeekerDashboard';
 
 // Auth Pages
 import { Login } from './pages/auth/Login';
@@ -42,6 +48,10 @@ import { ForumList } from './pages/forum/ForumList';
 import { CreatePost } from './pages/forum/CreatePost';
 import { PostDetails } from './pages/forum/PostDetails';
 
+
+
+import { AdminOpportunities } from './pages/admin/AdminOpportunities';
+import { AdminSeekers } from './pages/admin/AdminSeekers';
 import { AdminCourses } from './pages/admin/AdminCourses';
 import { ManageCourse } from './pages/admin/ManageCourse';
 import { ManageModule } from './pages/admin/ManageModule';
@@ -50,6 +60,7 @@ import { StudentChatList } from './pages/student/StudentChatList';
 import { ChatWindow } from './pages/student/ChatWindow';
 import { StudentNotifications } from './pages/student/StudentNotifications';
 import { StudentCourseView } from './pages/student/StudentCourseView';
+import { StudentOpportunities } from './pages/student/StudentOpportunities';
 import { ELearning } from './pages/student/ELearning';
 
 // Instructor Pages (placeholders)
@@ -59,6 +70,13 @@ import { InstructorStudents } from './pages/instructor/Students';
 import { InstructorChat } from './pages/instructor/Chat';
 import { InstructorSchedule } from './pages/instructor/Schedule';
 import { InstructorShareVideo } from './pages/instructor/ShareVideo';
+
+// Manager Pages
+import { ManagerLayout } from './components/layout/ManagerLayout';
+import { ManagerDashboard } from './pages/manager/Dashboard';
+import { ManagerContacts } from './pages/manager/Contacts';
+import { ManagerSubscribers } from './pages/manager/Subscribers';
+import { ManagerMessages } from './pages/manager/Messages';
 
 function App() {
   return (
@@ -82,12 +100,24 @@ function App() {
             <Route path="thank-you" element={<ThankYou />} />
             <Route path="login" element={<Login />} />
             <Route path="setup-admin" element={<SetupAdmin />} />
+            <Route path="opportunities" element={<Opportunities />} />
+            <Route path="opportunities/post" element={<PostOpportunity />} />
+            <Route path="opportunities/register" element={<SeekerRegister />} />
+            <Route path="seeker/login" element={<SeekerLogin />} />
+          </Route>
+
+          {/* Seeker Routes */}
+          <Route path="/seeker">
+            <Route index element={<Navigate to="/seeker/dashboard" replace />} />
+            <Route path="payment-pending" element={<PaymentPending />} />
+            <Route path="dashboard" element={<SeekerDashboard />} />
           </Route>
 
           {/* Student Routes */}
           <Route path="/student" element={<StudentLayout />}>
             <Route index element={<Navigate to="/student/dashboard" replace />} />
             <Route path="dashboard" element={<StudentDashboard />} />
+            <Route path="opportunities" element={<StudentOpportunities />} />
             <Route path="courses" element={<MyCourses />} />
             <Route path="e-learning" element={<ELearning />} />
             <Route path="profile" element={<Profile />} />
@@ -120,6 +150,8 @@ function App() {
             <Route path="testimonials" element={<AdminTestimonials />} />
             <Route path="activity-log" element={<ActivityLog />} />
             <Route path="notifications" element={<Notifications />} />
+            <Route path="opportunities" element={<AdminOpportunities />} />
+            <Route path="seekers" element={<AdminSeekers />} />
           </Route>
 
           {/* Instructor Routes */}
@@ -131,6 +163,15 @@ function App() {
             <Route path="chat" element={<InstructorChat />} />
             <Route path="schedule" element={<InstructorSchedule />} />
             <Route path="share-video" element={<InstructorShareVideo />} />
+          </Route>
+
+          {/* Manager Routes */}
+          <Route path="/manager" element={<ManagerLayout />}>
+            <Route index element={<Navigate to="/manager/dashboard" replace />} />
+            <Route path="dashboard" element={<ManagerDashboard />} />
+            <Route path="contacts" element={<ManagerContacts />} />
+            <Route path="subscribers" element={<ManagerSubscribers />} />
+            <Route path="messages" element={<ManagerMessages />} />
           </Route>
         </Routes>
       </BrowserRouter>

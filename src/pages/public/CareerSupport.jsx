@@ -1,20 +1,22 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { GradientButton } from '../../components/ui/GradientButton';
 
 export function CareerSupport() {
+    const { t } = useTranslation();
     return (
         <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark font-display text-espresso dark:text-white pb-20 pt-24">
 
             {/* 1. Page Title */}
             <div className="container mx-auto px-6 text-center mb-16">
                 <h1 className="font-serif text-4xl md:text-5xl font-bold text-espresso dark:text-white mb-4 tracking-tight">
-                    Launch Your Career
+                    {t('careerSupport.title')}
                 </h1>
                 <h2 className="text-xl md:text-2xl text-primary font-medium mb-6">
-                    Beyond the Certificate: Your Pathway to Professional Success
+                    {t('careerSupport.subtitle')}
                 </h2>
                 <p className="text-lg text-espresso/80 dark:text-white/80 leading-relaxed max-w-3xl mx-auto">
-                    At Usafi Barista Training Center, our commitment to you doesn't end when you finish your course. We provide a robust support system designed to transition you directly from training into employment or entrepreneurship.
+                    {t('careerSupport.description')}
                 </p>
             </div>
 
@@ -35,39 +37,39 @@ export function CareerSupport() {
                         {/* Content Side */}
                         <div className="p-8 lg:p-12">
                             <h2 className="font-serif text-2xl md:text-3xl font-bold text-espresso dark:text-white mb-6">
-                                Gain Essential Work Experience (Internship)
+                                {t('careerSupport.internship.title')}
                             </h2>
                             <p className="text-espresso/80 dark:text-white/80 mb-8 leading-relaxed">
-                                Hands-on training is complemented by real-world experience. Our program places you directly into working environments where you can apply your skills and build a professional network.
+                                {t('careerSupport.internship.description')}
                             </p>
 
                             <div className="space-y-6">
                                 <div>
                                     <h3 className="font-bold text-primary mb-2 flex items-center gap-2">
-                                        <span className="material-symbols-outlined">checklist</span> Ibisabwa (Requirements)
+                                        <span className="material-symbols-outlined">checklist</span> {t('careerSupport.internship.requirements.title')}
                                     </h3>
                                     <ul className="list-disc list-inside text-sm text-espresso/70 dark:text-white/70 space-y-1 ml-2">
-                                        <li>Successful completion of the Core Barista Curriculum.</li>
-                                        <li>Strong attendance and performance during training.</li>
-                                        <li>Professional presentation and attitude.</li>
+                                        {t('careerSupport.internship.requirements.list', { returnObjects: true }).map((req, idx) => (
+                                            <li key={idx}>{req}</li>
+                                        ))}
                                     </ul>
                                 </div>
 
                                 <div>
                                     <h3 className="font-bold text-primary mb-2 flex items-center gap-2">
-                                        <span className="material-symbols-outlined">handshake</span> Partnerships
+                                        <span className="material-symbols-outlined">handshake</span> {t('careerSupport.internship.partnerships.title')}
                                     </h3>
                                     <p className="text-sm text-espresso/70 dark:text-white/70 ml-2">
-                                        Usafi Barista Training Center actively partners with leading local cafés, hotels, and hospitality groups in Kigali to secure quality placement opportunities.
+                                        {t('careerSupport.internship.partnerships.description')}
                                     </p>
                                 </div>
 
                                 <div>
                                     <h3 className="font-bold text-primary mb-2 flex items-center gap-2">
-                                        <span className="material-symbols-outlined">how_to_reg</span> Uburyo bwo Gusaba (How to Apply)
+                                        <span className="material-symbols-outlined">how_to_reg</span> {t('careerSupport.internship.howToApply.title')}
                                     </h3>
                                     <p className="text-sm text-espresso/70 dark:text-white/70 ml-2">
-                                        Internship slots are competitive. Students must complete an internal application form and participate in a mock interview to qualify.
+                                        {t('careerSupport.internship.howToApply.description')}
                                     </p>
                                 </div>
                             </div>
@@ -81,7 +83,7 @@ export function CareerSupport() {
                 <div className="container mx-auto max-w-5xl">
                     <div className="text-center mb-16">
                         <h2 className="font-serif text-3xl md:text-4xl font-bold text-espresso dark:text-white mb-4">
-                            Mastering the Job Market
+                            {t('careerSupport.market.title')}
                         </h2>
                     </div>
 
@@ -91,9 +93,9 @@ export function CareerSupport() {
                             <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4">
                                 <span className="material-symbols-outlined text-3xl">description</span>
                             </div>
-                            <h3 className="font-serif font-bold text-xl text-espresso dark:text-white mb-3">CV Writing & Recs</h3>
+                            <h3 className="font-serif font-bold text-xl text-espresso dark:text-white mb-3">{t('careerSupport.market.cv.title')}</h3>
                             <p className="text-sm text-espresso/70 dark:text-white/70 leading-relaxed">
-                                Receive personalized coaching on crafting a compelling CV tailored to the hospitality sector. We also provide recommendation letters for top graduates.
+                                {t('careerSupport.market.cv.description')}
                             </p>
                         </div>
 
@@ -102,9 +104,9 @@ export function CareerSupport() {
                             <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4">
                                 <span className="material-symbols-outlined text-3xl">notifications_active</span>
                             </div>
-                            <h3 className="font-serif font-bold text-xl text-espresso dark:text-white mb-3">Job Alert Networks</h3>
+                            <h3 className="font-serif font-bold text-xl text-espresso dark:text-white mb-3">{t('careerSupport.market.alerts.title')}</h3>
                             <p className="text-sm text-espresso/70 dark:text-white/70 leading-relaxed">
-                                Access opportunities via our exclusive network and Usafi Community WhatsApp groups. Learn to leverage LinkedIn and Hospitality Jobs.
+                                {t('careerSupport.market.alerts.description')}
                             </p>
                         </div>
 
@@ -113,9 +115,9 @@ export function CareerSupport() {
                             <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4">
                                 <span className="material-symbols-outlined text-3xl">supervisor_account</span>
                             </div>
-                            <h3 className="font-serif font-bold text-xl text-espresso dark:text-white mb-3">Interview Preparation</h3>
+                            <h3 className="font-serif font-bold text-xl text-espresso dark:text-white mb-3">{t('careerSupport.market.interview.title')}</h3>
                             <p className="text-sm text-espresso/70 dark:text-white/70 leading-relaxed">
-                                Learn research techniques, proper attire (Uko Wambara), and non-verbal communication. Access sample interview videos to visualize success.
+                                {t('careerSupport.market.interview.description')}
                             </p>
                         </div>
                     </div>
@@ -135,41 +137,41 @@ export function CareerSupport() {
                                     <span className="material-symbols-outlined text-3xl">storefront</span>
                                 </div>
                                 <h2 className="font-serif text-2xl md:text-3xl font-bold text-white">
-                                    Uko Wakora Coffee Shop Business
+                                    {t('careerSupport.business.title')}
                                 </h2>
                             </div>
 
                             <p className="text-white/80 text-lg mb-8">
-                                For students aspiring to own their business, this module provides the foundational knowledge to turn your vision into a reality.
+                                {t('careerSupport.business.description')}
                             </p>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10">
                                 <div className="flex items-start gap-3">
                                     <span className="material-symbols-outlined text-primary mt-1">edit_document</span>
                                     <div>
-                                        <h4 className="font-bold text-white">Gutegura Business Plan</h4>
-                                        <p className="text-sm text-white/60">Developing a comprehensive plan.</p>
+                                        <h4 className="font-bold text-white">{t('careerSupport.business.plan.title')}</h4>
+                                        <p className="text-sm text-white/60">{t('careerSupport.business.plan.description')}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-3">
                                     <span className="material-symbols-outlined text-primary mt-1">add_location</span>
                                     <div>
-                                        <h4 className="font-bold text-white">Guhitomo Location</h4>
-                                        <p className="text-sm text-white/60">Selecting the perfect location.</p>
+                                        <h4 className="font-bold text-white">{t('careerSupport.business.location.title')}</h4>
+                                        <p className="text-sm text-white/60">{t('careerSupport.business.location.description')}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-3">
                                     <span className="material-symbols-outlined text-primary mt-1">restaurant_menu</span>
                                     <div>
-                                        <h4 className="font-bold text-white">Ibiciro & Menu</h4>
-                                        <p className="text-sm text-white/60">Strategic pricing and design.</p>
+                                        <h4 className="font-bold text-white">{t('careerSupport.business.pricing.title')}</h4>
+                                        <p className="text-sm text-white/60">{t('careerSupport.business.pricing.description')}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-3">
                                     <span className="material-symbols-outlined text-primary mt-1">campaign</span>
                                     <div>
-                                        <h4 className="font-bold text-white">Gukora Marketing</h4>
-                                        <p className="text-sm text-white/60">Effective startup strategies.</p>
+                                        <h4 className="font-bold text-white">{t('careerSupport.business.marketing.title')}</h4>
+                                        <p className="text-sm text-white/60">{t('careerSupport.business.marketing.description')}</p>
                                     </div>
                                 </div>
                             </div>
@@ -179,7 +181,7 @@ export function CareerSupport() {
                                     to="/contact"
                                     className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-white font-bold hover:bg-primary/90 transition-all shadow-lg"
                                 >
-                                    Get Startup Advice
+                                    {t('careerSupport.business.cta')}
                                     <span className="material-symbols-outlined text-sm">arrow_forward</span>
                                 </Link>
                             </div>
@@ -190,10 +192,10 @@ export function CareerSupport() {
 
             {/* CTA Footer */}
             <section className="container mx-auto px-6 text-center">
-                <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-6">Ready to start your journey?</h3>
-                <Link to="/enroll" className="inline-flex items-center justify-center h-14 px-8 rounded-xl bg-primary text-white text-lg font-bold shadow-lg hover:bg-primary/90 hover:scale-[1.02] transition-all">
-                    Enroll Now
-                </Link>
+                <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-6">{t('careerSupport.cta.title')}</h3>
+                <GradientButton to="/enroll" className="w-full sm:w-auto">
+                    {t('careerSupport.cta.button')}
+                </GradientButton>
             </section>
 
         </div>
