@@ -215,7 +215,10 @@ export function Profile() {
                                 <span className="material-symbols-outlined text-espresso/30 group-hover:translate-x-1 transition-transform">chevron_right</span>
                             </button>
 
-                            <button className="w-full flex items-center justify-between px-6 py-4 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors group">
+                            <button
+                                onClick={() => navigate('../privacy-settings')}
+                                className="w-full flex items-center justify-between px-6 py-4 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors group"
+                            >
                                 <div className="flex items-center gap-4 text-left">
                                     <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                                         <span className="material-symbols-outlined">shield_person</span>

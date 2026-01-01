@@ -259,6 +259,22 @@ export function SeekerProfile() {
                                         </div>
                                         <span className="material-symbols-outlined text-espresso/30 group-hover:translate-x-1 transition-transform">chevron_right</span>
                                     </button>
+
+                                    <button
+                                        onClick={() => navigate('../privacy-settings')}
+                                        className="w-full flex items-center justify-between px-6 py-4 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors group"
+                                    >
+                                        <div className="flex items-center gap-4 text-left">
+                                            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                                                <span className="material-symbols-outlined">shield_person</span>
+                                            </div>
+                                            <div>
+                                                <p className="font-bold text-espresso dark:text-white text-sm">Privacy & Permissions</p>
+                                                <p className="text-espresso/50 dark:text-white/50 text-xs">Manage your visibility and data</p>
+                                            </div>
+                                        </div>
+                                        <span className="material-symbols-outlined text-espresso/30 group-hover:translate-x-1 transition-transform">chevron_right</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>

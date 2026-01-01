@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { cn } from '../../lib/utils';
+import { ThemeToggle } from '../common/ThemeToggle';
 import { useAuth } from '../../context/AuthContext';
 
 export function ManagerLayout() {
@@ -86,6 +87,9 @@ export function ManagerLayout() {
                             </p>
                         </div>
                     </Link>
+                    <div className="mb-4">
+                        <ThemeToggle className="w-full justify-start gap-3 bg-black/5 dark:bg-white/5" />
+                    </div>
                     <button
                         onClick={handleLogout}
                         className="flex items-center gap-2 w-full px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors"

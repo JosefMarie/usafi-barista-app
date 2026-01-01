@@ -3,7 +3,9 @@ import { Link, Outlet, useLocation, useNavigate, Navigate } from 'react-router-d
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import { cn } from '../../lib/utils';
+import { ThemeToggle } from '../common/ThemeToggle';
 import { PendingApproval } from '../../pages/student/PendingApproval';
 
 // ...
@@ -175,6 +177,9 @@ export function StudentLayout() {
                             <p className="text-xs font-bold text-espresso dark:text-white truncate">{displayName}</p>
                             <p className="text-[10px] text-espresso/60 dark:text-white/60 truncate">{user.email}</p>
                         </div>
+                    </div>
+                    <div className="px-3 mb-2">
+                        <ThemeToggle className="w-full justify-start gap-3 bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5" />
                     </div>
                     <button
                         onClick={handleLogout}

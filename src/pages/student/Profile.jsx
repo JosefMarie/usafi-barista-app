@@ -225,7 +225,10 @@ export function Profile() {
                     </div>
 
                     {/* Privacy */}
-                    <div className="flex items-center gap-4 px-4 py-3.5 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors cursor-pointer border-b border-black/5 dark:border-white/5">
+                    <div
+                        onClick={() => navigate('../privacy-settings')}
+                        className="flex items-center gap-4 px-4 py-3.5 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors cursor-pointer border-b border-black/5 dark:border-white/5"
+                    >
                         <div className="flex items-center justify-center rounded-lg bg-primary/10 dark:bg-primary/20 shrink-0 w-8 h-8 text-primary">
                             <span className="material-symbols-outlined text-[18px]">shield</span>
                         </div>

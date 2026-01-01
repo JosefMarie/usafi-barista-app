@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { PublicLayout } from './components/layout/PublicLayout';
 import { StudentLayout } from './components/layout/StudentLayout';
 import { AdminLayout } from './components/layout/AdminLayout';
@@ -8,6 +9,7 @@ import { Home } from './pages/public/Home';
 import { About } from './pages/public/About';
 import { Courses } from './pages/public/Courses';
 import { Enrollment } from './pages/public/Enrollment';
+import { PrivacyPolicy } from './pages/public/PrivacyPolicy';
 import { ThankYou } from './pages/public/ThankYou';
 import { CareerSupport } from './pages/public/CareerSupport';
 import { Equipment } from './pages/public/Equipment';
@@ -32,6 +34,7 @@ import { SeekerProfile } from './pages/seeker/SeekerProfile';
 // Auth Pages
 import { Login } from './pages/auth/Login';
 import { ForgotPassword } from './pages/auth/ForgotPassword';
+import { PrivacySettings } from './pages/common/PrivacySettings';
 
 // Student Pages
 import { Dashboard as StudentDashboard } from './pages/student/Dashboard';
@@ -92,119 +95,127 @@ import { ManagerMessages } from './pages/manager/Messages';
 
 function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<PublicLayout />}>
-            <Route index element={<Home />} />
-            <Route path="about" element={<About />} />
-            <Route path="courses" element={<Courses />} />
-            <Route path="career" element={<CareerSupport />} />
-            <Route path="equipment" element={<Equipment />} />
-            <Route path="testimonials" element={<Testimonials />} />
-            <Route path="gallery" element={<Gallery />} />
-            <Route path="blog" element={<Blog />} />
-            <Route path="inclusion" element={<Inclusion />} />
-            <Route path="contact" element={<Contact />} />
-            <Route path="certificates" element={<Certificates />} />
-            <Route path="enroll" element={<Enrollment />} />
-            <Route path="thank-you" element={<ThankYou />} />
-            <Route path="login" element={<Login />} />
-            <Route path="forgot-password" element={<ForgotPassword />} />
-            <Route path="setup-admin" element={<SetupAdmin />} />
-            <Route path="opportunities" element={<Opportunities />} />
-            <Route path="opportunities/post" element={<PostOpportunity />} />
-            <Route path="opportunities/register" element={<SeekerRegister />} />
-            <Route path="seeker/login" element={<SeekerLogin />} />
-            <Route path="business/register" element={<BusinessRegister />} />
-            <Route path="business/login" element={<BusinessLogin />} />
-          </Route>
+    <ThemeProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<PublicLayout />}>
+              <Route index element={<Home />} />
+              <Route path="about" element={<About />} />
+              <Route path="courses" element={<Courses />} />
+              <Route path="career" element={<CareerSupport />} />
+              <Route path="equipment" element={<Equipment />} />
+              <Route path="testimonials" element={<Testimonials />} />
+              <Route path="gallery" element={<Gallery />} />
+              <Route path="blog" element={<Blog />} />
+              <Route path="inclusion" element={<Inclusion />} />
+              <Route path="contact" element={<Contact />} />
+              <Route path="certificates" element={<Certificates />} />
+              <Route path="enroll" element={<Enrollment />} />
+              <Route path="privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="thank-you" element={<ThankYou />} />
+              <Route path="login" element={<Login />} />
+              <Route path="forgot-password" element={<ForgotPassword />} />
+              <Route path="setup-admin" element={<SetupAdmin />} />
+              <Route path="opportunities" element={<Opportunities />} />
+              <Route path="opportunities/post" element={<PostOpportunity />} />
+              <Route path="opportunities/register" element={<SeekerRegister />} />
+              <Route path="seeker/login" element={<SeekerLogin />} />
+              <Route path="business/register" element={<BusinessRegister />} />
+              <Route path="business/login" element={<BusinessLogin />} />
+            </Route>
 
-          {/* Seeker Routes */}
-          <Route path="/seeker">
-            <Route index element={<Navigate to="/seeker/dashboard" replace />} />
-            <Route path="payment-pending" element={<PaymentPending />} />
-            <Route path="dashboard" element={<SeekerDashboard />} />
-            <Route path="profile" element={<SeekerProfile />} />
-          </Route>
+            {/* Seeker Routes */}
+            <Route path="/seeker">
+              <Route index element={<Navigate to="/seeker/dashboard" replace />} />
+              <Route path="payment-pending" element={<PaymentPending />} />
+              <Route path="dashboard" element={<SeekerDashboard />} />
+              <Route path="profile" element={<SeekerProfile />} />
+              <Route path="privacy-settings" element={<PrivacySettings />} />
+            </Route>
 
-          {/* Student Routes */}
-          <Route path="/student" element={<StudentLayout />}>
-            <Route index element={<Navigate to="/student/dashboard" replace />} />
-            <Route path="dashboard" element={<StudentDashboard />} />
-            <Route path="opportunities" element={<StudentOpportunities />} />
-            <Route path="courses" element={<MyCourses />} />
-            <Route path="e-learning" element={<ELearning />} />
-            <Route path="cv-builder" element={<CVBuilder />} />
-            <Route path="profile" element={<StudentProfile />} />
-            <Route path="forum" element={<ForumList />} />
-            <Route path="forum/create" element={<CreatePost />} />
-            <Route path="forum/:id" element={<PostDetails />} />
-            <Route path="chat" element={<StudentChatList />} />
-            <Route path="chat/:recipientId" element={<ChatWindow />} />
-            <Route path="notifications" element={<StudentNotifications />} />
-            <Route path="courses/:courseId" element={<StudentCourseView />} />
-          </Route>
+            {/* Student Routes */}
+            <Route path="/student" element={<StudentLayout />}>
+              <Route index element={<Navigate to="/student/dashboard" replace />} />
+              <Route path="dashboard" element={<StudentDashboard />} />
+              <Route path="opportunities" element={<StudentOpportunities />} />
+              <Route path="courses" element={<MyCourses />} />
+              <Route path="e-learning" element={<ELearning />} />
+              <Route path="cv-builder" element={<CVBuilder />} />
+              <Route path="profile" element={<StudentProfile />} />
+              <Route path="privacy-settings" element={<PrivacySettings />} />
+              <Route path="forum" element={<ForumList />} />
+              <Route path="forum/create" element={<CreatePost />} />
+              <Route path="forum/:id" element={<PostDetails />} />
+              <Route path="chat" element={<StudentChatList />} />
+              <Route path="chat/:recipientId" element={<ChatWindow />} />
+              <Route path="notifications" element={<StudentNotifications />} />
+              <Route path="courses/:courseId" element={<StudentCourseView />} />
+            </Route>
 
-          {/* Admin Routes */}
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<Navigate to="/admin/dashboard" replace />} />
-            <Route path="dashboard" element={<AdminDashboard />} />
-            <Route path="courses" element={<AdminCourses />} />
-            <Route path="courses/:courseId" element={<ManageCourse />} />
-            <Route path="courses/:courseId/modules/:moduleId" element={<ManageModule />} />
-            <Route path="courses/:courseId/lessons/:lessonId" element={<ManageLesson />} />
-            <Route path="forum" element={<ForumList />} />
-            <Route path="forum/create" element={<CreatePost />} />
-            <Route path="forum/:id" element={<PostDetails />} />
-            <Route path="instructors" element={<Instructors />} />
-            <Route path="students" element={<Students />} />
-            <Route path="students/:id" element={<StudentDetails />} />
-            <Route path="categories" element={<Categories />} />
-            <Route path="quizzes" element={<Quizzes />} />
-            <Route path="announcements" element={<Announcements />} />
-            <Route path="testimonials" element={<AdminTestimonials />} />
-            <Route path="activity-log" element={<ActivityLog />} />
-            <Route path="notifications" element={<Notifications />} />
-            <Route path="opportunities" element={<AdminOpportunities />} />
-            <Route path="seekers" element={<AdminSeekers />} />
-            <Route path="business/users" element={<AdminBusinessUsers />} />
-            <Route path="business/courses" element={<AdminBusinessCourses />} />
-            <Route path="business/courses/:courseId" element={<ManageBusinessCourse />} />
-            <Route path="profile" element={<CommonProfile />} />
-          </Route>
+            {/* Admin Routes */}
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<Navigate to="/admin/dashboard" replace />} />
+              <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="courses" element={<AdminCourses />} />
+              <Route path="courses/:courseId" element={<ManageCourse />} />
+              <Route path="courses/:courseId/modules/:moduleId" element={<ManageModule />} />
+              <Route path="courses/:courseId/lessons/:lessonId" element={<ManageLesson />} />
+              <Route path="forum" element={<ForumList />} />
+              <Route path="forum/create" element={<CreatePost />} />
+              <Route path="forum/:id" element={<PostDetails />} />
+              <Route path="instructors" element={<Instructors />} />
+              <Route path="students" element={<Students />} />
+              <Route path="students/:id" element={<StudentDetails />} />
+              <Route path="categories" element={<Categories />} />
+              <Route path="quizzes" element={<Quizzes />} />
+              <Route path="announcements" element={<Announcements />} />
+              <Route path="testimonials" element={<AdminTestimonials />} />
+              <Route path="activity-log" element={<ActivityLog />} />
+              <Route path="notifications" element={<Notifications />} />
+              <Route path="opportunities" element={<AdminOpportunities />} />
+              <Route path="seekers" element={<AdminSeekers />} />
+              <Route path="business/users" element={<AdminBusinessUsers />} />
+              <Route path="business/courses" element={<AdminBusinessCourses />} />
+              <Route path="business/courses/:courseId" element={<ManageBusinessCourse />} />
+              <Route path="profile" element={<CommonProfile />} />
+              <Route path="privacy-settings" element={<PrivacySettings />} />
+            </Route>
 
-          {/* Instructor Routes */}
-          <Route path="/instructor" element={<InstructorLayout />}>
-            <Route index element={<Navigate to="/instructor/dashboard" replace />} />
-            <Route path="dashboard" element={<InstructorDashboard />} />
-            <Route path="courses" element={<InstructorCourses />} />
-            <Route path="students" element={<InstructorStudents />} />
-            <Route path="chat" element={<InstructorChat />} />
-            <Route path="schedule" element={<InstructorSchedule />} />
-            <Route path="share-video" element={<InstructorShareVideo />} />
-            <Route path="profile" element={<CommonProfile />} />
-          </Route>
+            {/* Instructor Routes */}
+            <Route path="/instructor" element={<InstructorLayout />}>
+              <Route index element={<Navigate to="/instructor/dashboard" replace />} />
+              <Route path="dashboard" element={<InstructorDashboard />} />
+              <Route path="courses" element={<InstructorCourses />} />
+              <Route path="students" element={<InstructorStudents />} />
+              <Route path="chat" element={<InstructorChat />} />
+              <Route path="schedule" element={<InstructorSchedule />} />
+              <Route path="share-video" element={<InstructorShareVideo />} />
+              <Route path="profile" element={<CommonProfile />} />
+              <Route path="privacy-settings" element={<PrivacySettings />} />
+            </Route>
 
-          {/* Manager Routes */}
-          <Route path="/manager" element={<ManagerLayout />}>
-            <Route index element={<Navigate to="/manager/dashboard" replace />} />
-            <Route path="dashboard" element={<ManagerDashboard />} />
-            <Route path="contacts" element={<ManagerContacts />} />
-            <Route path="subscribers" element={<ManagerSubscribers />} />
-            <Route path="messages" element={<ManagerMessages />} />
-            <Route path="profile" element={<CommonProfile />} />
-          </Route>
+            {/* Manager Routes */}
+            <Route path="/manager" element={<ManagerLayout />}>
+              <Route index element={<Navigate to="/manager/dashboard" replace />} />
+              <Route path="dashboard" element={<ManagerDashboard />} />
+              <Route path="contacts" element={<ManagerContacts />} />
+              <Route path="subscribers" element={<ManagerSubscribers />} />
+              <Route path="messages" element={<ManagerMessages />} />
+              <Route path="profile" element={<CommonProfile />} />
+              <Route path="privacy-settings" element={<PrivacySettings />} />
+            </Route>
 
-          {/* Business Student Routes */}
-          <Route path="/business">
-            <Route path="dashboard" element={<BusinessDashboard />} />
-            <Route path="courses/:courseId" element={<BusinessCourseView />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+            {/* Business Student Routes */}
+            <Route path="/business">
+              <Route path="dashboard" element={<BusinessDashboard />} />
+              <Route path="courses/:courseId" element={<BusinessCourseView />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 
