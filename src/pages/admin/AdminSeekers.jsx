@@ -74,8 +74,8 @@ export function AdminSeekers() {
                                     </td>
                                     <td className="p-4">
                                         <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${seeker.paymentStatus === 'paid'
-                                                ? 'bg-green-100 text-green-700'
-                                                : 'bg-yellow-100 text-yellow-700'
+                                            ? 'bg-green-100 text-green-700'
+                                            : 'bg-yellow-100 text-yellow-700'
                                             }`}>
                                             {seeker.paymentStatus || 'pending'}
                                         </span>
@@ -89,12 +89,12 @@ export function AdminSeekers() {
                                                 Revoke Payment
                                             </button>
                                         ) : (
-                                            <GradientButton
+                                            <button
                                                 onClick={() => togglePaymentStatus(seeker.id, 'pending')}
-                                                className="h-8 text-xs w-24 ml-auto"
+                                                className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-orange-500 to-red-600 px-4 py-2 text-xs font-bold text-white uppercase tracking-wider shadow-md hover:scale-105 hover:shadow-lg transition-all"
                                             >
                                                 Approve
-                                            </GradientButton>
+                                            </button>
                                         )}
                                     </td>
                                 </tr>

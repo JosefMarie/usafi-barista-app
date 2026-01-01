@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { GradientButton } from '../../components/ui/GradientButton';
+import { Newsletter } from '../../components/ui/Newsletter';
 
 export function Testimonials() {
     const { t } = useTranslation();
@@ -143,6 +144,9 @@ export function Testimonials() {
                     </GradientButton>
                 </div>
             </section>
+
+            {/* Newsletter Section */}
+            <Newsletter />
 
         </div>
     );

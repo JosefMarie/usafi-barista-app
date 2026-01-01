@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
+import { Newsletter } from '../../components/ui/Newsletter';
 
 export function Blog() {
     const { t } = useTranslation();
@@ -124,26 +125,7 @@ export function Blog() {
             </section>
 
             {/* 4. Section 4: Newsletter */}
-            <section className="bg-espresso text-[#FAF5E8] py-20 px-6">
-                <div className="container mx-auto max-w-xl text-center">
-                    <span className="material-symbols-outlined text-5xl text-primary mb-4">mail</span>
-                    <h2 className="font-serif text-3xl font-bold mb-4">{t('blog.newsletter.title')}</h2>
-                    <p className="text-white/80 mb-8">
-                        {t('blog.newsletter.description')}
-                    </p>
-
-                    <form className="flex flex-col sm:flex-row gap-3">
-                        <input
-                            type="email"
-                            placeholder={t('blog.newsletter.placeholder')}
-                            className="flex-1 px-6 py-4 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-primary"
-                        />
-                        <button type="submit" className="px-8 py-4 rounded-xl bg-primary text-white font-bold shadow-lg hover:bg-primary/90 transition-all">
-                            {t('blog.newsletter.button')}
-                        </button>
-                    </form>
-                </div>
-            </section>
+            <Newsletter />
 
         </div>
     );

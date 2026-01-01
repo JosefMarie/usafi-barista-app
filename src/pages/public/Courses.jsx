@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { GradientButton } from '../../components/ui/GradientButton';
+import { Newsletter } from '../../components/ui/Newsletter';
 
 export function Courses() {
     const { t } = useTranslation();
@@ -242,6 +243,9 @@ export function Courses() {
                     </p>
                 </div>
             </section>
+
+            {/* Newsletter Section */}
+            <Newsletter />
 
         </div>
     );

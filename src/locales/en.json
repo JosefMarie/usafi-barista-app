@@ -644,5 +644,13 @@
     "title": "Application Received!",
     "description": "Thank you for applying to Usafi Barista Training Center. We have sent an email with payment details and your next steps.",
     "button": "Return Home"
+  },
+  "newsletter": {
+    "title": "Subscribe to our Newsletter",
+    "subtitle": "Stay updated with the latest news, trends, and opportunities.",
+    "placeholder": "Enter your email address",
+    "button": "Subscribe",
+    "success": "Thank you for subscribing!",
+    "error": "Failed to subscribe. Please try again."
   }
 }

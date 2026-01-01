@@ -261,6 +261,14 @@ export function SetupAdmin() {
                         </div>
                     )}
 
+                    {mode === 'login' && (
+                        <div className="text-right">
+                            <Link to="/forgot-password" className="text-sm font-medium text-primary hover:text-primary/80 transition-colors">
+                                Forgot password?
+                            </Link>
+                        </div>
+                    )}
+
                     <button
                         type="submit"
                         disabled={loading}

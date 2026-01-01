@@ -5,16 +5,23 @@ import { db } from '../../lib/firebase';
 export function ManagerMessages() {
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [selectedMessage, setSelectedMessage] = useState(null);
 
     useEffect(() => {
-        const q = query(collection(db, 'contact_messages'), orderBy('createdAt', 'desc'));
+        // Debugging: Removing orderBy to check if it's an index issue
+        const q = query(collection(db, 'contact_messages'));
 
         const unsubscribe = onSnapshot(q, (snapshot) => {
+            console.log("Fetched messages count:", snapshot.docs.length);
             setMessages(snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
             })));
+            setLoading(false);
+        }, (err) => {
+            console.error("Error fetching messages:", err);
+            setError(err.message);
             setLoading(false);
         });
 
@@ -59,11 +66,16 @@ export function ManagerMessages() {
                 {/* Message List */}
                 <div className="w-1/3 bg-white dark:bg-[#1e1e1e] rounded-xl border border-black/5 dark:border-white/5 flex flex-col overflow-hidden">
                     <div className="overflow-y-auto flex-1">
-                        {loading ? (
-                            <div className="p-8 text-center text-espresso/60">Loading messages...</div>
-                        ) : messages.length === 0 ? (
+                        {loading && <div className="p-8 text-center text-espresso/60">Loading messages...</div>}
+                        {error && (
+                            <div className="p-4 bg-red-50 text-red-700 text-sm m-4 rounded-lg">
+                                <strong>Error:</strong> {error}
+                            </div>
+                        )}
+                        {!loading && !error && messages.length === 0 && (
                             <div className="p-8 text-center text-espresso/60">No messages found.</div>
-                        ) : (
+                        )}
+                        {!loading && !error && messages.length > 0 && (
                             <div className="divide-y divide-black/5 dark:divide-white/5">
                                 {messages.map((msg) => (
                                     <div
@@ -124,8 +136,8 @@ export function ManagerMessages() {
                                     <button
                                         onClick={(e) => toggleStatus(e, selectedMessage)}
                                         className={`px-4 py-2 rounded-lg text-sm font-bold border transition-colors ${selectedMessage.status === 'replied'
-                                                ? 'bg-gray-100 text-gray-600 border-gray-200'
-                                                : 'bg-white text-blue-600 border-blue-200 hover:bg-blue-50'
+                                            ? 'bg-gray-100 text-gray-600 border-gray-200'
+                                            : 'bg-white text-blue-600 border-blue-200 hover:bg-blue-50'
                                             }`}
                                     >
                                         {selectedMessage.status === 'replied' ? 'Mark Unread' : 'Mark Replied'}

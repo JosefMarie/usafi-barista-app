@@ -21,16 +21,23 @@ import { Opportunities } from './pages/public/Opportunities';
 import { PostOpportunity } from './pages/public/PostOpportunity';
 import { SeekerRegister } from './pages/public/SeekerRegister';
 import { SeekerLogin } from './pages/auth/SeekerLogin';
+import { BusinessRegister } from './pages/business/BusinessRegister';
+import { BusinessLogin } from './pages/business/BusinessLogin';
+import { BusinessDashboard } from './pages/business/BusinessDashboard';
+import { BusinessCourseView } from './pages/business/BusinessCourseView';
 import { PaymentPending } from './pages/seeker/PaymentPending';
 import { SeekerDashboard } from './pages/seeker/SeekerDashboard';
+import { SeekerProfile } from './pages/seeker/SeekerProfile';
 
 // Auth Pages
 import { Login } from './pages/auth/Login';
+import { ForgotPassword } from './pages/auth/ForgotPassword';
 
 // Student Pages
 import { Dashboard as StudentDashboard } from './pages/student/Dashboard';
 import { MyCourses } from './pages/student/MyCourses';
-import { Profile } from './pages/student/Profile';
+import { Profile as StudentProfile } from './pages/student/Profile';
+import { Profile as CommonProfile } from './pages/common/Profile';
 
 // Admin Pages
 import { AdminDashboard } from './pages/admin/Dashboard';
@@ -61,7 +68,12 @@ import { ChatWindow } from './pages/student/ChatWindow';
 import { StudentNotifications } from './pages/student/StudentNotifications';
 import { StudentCourseView } from './pages/student/StudentCourseView';
 import { StudentOpportunities } from './pages/student/StudentOpportunities';
+import { CVBuilder } from './pages/student/CVBuilder';
+
 import { ELearning } from './pages/student/ELearning';
+import { AdminBusinessUsers } from './pages/admin/business/AdminBusinessUsers';
+import { AdminBusinessCourses } from './pages/admin/business/AdminBusinessCourses';
+import { ManageBusinessCourse } from './pages/admin/business/ManageBusinessCourse';
 
 // Instructor Pages (placeholders)
 import { InstructorDashboard } from './pages/instructor/Dashboard';
@@ -99,11 +111,14 @@ function App() {
             <Route path="enroll" element={<Enrollment />} />
             <Route path="thank-you" element={<ThankYou />} />
             <Route path="login" element={<Login />} />
+            <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="setup-admin" element={<SetupAdmin />} />
             <Route path="opportunities" element={<Opportunities />} />
             <Route path="opportunities/post" element={<PostOpportunity />} />
             <Route path="opportunities/register" element={<SeekerRegister />} />
             <Route path="seeker/login" element={<SeekerLogin />} />
+            <Route path="business/register" element={<BusinessRegister />} />
+            <Route path="business/login" element={<BusinessLogin />} />
           </Route>
 
           {/* Seeker Routes */}
@@ -111,6 +126,7 @@ function App() {
             <Route index element={<Navigate to="/seeker/dashboard" replace />} />
             <Route path="payment-pending" element={<PaymentPending />} />
             <Route path="dashboard" element={<SeekerDashboard />} />
+            <Route path="profile" element={<SeekerProfile />} />
           </Route>
 
           {/* Student Routes */}
@@ -120,7 +136,8 @@ function App() {
             <Route path="opportunities" element={<StudentOpportunities />} />
             <Route path="courses" element={<MyCourses />} />
             <Route path="e-learning" element={<ELearning />} />
-            <Route path="profile" element={<Profile />} />
+            <Route path="cv-builder" element={<CVBuilder />} />
+            <Route path="profile" element={<StudentProfile />} />
             <Route path="forum" element={<ForumList />} />
             <Route path="forum/create" element={<CreatePost />} />
             <Route path="forum/:id" element={<PostDetails />} />
@@ -152,6 +169,10 @@ function App() {
             <Route path="notifications" element={<Notifications />} />
             <Route path="opportunities" element={<AdminOpportunities />} />
             <Route path="seekers" element={<AdminSeekers />} />
+            <Route path="business/users" element={<AdminBusinessUsers />} />
+            <Route path="business/courses" element={<AdminBusinessCourses />} />
+            <Route path="business/courses/:courseId" element={<ManageBusinessCourse />} />
+            <Route path="profile" element={<CommonProfile />} />
           </Route>
 
           {/* Instructor Routes */}
@@ -163,6 +184,7 @@ function App() {
             <Route path="chat" element={<InstructorChat />} />
             <Route path="schedule" element={<InstructorSchedule />} />
             <Route path="share-video" element={<InstructorShareVideo />} />
+            <Route path="profile" element={<CommonProfile />} />
           </Route>
 
           {/* Manager Routes */}
@@ -172,6 +194,13 @@ function App() {
             <Route path="contacts" element={<ManagerContacts />} />
             <Route path="subscribers" element={<ManagerSubscribers />} />
             <Route path="messages" element={<ManagerMessages />} />
+            <Route path="profile" element={<CommonProfile />} />
+          </Route>
+
+          {/* Business Student Routes */}
+          <Route path="/business">
+            <Route path="dashboard" element={<BusinessDashboard />} />
+            <Route path="courses/:courseId" element={<BusinessCourseView />} />
           </Route>
         </Routes>
       </BrowserRouter>

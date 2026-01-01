@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { GradientButton } from '../../components/ui/GradientButton';
+import { Newsletter } from '../../components/ui/Newsletter';
 
 export function Equipment() {
     const { t } = useTranslation();
@@ -253,6 +254,9 @@ export function Equipment() {
 
                 </div>
             </section>
+
+            {/* Newsletter Section */}
+            <Newsletter />
 
         </div>
     );

@@ -644,5 +644,13 @@
         "title": "Candidature reçue !",
         "description": "Merci d'avoir postulé au centre de formation Usafi Barista. Nous avons envoyé un e-mail avec les détails de paiement et vos prochaines étapes.",
         "button": "Retour à l'accueil"
+    },
+    "newsletter": {
+        "title": "Abonnez-vous à notre Newsletter",
+        "subtitle": "Restez informé des dernières nouvelles, tendances et opportunités.",
+        "placeholder": "Entrez votre adresse email",
+        "button": "S'abonner",
+        "success": "Merci de vous être abonné !",
+        "error": "Échec de l'abonnement. Veuillez réessayer."
     }
 }

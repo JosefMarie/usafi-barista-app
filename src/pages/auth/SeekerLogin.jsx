@@ -98,6 +98,12 @@ export function SeekerLogin() {
                         </div>
                     )}
 
+                    <div className="text-right">
+                        <Link to="/forgot-password" className="text-sm font-medium text-green-600 hover:text-green-500 transition-colors">
+                            Forgot password?
+                        </Link>
+                    </div>
+
                     <div>
                         <button
                             type="submit"

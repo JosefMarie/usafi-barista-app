@@ -27,6 +27,7 @@ export function ManagerLayout() {
         { icon: 'contacts', label: 'Contacts Directory', path: '/manager/contacts' },
         { icon: 'mail', label: 'Subscribers', path: '/manager/subscribers' },
         { icon: 'inbox', label: 'Inbox Messages', path: '/manager/messages' },
+        { icon: 'person', label: 'My Profile', path: '/manager/profile' },
     ];
 
     return (
@@ -63,19 +64,28 @@ export function ManagerLayout() {
                 </nav>
 
                 <div className="p-4 border-t border-black/5">
-                    <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-black/5 dark:bg-white/5 mb-2">
-                        <div className="h-8 w-8 rounded-full bg-blue-600/20 text-blue-600 flex items-center justify-center font-bold">
-                            {user?.name?.[0] || 'M'}
+                    <Link
+                        to="/manager/profile"
+                        className="flex items-center gap-3 px-4 py-4 rounded-xl bg-black/5 dark:bg-white/5 mb-4 hover:bg-blue-600/5 transition-colors group"
+                    >
+                        <div className="h-10 w-10 rounded-full border-2 border-blue-600/20 overflow-hidden shrink-0">
+                            {user?.avatar ? (
+                                <img src={user.avatar} alt="Manager" className="w-full h-full object-cover" />
+                            ) : (
+                                <div className="w-full h-full bg-blue-600/10 text-blue-600 flex items-center justify-center font-bold">
+                                    {user?.name?.[0] || 'M'}
+                                </div>
+                            )}
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-sm font-bold text-espresso dark:text-white truncate">
+                            <p className="text-sm font-bold text-espresso dark:text-white truncate group-hover:text-blue-600 transition-colors">
                                 {user?.name || 'Manager'}
                             </p>
-                            <p className="text-xs text-espresso/60 dark:text-white/60 truncate">
-                                {user?.email}
+                            <p className="text-[10px] text-espresso/40 dark:text-white/40 truncate uppercase tracking-widest font-bold">
+                                View Profile
                             </p>
                         </div>
-                    </div>
+                    </Link>
                     <button
                         onClick={handleLogout}
                         className="flex items-center gap-2 w-full px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors"

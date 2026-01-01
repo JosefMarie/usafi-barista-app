@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Newsletter } from '../../components/ui/Newsletter';
 
 export function Contact() {
     const { t } = useTranslation();
@@ -27,7 +28,8 @@ export function Contact() {
             const { collection, addDoc, serverTimestamp } = await import('firebase/firestore');
             const { db } = await import('../../lib/firebase');
 
-            await addDoc(collection(db, 'contact_messages'), {
+            console.log("Attempting to write to firestore...");
+            const docRef = await addDoc(collection(db, 'contact_messages'), {
                 firstName: formData.firstName,
                 lastName: formData.lastName,
                 email: formData.email,
@@ -36,6 +38,7 @@ export function Contact() {
                 status: 'new',
                 createdAt: serverTimestamp()
             });
+            console.log("Document written with ID: ", docRef.id);
 
             setStatus({ type: 'success', message: 'Message sent successfully! We will get back to you soon.' });
             setFormData({ firstName: '', lastName: '', email: '', subject: '', message: '' });
@@ -220,6 +223,9 @@ export function Contact() {
                 </div>
 
             </div>
+
+            {/* Newsletter Section */}
+            <Newsletter />
 
         </div>
     );

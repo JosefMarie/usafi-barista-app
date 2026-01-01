@@ -72,6 +72,13 @@ export function SeekerDashboard() {
                     <span className="text-sm font-medium text-espresso dark:text-white hidden md:block">
                         Welcome, {user.name}
                     </span>
+                    <Link
+                        to="/seeker/profile"
+                        className="text-sm font-bold text-primary hover:bg-primary/5 px-4 py-2 rounded-xl transition-colors flex items-center gap-1"
+                    >
+                        <span className="material-symbols-outlined text-lg">person</span>
+                        <span className="hidden sm:inline">Profile</span>
+                    </Link>
                     <button
                         onClick={handleLogout}
                         className="text-sm font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 px-4 py-2 rounded-xl transition-colors"

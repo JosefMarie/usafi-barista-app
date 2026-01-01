@@ -644,5 +644,13 @@
         "title": "Ubusabe Bwakiriwe!",
         "description": "Urakoze gusaba kwiga muri Usafi Barista Training Center. Tukoherereje email ikubiyemo amakuru yo kwishyura n'intambwe zikurikira.",
         "button": "Subira Ahabanza"
+    },
+    "newsletter": {
+        "title": "Iyandikishe ku Makuru yacu",
+        "subtitle": "Menya amakuru agezweho, ibigezweho, n'amahirwe mashya.",
+        "placeholder": "Andika imeri yawe",
+        "button": "Iyandikishe",
+        "success": "Murakoze kwiyandikisha!",
+        "error": "Kwiyandikisha byanze. Ongera ugerageze."
     }
 }

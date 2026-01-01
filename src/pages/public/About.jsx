@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Newsletter } from '../../components/ui/Newsletter';
 
 export function About() {
     const { t } = useTranslation();

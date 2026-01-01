@@ -64,6 +64,9 @@ export function AdminLayout() {
         { icon: 'notifications', label: 'Notifications', path: '/admin/notifications' },
         { icon: 'work', label: 'Manage Jobs', path: '/admin/opportunities' },
         { icon: 'diversity_3', label: 'Job Seekers', path: '/admin/seekers' },
+        { icon: 'admin_panel_settings', label: 'Business Students', path: '/admin/business/users' },
+        { icon: 'menu_book', label: 'Business Courses', path: '/admin/business/courses' },
+        { icon: 'person', label: 'My Profile', path: '/admin/profile' },
     ];
 
     return (
@@ -106,19 +109,28 @@ export function AdminLayout() {
                 </nav>
 
                 <div className="p-4 border-t border-black/5">
-                    <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-black/5 dark:bg-white/5 mb-2">
-                        <div className="h-8 w-8 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold">
-                            {user?.name?.[0] || 'A'}
+                    <Link
+                        to="/admin/profile"
+                        className="flex items-center gap-3 px-4 py-4 rounded-xl bg-black/5 dark:bg-white/5 mb-4 hover:bg-primary/5 transition-colors group"
+                    >
+                        <div className="h-10 w-10 rounded-full border-2 border-primary/20 overflow-hidden shrink-0">
+                            {user?.avatar ? (
+                                <img src={user.avatar} alt="Admin" className="w-full h-full object-cover" />
+                            ) : (
+                                <div className="w-full h-full bg-primary/10 text-primary flex items-center justify-center font-bold">
+                                    {user?.name?.[0] || 'A'}
+                                </div>
+                            )}
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-sm font-bold text-espresso dark:text-white truncate">
+                            <p className="text-sm font-bold text-espresso dark:text-white truncate group-hover:text-primary transition-colors">
                                 {user?.name || 'Administrator'}
                             </p>
-                            <p className="text-xs text-espresso/60 dark:text-white/60 truncate">
-                                {user?.email || 'admin@usafi.com'}
+                            <p className="text-[10px] text-espresso/40 dark:text-white/40 truncate uppercase tracking-widest font-bold">
+                                View Profile
                             </p>
                         </div>
-                    </div>
+                    </Link>
                     <button
                         onClick={handleLogout}
                         className="flex items-center gap-2 w-full px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors"

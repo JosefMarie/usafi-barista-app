@@ -68,6 +68,7 @@ export function StudentLayout() {
         { name: 'Opportunities', path: '/student/opportunities', icon: 'work' },
         { name: 'My Courses', path: '/student/courses', icon: 'school' },
         { name: 'E-Learning', path: '/student/e-learning', icon: 'video_library' },
+        { name: 'CV Builder', path: '/student/cv-builder', icon: 'description' },
         { name: 'Forum', path: '/student/forum', icon: 'forum' },
         { name: 'Class Chat', path: '/student/chat', icon: 'chat', badge: totalUnread },
         { name: 'Notifications', path: '/student/notifications', icon: 'notifications', badge: unreadNotifications },
@@ -100,7 +101,7 @@ export function StudentLayout() {
             // User request: "Onsite students can not use the Online portal"
             // We'll leave them with Profile and basic communication if applicable, or maybe just Profile.
             // Let's assume they might want Forum/Chat, but definitely not "My Courses".
-            return ['Profile', 'Forum', 'Class Chat'].includes(item.name);
+            return ['Profile', 'Forum', 'Class Chat', 'CV Builder'].includes(item.name);
         }
         return true;
     });

@@ -2,9 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { GradientButton } from '../../components/ui/GradientButton';
+import { Newsletter } from '../../components/ui/Newsletter';
 
 export function Home() {
     const { t } = useTranslation();
+
     return (
         <div className="flex min-h-screen w-full flex-col bg-background-light dark:bg-background-dark font-display text-espresso dark:text-white">
 
@@ -57,7 +59,7 @@ export function Home() {
                         </Link>
 
                         {/* 4. Business Classes - Growing Purple */}
-                        <Link to="#" className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-purple-500 to-violet-600 p-[2px] transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/30">
+                        <Link to="/business/register" className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-purple-500 to-violet-600 p-[2px] transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/30">
                             <div className="relative flex h-14 w-full items-center justify-center rounded-xl bg-transparent px-8 transition-all duration-300 group-hover:bg-white/10">
                                 <span className="text-lg font-bold tracking-wide text-white">
                                     {t('home.hero.cta_business')}
@@ -126,6 +128,13 @@ export function Home() {
                 </div>
             </section>
 
+            {/* Newsletter Section */}
+            <Newsletter />
+
         </div>
     );
 }
+
+// Separate component or inline logic for Newsletter to avoid polluting the main component?
+// Let's add the logic inside Home for simplicity as requested.
+

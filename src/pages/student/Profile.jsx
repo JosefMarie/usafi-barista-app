@@ -1,10 +1,86 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { storage, db } from '../../lib/firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { doc, updateDoc } from 'firebase/firestore';
+import { ChangePasswordModal } from '../../components/auth/ChangePasswordModal';
 
 export function Profile() {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+    const fileInputRef = useRef(null);
+    const [uploading, setUploading] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [editData, setEditData] = useState({
+        phone: '',
+        location: ''
+    });
+    const [saving, setSaving] = useState(false);
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+
+    const handleAvatarClick = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleEditClick = () => {
+        setEditData({
+            phone: user?.phone || '',
+            location: user?.location || ''
+        });
+        setShowEditModal(true);
+    };
+
+    const handleSaveInfo = async () => {
+        if (!user) return;
+
+        setSaving(true);
+        try {
+            const userRef = doc(db, 'users', user.uid);
+            await updateDoc(userRef, {
+                phone: editData.phone,
+                location: editData.location
+            });
+
+            setShowEditModal(false);
+            window.location.reload();
+        } catch (error) {
+            console.error("Error updating profile:", error);
+            alert("Failed to update profile information.");
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const handleAvatarUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file || !user) return;
+
+        setUploading(true);
+        try {
+            const storageRef = ref(storage, `avatars/${user.uid}_${Date.now()}_${file.name}`);
+            await uploadBytes(storageRef, file);
+            const downloadURL = await getDownloadURL(storageRef);
+
+            // Update Firestore
+            const userRef = doc(db, 'users', user.uid);
+            await updateDoc(userRef, {
+                avatar: downloadURL
+            });
+
+            // Note: AuthContext might need a way to refresh the local user state if not using onSnapshot
+            // However, StudentLayout seems to use onSnapshot for chats/notifications, but AuthContext 
+            // uses onAuthStateChanged. onAuthStateChanged won't trigger on Firestore updates.
+            // Let's assume the user will see the change on next load or we might need to reload.
+            // In a better version, the AuthContext would listen to the user doc.
+            window.location.reload(); // Simple way to refresh data for now
+        } catch (error) {
+            console.error("Error uploading avatar:", error);
+            alert("Failed to update profile picture.");
+        } finally {
+            setUploading(false);
+        }
+    };
 
     const handleLogout = async () => {
         try {
@@ -34,7 +110,10 @@ export function Profile() {
                     <h2 className="text-espresso dark:text-white text-lg font-bold leading-tight tracking-tight text-center flex-1">
                         Student Profile
                     </h2>
-                    <button className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+                    <button
+                        onClick={handleEditClick}
+                        className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+                    >
                         <span className="text-primary text-base font-bold leading-normal tracking-wide">Edit</span>
                     </button>
                 </div>
@@ -42,16 +121,30 @@ export function Profile() {
 
             {/* ProfileHeader */}
             <section className="flex flex-col items-center pt-6 pb-8 px-6">
-                <div className="relative mb-5 group cursor-pointer">
+                <div
+                    onClick={handleAvatarClick}
+                    className="relative mb-5 group cursor-pointer"
+                >
                     <div
-                        className="w-32 h-32 rounded-full border-4 border-white dark:border-[#2c2825] shadow-lg bg-cover bg-center overflow-hidden"
-                        style={{ backgroundImage: `url('${avatarUrl}')` }}
+                        className="w-32 h-32 rounded-full border-4 border-white dark:border-[#2c2825] shadow-lg bg-cover bg-center overflow-hidden flex items-center justify-center bg-gray-100 dark:bg-white/5"
+                        style={{ backgroundImage: uploading ? 'none' : `url('${avatarUrl}')` }}
                     >
+                        {uploading && (
+                            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
+                        )}
                     </div>
                     {/* Camera Badge */}
                     <div className="absolute bottom-1 right-1 bg-primary text-white p-1.5 rounded-full shadow-md flex items-center justify-center border-2 border-gray-50 dark:border-[#1c1916]">
                         <span className="material-symbols-outlined text-[18px]">photo_camera</span>
                     </div>
+
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleAvatarUpload}
+                        className="hidden"
+                        accept="image/*"
+                    />
                 </div>
                 <div className="flex flex-col items-center text-center space-y-1">
                     <h1 className="text-espresso dark:text-white text-2xl font-serif font-bold leading-tight">
@@ -116,7 +209,10 @@ export function Profile() {
                 </h3>
                 <div className="bg-white dark:bg-[#2c2825] rounded-xl overflow-hidden shadow-sm border border-black/5 dark:border-white/5">
                     {/* Change Password */}
-                    <div className="flex items-center gap-4 px-4 py-3.5 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors cursor-pointer border-b border-black/5 dark:border-white/5">
+                    <div
+                        onClick={() => setShowPasswordModal(true)}
+                        className="flex items-center gap-4 px-4 py-3.5 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors cursor-pointer border-b border-black/5 dark:border-white/5"
+                    >
                         <div className="flex items-center justify-center rounded-lg bg-primary/10 dark:bg-primary/20 shrink-0 w-8 h-8 text-primary">
                             <span className="material-symbols-outlined text-[18px]">lock</span>
                         </div>
@@ -172,6 +268,68 @@ export function Profile() {
                     Version 2.4.1 (Build 203)
                 </p>
             </div>
+
+            {/* Edit Modal */}
+            {showEditModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setShowEditModal(false)}>
+                    <div className="bg-white dark:bg-[#2c2825] rounded-2xl p-6 w-full max-w-md shadow-xl" onClick={e => e.stopPropagation()}>
+                        <h3 className="text-xl font-bold text-espresso dark:text-white mb-6">
+                            Edit Personal Information
+                        </h3>
+
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-espresso dark:text-white mb-2">
+                                    Phone Number
+                                </label>
+                                <input
+                                    type="tel"
+                                    value={editData.phone}
+                                    onChange={e => setEditData({ ...editData, phone: e.target.value })}
+                                    placeholder="e.g., +250 712 345 678"
+                                    className="w-full px-4 py-3 rounded-lg border border-black/10 dark:border-white/10 bg-white dark:bg-[#1c1916] text-espresso dark:text-white placeholder:text-espresso/40 dark:placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-espresso dark:text-white mb-2">
+                                    Location
+                                </label>
+                                <input
+                                    type="text"
+                                    value={editData.location}
+                                    onChange={e => setEditData({ ...editData, location: e.target.value })}
+                                    placeholder="e.g., Kigali, Rwanda"
+                                    className="w-full px-4 py-3 rounded-lg border border-black/10 dark:border-white/10 bg-white dark:bg-[#1c1916] text-espresso dark:text-white placeholder:text-espresso/40 dark:placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex gap-3 mt-6">
+                            <button
+                                type="button"
+                                onClick={() => setShowEditModal(false)}
+                                className="flex-1 py-3 rounded-full border border-black/10 dark:border-white/10 text-espresso dark:text-white font-medium hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleSaveInfo}
+                                disabled={saving}
+                                className="flex-1 py-3 rounded-full bg-primary text-white font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+                            >
+                                {saving ? 'Saving...' : 'Save Changes'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Change Password Modal */}
+            <ChangePasswordModal
+                isOpen={showPasswordModal}
+                onClose={() => setShowPasswordModal(false)}
+            />
         </div>
     );
 }

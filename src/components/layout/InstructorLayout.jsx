@@ -47,6 +47,7 @@ export function InstructorLayout() {
         { icon: 'chat', label: 'Chat', path: '/instructor/chat' },
         { icon: 'schedule', label: 'Schedule', path: '/instructor/schedule' },
         { icon: 'video_library', label: 'Share Video', path: '/instructor/share-video' },
+        { icon: 'person', label: 'My Profile', path: '/instructor/profile' },
     ];
 
     return (
@@ -84,15 +85,28 @@ export function InstructorLayout() {
                     ))}
                 </nav>
                 <div className="p-4 border-t border-black/5">
-                    <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-black/5 dark:bg-white/5 mb-2">
-                        <div className="h-8 w-8 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold">
-                            {user?.name?.[0] || 'I'}
+                    <Link
+                        to="/instructor/profile"
+                        className="flex items-center gap-3 px-4 py-4 rounded-xl bg-black/5 dark:bg-white/5 mb-4 hover:bg-primary/5 transition-colors group"
+                    >
+                        <div className="h-10 w-10 rounded-full border-2 border-primary/20 overflow-hidden shrink-0">
+                            {user?.avatar ? (
+                                <img src={user.avatar} alt="Instructor" className="w-full h-full object-cover" />
+                            ) : (
+                                <div className="w-full h-full bg-primary/10 text-primary flex items-center justify-center font-bold">
+                                    {user?.name?.[0] || 'I'}
+                                </div>
+                            )}
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-sm font-bold text-espresso dark:text-white truncate">{user?.name || 'Instructor'}</p>
-                            <p className="text-xs text-espresso/60 dark:text-white/60 truncate">{user?.email || ''}</p>
+                            <p className="text-sm font-bold text-espresso dark:text-white truncate group-hover:text-primary transition-colors">
+                                {user?.name || 'Instructor'}
+                            </p>
+                            <p className="text-[10px] text-espresso/40 dark:text-white/40 truncate uppercase tracking-widest font-bold">
+                                View Profile
+                            </p>
                         </div>
-                    </div>
+                    </Link>
                     <button
                         onClick={handleLogout}
                         className="flex items-center gap-2 w-full px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors"

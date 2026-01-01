@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { cn } from '../../lib/utils';
 import { useTranslation } from 'react-i18next';
+import { Newsletter } from '../../components/ui/Newsletter';
 
 export function Certificates() {
     const { t } = useTranslation();
@@ -127,6 +128,9 @@ export function Certificates() {
                     </div>
                 )}
             </div>
+
+            {/* Newsletter Section */}
+            <Newsletter />
 
         </div>
     );
