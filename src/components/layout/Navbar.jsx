@@ -4,12 +4,14 @@ import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
 import { LanguageSwitcher } from '../LanguageSwitcher';
 import { ThemeToggle } from '../common/ThemeToggle';
+import { GlobalSearch } from '../common/GlobalSearch';
 import { GradientButton } from '../ui/GradientButton';
 
 export function Navbar() {
     const { t } = useTranslation();
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [activeDropdown, setActiveDropdown] = useState(null);
     const location = useLocation();
 
@@ -18,8 +20,20 @@ export function Navbar() {
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 20);
         };
+
+        const handleKeyDown = (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                setIsSearchOpen(true);
+            }
+        };
+
         window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+        window.addEventListener('keydown', handleKeyDown);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('keydown', handleKeyDown);
+        };
     }, []);
 
     // Close mobile menu on route change
@@ -138,6 +152,18 @@ export function Navbar() {
                         </div>
                     </GradientButton>
 
+                    {/* Search Button */}
+                    <button
+                        onClick={() => setIsSearchOpen(true)}
+                        className={cn(
+                            "p-2 rounded-xl transition-all duration-300 hover:bg-primary/10",
+                            !isScrolled && location.pathname === '/' ? "text-white/90 hover:bg-white/10" : "text-espresso dark:text-white"
+                        )}
+                        title="Search (Cmd+K)"
+                    >
+                        <span className="material-symbols-outlined text-[22px]">search</span>
+                    </button>
+
                     {/* Theme Toggle */}
                     <ThemeToggle className={cn(
                         "hover:bg-primary/10 transition-colors",
@@ -233,6 +259,10 @@ export function Navbar() {
                 </nav>
             </div>
 
+            <GlobalSearch
+                isOpen={isSearchOpen}
+                onClose={() => setIsSearchOpen(false)}
+            />
         </header>
     );
 }

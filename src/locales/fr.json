@@ -652,5 +652,13 @@
         "button": "S'abonner",
         "success": "Merci de vous être abonné !",
         "error": "Échec de l'abonnement. Veuillez réessayer."
+    },
+    "search": {
+        "placeholder": "Rechercher tout...",
+        "type_to_begin": "Tapez au moins 2 caractères pour rechercher",
+        "no_results": "Aucun résultat trouvé pour \"{{term}}\"",
+        "forum": "Forum de la communauté",
+        "opportunities": "Emplois et opportunités",
+        "courses": "Cours"
     }
 }

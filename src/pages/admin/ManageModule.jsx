@@ -4,6 +4,7 @@ import { doc, getDoc, updateDoc, setDoc, arrayUnion, arrayRemove, collection, qu
 import { db } from '../../lib/firebase';
 import { cn } from '../../lib/utils';
 import { useAuth } from '../../context/AuthContext';
+import { RichTextEditor } from '../../components/common/RichTextEditor';
 
 export function ManageModule() {
     const { courseId, moduleId } = useParams();
@@ -105,10 +106,27 @@ export function ManageModule() {
     };
 
     // --- Quiz Handlers ---
-    const addQuestion = () => {
+    const addQuestion = (type = 'multiple_choice') => {
+        const questionBase = {
+            type,
+            question: '',
+            duration: 30, // Default 30 seconds
+        };
+
+        let specificData = {};
+        if (type === 'multiple_choice') {
+            specificData = { options: ['', '', '', ''], correctOption: 0 };
+        } else if (type === 'true_false') {
+            specificData = { correctAnswer: true };
+        } else if (type === 'fill_in') {
+            specificData = { correctAnswer: '' };
+        } else if (type === 'matching') {
+            specificData = { pairs: [{ key: '', value: '' }, { key: '', value: '' }] };
+        }
+
         setQuiz(prev => ({
             ...prev,
-            questions: [...prev.questions, { question: '', options: ['', '', '', ''], correctOption: 0 }]
+            questions: [...prev.questions, { ...questionBase, ...specificData }]
         }));
     };
 
@@ -121,6 +139,24 @@ export function ManageModule() {
     const updateOption = (qIndex, oIndex, value) => {
         const newQuestions = [...quiz.questions];
         newQuestions[qIndex].options[oIndex] = value;
+        setQuiz(prev => ({ ...prev, questions: newQuestions }));
+    };
+
+    const updatePair = (qIndex, pIndex, field, value) => {
+        const newQuestions = [...quiz.questions];
+        newQuestions[qIndex].pairs[pIndex][field] = value;
+        setQuiz(prev => ({ ...prev, questions: newQuestions }));
+    };
+
+    const addPair = (qIndex) => {
+        const newQuestions = [...quiz.questions];
+        newQuestions[qIndex].pairs.push({ key: '', value: '' });
+        setQuiz(prev => ({ ...prev, questions: newQuestions }));
+    };
+
+    const removePair = (qIndex, pIndex) => {
+        const newQuestions = [...quiz.questions];
+        newQuestions[qIndex].pairs = newQuestions[qIndex].pairs.filter((_, i) => i !== pIndex);
         setQuiz(prev => ({ ...prev, questions: newQuestions }));
     };
 
@@ -270,11 +306,12 @@ export function ManageModule() {
                                             onChange={(e) => updateSlide(index, 'title', e.target.value)}
                                         />
                                     </div>
-                                    <textarea
-                                        className="w-full h-24 p-2 rounded-lg bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 text-sm"
-                                        placeholder="Slide Text / Content..."
+                                    <RichTextEditor
                                         value={slide.text}
-                                        onChange={(e) => updateSlide(index, 'text', e.target.value)}
+                                        onChange={(val) => updateSlide(index, 'text', val)}
+                                        placeholder="Slide Text / Content..."
+                                        className="border-gray-200 dark:border-white/10"
+                                        minHeight="150px"
                                     />
                                     <div className="flex gap-2">
                                         <input
@@ -315,9 +352,19 @@ export function ManageModule() {
 
                         <div className="flex justify-between items-center mt-6">
                             <h2 className="text-lg font-bold text-espresso dark:text-white">Questions</h2>
-                            <button onClick={addQuestion} className="flex items-center gap-2 bg-gray-100 dark:bg-white/10 px-3 py-1.5 rounded-lg text-sm font-bold hover:bg-gray-200 dark:hover:bg-white/20">
-                                <span className="material-symbols-outlined">add</span> Add Question
-                            </button>
+                            <div className="flex gap-2">
+                                <select
+                                    onChange={(e) => addQuestion(e.target.value)}
+                                    className="bg-white dark:bg-white/10 px-3 py-1.5 rounded-lg text-sm font-bold border border-gray-200 dark:border-white/10 outline-none"
+                                    defaultValue=""
+                                >
+                                    <option value="" disabled>+ Add Question</option>
+                                    <option value="multiple_choice">Multiple Choice</option>
+                                    <option value="true_false">True / False</option>
+                                    <option value="fill_in">Fill in the Blank</option>
+                                    <option value="matching">Matching</option>
+                                </select>
+                            </div>
                         </div>
 
                         {quiz.questions.map((q, qIndex) => (
@@ -325,34 +372,109 @@ export function ManageModule() {
                                 <button onClick={() => removeQuestion(qIndex)} className="absolute top-4 right-4 text-red-400 hover:text-red-500 p-1">
                                     <span className="material-symbols-outlined">delete</span>
                                 </button>
-                                <div className="mb-4">
-                                    <label className="text-xs font-bold uppercase text-espresso/50 mb-1 block">Question {qIndex + 1}</label>
+                                <div className="mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div className="md:col-span-2">
+                                        <label className="text-xs font-bold uppercase text-espresso/50 mb-1 block">Question {qIndex + 1}</label>
+                                        <input
+                                            className="w-full p-2 font-medium bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-lg"
+                                            placeholder="Enter question text..."
+                                            value={q.question}
+                                            onChange={(e) => updateQuestion(qIndex, 'question', e.target.value)}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="text-xs font-bold uppercase text-espresso/50 mb-1 block">Duration (Secs)</label>
+                                        <input
+                                            type="number"
+                                            className="w-full p-2 font-medium bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-lg"
+                                            value={q.duration}
+                                            onChange={(e) => updateQuestion(qIndex, 'duration', parseInt(e.target.value))}
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* QUESTION TYPE UI */}
+                                {q.type === 'multiple_choice' && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        {q.options.map((opt, oIndex) => (
+                                            <div key={oIndex} className="flex items-center gap-2">
+                                                <input
+                                                    type="radio"
+                                                    name={`correct-${qIndex}`}
+                                                    checked={q.correctOption === oIndex}
+                                                    onChange={() => updateQuestion(qIndex, 'correctOption', oIndex)}
+                                                    className="accent-primary"
+                                                />
+                                                <input
+                                                    className="flex-1 p-2 text-sm bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-lg"
+                                                    placeholder={`Option ${oIndex + 1}`}
+                                                    value={opt}
+                                                    onChange={(e) => updateOption(qIndex, oIndex, e.target.value)}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {q.type === 'true_false' && (
+                                    <div className="flex gap-4">
+                                        <button
+                                            onClick={() => updateQuestion(qIndex, 'correctAnswer', true)}
+                                            className={cn(
+                                                "flex-1 py-3 rounded-xl border-2 font-bold transition-all",
+                                                q.correctAnswer === true ? "bg-primary/10 border-primary text-primary" : "border-gray-100 dark:border-white/5 opacity-50"
+                                            )}
+                                        >
+                                            True
+                                        </button>
+                                        <button
+                                            onClick={() => updateQuestion(qIndex, 'correctAnswer', false)}
+                                            className={cn(
+                                                "flex-1 py-3 rounded-xl border-2 font-bold transition-all",
+                                                q.correctAnswer === false ? "bg-red-50 border-red-200 text-red-600" : "border-gray-100 dark:border-white/5 opacity-50"
+                                            )}
+                                        >
+                                            False
+                                        </button>
+                                    </div>
+                                )}
+
+                                {q.type === 'fill_in' && (
                                     <input
-                                        className="w-full p-2 font-medium bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-lg"
-                                        placeholder="Enter question text..."
-                                        value={q.question}
-                                        onChange={(e) => updateQuestion(qIndex, 'question', e.target.value)}
+                                        className="w-full p-3 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl font-bold text-primary"
+                                        placeholder="Correct Answer..."
+                                        value={q.correctAnswer}
+                                        onChange={(e) => updateQuestion(qIndex, 'correctAnswer', e.target.value)}
                                     />
-                                </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                    {q.options.map((opt, oIndex) => (
-                                        <div key={oIndex} className="flex items-center gap-2">
-                                            <input
-                                                type="radio"
-                                                name={`correct-${qIndex}`}
-                                                checked={q.correctOption === oIndex}
-                                                onChange={() => updateQuestion(qIndex, 'correctOption', oIndex)}
-                                                className="accent-primary"
-                                            />
-                                            <input
-                                                className="flex-1 p-2 text-sm bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-lg"
-                                                placeholder={`Option ${oIndex + 1}`}
-                                                value={opt}
-                                                onChange={(e) => updateOption(qIndex, oIndex, e.target.value)}
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
+                                )}
+
+                                {q.type === 'matching' && (
+                                    <div className="space-y-3">
+                                        {q.pairs.map((pair, pIndex) => (
+                                            <div key={pIndex} className="flex gap-2">
+                                                <input
+                                                    className="flex-1 p-2 text-sm bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-lg"
+                                                    placeholder="Item A"
+                                                    value={pair.key}
+                                                    onChange={(e) => updatePair(qIndex, pIndex, 'key', e.target.value)}
+                                                />
+                                                <span className="material-symbols-outlined text-espresso/20 self-center">link</span>
+                                                <input
+                                                    className="flex-1 p-2 text-sm bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-lg"
+                                                    placeholder="Match with B"
+                                                    value={pair.value}
+                                                    onChange={(e) => updatePair(qIndex, pIndex, 'value', e.target.value)}
+                                                />
+                                                <button onClick={() => removePair(qIndex, pIndex)} className="text-red-400">
+                                                    <span className="material-symbols-outlined text-sm">remove_circle</span>
+                                                </button>
+                                            </div>
+                                        ))}
+                                        <button onClick={() => addPair(qIndex)} className="text-xs font-bold text-primary flex items-center gap-1">
+                                            <span className="material-symbols-outlined text-xs">add</span> Add Pair
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>

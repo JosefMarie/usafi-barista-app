@@ -4,6 +4,7 @@ import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { cn } from '../../lib/utils';
 import { ThemeToggle } from '../common/ThemeToggle';
+import { PortalTopBar } from './PortalTopBar';
 import { useAuth } from '../../context/AuthContext';
 
 export function AdminLayout() {
@@ -110,31 +111,6 @@ export function AdminLayout() {
                 </nav>
 
                 <div className="p-4 border-t border-black/5">
-                    <Link
-                        to="/admin/profile"
-                        className="flex items-center gap-3 px-4 py-4 rounded-xl bg-black/5 dark:bg-white/5 mb-4 hover:bg-primary/5 transition-colors group"
-                    >
-                        <div className="h-10 w-10 rounded-full border-2 border-primary/20 overflow-hidden shrink-0">
-                            {user?.avatar ? (
-                                <img src={user.avatar} alt="Admin" className="w-full h-full object-cover" />
-                            ) : (
-                                <div className="w-full h-full bg-primary/10 text-primary flex items-center justify-center font-bold">
-                                    {user?.name?.[0] || 'A'}
-                                </div>
-                            )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                            <p className="text-sm font-bold text-espresso dark:text-white truncate group-hover:text-primary transition-colors">
-                                {user?.name || 'Administrator'}
-                            </p>
-                            <p className="text-[10px] text-espresso/40 dark:text-white/40 truncate uppercase tracking-widest font-bold">
-                                View Profile
-                            </p>
-                        </div>
-                    </Link>
-                    <div className="mb-4">
-                        <ThemeToggle className="w-full justify-start gap-3 bg-black/5 dark:bg-white/5" />
-                    </div>
                     <button
                         onClick={handleLogout}
                         className="flex items-center gap-2 w-full px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors"
@@ -147,29 +123,15 @@ export function AdminLayout() {
 
             {/* Main Content */}
             <div className="flex-1 md:ml-64 min-w-0 flex flex-col">
-                {/* Mobile Header */}
-                <header className="md:hidden h-16 bg-white dark:bg-[#1e1e1e] border-b border-black/5 flex items-center justify-between px-4 sticky top-0 z-10">
-                    <Link to="/" className="flex items-center gap-2">
-                        <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-white">
-                            <span className="material-symbols-outlined text-lg">coffee</span>
-                        </div>
-                        <span className="font-serif text-lg font-bold text-espresso dark:text-white">
-                            Usafi Admin
-                        </span>
-                    </Link>
-                    <button
-                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        className="p-2 text-espresso dark:text-white hover:bg-black/5 dark:hover:bg-white/5 rounded-lg"
-                    >
-                        <span className="material-symbols-outlined">
-                            {isMobileMenuOpen ? 'close' : 'menu'}
-                        </span>
-                    </button>
-                </header>
+                <PortalTopBar
+                    user={user}
+                    unreadNotifications={unreadCount}
+                    onLogout={handleLogout}
+                />
 
                 {/* Mobile Menu */}
                 {isMobileMenuOpen && (
-                    <div className="fixed inset-0 top-16 bg-background-light dark:bg-background-dark z-50 md:hidden overflow-y-auto">
+                    <div className="fixed inset-0 top-0 bg-background-light dark:bg-background-dark z-50 md:hidden overflow-y-auto">
                         <nav className="p-4 flex flex-col gap-2">
                             <div className="pb-4 mb-4 border-b border-black/5 dark:border-white/5">
                                 <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-black/5 dark:bg-white/5">

@@ -36,27 +36,13 @@ export function MyCourses() {
                 fetchedModules.sort((a, b) => a.title.localeCompare(b.title, undefined, { numeric: true }));
                 setModules(fetchedModules);
 
-                // 3. Fetch User Progress (Placeholder logic for now)
-                // In a real app, we'd fetch from users/{uid}/progress/{courseId}
-                // For now, let's assume if assigned, module 1 is open.
-                // We'll implemented detailed progress logic in the View
-
-                // Initialize progress map
-                const prog = {};
-                // Logic: 
-                // - Module 1 is always unlocked if assigned (or public).
-                // - Module N is unlocked if Module N-1 is completed.
-                // - We check 'assignedStudents' array in module doc for strict access control.
-
-                fetchedModules.forEach((mod, index) => {
-                    const isAssigned = mod.assignedStudents?.includes(user.uid);
-                    // Determine status based on real data later. modify this as we implement quiz results.
-                    prog[mod.id] = isAssigned ? 'unlocked' : 'locked';
-
-                    // Force unlock first module for demo/dev if assigned
-                    if (index === 0 && isAssigned) prog[mod.id] = 'unlocked';
+                // 3. Fetch User Progress
+                const progressSnapshot = await getDocs(collection(db, 'users', user.uid, 'progress'));
+                const progressMap = {};
+                progressSnapshot.docs.forEach(doc => {
+                    progressMap[doc.id] = doc.data();
                 });
-                setProgress(prog);
+                setProgress(progressMap);
 
                 setLoading(false);
             } catch (error) {
@@ -121,12 +107,13 @@ export function MyCourses() {
                 <div className="space-y-4">
                     {modules.map((module, index) => {
                         const isAssigned = module.assignedStudents?.includes(user?.uid);
-                        // Simple logic: Unlocked if assigned. 
-                        // Real logic will require checking previous module completion.
-                        // For now: First module unlocked if assigned. Next modules unlocked if previous done.
-                        // Since we don't have 'done' state in DB yet, we'll strict check 'assigned'.
+                        const moduleProgress = progress[module.id];
+                        const isCompleted = moduleProgress?.status === 'completed' || moduleProgress?.passed === true;
 
-                        const status = isAssigned ? 'unlocked' : 'locked';
+                        let status = 'locked';
+                        if (isAssigned) {
+                            status = isCompleted ? 'completed' : 'unlocked';
+                        }
 
                         return (
                             <div

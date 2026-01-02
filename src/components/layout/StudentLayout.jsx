@@ -6,6 +6,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { cn } from '../../lib/utils';
 import { ThemeToggle } from '../common/ThemeToggle';
+import { PortalTopBar } from './PortalTopBar';
 import { PendingApproval } from '../../pages/student/PendingApproval';
 
 // ...
@@ -71,6 +72,7 @@ export function StudentLayout() {
         { name: 'My Courses', path: '/student/courses', icon: 'school' },
         { name: 'E-Learning', path: '/student/e-learning', icon: 'video_library' },
         { name: 'CV Builder', path: '/student/cv-builder', icon: 'description' },
+        { name: 'Certificates', path: '/student/certificates', icon: 'workspace_premium' },
         { name: 'Forum', path: '/student/forum', icon: 'forum' },
         { name: 'Class Chat', path: '/student/chat', icon: 'chat', badge: totalUnread },
         { name: 'Notifications', path: '/student/notifications', icon: 'notifications', badge: unreadNotifications },
@@ -166,26 +168,11 @@ export function StudentLayout() {
                 </nav>
 
                 <div className="p-4 border-t border-gray-100 dark:border-white/5">
-                    <div className="flex items-center gap-3 px-3 py-3 mb-2 rounded-lg bg-gray-50 dark:bg-white/5">
-                        <img
-                            src={avatarUrl}
-                            alt={displayName}
-                            className="h-9 w-9 rounded-full object-cover border border-gray-200 dark:border-white/10"
-                            onError={(e) => { e.target.src = 'https://ui-avatars.com/api/?name=User'; }}
-                        />
-                        <div className="flex-1 min-w-0">
-                            <p className="text-xs font-bold text-espresso dark:text-white truncate">{displayName}</p>
-                            <p className="text-[10px] text-espresso/60 dark:text-white/60 truncate">{user.email}</p>
-                        </div>
-                    </div>
-                    <div className="px-3 mb-2">
-                        <ThemeToggle className="w-full justify-start gap-3 bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5" />
-                    </div>
                     <button
                         onClick={handleLogout}
-                        className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg transition-colors"
+                        className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-xl transition-colors"
                     >
-                        <span className="material-symbols-outlined text-lg">logout</span>
+                        <span className="material-symbols-outlined text-[20px]">logout</span>
                         Sign Out
                     </button>
                 </div>
@@ -194,27 +181,16 @@ export function StudentLayout() {
             {/* Main Content Area */}
             <div className="flex-1 md:ml-64 flex flex-col min-h-screen">
 
-                {/* Mobile Header */}
-                <header className="md:hidden bg-white dark:bg-[#2c2825] border-b border-gray-200 dark:border-white/5 sticky top-0 z-30 px-4 py-3 flex items-center justify-between shadow-sm">
-                    <Link to="/student/dashboard" className="flex items-center gap-2">
-                        <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-white">
-                            <span className="material-symbols-outlined text-xl">coffee</span>
-                        </div>
-                        <span className="font-serif text-lg font-bold text-espresso dark:text-white">
-                            Usafi
-                        </span>
-                    </Link>
-                    <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="text-espresso dark:text-white p-1">
-                        <span className="material-symbols-outlined text-2xl">
-                            {isMobileMenuOpen ? 'close' : 'menu'}
-                        </span>
-                    </button>
-                </header>
+                <PortalTopBar
+                    user={user}
+                    unreadNotifications={unreadNotifications}
+                    onLogout={handleLogout}
+                />
 
                 {/* Mobile Menu */}
                 {isMobileMenuOpen && (
                     <div className="md:hidden fixed inset-0 z-20 bg-black/50" onClick={() => setIsMobileMenuOpen(false)}>
-                        <div className="absolute top-[60px] left-0 right-0 bg-white dark:bg-[#2c2825] shadow-xl border-b border-black/5 p-4 space-y-2" onClick={e => e.stopPropagation()}>
+                        <div className="absolute top-[0px] left-0 right-0 bg-white dark:bg-[#2c2825] shadow-xl border-b border-black/5 p-4 space-y-2" onClick={e => e.stopPropagation()}>
                             {finalNavItems.map((item) => (
                                 <Link
                                     key={item.path}
@@ -257,4 +233,5 @@ export function StudentLayout() {
             </div>
         </div>
     );
+
 }

@@ -102,7 +102,7 @@ export function ManagerContacts() {
                     />
                 </div>
                 <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 w-full md:w-auto">
-                    {['all', 'student', 'instructor', 'job_seeker', 'admin'].map((role) => (
+                    {['all', 'student', 'business_student', 'instructor', 'job_seeker', 'admin'].map((role) => (
                         <button
                             key={role}
                             onClick={() => setFilterRole(role)}
@@ -111,7 +111,7 @@ export function ManagerContacts() {
                                 : 'bg-gray-100 dark:bg-white/5 text-espresso/70 dark:text-white/70 hover:bg-gray-200 dark:hover:bg-white/10'
                                 }`}
                         >
-                            {role.charAt(0).toUpperCase() + role.slice(1).replace('_', ' ')}
+                            {role === 'business_student' ? 'Business Student' : role.charAt(0).toUpperCase() + role.slice(1).replace('_', ' ')}
                         </button>
                     ))}
                 </div>
@@ -186,9 +186,10 @@ export function ManagerContacts() {
                                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${user.role === 'admin' ? 'bg-red-50 text-red-700 border-red-200' :
                                             user.role === 'instructor' ? 'bg-purple-50 text-purple-700 border-purple-200' :
                                                 user.role === 'student' ? 'bg-orange-50 text-orange-700 border-orange-200' :
-                                                    'bg-blue-50 text-blue-700 border-blue-200'
+                                                    user.role === 'business_student' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+                                                        'bg-blue-50 text-blue-700 border-blue-200'
                                             }`}>
-                                            {user.role}
+                                            {user.role?.replace('_', ' ')}
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 text-espresso/80 dark:text-white/80 select-all">

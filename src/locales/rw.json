@@ -652,5 +652,13 @@
         "button": "Iyandikishe",
         "success": "Murakoze kwiyandikisha!",
         "error": "Kwiyandikisha byanze. Ongera ugerageze."
+    },
+    "search": {
+        "placeholder": "Shaka byose...",
+        "type_to_begin": "Andika byibura inyuguti 2 kugira ngo ushake",
+        "no_results": "Nta nkuruyabonetse kuri \"{{term}}\"",
+        "forum": "Ihuriro ry'Umuryango",
+        "opportunities": "Akazi n'Amahirwe",
+        "courses": "Amasomo"
     }
 }

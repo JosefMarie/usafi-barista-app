@@ -77,7 +77,7 @@ export function Dashboard() {
                 setStats([
                     { label: 'Courses Available', value: courseData ? 1 : 0, icon: 'school', color: 'bg-blue-500' },
                     { label: 'Completed Modules', value: `${completedCount}/${totalModules}`, icon: 'check_circle', color: 'bg-green-500' },
-                    { label: 'Certificates Earned', value: 0, icon: 'workspace_premium', color: 'bg-yellow-500' }, // Placeholder
+                    { label: 'Certificates Earned', value: completedCount, icon: 'workspace_premium', color: 'bg-yellow-500' },
                 ]);
 
                 setNextModule(upcoming);

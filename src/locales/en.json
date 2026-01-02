@@ -652,5 +652,13 @@
     "button": "Subscribe",
     "success": "Thank you for subscribing!",
     "error": "Failed to subscribe. Please try again."
+  },
+  "search": {
+    "placeholder": "Search everything...",
+    "type_to_begin": "Type at least 2 characters to search",
+    "no_results": "No results found for \"{{term}}\"",
+    "forum": "Community Forum",
+    "opportunities": "Jobs & Opportunities",
+    "courses": "Courses"
   }
 }

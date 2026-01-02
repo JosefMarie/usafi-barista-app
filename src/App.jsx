@@ -4,7 +4,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import { PublicLayout } from './components/layout/PublicLayout';
 import { StudentLayout } from './components/layout/StudentLayout';
 import { AdminLayout } from './components/layout/AdminLayout';
-import { InstructorLayout } from './components/layout/InstructorLayout'; // New import
+import { InstructorLayout } from './components/layout/InstructorLayout';
 import { Home } from './pages/public/Home';
 import { About } from './pages/public/About';
 import { Courses } from './pages/public/Courses';
@@ -18,7 +18,7 @@ import { Gallery } from './pages/public/Gallery';
 import { Blog } from './pages/public/Blog';
 import { Inclusion } from './pages/public/Inclusion';
 import { Contact } from './pages/public/Contact';
-import { Certificates } from './pages/public/Certificates';
+import { Certificates as PublicCertificates } from './pages/public/Certificates'; // Renamed
 import { Opportunities } from './pages/public/Opportunities';
 import { PostOpportunity } from './pages/public/PostOpportunity';
 import { SeekerRegister } from './pages/public/SeekerRegister';
@@ -72,6 +72,7 @@ import { StudentNotifications } from './pages/student/StudentNotifications';
 import { StudentCourseView } from './pages/student/StudentCourseView';
 import { StudentOpportunities } from './pages/student/StudentOpportunities';
 import { CVBuilder } from './pages/student/CVBuilder';
+import { Certificates as StudentCertificates } from './pages/student/Certificates'; // Renamed
 
 import { ELearning } from './pages/student/ELearning';
 import { AdminBusinessUsers } from './pages/admin/business/AdminBusinessUsers';
@@ -111,7 +112,7 @@ function App() {
               <Route path="blog" element={<Blog />} />
               <Route path="inclusion" element={<Inclusion />} />
               <Route path="contact" element={<Contact />} />
-              <Route path="certificates" element={<Certificates />} />
+              <Route path="certificates" element={<PublicCertificates />} />
               <Route path="enroll" element={<Enrollment />} />
               <Route path="privacy-policy" element={<PrivacyPolicy />} />
               <Route path="thank-you" element={<ThankYou />} />
@@ -143,6 +144,7 @@ function App() {
               <Route path="courses" element={<MyCourses />} />
               <Route path="e-learning" element={<ELearning />} />
               <Route path="cv-builder" element={<CVBuilder />} />
+              <Route path="certificates" element={<StudentCertificates />} />
               <Route path="profile" element={<StudentProfile />} />
               <Route path="privacy-settings" element={<PrivacySettings />} />
               <Route path="forum" element={<ForumList />} />
