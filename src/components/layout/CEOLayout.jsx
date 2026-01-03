@@ -131,12 +131,24 @@ export function CEOLayout() {
                     onLogout={handleLogout}
                     roleLabel="CHIEF EXECUTIVE"
                     themeColor="text-[#D4Af37]"
+                    onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 />
 
-                {/* Mobile Menu */}
+                {/* Mobile Menu Overlay */}
                 {isMobileMenuOpen && (
-                    <div className="fixed inset-0 top-0 bg-[#4B3832] z-50 md:hidden overflow-y-auto">
-                        <nav className="p-4 flex flex-col gap-2">
+                    <div className="fixed inset-0 z-50 bg-[#4B3832] md:hidden flex flex-col">
+                        <div className="p-6 flex items-center justify-between border-b border-[#D4Af37]/10">
+                            <div className="flex items-center gap-3">
+                                <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#D4Af37] to-[#B8860B] flex items-center justify-center text-[#4B3832]">
+                                    <span className="material-symbols-outlined text-2xl">diamond</span>
+                                </div>
+                                <span className="font-serif text-lg font-bold text-[#F5DEB3]">Executive Menu</span>
+                            </div>
+                            <button onClick={() => setIsMobileMenuOpen(false)} className="h-12 w-12 flex items-center justify-center rounded-2xl bg-white/5 text-[#D4Af37] hover:bg-white/10 transition-colors">
+                                <span className="material-symbols-outlined">close</span>
+                            </button>
+                        </div>
+                        <nav className="flex-1 p-6 space-y-2 overflow-y-auto relative z-10 custom-scrollbar">
                             <div className="pb-4 mb-4 border-b border-[#D4Af37]/20">
                                 <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-[#D4Af37]/10">
                                     <div className="h-10 w-10 rounded-full bg-[#D4Af37] text-[#4B3832] flex items-center justify-center font-bold text-lg">

@@ -204,6 +204,7 @@ export function StudentLayout() {
                     user={user}
                     unreadNotifications={unreadNotifications}
                     onLogout={handleLogout}
+                    onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 />
 
                 {/* Mobile Menu */}

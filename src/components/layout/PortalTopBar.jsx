@@ -4,7 +4,7 @@ import { cn } from '../../lib/utils';
 import { GlobalSearch } from '../common/GlobalSearch';
 import { ThemeToggle } from '../common/ThemeToggle';
 
-export function PortalTopBar({ user, unreadNotifications = 0, onLogout }) {
+export function PortalTopBar({ user, unreadNotifications = 0, onLogout, onToggleMobileMenu }) {
     const { t } = useTranslation();
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [currentTime, setCurrentTime] = useState(new Date());
@@ -30,7 +30,15 @@ export function PortalTopBar({ user, unreadNotifications = 0, onLogout }) {
     const avatarUrl = user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=random`;
 
     return (
-        <div className="h-20 border-b border-espresso/10 bg-[#F5DEB3]/80 dark:bg-[#1c1916]/80 backdrop-blur-md sticky top-0 z-30 px-4 sm:px-8 flex items-center justify-between transition-colors">
+        <div className="h-20 border-b border-espresso/10 bg-[#F5DEB3]/80 dark:bg-[#1c1916]/80 backdrop-blur-md sticky top-0 z-30 px-4 sm:px-8 flex items-center justify-between transition-colors gap-2">
+
+            {/* Mobile Menu Toggle */}
+            <button
+                onClick={onToggleMobileMenu}
+                className="md:hidden p-2 rounded-xl bg-espresso/5 text-espresso dark:text-white hover:bg-espresso/10 transition-colors active:scale-95"
+            >
+                <span className="material-symbols-outlined text-[24px]">menu</span>
+            </button>
 
             {/* Search Trigger (Desktop) */}
             <div className="hidden sm:flex items-center flex-1">

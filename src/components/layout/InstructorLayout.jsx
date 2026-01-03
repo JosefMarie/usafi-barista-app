@@ -108,11 +108,23 @@ export function InstructorLayout() {
                     user={user}
                     unreadNotifications={unreadCount}
                     onLogout={handleLogout}
+                    onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 />
-                {/* Mobile Menu */}
+                {/* Mobile Menu Overlay */}
                 {isMobileMenuOpen && (
-                    <div className="fixed inset-0 top-0 bg-background-light dark:bg-background-dark z-50 md:hidden overflow-y-auto">
-                        <nav className="p-4 flex flex-col gap-2">
+                    <div className="fixed inset-0 z-50 bg-[#F5DEB3] dark:bg-[#1c1916] md:hidden flex flex-col">
+                        <div className="p-6 flex items-center justify-between border-b border-espresso/10">
+                            <div className="flex items-center gap-3">
+                                <div className="h-10 w-10 rounded-full bg-espresso flex items-center justify-center text-white shadow-lg">
+                                    <span className="material-symbols-outlined text-lg">coffee</span>
+                                </div>
+                                <span className="font-serif text-lg font-bold text-espresso dark:text-white">Instructor Menu</span>
+                            </div>
+                            <button onClick={() => setIsMobileMenuOpen(false)} className="h-12 w-12 flex items-center justify-center rounded-2xl bg-espresso/5 text-espresso dark:text-white hover:bg-espresso/10 transition-colors">
+                                <span className="material-symbols-outlined">close</span>
+                            </button>
+                        </div>
+                        <nav className="flex-1 p-6 space-y-2 overflow-y-auto relative z-10 custom-scrollbar">
                             <div className="pb-4 mb-4 border-b border-black/5 dark:border-white/5">
                                 <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-black/5 dark:bg-white/5">
                                     <div className="h-10 w-10 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-lg">
