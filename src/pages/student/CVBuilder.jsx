@@ -279,7 +279,7 @@ export function CVBuilder() {
                 details summary::-webkit-details-marker { display: none; }
             `}</style>
 
-            <div className="relative flex min-h-screen w-full flex-col max-w-5xl shadow-2xl overflow-hidden bg-[#F5DEB3] dark:bg-[#1c1916] rounded-[2.5rem] border border-espresso/10 my-8">
+            <div className="relative flex min-h-screen w-full flex-col shadow-2xl overflow-hidden bg-[#F5DEB3] dark:bg-[#1c1916] rounded-[2.5rem] border border-espresso/10 my-8">
 
                 {/* Header */}
                 <div className="sticky top-0 z-50 bg-[#F5DEB3]/90 dark:bg-[#1c1916]/90 backdrop-blur-md border-b border-espresso/10 text-espresso dark:text-white">
@@ -536,7 +536,7 @@ export function CVBuilder() {
 
                 {/* Footer Actions */}
                 <div className="sticky bottom-0 w-full bg-[#F5DEB3]/90 dark:bg-[#1c1916]/90 backdrop-blur-md border-t border-espresso/10 p-8 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] z-50 rounded-b-[2.5rem]">
-                    <div className="flex flex-col md:flex-row gap-6 max-w-4xl mx-auto">
+                    <div className="flex flex-col md:flex-row gap-6 w-full">
                         {saveSuccess ? (
                             <button disabled className="flex-1 h-16 flex items-center justify-center gap-3 rounded-[1.25rem] border-2 border-green-600/50 text-green-600 font-black text-xs uppercase tracking-[0.2em] bg-green-50/50 backdrop-blur-sm shadow-inner transition-all">
                                 <span className="material-symbols-outlined text-[20px] animate-pulse">verified_user</span>

@@ -95,7 +95,7 @@ export function PostDetails() {
                 </div>
             </header>
 
-            <main className="flex-1 w-full max-w-2xl mx-auto">
+            <main className="flex-1 w-full">
                 <article className="px-5 pt-6 pb-4">
                     {/* Author Info */}
                     <div className="flex items-center gap-3 mb-4">
@@ -178,7 +178,7 @@ export function PostDetails() {
 
             {/* Input Footer */}
             <div className="fixed bottom-0 w-full z-50 bg-background-light dark:bg-[#1c1916] border-t border-primary/10 dark:border-primary/20 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
-                <div className="flex items-end gap-3 px-4 py-3 max-w-2xl mx-auto">
+                <div className="flex items-end gap-3 px-4 py-3 w-full">
                     <div className="relative flex-1">
                         <textarea
                             value={newComment}

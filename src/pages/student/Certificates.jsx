@@ -214,7 +214,7 @@ export function Certificates() {
                         </div>
                         <div>
                             <h2 className="text-3xl font-serif font-bold text-espresso dark:text-white mb-3">Credential Repository Empty</h2>
-                            <p className="text-sm font-medium text-espresso/40 dark:text-white/40 max-w-sm mx-auto uppercase tracking-widest leading-relaxed">
+                            <p className="text-sm font-medium text-espresso/40 dark:text-white/40 w-full uppercase tracking-widest leading-relaxed">
                                 Complete your strategic modules and excel in evaluations to unlock verified professional credentials.
                             </p>
                         </div>

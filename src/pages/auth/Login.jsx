@@ -28,7 +28,8 @@ export function Login() {
             const userData = userDoc.data();
             const role = userData?.role || 'student';
 
-            if (role === 'admin') navigate('/admin/dashboard');
+            if (role === 'ceo') navigate('/ceo/dashboard');
+            else if (role === 'admin') navigate('/admin/dashboard');
             else if (role === 'instructor') navigate('/instructor/dashboard');
             else if (role === 'manager') navigate('/manager/dashboard');
             else if (role === 'business_student') navigate('/business/dashboard');

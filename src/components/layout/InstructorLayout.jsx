@@ -37,6 +37,9 @@ export function InstructorLayout() {
         return <Navigate to="/login" replace />;
     }
     // Only instructors can view this layout
+    if (user.role === 'ceo') {
+        return <Navigate to="/ceo/dashboard" replace />;
+    }
     if (user.role !== 'instructor') {
         // Redirect admins to admin dashboard, students to student dashboard
         return <Navigate to={user.role === 'admin' ? '/admin/dashboard' : '/student/dashboard'} replace />;

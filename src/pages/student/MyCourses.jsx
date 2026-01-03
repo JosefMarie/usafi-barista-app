@@ -73,7 +73,7 @@ export function MyCourses() {
     return (
         <div className="space-y-8 animate-fade-in w-full">
             {/* Header / Hero */}
-            <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl p-10 shadow-xl border border-espresso/10 flex flex-col md:flex-row gap-10 items-center relative overflow-hidden group">
+            <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl p-10 shadow-xl border border-espresso/10 flex flex-col md:flex-row gap-10 items-start relative overflow-hidden group">
                 <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                 <div className="w-full md:w-2/5 aspect-video rounded-3xl overflow-hidden shadow-2xl relative z-10 rotate-1 group-hover:rotate-0 transition-transform duration-500">
                     <img
@@ -83,7 +83,7 @@ export function MyCourses() {
                     />
                     <div className="absolute inset-0 bg-espresso/10 hover:bg-transparent transition-colors" />
                 </div>
-                <div className="flex-1 space-y-6 text-center md:text-left relative z-10">
+                <div className="flex-1 space-y-6 text-left relative z-10">
                     <h1 className="text-4xl font-serif font-bold text-espresso dark:text-white leading-tight">{course.title}</h1>
                     <p className="text-sm font-medium text-espresso/60 dark:text-white/60 leading-relaxed">{course.description}</p>
 

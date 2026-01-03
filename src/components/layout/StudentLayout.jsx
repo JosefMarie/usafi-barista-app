@@ -84,6 +84,9 @@ export function StudentLayout() {
     }
 
     // STRICT RBAC: Redirect Admins/Instructors to their own portal
+    if (user.role === 'ceo') {
+        return <Navigate to="/ceo/dashboard" replace />;
+    }
     if (user.role === 'admin') {
         return <Navigate to="/admin/dashboard" replace />;
     }
@@ -195,7 +198,7 @@ export function StudentLayout() {
             </aside>
 
             {/* Main Content Area */}
-            <div className="flex-1 flex flex-col h-full min-w-0">
+            <div className="flex-1 flex flex-col h-full min-w-0 w-full items-start transition-colors duration-300">
 
                 <PortalTopBar
                     user={user}
@@ -256,7 +259,7 @@ export function StudentLayout() {
                 )}
 
                 {/* Page Content */}
-                <main className="flex-1 p-6 overflow-y-auto overflow-x-hidden relative flex flex-col">
+                <main className="flex-1 overflow-y-auto overflow-x-hidden relative flex flex-col w-full p-6 items-start">
                     <Outlet />
                 </main>
             </div>

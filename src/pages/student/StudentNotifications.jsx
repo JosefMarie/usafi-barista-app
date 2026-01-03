@@ -97,7 +97,7 @@ export function StudentNotifications() {
                 </div>
             </div>
 
-            <main className="flex flex-col gap-6 px-4">
+            <main className="flex flex-col gap-6 px-4 w-full">
                 {/* New Section */}
                 {newNotifications.length > 0 && (
                     <div className="flex flex-col gap-3">

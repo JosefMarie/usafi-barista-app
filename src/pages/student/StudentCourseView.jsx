@@ -343,7 +343,7 @@ export function StudentCourseView() {
             </header>
 
             {/* Main Content */}
-            <main className="flex-1 max-w-4xl mx-auto w-full p-6 pb-24">
+            <main className="flex-1 w-full p-6 pb-24">
 
                 {/* QUIZ MODE */}
                 {showQuiz ? (
@@ -351,7 +351,7 @@ export function StudentCourseView() {
                         {!quizResult ? (
                             !quizStarted ? (
                                 // QUIZ INTRO / GUIDELINES
-                                <div className="max-w-2xl mx-auto bg-[#F5DEB3] dark:bg-white/5 p-12 rounded-3xl border border-espresso/10 shadow-2xl text-center space-y-10 animate-scale-in relative overflow-hidden group">
+                                <div className="w-full bg-[#F5DEB3] dark:bg-white/5 p-12 rounded-3xl border border-espresso/10 shadow-2xl text-left space-y-10 animate-scale-in relative overflow-hidden group">
                                     <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                                     <div className="size-24 bg-espresso/5 rounded-3xl flex items-center justify-center mx-auto text-espresso rotate-12 group-hover:rotate-0 transition-transform">
                                         <span className="material-symbols-outlined text-5xl">quiz</span>
@@ -567,7 +567,7 @@ export function StudentCourseView() {
                             )
                         ) : (
                             // QUIZ RESULTS
-                            <div className="text-center py-16 animate-scale-in max-w-2xl mx-auto bg-[#F5DEB3] dark:bg-white/5 p-12 rounded-3xl border border-espresso/10 shadow-2xl relative overflow-hidden group">
+                            <div className="text-left py-16 animate-scale-in w-full bg-[#F5DEB3] dark:bg-white/5 p-12 rounded-3xl border border-espresso/10 shadow-2xl relative overflow-hidden group">
                                 <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                                 <div className={cn(
                                     "inline-flex items-center justify-center w-28 h-28 rounded-3xl mb-8 shadow-2xl text-6xl rotate-3 group-hover:rotate-0 transition-transform",
@@ -586,24 +586,24 @@ export function StudentCourseView() {
 
                                 {quizResult.passed ? (
                                     <div className="space-y-6 relative z-10">
-                                        <p className="text-sm font-medium text-espresso/60 dark:text-white/60 leading-relaxed max-w-md mx-auto">
+                                        <p className="text-sm font-medium text-espresso/60 dark:text-white/60 leading-relaxed">
                                             Exceptional performance. Your understanding of this module has been successfully encoded. Premium advancement is now authorized.
                                         </p>
                                         <button
                                             onClick={() => navigate('/student/courses')}
-                                            className="px-10 py-5 bg-green-600 text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-2xl hover:bg-green-700 transition-all flex items-center gap-3 mx-auto active:scale-95"
+                                            className="px-10 py-5 bg-green-600 text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-2xl hover:bg-green-700 transition-all flex items-center gap-3 active:scale-95"
                                         >
                                             Advance to Curriculum Map <span className="material-symbols-outlined text-[20px]">map</span>
                                         </button>
                                     </div>
                                 ) : (
                                     <div className="space-y-6 relative z-10">
-                                        <p className="text-sm font-medium text-espresso/60 dark:text-white/60 leading-relaxed max-w-md mx-auto">
+                                        <p className="text-sm font-medium text-espresso/60 dark:text-white/60 leading-relaxed">
                                             The evaluation threshold was not met. Strategic recalibration is required before another extraction attempt is authorized.
                                         </p>
                                         <button
                                             onClick={retakeModule}
-                                            className="px-10 py-5 bg-espresso text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-2xl hover:bg-black transition-all flex items-center gap-3 mx-auto active:scale-95"
+                                            className="px-10 py-5 bg-espresso text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-2xl hover:bg-black transition-all flex items-center gap-3 active:scale-95"
                                         >
                                             <span className="material-symbols-outlined text-[20px]">refresh</span> Re-initiate Extraction
                                         </button>
@@ -657,7 +657,7 @@ export function StudentCourseView() {
             {
                 !showQuiz && (
                     <footer className="fixed bottom-0 left-0 right-0 bg-[#F5DEB3]/80 dark:bg-[#1e1e1e]/80 backdrop-blur-md border-t border-espresso/10 p-6 z-30 transition-colors">
-                        <div className="max-w-6xl mx-auto flex justify-between items-center">
+                        <div className="w-full flex justify-between items-center px-6">
                             <button
                                 onClick={handlePrev}
                                 disabled={currentSlide === 0}

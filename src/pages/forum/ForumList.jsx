@@ -22,7 +22,7 @@ export function ForumList() {
     if (loading) return <div className="p-8 text-center">Loading forum...</div>;
 
     return (
-        <div className="max-w-3xl mx-auto pb-20 space-y-6">
+        <div className="w-full pb-20 space-y-6">
             <div className="flex items-center justify-between">
                 <h2 className="text-espresso dark:text-white text-2xl font-serif font-bold">Community Forum</h2>
                 <Link to="create" className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-full font-bold shadow-md hover:bg-primary/90 transition-transform active:scale-95">

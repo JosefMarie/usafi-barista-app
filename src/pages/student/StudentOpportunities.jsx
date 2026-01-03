@@ -38,7 +38,7 @@ export function StudentOpportunities() {
     if (loading) return <div className="p-8 text-center text-espresso/60">Loading opportunities...</div>;
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 w-full">
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="font-serif text-2xl font-bold text-espresso dark:text-white">Career Opportunities</h1>

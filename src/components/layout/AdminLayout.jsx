@@ -43,6 +43,9 @@ export function AdminLayout() {
     }
 
     // STRICT RBAC: Only Admin can view this layout
+    if (user.role === 'ceo') {
+        return <Navigate to="/ceo/dashboard" replace />;
+    }
     if (user.role === 'instructor') {
         return <Navigate to="/instructor/dashboard" replace />;
     }

@@ -62,7 +62,7 @@ export function CreatePost() {
                 </div>
             </header>
 
-            <main className="flex-1 flex flex-col w-full max-w-2xl mx-auto">
+            <main className="flex-1 flex flex-col w-full">
                 {/* Post Title Input */}
                 <div className="px-5 pt-6 pb-2">
                     <label className="block mb-2 text-sm font-bold text-espresso/80 dark:text-white/80 uppercase tracking-wider">Title</label>
@@ -87,8 +87,8 @@ export function CreatePost() {
                                 key={topic}
                                 onClick={() => setFormData({ ...formData, topic })}
                                 className={`group flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full pl-4 pr-4 transition-all active:scale-95 whitespace-nowrap ${formData.topic === topic
-                                        ? "bg-primary text-white shadow-md shadow-primary/20"
-                                        : "bg-white dark:bg-white/5 border border-primary/30 hover:border-primary hover:bg-primary/5 text-espresso dark:text-white"
+                                    ? "bg-primary text-white shadow-md shadow-primary/20"
+                                    : "bg-white dark:bg-white/5 border border-primary/30 hover:border-primary hover:bg-primary/5 text-espresso dark:text-white"
                                     }`}
                             >
                                 <span className="text-sm font-medium leading-normal">{topic}</span>
@@ -124,7 +124,7 @@ export function CreatePost() {
 
             {/* Bottom Action Bar */}
             <div className="sticky bottom-0 z-50 bg-background-light dark:bg-[#1c1916] border-t border-primary/10 dark:border-primary/20 p-4 pb-8 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
-                <div className="flex items-center justify-between max-w-2xl mx-auto gap-4">
+                <div className="flex items-center justify-between w-full gap-4">
                     {/* Rich Text Tools (Visual Only for V1) */}
                     <div className="flex items-center gap-1 text-espresso/60 dark:text-white/60">
                         <button aria-label="Bold" className="p-2 hover:bg-primary/10 rounded-lg transition-colors active:text-primary">
@@ -138,7 +138,7 @@ export function CreatePost() {
                     <button
                         onClick={handleSubmit}
                         disabled={loading || !formData.title.trim() || !formData.content.trim()}
-                        className="flex-1 max-w-[160px] bg-primary hover:bg-[#8e6a46] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold h-12 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-primary/25 active:scale-95 active:shadow-sm transition-all"
+                        className="flex-1 bg-primary hover:bg-[#8e6a46] disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold h-12 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-primary/25 active:scale-95 active:shadow-sm transition-all"
                     >
                         {loading ? (
                             <span className="material-symbols-outlined animate-spin">progress_activity</span>

@@ -95,7 +95,7 @@ export function Dashboard() {
     if (loading) return <div className="h-screen flex items-center justify-center"><span className="material-symbols-outlined animate-spin text-4xl text-primary">progress_activity</span></div>;
 
     return (
-        <div className="space-y-8 animate-fade-in">
+        <div className="space-y-8 animate-fade-in w-full">
             {/* Welcome Section */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>

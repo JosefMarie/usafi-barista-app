@@ -93,7 +93,7 @@ export function ELearning() {
             </div>
 
             {/* Tabs */}
-            <div className="flex gap-4 border-b border-espresso/10 pb-4">
+            <div className="flex gap-4 border-b border-espresso/10 pb-4 justify-start">
                 <button
                     onClick={() => setActiveTab('schedule')}
                     className={cn(

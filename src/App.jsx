@@ -95,6 +95,16 @@ import { ManagerContacts } from './pages/manager/Contacts';
 import { ManagerSubscribers } from './pages/manager/Subscribers';
 import { ManagerMessages } from './pages/manager/Messages';
 
+// CEO Pages
+import { CEOLayout } from './components/layout/CEOLayout';
+import { CEODashboard } from './pages/ceo/CEODashboard';
+import { CEOStaff } from './pages/ceo/CEOStaff';
+import { CEORevenue } from './pages/ceo/CEORevenue';
+import { CEOSettings } from './pages/ceo/CEOSettings';
+
+// Setup utility
+import { SetupCEO } from './pages/public/SetupCEO';
+
 function App() {
   return (
     <ThemeProvider>
@@ -120,6 +130,7 @@ function App() {
               <Route path="login" element={<Login />} />
               <Route path="forgot-password" element={<ForgotPassword />} />
               <Route path="setup-admin" element={<SetupAdmin />} />
+              <Route path="setup-ceo" element={<SetupCEO />} />
               <Route path="opportunities" element={<Opportunities />} />
               <Route path="opportunities/post" element={<PostOpportunity />} />
               <Route path="opportunities/register" element={<SeekerRegister />} />
@@ -208,6 +219,16 @@ function App() {
               <Route path="messages" element={<ManagerMessages />} />
               <Route path="profile" element={<CommonProfile />} />
               <Route path="privacy-settings" element={<PrivacySettings />} />
+            </Route>
+
+            {/* CEO Route */}
+            <Route path="/ceo" element={<CEOLayout />}>
+              <Route index element={<Navigate to="/ceo/dashboard" replace />} />
+              <Route path="dashboard" element={<CEODashboard />} />
+              <Route path="staff" element={<CEOStaff />} />
+              <Route path="revenue" element={<CEORevenue />} />
+              <Route path="settings" element={<CEOSettings />} />
+              <Route path="profile" element={<CommonProfile />} />
             </Route>
 
             {/* Business Student Routes */}

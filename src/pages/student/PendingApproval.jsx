@@ -14,7 +14,7 @@ export function PendingApproval() {
     return (
         <div className="min-h-screen bg-background-light dark:bg-background-dark flex flex-col items-center justify-center p-4 text-center">
 
-            <div className="bg-white dark:bg-[#2c2825] p-8 md:p-12 rounded-3xl shadow-xl max-w-lg w-full border border-gray-100 dark:border-white/5 space-y-6">
+            <div className="bg-white dark:bg-[#2c2825] p-8 md:p-12 rounded-3xl shadow-xl w-full border border-gray-100 dark:border-white/5 space-y-6">
 
                 {/* Icon */}
                 <div className="h-20 w-20 bg-yellow-100 dark:bg-yellow-900/20 rounded-full flex items-center justify-center mx-auto text-yellow-600 dark:text-yellow-400">

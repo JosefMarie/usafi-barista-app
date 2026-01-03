@@ -20,6 +20,10 @@ export function ManagerLayout() {
         return <Navigate to="/setup-admin" replace />;
     }
 
+    if (user.role === 'ceo') {
+        return <Navigate to="/ceo/dashboard" replace />;
+    }
+
     if (user.role !== 'manager' && user.role !== 'admin') {
         return <Navigate to="/student/dashboard" replace />;
     }

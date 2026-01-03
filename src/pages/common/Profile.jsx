@@ -96,7 +96,7 @@ export function Profile() {
     const idLabel = user?.role === 'student' ? 'Student ID' : 'Staff ID';
 
     return (
-        <div className="flex flex-col w-full max-w-5xl mx-auto pb-12 animate-fade-in px-4">
+        <div className="flex-1 flex flex-col h-full overflow-y-auto w-full max-w-5xl mx-auto pb-12 animate-fade-in px-4 custom-scrollbar">
             {/* Header Area */}
             <div className="flex items-center justify-between mb-10">
                 <div>
