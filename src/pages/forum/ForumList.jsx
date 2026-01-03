@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { formatDistanceToNow } from 'date-fns';
+import { cn } from '../../lib/utils';
+
 
 export function ForumList() {
     const [posts, setPosts] = useState([]);
@@ -46,37 +48,38 @@ export function ForumList() {
                 ) : (
                     posts.map(post => (
                         <Link to={`${post.id}`} key={post.id} className="block group">
-                            <article className="bg-white dark:bg-[#1c1916] p-5 rounded-2xl shadow-sm border border-primary/10 hover:border-primary/40 transition-all hover:shadow-md">
-                                <div className="flex items-start justify-between mb-3">
-                                    <div className="flex items-center gap-2">
-                                        <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-bold overflow-hidden">
+                            <article className="bg-[#F5DEB3] dark:bg-[#1c1916] p-6 rounded-2xl shadow-md border border-primary/20 hover:border-espresso transition-all hover:shadow-lg relative overflow-hidden">
+                                <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/30"></div>
+                                <div className="flex items-start justify-between mb-4">
+                                    <div className="flex items-center gap-3">
+                                        <div className="h-10 w-10 rounded-full bg-white dark:bg-white/10 flex items-center justify-center text-espresso text-sm font-bold overflow-hidden shadow-inner border border-white/20">
                                             {post.authorAvatar ? <img src={post.authorAvatar} alt="" className="w-full h-full object-cover" /> : (post.authorName?.[0] || 'U')}
                                         </div>
                                         <div className="flex flex-col">
-                                            <span className="text-xs font-bold text-espresso dark:text-white">{post.authorName}</span>
-                                            <span className="text-[10px] text-espresso/50 dark:text-white/50">
+                                            <span className="text-sm font-bold text-espresso dark:text-white">{post.authorName}</span>
+                                            <span className="text-xs text-espresso/60 dark:text-white/50 font-medium">
                                                 {post.createdAt?.seconds ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Just now'}
                                             </span>
                                         </div>
                                     </div>
-                                    <span className="px-2 py-0.5 rounded-full bg-primary/5 text-primary text-[10px] font-bold border border-primary/10 uppercase tracking-wide">
+                                    <span className="px-2.5 py-1 rounded-full bg-espresso text-white dark:bg-primary/20 dark:text-primary text-[10px] font-bold border border-white/10 uppercase tracking-widest shadow-sm">
                                         {post.topic}
                                     </span>
                                 </div>
-                                <h3 className="text-lg font-serif font-bold text-espresso dark:text-white mb-2 group-hover:text-primary transition-colors leading-tight">
+                                <h3 className="text-xl font-serif font-bold text-espresso dark:text-white mb-2 group-hover:text-espresso/80 dark:group-hover:text-primary transition-colors leading-tight">
                                     {post.title}
                                 </h3>
-                                <p className="text-sm text-espresso/70 dark:text-white/70 line-clamp-2 mb-4">
+                                <p className="text-sm text-espresso/80 dark:text-white/70 line-clamp-2 mb-5 font-medium leading-relaxed">
                                     {post.content}
                                 </p>
-                                <div className="flex items-center gap-4 text-xs text-espresso/50 dark:text-white/50 font-medium border-t border-primary/5 pt-3">
-                                    <div className="flex items-center gap-1">
-                                        <span className="material-symbols-outlined text-[16px]">thumb_up</span>
-                                        {post.likes || 0} Likes
+                                <div className="flex items-center gap-6 text-[11px] text-espresso/70 dark:text-white/50 font-bold border-t border-espresso/10 pt-4">
+                                    <div className="flex items-center gap-1.5 hover:text-espresso transition-colors">
+                                        <span className="material-symbols-outlined text-[18px] filled text-espresso/40">thumb_up</span>
+                                        {post.likes || 0} LIKES
                                     </div>
-                                    <div className="flex items-center gap-1">
-                                        <span className="material-symbols-outlined text-[16px]">chat_bubble</span>
-                                        {post.commentCount || 0} Comments
+                                    <div className="flex items-center gap-1.5 hover:text-espresso transition-colors">
+                                        <span className="material-symbols-outlined text-[18px] text-espresso/40">chat_bubble</span>
+                                        {post.commentCount || 0} COMMENTS
                                     </div>
                                 </div>
                             </article>

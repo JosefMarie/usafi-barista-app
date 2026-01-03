@@ -57,7 +57,7 @@ export function Gallery() {
             <section className="container mx-auto px-6 mb-20">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                     {photos.map((photo, index) => (
-                        <div key={index} className="group relative break-inside-avoid overflow-hidden rounded-2xl shadow-lg border border-[#e0dbd6] dark:border-white/10 aspect-[4/3]">
+                        <div key={index} className="group relative break-inside-avoid overflow-hidden rounded-2xl shadow-xl border border-espresso/10 aspect-[4/3] bg-[#F5DEB3] dark:bg-white/5">
                             <div
                                 className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
                                 style={{ backgroundImage: `url("${photo.url}")` }}
@@ -119,7 +119,8 @@ export function Gallery() {
             </section>
 
             {/* 4. Section 3: Call to Action */}
-            <section className="container mx-auto px-6 py-20 text-center">
+            <section className="container mx-auto px-6 py-20 text-center bg-[#F5DEB3] dark:bg-white/5 border-y border-espresso/10 rounded-3xl mt-20 relative overflow-hidden group">
+                <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                 <h2 className="font-serif text-3xl md:text-4xl font-bold text-espresso dark:text-white mb-6">
                     {t('gallery.cta.title')}
                 </h2>

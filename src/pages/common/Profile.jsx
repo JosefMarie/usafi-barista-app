@@ -96,36 +96,38 @@ export function Profile() {
     const idLabel = user?.role === 'student' ? 'Student ID' : 'Staff ID';
 
     return (
-        <div className="flex flex-col w-full max-w-4xl mx-auto pb-8 animate-fade-in">
+        <div className="flex flex-col w-full max-w-5xl mx-auto pb-12 animate-fade-in px-4">
             {/* Header Area */}
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-10">
                 <div>
-                    <h2 className="text-2xl font-serif font-bold text-espresso dark:text-white">
+                    <h2 className="text-3xl font-serif font-bold text-espresso dark:text-white leading-tight">
                         {roleLabel} Profile
                     </h2>
-                    <p className="text-espresso/60 dark:text-white/60 text-sm">
-                        Manage your personal information and account settings
+                    <p className="text-espresso/60 dark:text-white/60 text-sm font-medium uppercase tracking-wide mt-1">
+                        Securely manage your personal account & settings
                     </p>
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
                 {/* Left Column: Avatar and Quick Info */}
-                <div className="lg:col-span-1 flex flex-col items-center">
-                    <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl p-8 shadow-sm border border-black/5 dark:border-white/5 w-full flex flex-col items-center">
+                <div className="lg:col-span-4 flex flex-col items-center">
+                    <div className="bg-[#F5DEB3] dark:bg-[#1c1916] rounded-3xl p-10 shadow-xl border border-primary/20 w-full flex flex-col items-center relative overflow-hidden group">
+                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/30 group-hover:bg-espresso transition-colors"></div>
+
                         <div
                             onClick={handleAvatarClick}
-                            className="relative mb-6 group cursor-pointer"
+                            className="relative mb-8 group/avatar cursor-pointer"
                         >
                             <div
-                                className="w-40 h-40 rounded-full border-4 border-primary/10 shadow-lg bg-cover bg-center overflow-hidden flex items-center justify-center bg-gray-100 dark:bg-white/5"
+                                className="w-44 h-44 rounded-full border-4 border-white dark:border-[#2c2825] shadow-2xl bg-cover bg-center overflow-hidden flex items-center justify-center bg-white/50 backdrop-blur-sm transition-transform duration-500 group-hover/avatar:scale-105"
                                 style={{ backgroundImage: uploading ? 'none' : `url('${avatarUrl}')` }}
                             >
                                 {uploading && (
-                                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                                    <div className="animate-spin rounded-full h-14 w-14 border-b-2 border-primary"></div>
                                 )}
                             </div>
-                            <div className="absolute bottom-2 right-2 bg-primary text-white p-2.5 rounded-full shadow-md flex items-center justify-center border-4 border-white dark:border-[#1e1e1e] group-hover:scale-110 transition-transform">
+                            <div className="absolute bottom-2 right-2 bg-espresso text-white p-3 rounded-full shadow-lg flex items-center justify-center border-4 border-[#F5DEB3] dark:border-[#1c1916] group-hover/avatar:scale-110 transition-transform">
                                 <span className="material-symbols-outlined text-[20px]">photo_camera</span>
                             </div>
                             <input
@@ -137,111 +139,115 @@ export function Profile() {
                             />
                         </div>
 
-                        <h1 className="text-2xl font-bold text-espresso dark:text-white text-center mb-1">
+                        <h1 className="text-2xl font-bold text-espresso dark:text-white text-center mb-1 font-serif">
                             {displayName}
                         </h1>
-                        <p className="text-primary font-bold text-sm tracking-wider uppercase mb-4">
+                        <p className="text-espresso/60 font-black text-[10px] tracking-[0.2em] uppercase mb-6 bg-white/30 px-4 py-1.5 rounded-full border border-white/20">
                             {idLabel}: {userId}
                         </p>
 
-                        <div className="px-4 py-1.5 bg-primary/10 dark:bg-primary/20 rounded-full mb-6">
-                            <p className="text-primary text-xs font-bold tracking-widest uppercase">
-                                {roleLabel}
-                            </p>
+                        <div className="flex flex-col gap-3 w-full">
+                            <button
+                                onClick={handleLogout}
+                                className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-white/40 text-red-600 border border-red-200/50 hover:bg-red-50 hover:border-red-300 transition-all font-bold text-xs uppercase tracking-widest shadow-sm active:scale-95"
+                            >
+                                <span className="material-symbols-outlined text-[18px]">logout</span>
+                                Sign Out Account
+                            </button>
                         </div>
-
-                        <button
-                            onClick={handleLogout}
-                            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-red-200 text-red-600 hover:bg-red-50 dark:border-red-900/30 dark:hover:bg-red-900/10 transition-colors font-medium text-sm"
-                        >
-                            <span className="material-symbols-outlined text-[20px]">logout</span>
-                            Sign Out
-                        </button>
                     </div>
                 </div>
 
                 {/* Right Column: Settings and Info */}
-                <div className="lg:col-span-2 space-y-6">
+                <div className="lg:col-span-8 space-y-8">
                     {/* Personal Info Card */}
-                    <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-sm border border-black/5 dark:border-white/5 overflow-hidden">
-                        <div className="px-6 py-4 border-b border-black/5 dark:border-white/5 flex items-center justify-between">
-                            <h3 className="font-bold text-espresso dark:text-white">Personal Information</h3>
+                    <div className="bg-[#F5DEB3] dark:bg-[#1c1916] rounded-3xl shadow-xl border border-primary/20 overflow-hidden relative group">
+                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/30 group-hover:bg-espresso transition-colors"></div>
+                        <div className="px-8 py-5 border-b border-espresso/10 flex items-center justify-between bg-white/20">
+                            <div className="flex items-center gap-3">
+                                <span className="material-symbols-outlined text-espresso/60">badge</span>
+                                <h3 className="font-bold text-espresso dark:text-white uppercase tracking-widest text-xs">Identity Profile</h3>
+                            </div>
                             <button
                                 onClick={handleEditClick}
-                                className="text-primary text-sm font-bold hover:underline"
+                                className="h-10 px-6 rounded-xl bg-espresso text-white text-[10px] font-black uppercase tracking-widest hover:shadow-lg hover:-translate-y-0.5 transition-all active:scale-95"
                             >
-                                Edit
+                                Edit Info
                             </button>
                         </div>
-                        <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="space-y-1">
-                                <p className="text-xs text-espresso/50 dark:text-white/50 font-bold uppercase tracking-wider">Full Name</p>
-                                <p className="text-espresso dark:text-white font-medium">{displayName}</p>
+                        <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+                            <div className="space-y-1.5">
+                                <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">Full Name</p>
+                                <p className="text-espresso dark:text-white font-bold text-lg">{displayName}</p>
                             </div>
-                            <div className="space-y-1">
-                                <p className="text-xs text-espresso/50 dark:text-white/50 font-bold uppercase tracking-wider">Email Address</p>
-                                <p className="text-espresso dark:text-white font-medium">{user?.email}</p>
+                            <div className="space-y-1.5">
+                                <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">Email Address</p>
+                                <p className="text-espresso dark:text-white font-bold text-lg">{user?.email}</p>
                             </div>
-                            <div className="space-y-1">
-                                <p className="text-xs text-espresso/50 dark:text-white/50 font-bold uppercase tracking-wider">Phone Number</p>
-                                <p className="text-espresso dark:text-white font-medium">{user?.phone || 'Not provided'}</p>
+                            <div className="space-y-1.5">
+                                <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">Phone Number</p>
+                                <p className="text-espresso dark:text-white font-bold text-lg">{user?.phone || 'Not provided'}</p>
                             </div>
-                            <div className="space-y-1">
-                                <p className="text-xs text-espresso/50 dark:text-white/50 font-bold uppercase tracking-wider">Location</p>
-                                <p className="text-espresso dark:text-white font-medium">{user?.location || 'Not set'}</p>
+                            <div className="space-y-1.5">
+                                <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">Live Location</p>
+                                <p className="text-espresso dark:text-white font-bold text-lg">{user?.location || 'Not set'}</p>
                             </div>
                         </div>
                     </div>
 
                     {/* Account Settings Card */}
-                    <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-sm border border-black/5 dark:border-white/5 overflow-hidden">
-                        <div className="px-6 py-4 border-b border-black/5 dark:border-white/5">
-                            <h3 className="font-bold text-espresso dark:text-white">Account Settings</h3>
+                    <div className="bg-[#F5DEB3] dark:bg-[#1c1916] rounded-3xl shadow-xl border border-primary/20 overflow-hidden relative group">
+                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/30 group-hover:bg-espresso transition-colors"></div>
+                        <div className="px-8 py-5 border-b border-espresso/10 bg-white/20">
+                            <div className="flex items-center gap-3">
+                                <span className="material-symbols-outlined text-espresso/60">settings</span>
+                                <h3 className="font-bold text-espresso dark:text-white uppercase tracking-widest text-xs">Security & Utility</h3>
+                            </div>
                         </div>
-                        <div className="divide-y divide-black/5 dark:divide-white/5">
+                        <div className="divide-y divide-espresso/10 relative z-10">
                             <button
                                 onClick={() => setShowPasswordModal(true)}
-                                className="w-full flex items-center justify-between px-6 py-4 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors group"
+                                className="w-full flex items-center justify-between px-8 py-6 hover:bg-white/30 dark:hover:bg-white/5 transition-all group/item"
                             >
-                                <div className="flex items-center gap-4 text-left">
-                                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                                <div className="flex items-center gap-5 text-left">
+                                    <div className="w-12 h-12 rounded-2xl bg-espresso text-white flex items-center justify-center group-hover/item:scale-110 transition-transform shadow-md">
                                         <span className="material-symbols-outlined">lock</span>
                                     </div>
                                     <div>
-                                        <p className="font-bold text-espresso dark:text-white text-sm">Change Password</p>
-                                        <p className="text-espresso/50 dark:text-white/50 text-xs">Update your account security</p>
+                                        <p className="font-black text-espresso dark:text-white text-[11px] uppercase tracking-widest leading-none mb-1">Update Password</p>
+                                        <p className="text-espresso/50 dark:text-white/50 text-xs font-medium">Reset your secure access key</p>
                                     </div>
                                 </div>
-                                <span className="material-symbols-outlined text-espresso/30 group-hover:translate-x-1 transition-transform">chevron_right</span>
+                                <span className="material-symbols-outlined text-espresso/30 group-hover/item:translate-x-2 transition-transform">arrow_forward</span>
                             </button>
 
                             <button
                                 onClick={() => navigate('../privacy-settings')}
-                                className="w-full flex items-center justify-between px-6 py-4 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors group"
+                                className="w-full flex items-center justify-between px-8 py-6 hover:bg-white/30 dark:hover:bg-white/5 transition-all group/item"
                             >
-                                <div className="flex items-center gap-4 text-left">
-                                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                                        <span className="material-symbols-outlined">shield_person</span>
+                                <div className="flex items-center gap-5 text-left">
+                                    <div className="w-12 h-12 rounded-2xl bg-white/50 text-espresso flex items-center justify-center group-hover/item:scale-110 transition-transform shadow-sm border border-white/20">
+                                        <span className="material-symbols-outlined font-bold">shield_person</span>
                                     </div>
                                     <div>
-                                        <p className="font-bold text-espresso dark:text-white text-sm">Privacy Settings</p>
-                                        <p className="text-espresso/50 dark:text-white/50 text-xs">Manage your visibility and data</p>
+                                        <p className="font-black text-espresso dark:text-white text-[11px] uppercase tracking-widest leading-none mb-1">Privacy Permissions</p>
+                                        <p className="text-espresso/50 dark:text-white/50 text-xs font-medium">Control your digital visibility</p>
                                     </div>
                                 </div>
-                                <span className="material-symbols-outlined text-espresso/30 group-hover:translate-x-1 transition-transform">chevron_right</span>
+                                <span className="material-symbols-outlined text-espresso/30 group-hover/item:translate-x-2 transition-transform">arrow_forward</span>
                             </button>
 
-                            <button className="w-full flex items-center justify-between px-6 py-4 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors group">
-                                <div className="flex items-center gap-4 text-left">
-                                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                                        <span className="material-symbols-outlined">notifications_active</span>
+                            <button className="w-full flex items-center justify-between px-8 py-6 hover:bg-white/30 dark:hover:bg-white/5 transition-all group/item">
+                                <div className="flex items-center gap-5 text-left">
+                                    <div className="w-12 h-12 rounded-2xl bg-white/50 text-espresso flex items-center justify-center group-hover/item:scale-110 transition-transform shadow-sm border border-white/20">
+                                        <span className="material-symbols-outlined font-bold">notifications_active</span>
                                     </div>
                                     <div>
-                                        <p className="font-bold text-espresso dark:text-white text-sm">Notifications</p>
-                                        <p className="text-espresso/50 dark:text-white/50 text-xs">Manage how you receive updates</p>
+                                        <p className="font-black text-espresso dark:text-white text-[11px] uppercase tracking-widest leading-none mb-1">Global Alerts</p>
+                                        <p className="text-espresso/50 dark:text-white/50 text-xs font-medium">Set your communication flow</p>
                                     </div>
                                 </div>
-                                <span className="material-symbols-outlined text-espresso/30 group-hover:translate-x-1 transition-transform">chevron_right</span>
+                                <span className="material-symbols-outlined text-espresso/30 group-hover/item:translate-x-2 transition-transform">arrow_forward</span>
                             </button>
                         </div>
                     </div>

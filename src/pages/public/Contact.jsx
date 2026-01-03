@@ -70,7 +70,8 @@ export function Contact() {
 
                 {/* Contact Information & Map */}
                 <div className="space-y-8">
-                    <div className="bg-white dark:bg-white/5 p-8 rounded-2xl shadow-sm border border-[#e0dbd6] dark:border-white/10">
+                    <div className="bg-[#F5DEB3] dark:bg-white/5 p-8 rounded-3xl shadow-xl border border-espresso/10 relative overflow-hidden group">
+                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                         <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-6">{t('contact.info.title')}</h3>
 
                         <div className="space-y-6">
@@ -129,7 +130,8 @@ export function Contact() {
                 </div>
 
                 {/* Contact Form */}
-                <div className="bg-white dark:bg-white/5 p-8 rounded-2xl shadow-lg border border-[#e0dbd6] dark:border-white/10">
+                <div className="bg-[#F5DEB3] dark:bg-white/5 p-8 rounded-3xl shadow-2xl border border-espresso/10 relative overflow-hidden group">
+                    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                     <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-6">{t('contact.form.title')}</h3>
                     <form className="space-y-6" onSubmit={handleSubmit}>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -141,7 +143,7 @@ export function Contact() {
                                     required
                                     value={formData.firstName}
                                     onChange={handleChange}
-                                    className="w-full px-4 py-3 rounded-lg bg-background-light dark:bg-white/10 border border-primary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                                    className="w-full px-4 py-3 rounded-lg bg-white/50 dark:bg-white/10 border border-espresso/10 focus:border-espresso focus:ring-1 focus:ring-espresso outline-none transition-all placeholder:text-espresso/30"
                                     placeholder="John"
                                 />
                             </div>
@@ -153,7 +155,7 @@ export function Contact() {
                                     required
                                     value={formData.lastName}
                                     onChange={handleChange}
-                                    className="w-full px-4 py-3 rounded-lg bg-background-light dark:bg-white/10 border border-primary/20 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                                    className="w-full px-4 py-3 rounded-lg bg-white/50 dark:bg-white/10 border border-espresso/10 focus:border-espresso focus:ring-1 focus:ring-espresso outline-none transition-all placeholder:text-espresso/30"
                                     placeholder="Doe"
                                 />
                             </div>

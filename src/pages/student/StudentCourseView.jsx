@@ -296,26 +296,29 @@ export function StudentCourseView() {
 
     return (
         <div
-            className="min-h-screen bg-background-light dark:bg-background-dark flex flex-col select-none"
+            className="min-h-screen bg-[#F5DEB3] dark:bg-background-dark flex flex-col select-none"
             onContextMenu={(e) => e.preventDefault()}
         >
             {/* Header */}
-            <header className="bg-white dark:bg-[#1e1e1e] border-b border-black/5 dark:border-white/5 sticky top-0 z-10 px-6 py-4 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                    <button onClick={() => navigate('/student/courses')} className="p-2 hover:bg-black/5 rounded-full dark:text-white">
+            <header className="bg-[#F5DEB3]/80 dark:bg-[#1e1e1e]/80 backdrop-blur-md border-b border-espresso/10 sticky top-0 z-30 px-6 py-5 flex items-center justify-between transition-colors">
+                <div className="flex items-center gap-6">
+                    <button
+                        onClick={() => navigate('/student/courses')}
+                        className="h-12 w-12 flex items-center justify-center bg-white/40 hover:bg-white text-espresso rounded-2xl transition-all shadow-sm active:scale-95"
+                    >
                         <span className="material-symbols-outlined">arrow_back</span>
                     </button>
                     <div>
-                        <h1 className="font-serif font-bold text-espresso dark:text-white text-lg">{module.title}</h1>
-                        <div className="flex items-center gap-2">
-                            <div className="w-24 h-1.5 bg-gray-100 dark:bg-white/10 rounded-full overflow-hidden">
+                        <h1 className="font-serif font-bold text-espresso dark:text-white text-xl leading-tight">{module.title}</h1>
+                        <div className="flex items-center gap-4 mt-1">
+                            <div className="w-32 h-2 bg-espresso/10 dark:bg-white/10 rounded-full overflow-hidden shadow-inner">
                                 <div
-                                    className="h-full bg-primary transition-all duration-500"
+                                    className="h-full bg-espresso transition-all duration-1000 ease-out"
                                     style={{ width: `${showQuiz ? 100 : progressPercent}%` }}
                                 />
                             </div>
-                            <p className="text-[10px] font-bold text-primary uppercase tracking-wider">
-                                {showQuiz ? '100% (Assessment)' : `${progressPercent}% Complete`}
+                            <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.2em]">
+                                {showQuiz ? 'Assessment Phase' : `Extraction: ${progressPercent}%`}
                             </p>
                         </div>
                     </div>
@@ -325,16 +328,16 @@ export function StudentCourseView() {
                     <button
                         onClick={() => setShowNotes(!showNotes)}
                         className={cn(
-                            "flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm transition-all",
+                            "flex items-center gap-3 px-6 py-3 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all shadow-xl active:scale-95",
                             showNotes
-                                ? "bg-primary text-white shadow-lg shadow-primary/20"
-                                : "bg-primary/10 text-primary hover:bg-primary/20"
+                                ? "bg-espresso text-white shadow-espresso/20"
+                                : "bg-white/40 text-espresso hover:bg-white border border-espresso/5 shadow-sm"
                         )}
                     >
                         <span className="material-symbols-outlined text-[20px]">
-                            {showNotes ? 'edit_note' : 'note_add'}
+                            {showNotes ? 'book_2' : 'edit_note'}
                         </span>
-                        {showNotes ? 'Hide Notes' : 'My Notes'}
+                        {showNotes ? 'Stow Ledger' : 'Strategic Notes'}
                     </button>
                 </div>
             </header>
@@ -348,100 +351,113 @@ export function StudentCourseView() {
                         {!quizResult ? (
                             !quizStarted ? (
                                 // QUIZ INTRO / GUIDELINES
-                                <div className="max-w-2xl mx-auto bg-white dark:bg-[#2c2825] p-10 rounded-3xl border border-black/5 dark:border-white/5 shadow-xl text-center space-y-8 animate-scale-in">
-                                    <div className="size-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto text-primary">
-                                        <span className="material-symbols-outlined text-4xl">inventory_2</span>
+                                <div className="max-w-2xl mx-auto bg-[#F5DEB3] dark:bg-white/5 p-12 rounded-3xl border border-espresso/10 shadow-2xl text-center space-y-10 animate-scale-in relative overflow-hidden group">
+                                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                                    <div className="size-24 bg-espresso/5 rounded-3xl flex items-center justify-center mx-auto text-espresso rotate-12 group-hover:rotate-0 transition-transform">
+                                        <span className="material-symbols-outlined text-5xl">quiz</span>
                                     </div>
                                     <div>
-                                        <h2 className="text-3xl font-serif font-bold text-espresso dark:text-white mb-4">Quiz Instructions</h2>
-                                        <div className="space-y-4 text-left text-espresso/70 dark:text-white/70">
-                                            <div className="flex gap-4 p-4 rounded-xl bg-gray-50 dark:bg-white/5 border border-black/5 dark:border-white/5">
-                                                <span className="material-symbols-outlined text-amber-500">timer</span>
-                                                <p className="text-sm">Each question has a <strong>limited time</strong>. It will auto-submit when the countdown hits zero.</p>
+                                        <h2 className="text-4xl font-serif font-bold text-espresso dark:text-white mb-4">Strategic Evaluation</h2>
+                                        <p className="text-sm font-medium text-espresso/40 dark:text-white/40 uppercase tracking-widest mb-8">Please adhere to the following operational protocols</p>
+                                        <div className="space-y-4 text-left">
+                                            <div className="flex gap-5 p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm transform transition-all hover:scale-[1.02]">
+                                                <span className="material-symbols-outlined text-espresso shrink-0">timer_10_alt_1</span>
+                                                <div>
+                                                    <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-1">Temporal Constraint</p>
+                                                    <p className="text-sm font-medium text-espresso dark:text-white">Each inquiry is governed by a strict countdown. Inactivity results in automatic submission.</p>
+                                                </div>
                                             </div>
-                                            <div className="flex gap-4 p-4 rounded-xl bg-gray-50 dark:bg-white/5 border border-black/5 dark:border-white/5">
-                                                <span className="material-symbols-outlined text-red-500">security_update_warning</span>
-                                                <p className="text-sm"><strong>Anti-Cheat</strong>: Navigating away, switching tabs, or refreshing will cause the quiz to <strong>submit immediately</strong>.</p>
+                                            <div className="flex gap-5 p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm transform transition-all hover:scale-[1.02]">
+                                                <span className="material-symbols-outlined text-espresso shrink-0">workspace_premium</span>
+                                                <div>
+                                                    <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-1">Clearance Threshold</p>
+                                                    <p className="text-sm font-medium text-espresso dark:text-white">A mastery score of <strong>{module.quiz?.passMark || 70}%</strong> is essential for strategic advancement.</p>
+                                                </div>
                                             </div>
-                                            <div className="flex gap-4 p-4 rounded-xl bg-gray-50 dark:bg-white/5 border border-black/5 dark:border-white/5">
-                                                <span className="material-symbols-outlined text-green-500">task_alt</span>
-                                                <p className="text-sm">You need at least <strong>{module.quiz?.passMark || 70}%</strong> to pass this module.</p>
+                                            <div className="flex gap-5 p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm transform transition-all hover:scale-[1.02]">
+                                                <span className="material-symbols-outlined text-red-500 shrink-0">lock_reset</span>
+                                                <div>
+                                                    <p className="text-[10px] font-black uppercase tracking-widest text-red-500/40 mb-1">Anti-Bypass Protocol</p>
+                                                    <p className="text-sm font-medium text-espresso dark:text-white">Page navigation, tab switching, or refresh attempts will trigger emergency quiz finalization.</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                     <button
                                         onClick={startQuiz}
-                                        className="w-full py-4 bg-primary text-white font-bold rounded-2xl shadow-lg shadow-primary/20 hover:bg-primary-dark transition-all transform hover:-translate-y-1"
+                                        className="w-full py-5 bg-espresso text-white font-black uppercase tracking-[0.2em] text-[10px] rounded-2xl shadow-2xl shadow-espresso/30 hover:shadow-espresso/40 transition-all active:scale-95"
                                     >
-                                        I Understand, Start Quiz
+                                        Authorize & Commence Evaluation
                                     </button>
                                 </div>
                             ) : (
                                 // QUIZ IN-PROGRESS
                                 <div className="space-y-6">
                                     {/* Question Progress & Timer */}
-                                    <div className="flex items-center justify-between bg-white dark:bg-[#2c2825] p-4 rounded-2xl border border-black/5 dark:border-white/5 shadow-sm sticky top-24 z-10 backdrop-blur-md bg-white/80 dark:bg-[#2c2825]/80">
-                                        <div className="flex items-center gap-4">
-                                            <div className="text-xs font-bold text-espresso/40 dark:text-white/40 uppercase tracking-widest">Question</div>
-                                            <div className="flex gap-1">
+                                    <div className="flex items-center justify-between bg-[#F5DEB3]/80 dark:bg-[#2c2825]/80 p-5 rounded-2xl border border-espresso/10 shadow-xl sticky top-28 z-20 backdrop-blur-md relative overflow-hidden group">
+                                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                                        <div className="flex items-center gap-6">
+                                            <div className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.2em]">Objective</div>
+                                            <div className="flex gap-1.5">
                                                 {module.quiz?.questions?.map((_, i) => (
                                                     <div
                                                         key={i}
                                                         className={cn(
-                                                            "h-1.5 w-6 rounded-full transition-all",
-                                                            i < currentQuestionIndex ? "bg-primary" : i === currentQuestionIndex ? "bg-primary w-10" : "bg-gray-200 dark:bg-white/10"
+                                                            "h-2 rounded-full transition-all duration-500 shadow-inner",
+                                                            i < currentQuestionIndex ? "bg-espresso w-8" : i === currentQuestionIndex ? "bg-espresso w-12 animate-pulse" : "bg-espresso/10 dark:bg-white/10 w-6"
                                                         )}
                                                     />
                                                 ))}
                                             </div>
-                                            <div className="text-sm font-bold text-primary">{currentQuestionIndex + 1}/{module.quiz?.questions?.length}</div>
+                                            <div className="text-sm font-black text-espresso tracking-tight">{currentQuestionIndex + 1}/{module.quiz?.questions?.length}</div>
                                         </div>
                                         <div className={cn(
-                                            "flex items-center gap-2 px-4 py-2 rounded-xl border-2 font-mono font-bold transition-all",
-                                            timeLeft < 10 ? "text-red-500 border-red-500/20 bg-red-50 animate-pulse" : "text-espresso dark:text-white border-black/5 dark:border-white/5"
+                                            "flex items-center gap-3 px-6 py-3 rounded-2xl border-2 font-mono font-black text-lg transition-all shadow-sm",
+                                            timeLeft < 10 ? "text-red-600 border-red-600/30 bg-red-600/5 animate-pulse" : "text-espresso dark:text-white border-espresso/10 bg-white/20"
                                         )}>
-                                            <span className="material-symbols-outlined text-sm">timer</span>
+                                            <span className="material-symbols-outlined text-xl">timer</span>
                                             {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
                                         </div>
                                     </div>
 
                                     {/* Question Card */}
-                                    <div className="bg-white dark:bg-[#2c2825] p-8 rounded-3xl border border-black/5 dark:border-white/5 shadow-xl animate-scale-in">
-                                        <div className="mb-8">
-                                            <div className="flex items-center gap-3 mb-4">
-                                                <span className="px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest rounded-full">
+                                    <div className="bg-[#F5DEB3] dark:bg-white/5 p-10 rounded-3xl border border-espresso/10 shadow-2xl animate-scale-in relative group overflow-hidden">
+                                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                                        <div className="mb-10 relative z-10">
+                                            <div className="flex items-center gap-3 mb-6">
+                                                <span className="px-4 py-1.5 bg-espresso text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg">
                                                     {module.quiz?.questions[currentQuestionIndex].type.replace('_', ' ')}
                                                 </span>
                                             </div>
-                                            <h2 className="text-2xl font-serif font-bold text-espresso dark:text-white">
+                                            <h2 className="text-3xl font-serif font-bold text-espresso dark:text-white leading-tight">
                                                 {module.quiz?.questions[currentQuestionIndex].question}
                                             </h2>
                                         </div>
 
                                         {/* QUESTION RENDERERS */}
-                                        <div className="space-y-4">
+                                        <div className="space-y-5 relative z-10">
                                             {/* 1. Multiple Choice */}
                                             {module.quiz?.questions[currentQuestionIndex].type === 'multiple_choice' && (
-                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                                     {module.quiz?.questions[currentQuestionIndex].options.map((opt, optIdx) => (
                                                         <button
                                                             key={optIdx}
                                                             onClick={() => handleAnswer(currentQuestionIndex, optIdx)}
                                                             className={cn(
-                                                                "p-5 rounded-2xl border-2 text-left transition-all group relative overflow-hidden",
+                                                                "p-6 rounded-2xl border-2 text-left transition-all group relative overflow-hidden shadow-sm active:scale-95",
                                                                 userAnswers[currentQuestionIndex] === optIdx
-                                                                    ? "bg-primary text-white border-primary shadow-lg shadow-primary/20"
-                                                                    : "bg-gray-50 dark:bg-white/5 border-transparent hover:border-primary/30"
+                                                                    ? "bg-espresso text-white border-espresso shadow-2xl shadow-espresso/20"
+                                                                    : "bg-white/40 dark:bg-white/5 border-espresso/5 hover:border-espresso/30"
                                                             )}
                                                         >
-                                                            <div className="flex items-center gap-4">
+                                                            <div className="flex items-center gap-5">
                                                                 <span className={cn(
-                                                                    "size-8 rounded-full border-2 flex items-center justify-center font-bold text-sm",
-                                                                    userAnswers[currentQuestionIndex] === optIdx ? "border-white bg-white/20" : "border-black/5 dark:border-white/10"
+                                                                    "size-10 rounded-xl border-2 flex items-center justify-center font-black text-sm transition-colors",
+                                                                    userAnswers[currentQuestionIndex] === optIdx ? "border-white bg-white/20" : "border-espresso/10 bg-white/20 text-espresso/40"
                                                                 )}>
                                                                     {String.fromCharCode(65 + optIdx)}
                                                                 </span>
-                                                                <span className="font-medium">{opt}</span>
+                                                                <span className="font-bold tracking-tight">{opt}</span>
                                                             </div>
                                                         </button>
                                                     ))}
@@ -534,16 +550,16 @@ export function StudentCourseView() {
                                             )}
                                         </div>
 
-                                        <div className="mt-12 flex justify-between items-center">
-                                            <p className="text-xs font-bold text-espresso/30 dark:text-white/30 uppercase tracking-widest">
-                                                Note: Time runs out fast!
+                                        <div className="mt-16 flex justify-between items-center relative z-10">
+                                            <p className="text-[10px] font-black text-espresso/20 dark:text-white/20 uppercase tracking-[0.2em]">
+                                                Precision is paramount.
                                             </p>
                                             <button
                                                 onClick={handleNextQuestion}
-                                                className="px-8 py-3 bg-primary text-white font-bold rounded-2xl shadow-lg hover:bg-primary-dark transition-all flex items-center gap-2"
+                                                className="px-10 py-4 bg-espresso text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-2xl hover:shadow-espresso/40 transition-all flex items-center gap-3 active:scale-95"
                                             >
-                                                {currentQuestionIndex === (module.quiz?.questions?.length || 0) - 1 ? 'Finish Assessment' : 'Next Question'}
-                                                <span className="material-symbols-outlined">arrow_forward</span>
+                                                {currentQuestionIndex === (module.quiz?.questions?.length || 0) - 1 ? 'Finalize Extraction' : 'Strategic Advance'}
+                                                <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
                                             </button>
                                         </div>
                                     </div>
@@ -551,46 +567,45 @@ export function StudentCourseView() {
                             )
                         ) : (
                             // QUIZ RESULTS
-                            <div className="text-center py-10 animate-scale-in">
+                            <div className="text-center py-16 animate-scale-in max-w-2xl mx-auto bg-[#F5DEB3] dark:bg-white/5 p-12 rounded-3xl border border-espresso/10 shadow-2xl relative overflow-hidden group">
+                                <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                                 <div className={cn(
-                                    "inline-flex items-center justify-center w-24 h-24 rounded-full mb-6 shadow-xl text-5xl",
-                                    quizResult.passed ? "bg-green-100 text-green-600" : "bg-red-100 text-red-600"
+                                    "inline-flex items-center justify-center w-28 h-28 rounded-3xl mb-8 shadow-2xl text-6xl rotate-3 group-hover:rotate-0 transition-transform",
+                                    quizResult.passed ? "bg-green-500 text-white" : "bg-red-500 text-white"
                                 )}>
                                     <span className="material-symbols-outlined text-6xl">
-                                        {quizResult.passed ? 'emoji_events' : 'sentiment_dissatisfied'}
+                                        {quizResult.passed ? 'auto_awesome' : 'warning'}
                                     </span>
                                 </div>
-                                <h1 className="text-4xl font-serif font-bold text-espresso dark:text-white mb-2">
-                                    {quizResult.passed ? 'Module Completed!' : 'Assessment Failed'}
+                                <h1 className="text-4xl font-serif font-bold text-espresso dark:text-white mb-3">
+                                    {quizResult.passed ? 'Mastery Confirmed' : 'Sync Interrupted'}
                                 </h1>
-                                <p className="text-xl text-espresso/60 dark:text-white/60 mb-8">
-                                    You scored <span className={quizResult.passed ? "text-green-600 font-bold" : "text-red-600 font-bold"}>{quizResult.score.toFixed(0)}%</span>
+                                <p className="text-xl font-medium text-espresso/40 dark:text-white/40 mb-10">
+                                    Strategic Score: <span className={quizResult.passed ? "text-green-600 font-black" : "text-red-600 font-black"}>{quizResult.score.toFixed(0)}%</span>
                                 </p>
 
                                 {quizResult.passed ? (
-                                    <div className="space-y-4">
-                                        <p className="max-w-md mx-auto text-espresso/70 dark:text-white/70">
-                                            Congratulations! You have successfully mastered this module.
-                                            You can now proceed to the next stage of your training.
+                                    <div className="space-y-6 relative z-10">
+                                        <p className="text-sm font-medium text-espresso/60 dark:text-white/60 leading-relaxed max-w-md mx-auto">
+                                            Exceptional performance. Your understanding of this module has been successfully encoded. Premium advancement is now authorized.
                                         </p>
                                         <button
                                             onClick={() => navigate('/student/courses')}
-                                            className="px-8 py-3 bg-green-600 text-white font-bold rounded-xl shadow-lg hover:bg-green-700 transition-all flex items-center gap-2 mx-auto"
+                                            className="px-10 py-5 bg-green-600 text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-2xl hover:bg-green-700 transition-all flex items-center gap-3 mx-auto active:scale-95"
                                         >
-                                            Return to Course Map <span className="material-symbols-outlined">arrow_forward</span>
+                                            Advance to Curriculum Map <span className="material-symbols-outlined text-[20px]">map</span>
                                         </button>
                                     </div>
                                 ) : (
-                                    <div className="space-y-4">
-                                        <p className="max-w-md mx-auto text-espresso/70 dark:text-white/70">
-                                            Don't worry! Review the material and try again.
-                                            Mastery takes practice.
+                                    <div className="space-y-6 relative z-10">
+                                        <p className="text-sm font-medium text-espresso/60 dark:text-white/60 leading-relaxed max-w-md mx-auto">
+                                            The evaluation threshold was not met. Strategic recalibration is required before another extraction attempt is authorized.
                                         </p>
                                         <button
                                             onClick={retakeModule}
-                                            className="px-8 py-3 bg-espresso text-white font-bold rounded-xl shadow-lg hover:bg-black transition-all flex items-center gap-2 mx-auto"
+                                            className="px-10 py-5 bg-espresso text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-2xl hover:bg-black transition-all flex items-center gap-3 mx-auto active:scale-95"
                                         >
-                                            <span className="material-symbols-outlined">replay</span> Retake Module
+                                            <span className="material-symbols-outlined text-[20px]">refresh</span> Re-initiate Extraction
                                         </button>
                                     </div>
                                 )}
@@ -614,12 +629,13 @@ export function StudentCourseView() {
                                 )}
 
                                 {/* Slide Text */}
-                                <div className="bg-white dark:bg-[#2c2825] p-8 rounded-2xl border border-black/5 dark:border-white/5 shadow-sm min-h-[300px] flex flex-col justify-center text-center">
-                                    <h2 className="text-3xl font-serif font-bold text-espresso dark:text-white mb-6">
+                                <div className="bg-[#F5DEB3] dark:bg-[#2c2825] p-12 rounded-3xl border border-espresso/10 shadow-2xl min-h-[400px] flex flex-col justify-center text-center relative overflow-hidden group">
+                                    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                                    <h2 className="text-4xl font-serif font-bold text-espresso dark:text-white mb-8 group-hover:translate-y-[-4px] transition-transform">
                                         {module.content[currentSlide].title}
                                     </h2>
                                     <div
-                                        className="text-lg leading-relaxed text-espresso/80 dark:text-white/80 prose prose-espresso dark:prose-invert max-w-none text-left"
+                                        className="text-lg leading-relaxed text-espresso/70 dark:text-white/70 prose prose-espresso dark:prose-invert max-w-none text-left font-medium"
                                         dangerouslySetInnerHTML={{ __html: module.content[currentSlide].text }}
                                     />
                                 </div>
@@ -640,23 +656,23 @@ export function StudentCourseView() {
             {/* Sticky Navigation Footer (Only in Slide Mode) */}
             {
                 !showQuiz && (
-                    <footer className="fixed bottom-0 left-0 right-0 bg-white dark:bg-[#1e1e1e] border-t border-black/5 dark:border-white/5 p-4 z-20">
-                        <div className="max-w-4xl mx-auto flex justify-between items-center">
+                    <footer className="fixed bottom-0 left-0 right-0 bg-[#F5DEB3]/80 dark:bg-[#1e1e1e]/80 backdrop-blur-md border-t border-espresso/10 p-6 z-30 transition-colors">
+                        <div className="max-w-6xl mx-auto flex justify-between items-center">
                             <button
                                 onClick={handlePrev}
                                 disabled={currentSlide === 0}
-                                className="px-6 py-2 rounded-lg border border-black/10 dark:border-white/10 font-bold hover:bg-black/5 dark:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                                className="h-12 px-8 rounded-2xl border border-espresso/10 bg-white/40 hover:bg-white text-espresso font-black uppercase tracking-widest text-[10px] disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm active:scale-95"
                             >
-                                Previous
+                                Re-examine Previous
                             </button>
 
-                            <div className="flex gap-1">
+                            <div className="flex gap-2">
                                 {module.content?.map((_, idx) => (
                                     <div
                                         key={idx}
                                         className={cn(
-                                            "w-2 h-2 rounded-full transition-all",
-                                            idx === currentSlide ? "bg-primary w-4" : "bg-gray-300 dark:bg-white/20"
+                                            "h-2 rounded-full transition-all duration-500 shadow-inner",
+                                            idx === currentSlide ? "bg-espresso w-10 shadow-lg" : "bg-espresso/10 dark:bg-white/20 w-4"
                                         )}
                                     />
                                 ))}
@@ -664,10 +680,10 @@ export function StudentCourseView() {
 
                             <button
                                 onClick={handleNext}
-                                className="px-6 py-2 rounded-lg bg-primary text-white font-bold hover:bg-primary-dark shadow-md transition-colors flex items-center gap-2"
+                                className="h-12 px-8 rounded-2xl bg-espresso text-white font-black uppercase tracking-widest text-[10px] hover:shadow-2xl transition-all shadow-xl flex items-center gap-3 active:scale-95"
                             >
-                                {currentSlide === (module.content?.length || 0) - 1 ? 'Take Quiz' : 'Next'}
-                                <span className="material-symbols-outlined text-lg">
+                                {currentSlide === (module.content?.length || 0) - 1 ? 'Begin Evaluation' : 'Strategic Advance'}
+                                <span className="material-symbols-outlined text-[20px]">
                                     {currentSlide === (module.content?.length || 0) - 1 ? 'school' : 'arrow_forward'}
                                 </span>
                             </button>
@@ -677,17 +693,23 @@ export function StudentCourseView() {
             }
             {/* Rich Text Notes Drawer */}
             <div className={cn(
-                "fixed inset-y-0 right-0 w-full max-w-md bg-white dark:bg-[#1e1e1e] shadow-2xl z-[100] transform transition-transform duration-300 border-l border-black/5 dark:border-white/5 flex flex-col",
+                "fixed inset-y-0 right-0 w-full max-w-xl bg-[#F5DEB3] dark:bg-[#1e1e1e] shadow-2xl z-[100] transform transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] border-l border-espresso/10 flex flex-col",
                 showNotes ? "translate-x-0" : "translate-x-full"
             )}>
-                <div className="p-4 border-b border-black/5 dark:border-white/5 flex items-center justify-between bg-gray-50 dark:bg-black/20">
-                    <div className="flex items-center gap-2">
-                        <span className="material-symbols-outlined text-primary">description</span>
-                        <h2 className="font-serif font-bold text-espresso dark:text-white">Module Notes</h2>
+                <div className="p-8 border-b border-espresso/10 flex items-center justify-between bg-white/20 relative overflow-hidden">
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/20"></div>
+                    <div className="flex items-center gap-4 relative z-10">
+                        <div className="p-3 bg-espresso text-white rounded-2xl shadow-lg rotate-3">
+                            <span className="material-symbols-outlined text-[24px]">description</span>
+                        </div>
+                        <div>
+                            <h2 className="font-serif font-bold text-2xl text-espresso dark:text-white">Cognitive Ledger</h2>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40">Strategic Module Insights</p>
+                        </div>
                     </div>
                     <button
                         onClick={() => setShowNotes(false)}
-                        className="p-2 hover:bg-black/10 rounded-full text-espresso/40 dark:text-white/40"
+                        className="h-10 w-10 flex items-center justify-center rounded-xl hover:bg-white transition-all text-espresso/40 hover:text-espresso"
                     >
                         <span className="material-symbols-outlined">close</span>
                     </button>

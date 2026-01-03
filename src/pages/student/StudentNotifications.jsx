@@ -68,7 +68,7 @@ export function StudentNotifications() {
     const earlierNotifications = notifications.filter(n => n.read);
 
     return (
-        <div className="max-w-2xl mx-auto min-h-screen pb-12 animate-fade-in">
+        <div className="w-full min-h-screen pb-12 animate-fade-in">
             {/* Header */}
             <header className="sticky top-0 z-20 bg-gray-50/90 dark:bg-[#1c1916]/90 backdrop-blur-sm mb-4">
                 <div className="flex items-center gap-3 px-4 py-4">

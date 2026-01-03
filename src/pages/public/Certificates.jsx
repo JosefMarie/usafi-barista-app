@@ -71,7 +71,7 @@ export function Certificates() {
                                 "flex h-10 shrink-0 items-center justify-center px-6 rounded-full text-sm font-medium transition-all whitespace-nowrap",
                                 activeFilter === filter.id
                                     ? "bg-espresso text-[#FAF5E8] shadow-md"
-                                    : "bg-white dark:bg-white/5 border border-primary/30 text-espresso hover:bg-primary/5 dark:text-white"
+                                    : "bg-[#F5DEB3] dark:bg-white/5 border border-espresso/20 text-espresso hover:bg-espresso/5 dark:text-white"
                             )}
                         >
                             {filter.label}
@@ -84,7 +84,8 @@ export function Certificates() {
             <div className="container mx-auto px-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredCertificates.map((cert) => (
-                        <div key={cert.id} className="group flex flex-col gap-4 rounded-xl bg-white dark:bg-white/5 p-4 shadow-sm border border-primary/20 hover:border-primary/50 transition-colors">
+                        <div key={cert.id} className="group flex flex-col gap-4 rounded-xl bg-[#F5DEB3] dark:bg-white/5 p-4 shadow-xl border border-espresso/10 hover:border-espresso/30 transition-all relative overflow-hidden">
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                             <div className="flex items-start gap-4">
                                 {/* Thumbnail */}
                                 <div className="h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-gray-100 border border-gray-100 relative">

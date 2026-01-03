@@ -15,6 +15,9 @@ export function Navbar() {
     const [activeDropdown, setActiveDropdown] = useState(null);
     const location = useLocation();
 
+    // Pages that have a dark header/hero section where navbar should be white when transparent
+    const isDarkHeader = location.pathname === '/' || location.pathname === '/courses';
+
     // Handle scroll effect
     useEffect(() => {
         const handleScroll = () => {
@@ -94,7 +97,7 @@ export function Navbar() {
                                 <button
                                     className={cn(
                                         "flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary focus:outline-none cursor-pointer",
-                                        !isScrolled && location.pathname === '/' ? "text-white/90 hover:text-white" : "text-espresso dark:text-white"
+                                        !isScrolled && isDarkHeader ? "text-white/90 hover:text-white" : "text-espresso dark:text-white"
                                     )}
                                 >
                                     {link.name}
@@ -106,7 +109,7 @@ export function Navbar() {
                                     className={cn(
                                         "text-sm font-medium transition-colors hover:text-primary relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-primary after:transition-all after:duration-300 hover:after:w-full",
                                         location.pathname === link.path ? "text-primary after:w-full" : "",
-                                        !isScrolled && location.pathname === '/' ? "text-white/90 hover:text-white" : "" // Light text on Hero only if not scrolled
+                                        !isScrolled && isDarkHeader ? "text-white/90 hover:text-white" : "" // Light text on Hero only if not scrolled
                                     )}
                                 >
                                     {link.name}
@@ -139,7 +142,7 @@ export function Navbar() {
                         to="/login"
                         className={cn(
                             "text-sm font-medium transition-colors hover:text-primary",
-                            !isScrolled && location.pathname === '/' ? "text-white/90 hover:text-white" : "text-espresso dark:text-white"
+                            !isScrolled && isDarkHeader ? "text-white/90 hover:text-white" : "text-espresso dark:text-white"
                         )}
                     >
                         {t('nav.login')}
@@ -157,7 +160,7 @@ export function Navbar() {
                         onClick={() => setIsSearchOpen(true)}
                         className={cn(
                             "p-2 rounded-xl transition-all duration-300 hover:bg-primary/10",
-                            !isScrolled && location.pathname === '/' ? "text-white/90 hover:bg-white/10" : "text-espresso dark:text-white"
+                            !isScrolled && isDarkHeader ? "text-white/90 hover:bg-white/10" : "text-espresso dark:text-white"
                         )}
                         title="Search (Cmd+K)"
                     >
@@ -167,14 +170,14 @@ export function Navbar() {
                     {/* Theme Toggle */}
                     <ThemeToggle className={cn(
                         "hover:bg-primary/10 transition-colors",
-                        !isScrolled && location.pathname === '/' ? "text-white/90 hover:bg-white/10" : "text-espresso dark:text-white"
+                        !isScrolled && isDarkHeader ? "text-white/90 hover:bg-white/10" : "text-espresso dark:text-white"
                     )} />
 
                     {/* Language Switcher */}
                     <div className="h-6 w-[1px] bg-espresso/10 dark:bg-white/10 mx-2"></div>
                     <LanguageSwitcher
                         isScrolled={isScrolled}
-                        isLightHero={location.pathname === '/'}
+                        isLightHero={isDarkHeader}
                     />
                 </nav>
 

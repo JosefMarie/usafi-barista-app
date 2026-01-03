@@ -26,6 +26,7 @@ import { SeekerLogin } from './pages/auth/SeekerLogin';
 import { BusinessRegister } from './pages/business/BusinessRegister';
 import { BusinessLogin } from './pages/business/BusinessLogin';
 import { BusinessDashboard } from './pages/business/BusinessDashboard';
+import { BusinessProfile } from './pages/business/BusinessProfile';
 import { BusinessCourseView } from './pages/business/BusinessCourseView';
 import { PaymentPending } from './pages/seeker/PaymentPending';
 import { SeekerDashboard } from './pages/seeker/SeekerDashboard';
@@ -212,6 +213,7 @@ function App() {
             {/* Business Student Routes */}
             <Route path="/business">
               <Route path="dashboard" element={<BusinessDashboard />} />
+              <Route path="profile" element={<BusinessProfile />} />
               <Route path="courses/:courseId" element={<BusinessCourseView />} />
             </Route>
           </Routes>

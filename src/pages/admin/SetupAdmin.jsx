@@ -109,7 +109,8 @@ export function SetupAdmin() {
 
     return (
         <div className="min-h-screen bg-background-light dark:bg-background-dark py-12 px-4 sm:px-6 lg:px-8 flex flex-col justify-center">
-            <div className="max-w-md w-full mx-auto space-y-8 bg-white dark:bg-[#2c2825] p-10 rounded-2xl shadow-xl border border-gray-100 dark:border-white/5">
+            <div className="max-w-md w-full mx-auto space-y-8 bg-[#F5DEB3] dark:bg-white/5 p-10 rounded-3xl shadow-2xl border border-espresso/10 relative overflow-hidden group">
+                <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
 
                 {/* Header */}
                 <div className="text-center">
@@ -173,7 +174,7 @@ export function SetupAdmin() {
                                     name="name"
                                     type="text"
                                     required
-                                    className="block w-full px-3 py-2 border border-gray-300 dark:border-white/10 rounded-lg bg-gray-50 dark:bg-white/5 focus:outline-none focus:ring-2 focus:ring-primary"
+                                    className="block w-full px-3 py-2 border border-espresso/10 rounded-lg bg-white/50 dark:bg-white/5 focus:outline-none focus:ring-2 focus:ring-espresso text-espresso dark:text-white placeholder:text-espresso/40"
                                     placeholder="e.g. Sarah Kimani"
                                     value={formData.name}
                                     onChange={handleChange}
@@ -288,3 +289,5 @@ export function SetupAdmin() {
         </div>
     );
 }
+
+

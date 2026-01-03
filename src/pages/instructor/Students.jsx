@@ -40,19 +40,20 @@ export function InstructorStudents() {
     return (
         <div className="max-w-4xl mx-auto space-y-6">
             <div>
-                <h1 className="text-2xl font-serif font-bold text-espresso dark:text-white">My Students</h1>
-                <p className="text-sm text-espresso/70 dark:text-white/70 mt-1">Students assigned to you</p>
+                <h1 className="text-3xl font-serif font-bold text-espresso dark:text-white">Student Cohort</h1>
+                <p className="text-espresso/60 dark:text-white/60 font-medium mt-1">Manage and track progress for your assigned students</p>
             </div>
 
             {/* Search */}
-            <div className="flex gap-3">
-                <div className="flex w-full flex-1 items-stretch rounded-xl h-12 shadow-sm bg-white dark:bg-[#2c2825] border border-black/5">
-                    <div className="text-primary/60 flex items-center justify-center pl-4">
+            <div className="flex gap-3 relative z-10">
+                <div className="flex w-full flex-1 items-stretch rounded-2xl h-14 shadow-xl bg-[#F5DEB3] dark:bg-white/5 border border-espresso/10 group focus-within:border-espresso/30 transition-all overflow-hidden relative">
+                    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-focus-within:bg-espresso transition-colors"></div>
+                    <div className="text-espresso/40 flex items-center justify-center pl-6">
                         <span className="material-symbols-outlined">search</span>
                     </div>
                     <input
-                        className="flex w-full min-w-0 flex-1 bg-transparent text-espresso dark:text-white focus:outline-0 border-none h-full placeholder:text-espresso/50 dark:placeholder:text-white/50 px-3 text-base"
-                        placeholder="Search by name or email..."
+                        className="flex w-full min-w-0 flex-1 bg-transparent text-espresso dark:text-white focus:outline-0 border-none h-full placeholder:text-espresso/30 dark:placeholder:text-white/30 px-4 text-base font-bold"
+                        placeholder="Search student directory by name or email..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -64,38 +65,48 @@ export function InstructorStudents() {
                     <span className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></span>
                 </div>
             ) : filteredStudents.length === 0 ? (
-                <div className="text-center py-12 bg-white dark:bg-[#2c2825] rounded-xl border border-black/5">
-                    <span className="material-symbols-outlined text-5xl text-espresso/30 dark:text-white/30 mb-3 block">people</span>
-                    <p className="text-espresso/60 dark:text-white/60">
-                        {searchTerm ? 'No students match your search.' : 'No students assigned to you yet.'}
+                <div className="text-center py-16 bg-[#F5DEB3] dark:bg-white/5 rounded-3xl border border-espresso/10 shadow-xl relative overflow-hidden group">
+                    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                    <span className="material-symbols-outlined text-6xl text-espresso/20 dark:text-white/20 mb-4 block group-hover:scale-110 transition-transform">people</span>
+                    <p className="text-espresso/40 dark:text-white/40 font-black uppercase tracking-widest text-sm">
+                        {searchTerm ? 'No matches found in cohort' : 'No students registered in your cohort'}
                     </p>
                 </div>
             ) : (
                 <div className="grid gap-4">
                     {filteredStudents.map(student => (
-                        <div key={student.id} className="bg-white dark:bg-[#2c2825] rounded-xl p-4 shadow-sm border border-black/5">
-                            <div className="flex items-center gap-4">
+                        <div key={student.id} className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl p-6 shadow-xl border border-espresso/10 relative overflow-hidden group transition-all hover:-translate-y-1">
+                            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                            <div className="flex items-center gap-5 relative z-10">
                                 <div
-                                    className="bg-center bg-no-repeat bg-cover rounded-full h-14 w-14 border-2 border-background-light shadow-sm flex-shrink-0"
+                                    className="bg-center bg-no-repeat bg-cover rounded-2xl h-16 w-16 border-2 border-white/50 dark:border-white/10 shadow-lg flex-shrink-0 group-hover:scale-105 transition-transform"
                                     style={{
                                         backgroundImage: `url("${student.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(student.name || 'S')}&background=random`}")`
                                     }}
                                 />
                                 <div className="flex-1 min-w-0">
-                                    <h3 className="text-lg font-bold text-espresso dark:text-white truncate">
+                                    <h3 className="text-xl font-serif font-bold text-espresso dark:text-white truncate mb-1">
                                         {student.name || student.email}
                                     </h3>
-                                    <p className="text-sm text-espresso/70 dark:text-white/70 truncate">{student.email}</p>
-                                    {student.studyMethod && (
-                                        <span className="inline-flex items-center mt-2 px-2 py-1 rounded-md bg-primary/10 text-primary text-xs font-medium">
-                                            {student.studyMethod === 'online' ? 'Online' : 'Onsite'}
-                                        </span>
-                                    )}
+                                    <p className="text-sm font-bold text-espresso/50 dark:text-white/50 truncate mb-3">{student.email}</p>
+                                    <div className="flex items-center gap-3">
+                                        {student.studyMethod && (
+                                            <span className="inline-flex items-center px-3 py-1 rounded-full bg-espresso text-white text-[10px] font-black uppercase tracking-widest shadow-sm">
+                                                {student.studyMethod === 'online' ? 'Digital Stream' : 'In-Person'}
+                                            </span>
+                                        )}
+                                        {student.status === 'active' && (
+                                            <span className="flex items-center gap-1.5 text-[10px] font-black text-green-600 uppercase tracking-widest">
+                                                <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                                                Active Now
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    {student.status === 'active' && (
-                                        <span className="w-3 h-3 bg-green-500 rounded-full"></span>
-                                    )}
+                                    <button className="p-3 rounded-full bg-white/50 dark:bg-white/5 text-espresso/40 hover:text-espresso hover:bg-white transition-all shadow-sm active:scale-95">
+                                        <span className="material-symbols-outlined text-lg">chat</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>

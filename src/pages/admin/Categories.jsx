@@ -11,59 +11,89 @@ export function Categories() {
     ];
 
     return (
-        <div className="max-w-2xl mx-auto space-y-6">
-            {/* Header */}
-            <header className="flex items-center justify-between">
-                <h1 className="text-xl font-bold tracking-tight text-espresso dark:text-white">Manage Categories</h1>
-                <button className="flex items-center justify-center p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-espresso dark:text-white">
-                    <span className="material-symbols-outlined">more_horiz</span>
-                </button>
-            </header>
-
-            {/* Search Bar */}
-            <div className="relative group">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                    <span className="material-symbols-outlined text-primary/70 text-[22px]">search</span>
-                </div>
-                <input
-                    className="block w-full p-4 pl-12 text-base text-espresso dark:text-white bg-white dark:bg-[#2c2825] rounded-2xl border-0 ring-1 ring-black/5 dark:ring-white/10 shadow-sm focus:ring-2 focus:ring-primary focus:outline-none placeholder:text-gray-400"
-                    placeholder="Search categories..."
-                    type="text"
-                />
-            </div>
-
-            {/* Categories List */}
-            <div className="space-y-4 pb-20">
-                {categories.map((category) => (
-                    <div key={category.id} className="group relative flex items-center justify-between bg-white dark:bg-[#2c2825] p-3 rounded-2xl shadow-sm border border-transparent hover:border-primary/20 transition-all active:scale-[0.99] duration-200">
-                        <div className="flex items-center gap-4 flex-1 min-w-0">
-                            <div className="flex items-center justify-center h-12 w-12 rounded-xl bg-[#F4EFEA] dark:bg-white/10 text-primary shrink-0">
-                                <span className="material-symbols-outlined text-[24px]">{category.icon}</span>
-                            </div>
-                            <div className="flex flex-col truncate">
-                                <span className="text-base font-semibold text-espresso dark:text-white truncate">{category.name}</span>
-                                <span className="text-xs text-gray-500 dark:text-white/60 font-medium">{category.count} Courses</span>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-1 pl-2">
-                            <button aria-label="Edit" className="flex items-center justify-center w-9 h-9 rounded-full text-gray-400 hover:text-primary hover:bg-primary/10 transition-colors">
-                                <span className="material-symbols-outlined text-[20px]">edit</span>
-                            </button>
-                            <button aria-label="Delete" className="flex items-center justify-center w-9 h-9 rounded-full text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors">
-                                <span className="material-symbols-outlined text-[20px]">delete</span>
-                            </button>
-                        </div>
+        <div className="flex-1 flex flex-col h-full bg-[#F5DEB3] dark:bg-[#1c1916] overflow-y-auto animate-fade-in pb-32">
+            <div className=" w-full px-2 py-10 space-y-10">
+                {/* Header Section */}
+                <div className="flex items-center justify-between relative">
+                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 -ml-10"></div>
+                    <div>
+                        <h1 className="text-4xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none">System Taxonomy</h1>
+                        <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] mt-2">Content Classification & Organizational Hierarchy</p>
                     </div>
-                ))}
-            </div>
+                </div>
 
-            {/* Bottom Action Area */}
-            <div className="fixed bottom-6 right-6 md:absolute md:bottom-0 md:right-0 md:p-0 z-10 w-full md:w-auto p-4 pointer-events-none md:pointer-events-auto flex justify-end">
-                <button className="pointer-events-auto w-full md:w-auto bg-primary hover:bg-[#8F6A46] text-white font-bold py-4 px-6 rounded-2xl shadow-lg shadow-primary/30 flex items-center justify-center gap-2 transition-all active:scale-[0.98]">
-                    <span className="material-symbols-outlined text-[24px]">add</span>
-                    <span className="text-lg">Add New Category</span>
-                </button>
+                {/* Classification Search Array */}
+                <div className="relative group">
+                    <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none text-espresso/30">
+                        <span className="material-symbols-outlined text-[28px]">filter_alt</span>
+                    </div>
+                    <input
+                        className="w-full h-16 pl-20 pr-8 bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-[1.5rem] text-espresso dark:text-white font-serif text-lg focus:outline-none focus:ring-2 focus:ring-espresso transition-all shadow-inner placeholder:text-espresso/20 placeholder:font-black placeholder:uppercase placeholder:tracking-[0.4em] placeholder:text-[10px]"
+                        placeholder="Filter classification nodes..."
+                        type="text"
+                    />
+                </div>
+
+                {/* Taxonomy Matrix */}
+                <div className="grid gap-6">
+                    {categories.map((category) => (
+                        <div key={category.id} className="group relative bg-white/40 dark:bg-black/20 rounded-[2.5rem] p-8 border border-espresso/10 shadow-xl transition-all hover:-translate-y-1 hover:shadow-2xl overflow-hidden flex items-center justify-between">
+                            <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover:bg-espresso transition-colors"></div>
+
+                            <div className="flex items-center gap-8 flex-1 min-w-0">
+                                <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-espresso to-espresso/80 text-white flex items-center justify-center shadow-lg shadow-espresso/20 group-hover:scale-110 transition-transform shrink-0">
+                                    <span className="material-symbols-outlined text-[40px]">{category.icon}</span>
+                                </div>
+
+                                <div className="flex flex-col flex-1 min-w-0">
+                                    <h3 className="text-2xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none group-hover:text-espresso/70 transition-colors truncate">
+                                        {category.name}
+                                    </h3>
+                                    <div className="flex items-center gap-3 mt-2">
+                                        <div className="flex items-center gap-2 px-4 py-1.5 bg-espresso/5 rounded-xl border border-espresso/10 shadow-inner">
+                                            <span className="material-symbols-outlined text-[16px] text-espresso/40">dataset</span>
+                                            <span className="text-[10px] font-black text-espresso/60 uppercase tracking-[0.2em]">
+                                                {category.count} MODULES
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-3 ml-8 shrink-0">
+                                <button
+                                    aria-label="Edit"
+                                    className="w-12 h-12 rounded-2xl bg-white/60 hover:bg-espresso text-espresso/40 hover:text-white transition-all flex items-center justify-center shadow-sm group-hover:scale-110"
+                                >
+                                    <span className="material-symbols-outlined text-[24px]">edit</span>
+                                </button>
+                                <button
+                                    aria-label="Delete"
+                                    className="w-12 h-12 rounded-2xl bg-white/60 hover:bg-red-600 text-red-400 hover:text-white transition-all flex items-center justify-center shadow-sm group-hover:scale-110"
+                                >
+                                    <span className="material-symbols-outlined text-[24px]">delete</span>
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Expansion Trigger */}
+                <div className="fixed bottom-12 right-12 z-50">
+                    <button className="group flex items-center gap-4 bg-espresso hover:bg-espresso/90 text-white rounded-[2rem] shadow-2xl hover:shadow-espresso/40 transition-all p-2 pr-10 hover:scale-105 active:scale-95">
+                        <div className="h-16 w-16 rounded-[1.75rem] border-2 border-white/20 flex items-center justify-center bg-white/10 group-hover:rotate-90 transition-transform duration-500">
+                            <span className="material-symbols-outlined text-[32px]">add</span>
+                        </div>
+                        <div className="flex flex-col items-start">
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em] opacity-60">Initialize</span>
+                            <span className="font-serif font-black text-xl uppercase tracking-tight">New Node</span>
+                        </div>
+                    </button>
+                </div>
             </div>
         </div>
     );
 }
+
+
+

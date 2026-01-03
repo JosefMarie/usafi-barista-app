@@ -38,15 +38,16 @@ export function About() {
             </section>
 
             {/* 3. Mission & Vision Section */}
-            <section className="w-full bg-[#FAF5E8] py-20 px-6 border-y border-[#e0dbd6] dark:border-white/10 dark:bg-white/5">
+            <section className="w-full bg-[#F5DEB3] py-20 px-6 border-y border-espresso/10 dark:border-white/10 dark:bg-white/5">
                 <div className="container mx-auto max-w-5xl">
                     <div className="flex flex-col md:flex-row gap-8">
 
                         {/* Mission Card */}
-                        <div className="flex-1 bg-white dark:bg-white/5 p-8 rounded-2xl shadow-sm border border-[#e0dbd6] dark:border-white/10 flex flex-col items-center text-center gap-4">
-                            <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-2">
+                        <div className="flex-1 bg-[#F5DEB3] dark:bg-white/5 p-8 rounded-3xl shadow-xl border border-espresso/10 flex flex-col items-center text-center gap-4 relative overflow-hidden group">
+                            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                            <div className="h-16 w-16 rounded-2xl bg-espresso text-white flex items-center justify-center shadow-md mb-2 group-hover:scale-110 transition-transform">
                                 {/* Target Icon */}
-                                <span className="material-symbols-outlined text-4xl">ads_click</span>
+                                <span className="material-symbols-outlined text-3xl">ads_click</span>
                             </div>
                             <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white">{t('about.mission.title')}</h3>
                             <p className="text-espresso/70 dark:text-white/70 leading-relaxed">
@@ -55,10 +56,11 @@ export function About() {
                         </div>
 
                         {/* Vision Card */}
-                        <div className="flex-1 bg-white dark:bg-white/5 p-8 rounded-2xl shadow-sm border border-[#e0dbd6] dark:border-white/10 flex flex-col items-center text-center gap-4">
-                            <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-2">
+                        <div className="flex-1 bg-[#F5DEB3] dark:bg-white/5 p-8 rounded-3xl shadow-xl border border-espresso/10 flex flex-col items-center text-center gap-4 relative overflow-hidden group">
+                            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                            <div className="h-16 w-16 rounded-2xl bg-espresso text-white flex items-center justify-center shadow-md mb-2 group-hover:scale-110 transition-transform">
                                 {/* Compass Icon */}
-                                <span className="material-symbols-outlined text-4xl">explore</span>
+                                <span className="material-symbols-outlined text-3xl">explore</span>
                             </div>
                             <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white">{t('about.vision.title')}</h3>
                             <p className="text-espresso/70 dark:text-white/70 leading-relaxed">

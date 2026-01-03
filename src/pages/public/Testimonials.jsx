@@ -59,8 +59,9 @@ export function Testimonials() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
                     {/* Testimonial 1 */}
-                    <div className="bg-white dark:bg-white/5 p-8 rounded-2xl shadow-sm border border-[#e0dbd6] dark:border-white/10 relative">
-                        <span className="material-symbols-outlined text-6xl text-primary/20 absolute top-4 right-4">format_quote</span>
+                    <div className="bg-[#F5DEB3] dark:bg-white/5 p-8 rounded-3xl shadow-xl border border-espresso/10 relative overflow-hidden group hover:-translate-y-2 transition-all duration-300">
+                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                        <span className="material-symbols-outlined text-6xl text-espresso/10 absolute top-4 right-4">format_quote</span>
 
                         {/* Tag */}
                         <div className="mb-6">
@@ -83,8 +84,9 @@ export function Testimonials() {
                     </div>
 
                     {/* Testimonial 2 */}
-                    <div className="bg-white dark:bg-white/5 p-8 rounded-2xl shadow-sm border border-[#e0dbd6] dark:border-white/10 relative">
-                        <span className="material-symbols-outlined text-6xl text-primary/20 absolute top-4 right-4">format_quote</span>
+                    <div className="bg-[#F5DEB3] dark:bg-white/5 p-8 rounded-3xl shadow-xl border border-espresso/10 relative overflow-hidden group hover:-translate-y-2 transition-all duration-300">
+                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                        <span className="material-symbols-outlined text-6xl text-espresso/10 absolute top-4 right-4">format_quote</span>
 
                         {/* Tag */}
                         <div className="mb-6">
@@ -107,8 +109,9 @@ export function Testimonials() {
                     </div>
 
                     {/* Testimonial 3 */}
-                    <div className="bg-white dark:bg-white/5 p-8 rounded-2xl shadow-sm border border-[#e0dbd6] dark:border-white/10 relative">
-                        <span className="material-symbols-outlined text-6xl text-primary/20 absolute top-4 right-4">format_quote</span>
+                    <div className="bg-[#F5DEB3] dark:bg-white/5 p-8 rounded-3xl shadow-xl border border-espresso/10 relative overflow-hidden group hover:-translate-y-2 transition-all duration-300">
+                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                        <span className="material-symbols-outlined text-6xl text-espresso/10 absolute top-4 right-4">format_quote</span>
 
                         {/* Tag */}
                         <div className="mb-6">

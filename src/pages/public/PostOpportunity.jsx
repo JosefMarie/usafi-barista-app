@@ -59,7 +59,8 @@ export function PostOpportunity() {
     if (success) {
         return (
             <div className="min-h-screen bg-background-light dark:bg-background-dark flex items-center justify-center px-4">
-                <div className="bg-white dark:bg-white/5 p-8 rounded-3xl shadow-xl max-w-md w-full text-center border border-green-500/30">
+                <div className="bg-[#F5DEB3] dark:bg-white/5 p-8 rounded-3xl shadow-2xl max-w-md w-full text-center border border-espresso/10 relative overflow-hidden group">
+                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                     <div className="h-20 w-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
                         <span className="material-symbols-outlined text-4xl">check_circle</span>
                     </div>
@@ -76,7 +77,8 @@ export function PostOpportunity() {
     return (
         <div className="min-h-screen bg-background-light dark:bg-background-dark py-24 px-4 font-display">
             <div className="container mx-auto max-w-3xl">
-                <div className="bg-white dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/5 p-8 md:p-12">
+                <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-2xl border border-espresso/10 p-8 md:p-12 relative overflow-hidden group">
+                    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                     <div className="text-center mb-10">
                         <h1 className="font-serif text-3xl md:text-4xl font-bold text-espresso dark:text-white mb-3">Post an Opportunity</h1>
                         <p className="text-espresso/70 dark:text-white/70">Find the perfect candidate for your venue.</p>
@@ -96,7 +98,7 @@ export function PostOpportunity() {
                                         required
                                         value={formData.orgName}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary/50 outline-none transition-all"
+                                        className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:ring-2 focus:ring-espresso/50 outline-none transition-all placeholder:text-espresso/30"
                                         placeholder="e.g. Kigali Coffee House"
                                     />
                                 </div>
@@ -108,7 +110,7 @@ export function PostOpportunity() {
                                         required
                                         value={formData.location}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary/50 outline-none transition-all"
+                                        className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:ring-2 focus:ring-espresso/50 outline-none transition-all placeholder:text-espresso/30"
                                         placeholder="e.g. Kimihurura, Kigali"
                                     />
                                 </div>
@@ -123,7 +125,7 @@ export function PostOpportunity() {
                                         required
                                         value={formData.contactPhone}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary/50 outline-none transition-all"
+                                        className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:ring-2 focus:ring-espresso/50 outline-none transition-all placeholder:text-espresso/30"
                                         placeholder="+250..."
                                     />
                                 </div>
@@ -135,7 +137,7 @@ export function PostOpportunity() {
                                         required
                                         value={formData.contactEmail}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary/50 outline-none transition-all"
+                                        className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:ring-2 focus:ring-espresso/50 outline-none transition-all placeholder:text-espresso/30"
                                         placeholder="hiring@example.com"
                                     />
                                 </div>
@@ -153,7 +155,7 @@ export function PostOpportunity() {
                                         name="type"
                                         value={formData.type}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary/50 outline-none transition-all"
+                                        className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:ring-2 focus:ring-espresso/50 outline-none transition-all placeholder:text-espresso/30"
                                     >
                                         <option value="Barista">Barista</option>
                                         <option value="Bartender">Bartender</option>
@@ -166,7 +168,7 @@ export function PostOpportunity() {
                                         name="jobType"
                                         value={formData.jobType}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary/50 outline-none transition-all"
+                                        className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:ring-2 focus:ring-espresso/50 outline-none transition-all placeholder:text-espresso/30"
                                     >
                                         <option value="Full Time">Full Time</option>
                                         <option value="Part Time">Part Time</option>
@@ -185,7 +187,7 @@ export function PostOpportunity() {
                                         name="salaryRange"
                                         value={formData.salaryRange}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary/50 outline-none transition-all"
+                                        className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:ring-2 focus:ring-espresso/50 outline-none transition-all placeholder:text-espresso/30"
                                         placeholder="e.g. 150k - 300k RWF"
                                     />
                                 </div>
@@ -195,7 +197,7 @@ export function PostOpportunity() {
                                         name="genderPreference"
                                         value={formData.genderPreference}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary/50 outline-none transition-all"
+                                        className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:ring-2 focus:ring-espresso/50 outline-none transition-all placeholder:text-espresso/30"
                                     >
                                         <option value="Any">Any</option>
                                         <option value="Male">Male</option>
@@ -224,7 +226,7 @@ export function PostOpportunity() {
                                         name="applicationLink"
                                         value={formData.applicationLink}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary/50 outline-none transition-all"
+                                        className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:ring-2 focus:ring-espresso/50 outline-none transition-all placeholder:text-espresso/30"
                                         placeholder="https://..."
                                     />
                                 </div>

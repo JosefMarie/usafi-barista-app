@@ -87,9 +87,10 @@ export function Home() {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
                         {/* Column 1: Comprehensive Curriculum */}
-                        <div className="flex flex-col items-center text-center gap-4 group hover:-translate-y-2 transition-transform duration-300">
-                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary mb-2">
-                                <span className="material-symbols-outlined text-4xl">school</span>
+                        <div className="flex flex-col items-center text-center p-8 bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/5 gap-4 group hover:-translate-y-2 transition-all duration-300 relative overflow-hidden">
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-espresso text-white mb-2 shadow-md group-hover:scale-110 transition-transform">
+                                <span className="material-symbols-outlined text-3xl">school</span>
                             </div>
                             <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white">
                                 {t('home.benefits.item1.title')}
@@ -100,9 +101,10 @@ export function Home() {
                         </div>
 
                         {/* Column 2: Flexible Learning Options */}
-                        <div className="flex flex-col items-center text-center gap-4 group hover:-translate-y-2 transition-transform duration-300">
-                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary mb-2">
-                                <span className="material-symbols-outlined text-4xl">sync_alt</span>
+                        <div className="flex flex-col items-center text-center p-8 bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/5 gap-4 group hover:-translate-y-2 transition-all duration-300 relative overflow-hidden">
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-espresso text-white mb-2 shadow-md group-hover:scale-110 transition-transform">
+                                <span className="material-symbols-outlined text-3xl">sync_alt</span>
                             </div>
                             <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white">
                                 {t('home.benefits.item2.title')}
@@ -113,9 +115,10 @@ export function Home() {
                         </div>
 
                         {/* Column 3: Real Career Support */}
-                        <div className="flex flex-col items-center text-center gap-4 group hover:-translate-y-2 transition-transform duration-300">
-                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary mb-2">
-                                <span className="material-symbols-outlined text-4xl">work</span>
+                        <div className="flex flex-col items-center text-center p-8 bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/5 gap-4 group hover:-translate-y-2 transition-all duration-300 relative overflow-hidden">
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-espresso text-white mb-2 shadow-md group-hover:scale-110 transition-transform">
+                                <span className="material-symbols-outlined text-3xl">work</span>
                             </div>
                             <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white">
                                 {t('home.benefits.item3.title')}

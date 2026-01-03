@@ -69,7 +69,7 @@ export function StudentChatList() {
     if (loading) return <div className="p-8 text-center">Loading classmates...</div>;
 
     return (
-        <div className="max-w-3xl mx-auto space-y-6">
+        <div className="w-full space-y-6">
             <h2 className="text-espresso dark:text-white text-2xl font-serif font-bold">Classmates Chat</h2>
 
             <div className="grid gap-3">

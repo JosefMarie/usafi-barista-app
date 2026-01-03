@@ -76,52 +76,54 @@ export function InstructorDashboard() {
                 <>
                     {/* Stats Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <StatCard icon="group" label="Assigned Students" value={stats.totalStudents} color="bg-blue-500" />
-                        <StatCard icon="menu_book" label="Active Courses" value={stats.assignedCourses} color="bg-purple-500" />
-                        <StatCard icon="videocam" label="Upcoming Sessions" value={stats.upcomingSessions} color="bg-green-500" />
-                        <StatCard icon="star" label="Avg. Student Rating" value={stats.averageRating} color="bg-amber-500" />
+                        <StatCard icon="group" label="Assigned Students" value={stats.totalStudents} color="bg-espresso" />
+                        <StatCard icon="menu_book" label="Active Courses" value={stats.assignedCourses} color="bg-espresso" />
+                        <StatCard icon="videocam" label="Upcoming Sessions" value={stats.upcomingSessions} color="bg-espresso" />
+                        <StatCard icon="star" label="Avg. Student Rating" value={stats.averageRating} color="bg-espresso" />
                     </div>
 
                     <div className="grid lg:grid-cols-3 gap-6">
                         {/* Chart Section */}
-                        <div className="lg:col-span-2 bg-white dark:bg-[#2c2825] p-6 rounded-xl border border-black/5 dark:border-white/5 shadow-sm">
-                            <h2 className="text-lg font-bold text-espresso dark:text-white mb-6">Course Completion Rates</h2>
-                            <div className="h-64 flex items-end justify-between gap-4 px-2">
+                        <div className="lg:col-span-2 bg-[#F5DEB3] dark:bg-white/5 p-8 rounded-3xl border border-espresso/10 shadow-xl relative overflow-hidden group">
+                            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                            <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 mb-8 uppercase tracking-[0.2em] relative z-10">Course Completion Performance</h2>
+                            <div className="h-64 flex items-end justify-between gap-4 px-2 relative z-10">
                                 {studentProgressData.map((item, index) => (
-                                    <div key={index} className="flex flex-col items-center gap-2 flex-1 group">
-                                        <div className="text-xs font-bold text-primary opacity-0 group-hover:opacity-100 transition-opacity mb-1">{item.value}%</div>
-                                        <div className="w-full bg-gray-100 dark:bg-white/5 rounded-t-lg relative h-48 overflow-hidden">
+                                    <div key={index} className="flex flex-col items-center gap-3 flex-1 group/bar">
+                                        <div className="text-[10px] font-black text-espresso dark:text-white opacity-0 group-hover/bar:opacity-100 transition-all mb-1 bg-white/50 dark:bg-black/20 px-2 py-0.5 rounded shadow-sm">{item.value}%</div>
+                                        <div className="w-full bg-white/40 dark:bg-white/5 rounded-t-2xl relative h-48 overflow-hidden border border-espresso/5">
                                             <div
-                                                className="absolute bottom-0 left-0 w-full bg-primary transition-all duration-1000 ease-out hover:bg-primary/90"
+                                                className="absolute bottom-0 left-0 w-full bg-espresso transition-all duration-1000 ease-out group-hover/bar:bg-espresso/80"
                                                 style={{ height: `${item.value}%` }}
                                             />
                                         </div>
-                                        <span className="text-xs font-medium text-espresso/60 dark:text-white/60 text-center truncate w-full">{item.name}</span>
+                                        <span className="text-[10px] font-black text-espresso/40 dark:text-white/40 text-center truncate w-full uppercase tracking-tighter">{item.name}</span>
                                     </div>
                                 ))}
                             </div>
                         </div>
 
                         {/* Recent Activity */}
-                        <div className="bg-white dark:bg-[#2c2825] p-6 rounded-xl border border-black/5 dark:border-white/5 shadow-sm">
-                            <h2 className="text-lg font-bold text-espresso dark:text-white mb-4">Recent Student Activity</h2>
-                            <div className="space-y-4">
+                        <div className="bg-[#F5DEB3] dark:bg-white/5 p-8 rounded-3xl border border-espresso/10 shadow-xl relative overflow-hidden group">
+                            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                            <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 mb-8 uppercase tracking-[0.2em] relative z-10">Live Student Pulse</h2>
+                            <div className="space-y-5 relative z-10">
                                 {recentActivity.map((activity) => (
-                                    <div key={activity.id} className="flex items-start gap-3 pb-4 border-b border-black/5 dark:border-white/5 last:border-0 last:pb-0">
-                                        <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary mt-1 shrink-0">
-                                            <span className="material-symbols-outlined text-[16px]">
+                                    <div key={activity.id} className="flex items-start gap-4 pb-5 border-b border-espresso/5 dark:border-white/5 last:border-0 last:pb-0 group/activity">
+                                        <div className="h-10 w-10 rounded-2xl bg-espresso flex items-center justify-center text-white shadow-lg shrink-0 group-hover/activity:scale-110 transition-transform">
+                                            <span className="material-symbols-outlined text-[18px]">
                                                 {activity.action.includes('Quiz') ? 'quiz' : activity.action.includes('Session') ? 'videocam' : 'upload_file'}
                                             </span>
                                         </div>
-                                        <div>
-                                            <p className="text-sm font-bold text-espresso dark:text-white">{activity.student}</p>
-                                            <p className="text-xs text-espresso/70 dark:text-white/70">{activity.action}</p>
-                                            <div className="flex items-center gap-2 mt-1">
-                                                <span className="text-[10px] text-espresso/40 dark:text-white/40 uppercase tracking-wider">{activity.time}</span>
+                                        <div className="flex-1">
+                                            <p className="text-sm font-black text-espresso dark:text-white">{activity.student}</p>
+                                            <p className="text-xs font-bold text-espresso/60 dark:text-white/60 mb-2">{activity.action}</p>
+                                            <div className="flex items-center gap-3">
+                                                <span className="text-[9px] font-black text-espresso/30 dark:text-white/30 uppercase tracking-[0.2em]">{activity.time}</span>
                                                 {activity.score && (
                                                     <span className={cn(
-                                                        "text-[10px] font-bold px-1.5 py-0.5 rounded",
-                                                        activity.score === 'Pending' ? "bg-gray-100 text-gray-600" : "bg-green-100 text-green-700"
+                                                        "text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest shadow-sm",
+                                                        activity.score === 'Pending' ? "bg-white/40 text-espresso/50" : "bg-espresso text-white"
                                                     )}>
                                                         {activity.score}
                                                     </span>
@@ -131,8 +133,9 @@ export function InstructorDashboard() {
                                     </div>
                                 ))}
                             </div>
-                            <Link to="/instructor/students" className="block text-center mt-4 text-sm text-primary font-bold hover:underline">
-                                View All Students
+                            <Link to="/instructor/students" className="flex items-center justify-center gap-2 mt-8 py-3 bg-white/40 dark:bg-white/5 text-[10px] font-black uppercase tracking-widest text-espresso/60 hover:bg-white/60 dark:hover:bg-white/10 rounded-xl transition-all relative z-10 active:scale-95 shadow-sm">
+                                Explore All Students
+                                <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
                             </Link>
                         </div>
                     </div>
@@ -144,13 +147,14 @@ export function InstructorDashboard() {
 
 function StatCard({ icon, label, value, color }) {
     return (
-        <div className="bg-white dark:bg-[#2c2825] p-5 rounded-xl border border-black/5 dark:border-white/5 shadow-sm flex items-center gap-4">
-            <div className={cn("h-12 w-12 rounded-full flex items-center justify-center text-white shadow-md", color)}>
+        <div className="bg-[#F5DEB3] dark:bg-white/5 p-6 rounded-3xl border border-espresso/10 shadow-xl flex items-center gap-5 relative overflow-hidden group">
+            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+            <div className={cn("h-14 w-14 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform relative z-10", color)}>
                 <span className="material-symbols-outlined text-2xl">{icon}</span>
             </div>
-            <div>
-                <p className="text-2xl font-serif font-bold text-espresso dark:text-white">{value}</p>
-                <p className="text-xs uppercase tracking-wider font-bold text-espresso/40 dark:text-white/40">{label}</p>
+            <div className="relative z-10">
+                <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest mb-1">{label}</p>
+                <p className="text-3xl font-serif font-bold text-espresso dark:text-white leading-none">{value}</p>
             </div>
         </div>
     );

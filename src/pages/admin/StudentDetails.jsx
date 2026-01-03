@@ -99,272 +99,269 @@ export function StudentDetails() {
     const avatarUrl = student.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=random`;
 
     return (
-        <div className="max-w-3xl mx-auto bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-xl overflow-hidden min-h-screen md:min-h-0 animate-fade-in relative">
-
-            {/* Loading Overlay for Actions */}
-            {loading && student && (
-                <div className="absolute inset-0 bg-white/50 dark:bg-black/50 z-50 flex items-center justify-center">
-                    <span className="material-symbols-outlined animate-spin text-4xl text-primary">progress_activity</span>
-                </div>
-            )}
-
-            {/* Top Bar / Navigation */}
-            <div className="flex items-center justify-between p-4 border-b border-gray-100 dark:border-white/5">
-                <Link to="/admin/students" className="flex items-center gap-2 text-primary hover:underline">
-                    <span className="material-symbols-outlined text-sm">arrow_back</span>
-                    Back to Students
-                </Link>
-                {isEditing ? (
-                    <div className="flex gap-2">
+        <div className="flex-1 flex flex-col h-full bg-[#F5DEB3] dark:bg-[#1c1916] overflow-y-auto animate-fade-in pb-20">
+            <div className=" w-full px-2 py-10">
+                {/* Header / Back Navigation */}
+                <header className="flex items-center justify-between mb-12 relative">
+                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 -ml-10"></div>
+                    <div className="flex items-center gap-6">
                         <button
-                            onClick={() => setIsEditing(false)}
-                            className="px-4 py-2 text-sm font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg"
+                            onClick={() => navigate('/admin/students')}
+                            className="w-12 h-12 rounded-2xl bg-white/40 hover:bg-espresso hover:text-white transition-all flex items-center justify-center active:scale-95 shadow-sm group"
                         >
-                            Cancel
+                            <span className="material-symbols-outlined text-[24px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
                         </button>
-                        <button
-                            onClick={handleUpdate}
-                            className="px-4 py-2 text-sm font-bold text-white bg-primary hover:bg-primary/90 rounded-lg shadow-sm"
-                        >
-                            Save Changes
-                        </button>
-                    </div>
-                ) : (
-                    <div className="flex gap-2">
-                        <button
-                            onClick={handleDelete}
-                            className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-full"
-                            title="Delete Student"
-                        >
-                            <span className="material-symbols-outlined">delete</span>
-                        </button>
-                    </div>
-                )}
-            </div>
-
-            {/* Profile Header */}
-            <div className="flex flex-col items-center pt-8 pb-6 px-4">
-                <div className="relative group">
-                    <div className="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-32 w-32 shadow-lg border-4 border-white dark:border-[#2c2825] bg-gray-200"
-                        style={{ backgroundImage: `url("${avatarUrl}")` }}>
-                    </div>
-                    <div className={`absolute bottom-1 right-1 w-5 h-5 rounded-full border-2 border-white dark:border-[#1e1e1e] ${student.status === 'active' ? 'bg-green-500' :
-                        student.status === 'graduated' ? 'bg-indigo-500' :
-                            student.status === 'suspended' ? 'bg-red-500' :
-                                'bg-yellow-500'
-                        }`}
-                        title={student.status}>
-                    </div>
-                </div>
-
-                {isEditing ? (
-                    <div className="mt-6 w-full max-w-sm space-y-4">
                         <div>
-                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Full Name</label>
-                            <input
-                                type="text"
-                                value={editForm.fullName}
-                                onChange={(e) => setEditForm({ ...editForm, fullName: e.target.value })}
-                                className="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-transparent dark:text-white"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Status</label>
-                            <select
-                                value={editForm.status}
-                                onChange={(e) => setEditForm({ ...editForm, status: e.target.value })}
-                                className="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-transparent dark:text-white"
-                            >
-                                <option value="pending">Pending</option>
-                                <option value="active">Active</option>
-                                <option value="suspended">Suspended (Payment)</option>
-                                <option value="graduated">Graduated</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Phone</label>
-                            <input
-                                type="text"
-                                value={editForm.phone}
-                                onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
-                                className="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-transparent dark:text-white"
-                            />
+                            <h1 className="text-3xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none">Participant Dossier</h1>
+                            <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] mt-2">Node: {student.id.slice(0, 8)} // SECURITY PROTOCOL ALPHA</p>
                         </div>
                     </div>
-                ) : (
-                    <div className="mt-4 flex flex-col items-center justify-center text-center w-full">
-                        <h1 className="text-espresso dark:text-white text-2xl font-bold leading-tight font-serif">
-                            {displayName}
-                        </h1>
-                        <p className="text-primary font-medium text-sm mt-1 uppercase tracking-wider">{student.role || 'Student'}</p>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 w-full max-w-lg text-left bg-gray-50 dark:bg-white/5 p-6 rounded-xl border border-gray-100 dark:border-white/5">
-                            <div>
-                                <h4 className="text-xs font-bold text-gray-500 uppercase mb-1">Contact Info</h4>
-                                <div className="space-y-2 text-sm text-espresso/80 dark:text-white/80">
-                                    <div className="flex items-center gap-2">
-                                        <span className="material-symbols-outlined text-base opacity-70">mail</span>
-                                        <a href={`mailto:${student.email}`} className="hover:text-primary transition-colors truncate">{student.email}</a>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="material-symbols-outlined text-base opacity-70">call</span>
-                                        <a href={`tel:${student.phone}`} className="hover:text-primary transition-colors">{student.phone || 'N/A'}</a>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="material-symbols-outlined text-base opacity-70">location_on</span>
-                                        <span>{student.residence || 'N/A'}</span>
-                                    </div>
-                                </div>
+                    <div className="flex gap-4">
+                        {isEditing ? (
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={() => setIsEditing(false)}
+                                    className="px-6 py-3 bg-white/40 text-espresso text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl border border-espresso/10 hover:bg-espresso hover:text-white transition-all active:scale-95 shadow-sm"
+                                >
+                                    Abort
+                                </button>
+                                <button
+                                    onClick={handleUpdate}
+                                    className="px-8 py-3 bg-espresso text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl shadow-xl hover:shadow-espresso/40 active:scale-95 transition-all flex items-center gap-2"
+                                >
+                                    Commit Changes
+                                </button>
                             </div>
+                        ) : (
+                            <button
+                                onClick={handleDelete}
+                                className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition-all flex items-center justify-center active:scale-95 shadow-sm group"
+                                title="Decommission Node"
+                            >
+                                <span className="material-symbols-outlined text-[24px]">delete</span>
+                            </button>
+                        )}
+                    </div>
+                </header>
 
-                            <div>
-                                <h4 className="text-xs font-bold text-gray-500 uppercase mb-1">Enrollment Details</h4>
-                                <div className="space-y-2 text-sm text-espresso/80 dark:text-white/80">
-                                    <div className="flex items-center gap-2">
-                                        <span className="material-symbols-outlined text-base opacity-70">school</span>
-                                        <span className="font-medium capitalize">{student.course || 'No Course'}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="material-symbols-outlined text-base opacity-70">menu_book</span>
-                                        <span className={`capitalize ${student.studyMethod === 'online' ? 'text-blue-500' : 'text-amber-600'} font-medium`}>
-                                            {student.studyMethod === 'online' ? 'E-Learning (Online)' : 'Onsite (In-Person)'}
-                                        </span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="material-symbols-outlined text-base opacity-70">event</span>
-                                        {student.studyMethod === 'onsite' ? (
-                                            <span className="font-mono bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200 px-2 py-0.5 rounded text-xs">
-                                                {student.shift ? student.shift.replace('-', ' ').toUpperCase() : 'NO SHIFT'}
-                                            </span>
-                                        ) : (
-                                            <span>Start: {student.startDate || 'Not set'}</span>
+                <main className="space-y-10">
+                    {/* Profile Card */}
+                    <div className="bg-white/40 dark:bg-black/20 rounded-[3rem] p-12 shadow-2xl border border-espresso/10 relative overflow-hidden group/main">
+                        <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover/main:bg-espresso transition-colors"></div>
+
+                        <div className="flex flex-col md:flex-row gap-12">
+                            {/* Avatar Section */}
+                            <div className="flex flex-col items-center gap-6 shrink-0">
+                                <div className="relative group/avatar">
+                                    <div className="w-48 h-48 rounded-[2.5rem] overflow-hidden border-4 border-white/60 shadow-2xl relative">
+                                        <img src={avatarUrl} alt={displayName} className="w-full h-full object-cover transition-transform duration-700 group-hover/avatar:scale-110" />
+                                        {loading && (
+                                            <div className="absolute inset-0 bg-espresso/40 backdrop-blur-sm flex items-center justify-center">
+                                                <span className="material-symbols-outlined animate-spin text-4xl text-white">progress_activity</span>
+                                            </div>
                                         )}
                                     </div>
-                                    <div className="flex items-center gap-2 text-xs opacity-70">
-                                        <span className="material-symbols-outlined text-base">campaign</span>
-                                        <span>Heard via: {student.referral || 'Unknown'}</span>
-                                    </div>
+                                    <div className={`absolute -bottom-2 -right-2 w-8 h-8 rounded-full border-4 border-[#F5DEB3] dark:border-[#1c1916] shadow-xl ${student.status === 'active' ? 'bg-green-500' :
+                                        student.status === 'graduated' ? 'bg-indigo-500' :
+                                            student.status === 'suspended' ? 'bg-red-500' :
+                                                'bg-amber-400'
+                                        }`}></div>
                                 </div>
+                                <span className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.4em]">Integrated Registry Entry</span>
+                            </div>
+
+                            {/* Info Section */}
+                            <div className="flex-1 space-y-10">
+                                {isEditing ? (
+                                    <div className="space-y-8">
+                                        <div>
+                                            <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-espresso/40 mb-3 ml-1">Identity Tag</label>
+                                            <input
+                                                className="w-full text-3xl font-serif font-black bg-white/40 border border-espresso/10 rounded-2xl px-6 py-4 focus:outline-none focus:ring-2 focus:ring-espresso transition-all shadow-inner text-espresso"
+                                                value={editForm.fullName}
+                                                onChange={(e) => setEditForm({ ...editForm, fullName: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="grid md:grid-cols-2 gap-8">
+                                            <div>
+                                                <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-espresso/40 mb-3 ml-1">Operational Status</label>
+                                                <select
+                                                    className="w-full p-4 bg-white/40 border border-espresso/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-espresso text-espresso font-black uppercase tracking-widest text-[10px]"
+                                                    value={editForm.status}
+                                                    onChange={(e) => setEditForm({ ...editForm, status: e.target.value })}
+                                                >
+                                                    <option value="pending">PENDING PROTOCOL</option>
+                                                    <option value="active">ACTIVE OPERATION</option>
+                                                    <option value="suspended">SUSPENDED (BILLING)</option>
+                                                    <option value="graduated">VALIDATED ALUMNUS</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-espresso/40 mb-3 ml-1">Comms Frequency</label>
+                                                <input
+                                                    className="w-full p-4 bg-white/40 border border-espresso/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-espresso text-espresso font-black uppercase tracking-widest text-[10px]"
+                                                    value={editForm.phone}
+                                                    onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-10">
+                                        <div>
+                                            <h2 className="text-4xl md:text-5xl font-serif font-black text-espresso dark:text-white leading-none tracking-tight">
+                                                {displayName}
+                                            </h2>
+                                            <div className="flex items-center gap-3 mt-4">
+                                                <span className="bg-espresso text-white text-[9px] font-black px-3 py-1.5 rounded-lg uppercase tracking-[0.2em]">{student.role || 'PARTICIPANT'}</span>
+                                                <span className="text-espresso/20 font-black tracking-widest text-[10px]">OPERATIONAL NODE ALPHA</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                                            <div className="space-y-6">
+                                                <h4 className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.4em] flex items-center gap-3">
+                                                    <span className="w-8 h-px bg-espresso/20"></span>
+                                                    Transmission Array
+                                                </h4>
+                                                <div className="space-y-4">
+                                                    <div className="flex items-center gap-4 group/info">
+                                                        <div className="w-10 h-10 rounded-xl bg-espresso/5 flex items-center justify-center text-espresso/40 group-hover/info:bg-espresso group-hover/info:text-white transition-all shadow-sm">
+                                                            <span className="material-symbols-outlined text-[20px]">mail</span>
+                                                        </div>
+                                                        <a href={`mailto:${student.email}`} className="text-sm font-black text-espresso/80 hover:text-espresso transition-colors font-serif truncate">{student.email}</a>
+                                                    </div>
+                                                    <div className="flex items-center gap-4 group/info">
+                                                        <div className="w-10 h-10 rounded-xl bg-espresso/5 flex items-center justify-center text-espresso/40 group-hover/info:bg-espresso group-hover/info:text-white transition-all shadow-sm">
+                                                            <span className="material-symbols-outlined text-[20px]">call</span>
+                                                        </div>
+                                                        <span className="text-sm font-black text-espresso/80 font-serif">{student.phone || 'DATA MISSING'}</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-4 group/info">
+                                                        <div className="w-10 h-10 rounded-xl bg-espresso/5 flex items-center justify-center text-espresso/40 group-hover/info:bg-espresso group-hover/info:text-white transition-all shadow-sm">
+                                                            <span className="material-symbols-outlined text-[20px]">location_on</span>
+                                                        </div>
+                                                        <span className="text-sm font-black text-espresso/80 font-serif">{student.residence || 'UNLOCATED NODE'}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-6">
+                                                <h4 className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.4em] flex items-center gap-3">
+                                                    <span className="w-8 h-px bg-espresso/20"></span>
+                                                    Structural Schema
+                                                </h4>
+                                                <div className="space-y-4">
+                                                    <div className="flex items-center gap-4 group/info">
+                                                        <div className="w-10 h-10 rounded-xl bg-espresso/5 flex items-center justify-center text-espresso/40 group-hover/info:bg-espresso group-hover/info:text-white transition-all shadow-sm">
+                                                            <span className="material-symbols-outlined text-[20px]">school</span>
+                                                        </div>
+                                                        <span className="text-sm font-black text-espresso uppercase tracking-widest">{student.course || 'FLUID SELECTION'}</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-4 group/info">
+                                                        <div className="w-10 h-10 rounded-xl bg-espresso/5 flex items-center justify-center text-espresso/40 group-hover/info:bg-espresso group-hover/info:text-white transition-all shadow-sm">
+                                                            <span className="material-symbols-outlined text-[20px]">hub</span>
+                                                        </div>
+                                                        <span className={`text-[10px] font-black uppercase tracking-widest ${student.studyMethod === 'online' ? 'text-blue-600' : 'text-amber-600'}`}>
+                                                            {student.studyMethod === 'online' ? 'PROTOCOL: DIGITAL' : 'PROTOCOL: ANALOG'}
+                                                        </span>
+                                                    </div>
+                                                    <div className="flex items-center gap-4 group/info">
+                                                        <div className="w-10 h-10 rounded-xl bg-espresso/5 flex items-center justify-center text-espresso/40 group-hover/info:bg-espresso group-hover/info:text-white transition-all shadow-sm">
+                                                            <span className="material-symbols-outlined text-[20px]">event</span>
+                                                        </div>
+                                                        <span className="text-[10px] font-black text-espresso/60 uppercase tracking-widest">
+                                                            {student.studyMethod === 'onsite' ? (student.shift || 'NO SHIFT MATRIX').toUpperCase() : `DEPLOYED: ${student.startDate || 'TBD'}`}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
+                    </div>
 
-                        <div className="mt-6 flex gap-2">
-                            <span className={`px-3 py-1 rounded-full text-xs font-bold capitalize ${student.status === 'active' ? 'bg-green-100 text-green-700' :
-                                student.status === 'graduated' ? 'bg-indigo-100 text-indigo-700' :
-                                    student.status === 'suspended' ? 'bg-red-100 text-red-700' :
-                                        'bg-yellow-100 text-yellow-700'
-                                }`}>
-                                {student.status}
-                            </span>
+                    {/* Action Hub */}
+                    {!isEditing && (
+                        <div className="grid md:grid-cols-3 gap-6">
+                            <button
+                                onClick={() => window.location.href = `mailto:${student.email}`}
+                                className="flex flex-col items-center gap-4 p-8 bg-espresso text-white rounded-[2rem] shadow-2xl hover:-translate-y-1 transition-all active:scale-95 group/btn"
+                            >
+                                <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center group-hover/btn:bg-white group-hover/btn:text-espresso transition-all">
+                                    <span className="material-symbols-outlined text-3xl">chat</span>
+                                </div>
+                                <span className="text-[10px] font-black uppercase tracking-[0.3em]">Initialize Comms</span>
+                            </button>
+                            <button
+                                onClick={() => setIsEditing(true)}
+                                className="flex flex-col items-center gap-4 p-8 bg-white/40 dark:bg-black/20 border border-espresso/10 text-espresso dark:text-white rounded-[2rem] shadow-xl hover:-translate-y-1 transition-all active:scale-95 group/btn"
+                            >
+                                <div className="w-14 h-14 rounded-2xl bg-espresso flex items-center justify-center text-white transition-all group-hover/btn:scale-110">
+                                    <span className="material-symbols-outlined text-3xl">edit_note</span>
+                                </div>
+                                <span className="text-[10px] font-black uppercase tracking-[0.3em]">Modify Schema</span>
+                            </button>
+                            <div className="flex flex-col gap-3">
+                                {student.status === 'suspended' ? (
+                                    <button
+                                        onClick={async () => {
+                                            if (window.confirm('Resume this student? They will regain access.')) {
+                                                await updateDoc(doc(db, 'users', id), { status: 'active' });
+                                                setStudent(prev => ({ ...prev, status: 'active' }));
+                                            }
+                                        }}
+                                        className="h-full flex items-center justify-center gap-4 p-4 bg-green-500 text-white rounded-[2rem] shadow-xl hover:bg-green-600 active:scale-95 transition-all group/btn"
+                                    >
+                                        <span className="material-symbols-outlined text-3xl">play_circle</span>
+                                        <span className="text-[10px] font-black uppercase tracking-[0.2em]">Resume Node</span>
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={async () => {
+                                            if (window.confirm('Suspend this student for non-payment? They will lose dashboard access.')) {
+                                                await updateDoc(doc(db, 'users', id), { status: 'suspended' });
+                                                setStudent(prev => ({ ...prev, status: 'suspended' }));
+                                            }
+                                        }}
+                                        className="h-full flex items-center justify-center gap-4 p-4 bg-amber-500 text-white rounded-[2rem] shadow-xl hover:bg-amber-600 active:scale-95 transition-all group/btn"
+                                    >
+                                        <span className="material-symbols-outlined text-3xl">pause_circle</span>
+                                        <span className="text-[10px] font-black uppercase tracking-[0.2em]">Suspend Node</span>
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Progress Analytics Layer */}
+                    <div className="grid md:grid-cols-2 gap-10 opacity-30 select-none grayscale cursor-not-allowed relative group/analytics">
+                        <div className="absolute inset-0 z-50 flex items-center justify-center opacity-0 group-hover/analytics:opacity-100 transition-opacity">
+                            <span className="bg-espresso text-white px-6 py-2 rounded-full text-[9px] font-black uppercase tracking-widest shadow-2xl">Module Locked: Protocol Pending</span>
+                        </div>
+                        <div className="bg-white/40 p-10 rounded-[3rem] border border-espresso/10 space-y-6">
+                            <h3 className="text-xl font-serif font-black text-espresso uppercase tracking-tight">Deployment Matrix</h3>
+                            <div className="h-4 w-full bg-espresso/10 rounded-full overflow-hidden">
+                                <div className="h-full bg-espresso/40 w-[65%]"></div>
+                            </div>
+                            <p className="text-[9px] font-black uppercase tracking-widest text-espresso/40">Active certification progress overview</p>
+                        </div>
+                        <div className="bg-white/40 p-10 rounded-[3rem] border border-espresso/10 space-y-6">
+                            <h3 className="text-xl font-serif font-black text-espresso uppercase tracking-tight">Recent Interactions</h3>
+                            <div className="space-y-4">
+                                <div className="h-4 bg-espresso/5 rounded-full w-3/4"></div>
+                                <div className="h-4 bg-espresso/5 rounded-full w-1/2"></div>
+                            </div>
+                            <p className="text-[9px] font-black uppercase tracking-widest text-espresso/40">Temporal activity sequence log</p>
                         </div>
                     </div>
-                )}
+                </main>
             </div>
-
-            {/* Action Buttons */}
-            {!isEditing && (
-                <div className="px-6 py-4 border-b border-gray-100 dark:border-white/5 space-y-3">
-                    <div className="flex gap-3 w-full">
-                        <button
-                            onClick={() => window.location.href = `mailto:${student.email}`}
-                            className="flex-1 flex items-center justify-center gap-2 h-11 px-4 bg-primary text-white text-sm font-bold rounded-lg shadow-md hover:bg-primary/90 transition-all"
-                        >
-                            <span className="material-symbols-outlined text-[20px]">chat</span>
-                            Message
-                        </button>
-                        <button
-                            onClick={() => setIsEditing(true)}
-                            className="flex-1 flex items-center justify-center gap-2 h-11 px-4 bg-white dark:bg-white/10 border border-primary/30 text-primary dark:text-white text-sm font-bold rounded-lg shadow-sm hover:bg-primary/5 transition-all"
-                        >
-                            <span className="material-symbols-outlined text-[20px]">edit</span>
-                            Edit Info
-                        </button>
-                    </div>
-
-                    {/* Status Actions */}
-                    <div className="grid grid-cols-2 gap-3">
-                        {/* Suspend / Resume (Payment) */}
-                        {student.status === 'suspended' ? (
-                            <button
-                                onClick={async () => {
-                                    if (window.confirm('Resume this student? They will regain access.')) {
-                                        setEditForm(prev => ({ ...prev, status: 'active' }));
-                                        // Quick inline update
-                                        await updateDoc(doc(db, 'users', id), { status: 'active' });
-                                        setStudent(prev => ({ ...prev, status: 'active' }));
-                                    }
-                                }}
-                                className="col-span-1 flex items-center justify-center gap-2 h-10 px-4 bg-green-100 text-green-700 hover:bg-green-200 text-xs font-bold rounded-lg transition-all"
-                            >
-                                <span className="material-symbols-outlined text-[18px]">play_arrow</span>
-                                Resume Course
-                            </button>
-                        ) : (
-                            <button
-                                onClick={async () => {
-                                    if (window.confirm('Suspend this student for non-payment? They will lose dashboard access.')) {
-                                        setEditForm(prev => ({ ...prev, status: 'suspended' }));
-                                        await updateDoc(doc(db, 'users', id), { status: 'suspended' });
-                                        setStudent(prev => ({ ...prev, status: 'suspended' }));
-                                    }
-                                }}
-                                className="col-span-1 flex items-center justify-center gap-2 h-10 px-4 bg-yellow-100 text-yellow-700 hover:bg-yellow-200 text-xs font-bold rounded-lg transition-all"
-                            >
-                                <span className="material-symbols-outlined text-[18px]">pause</span>
-                                Suspend (Payment)
-                            </button>
-                        )}
-
-                        {/* Graduate / Reactivate */}
-                        {student.status === 'graduated' ? (
-                            <button
-                                onClick={async () => {
-                                    if (window.confirm('Reactivate this graduated student? They will show as Active.')) {
-                                        setEditForm(prev => ({ ...prev, status: 'active' }));
-                                        await updateDoc(doc(db, 'users', id), { status: 'active' });
-                                        setStudent(prev => ({ ...prev, status: 'active' }));
-                                    }
-                                }}
-                                className="col-span-1 flex items-center justify-center gap-2 h-10 px-4 bg-purple-100 text-purple-700 hover:bg-purple-200 text-xs font-bold rounded-lg transition-all"
-                            >
-                                <span className="material-symbols-outlined text-[18px]">replay</span>
-                                Reactivate
-                            </button>
-                        ) : (
-                            <button
-                                onClick={async () => {
-                                    if (window.confirm('Mark this student as Graduated? This indicates course completion.')) {
-                                        setEditForm(prev => ({ ...prev, status: 'graduated' }));
-                                        await updateDoc(doc(db, 'users', id), { status: 'graduated' });
-                                        setStudent(prev => ({ ...prev, status: 'graduated' }));
-                                    }
-                                }}
-                                className="col-span-1 flex items-center justify-center gap-2 h-10 px-4 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 text-xs font-bold rounded-lg transition-all"
-                            >
-                                <span className="material-symbols-outlined text-[18px]">school</span>
-                                Mark Graduated
-                            </button>
-                        )}
-                    </div>
-                </div>
-            )}
-
-            {/* Data Grids (Placeholders for Future Data) */}
-            <div className="px-6 py-6 space-y-6 opacity-60 pointer-events-none filter grayscale">
-                <div>
-                    <h3 className="text-espresso dark:text-white text-lg font-bold font-serif mb-3">Enrolled Courses (Coming Soon)</h3>
-                    <div className="p-4 bg-gray-50 dark:bg-white/5 rounded-lg border border-gray-200 dark:border-white/10 text-center text-sm">
-                        No active course data available.
-                    </div>
-                </div>
-                <div>
-                    <h3 className="text-espresso dark:text-white text-lg font-bold font-serif mb-3">Recent Activity (Coming Soon)</h3>
-                    <div className="p-4 bg-gray-50 dark:bg-white/5 rounded-lg border border-gray-200 dark:border-white/10 text-center text-sm">
-                        No activity logs available.
-                    </div>
-                </div>
-            </div>
-
         </div>
     );
 }
+
+
+

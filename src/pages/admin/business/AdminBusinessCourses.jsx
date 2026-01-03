@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../../lib/firebase';
 import { GradientButton } from '../../../components/ui/GradientButton';
+import { cn } from '../../../lib/utils';
+
 
 export function AdminBusinessCourses() {
     const [courses, setCourses] = useState([]);
@@ -48,7 +50,7 @@ export function AdminBusinessCourses() {
     if (loading) return <div className="p-8">Loading...</div>;
 
     return (
-        <div className="container mx-auto max-w-6xl">
+        <div className="w-full px-4">
             <div className="flex justify-between items-center mb-8">
                 <div>
                     <h1 className="font-serif text-3xl font-bold text-espresso dark:text-white">Manage Business Courses</h1>
@@ -60,55 +62,66 @@ export function AdminBusinessCourses() {
                 </GradientButton>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {courses.map(course => (
                     <Link
                         key={course.id}
                         to={`/admin/business/courses/${course.id}`}
-                        className="group bg-white dark:bg-white/5 rounded-2xl border border-gray-100 dark:border-white/5 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                        className="group bg-[#F5DEB3] dark:bg-[#1c1916] rounded-[2rem] border border-espresso/10 overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 relative"
                     >
-                        <div className="h-48 bg-gray-100 dark:bg-white/5 relative overflow-hidden">
+                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/30 group-hover:bg-espresso transition-colors"></div>
+                        <div className="h-52 bg-espresso/10 dark:bg-white/5 relative overflow-hidden">
                             {course.thumbnail ? (
-                                <img src={course.thumbnail} alt={course.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                                <img src={course.thumbnail} alt={course.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                             ) : (
-                                <div className="w-full h-full flex items-center justify-center text-gray-300 dark:text-white/20">
-                                    <span className="material-symbols-outlined text-6xl">menu_book</span>
+                                <div className="w-full h-full flex items-center justify-center text-espresso/20 dark:text-white/20">
+                                    <span className="material-symbols-outlined text-7xl">menu_book</span>
                                 </div>
                             )}
-                            <div className="absolute top-2 right-2">
-                                <span className={`px-2 py-1 rounded-full text-xs font-bold uppercase backdrop-blur-md ${course.status === 'published'
-                                        ? 'bg-green-500/80 text-white'
-                                        : 'bg-yellow-500/80 text-white'
-                                    }`}>
+                            <div className="absolute top-4 right-4">
+                                <span className={cn(
+                                    "px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg backdrop-blur-md",
+                                    course.status === 'published'
+                                        ? 'bg-green-600 text-white'
+                                        : 'bg-amber-500 text-white'
+                                )}>
                                     {course.status}
                                 </span>
                             </div>
                         </div>
-                        <div className="p-6">
-                            <h3 className="font-serif text-xl font-bold text-espresso dark:text-white mb-2 group-hover:text-primary transition-colors">
+                        <div className="p-7">
+                            <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-3 group-hover:text-primary transition-colors leading-tight">
                                 {course.title}
                             </h3>
-                            <p className="text-espresso/70 dark:text-white/70 text-sm line-clamp-2">
+                            <p className="text-espresso/70 dark:text-white/70 text-sm line-clamp-2 font-medium leading-relaxed">
                                 {course.description}
                             </p>
-                            <div className="mt-4 flex items-center text-sm text-primary font-medium">
-                                Manage Content
-                                <span className="material-symbols-outlined ml-1 text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                            <div className="mt-6 flex items-center justify-between">
+                                <div className="flex items-center text-[10px] font-black text-espresso uppercase tracking-widest bg-white/40 px-3 py-2 rounded-xl border border-white/20">
+                                    MANAGE CONTENT
+                                    <span className="material-symbols-outlined ml-2 text-base group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                                </div>
+                                <div className="p-2 rounded-full bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <span className="material-symbols-outlined text-espresso">edit_note</span>
+                                </div>
                             </div>
                         </div>
                     </Link>
                 ))}
 
                 {courses.length === 0 && (
-                    <div className="col-span-full py-20 text-center bg-white dark:bg-white/5 rounded-2xl border border-dashed border-gray-200 dark:border-white/10">
-                        <span className="material-symbols-outlined text-6xl text-gray-300 dark:text-white/10 mb-4">library_books</span>
-                        <h3 className="text-xl font-bold text-espresso dark:text-white mb-2">No Courses Yet</h3>
-                        <p className="text-espresso/60 dark:text-white/60 mb-6">Start building your business curriculum today.</p>
+                    <div className="col-span-full py-24 text-center bg-[#F5DEB3]/50 dark:bg-white/5 rounded-[2rem] border-2 border-dashed border-espresso/10 dark:border-white/10">
+                        <div className="w-20 h-20 bg-espresso/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <span className="material-symbols-outlined text-5xl text-espresso/40">library_books</span>
+                        </div>
+                        <h3 className="text-2xl font-serif font-bold text-espresso dark:text-white mb-2">No Courses Yet</h3>
+                        <p className="text-espresso/60 dark:text-white/60 mb-8 max-w-sm mx-auto font-medium">Start building your exclusive business curriculum and empower your students today.</p>
                         <button
                             onClick={() => setIsModalOpen(true)}
-                            className="text-primary font-bold hover:underline"
+                            className="inline-flex items-center gap-2 bg-espresso text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all"
                         >
-                            Create your first course
+                            <span className="material-symbols-outlined">add</span>
+                            Create First Course
                         </button>
                     </div>
                 )}
@@ -174,3 +187,4 @@ export function AdminBusinessCourses() {
         </div>
     );
 }
+

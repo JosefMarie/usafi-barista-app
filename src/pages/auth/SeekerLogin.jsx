@@ -28,7 +28,8 @@ export function SeekerLogin() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-background-light dark:bg-background-dark py-12 px-4 sm:px-6 lg:px-8 font-display">
-            <div className="max-w-md w-full space-y-8 bg-white dark:bg-[#2c2825] p-10 rounded-2xl shadow-xl border border-green-500/20">
+            <div className="max-w-md w-full space-y-8 bg-[#F5DEB3] dark:bg-white/5 p-10 rounded-3xl shadow-2xl border border-espresso/10 relative overflow-hidden group">
+                <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                 <div className="text-center">
                     <Link to="/opportunities" className="inline-flex items-center gap-2 justify-center mb-6">
                         <div className="h-10 w-10 rounded-full bg-green-600 flex items-center justify-center text-white shadow-lg">
@@ -62,7 +63,7 @@ export function SeekerLogin() {
                                     type="email"
                                     autoComplete="email"
                                     required
-                                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-white/10 rounded-lg bg-gray-50 dark:bg-white/5 text-espresso dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                                    className="block w-full pl-10 pr-3 py-3 border border-espresso/10 rounded-lg bg-white/50 dark:bg-white/5 text-espresso dark:text-white placeholder-espresso/40 focus:outline-none focus:ring-2 focus:ring-espresso focus:border-transparent transition-all"
                                     placeholder="Email address"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
@@ -83,7 +84,7 @@ export function SeekerLogin() {
                                     type="password"
                                     autoComplete="current-password"
                                     required
-                                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-white/10 rounded-lg bg-gray-50 dark:bg-white/5 text-espresso dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                                    className="block w-full pl-10 pr-3 py-3 border border-espresso/10 rounded-lg bg-white/50 dark:bg-white/5 text-espresso dark:text-white placeholder-espresso/40 focus:outline-none focus:ring-2 focus:ring-espresso focus:border-transparent transition-all"
                                     placeholder="Password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}

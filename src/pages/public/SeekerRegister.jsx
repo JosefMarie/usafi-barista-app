@@ -71,7 +71,8 @@ export function SeekerRegister() {
 
     return (
         <div className="min-h-screen bg-background-light dark:bg-background-dark py-24 px-4 font-display flex items-center justify-center">
-            <div className="bg-white dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/5 p-8 md:p-12 max-w-lg w-full">
+            <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/10 p-8 md:p-12 max-w-lg w-full relative overflow-hidden group">
+                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                 <div className="text-center mb-10">
                     <h1 className="font-serif text-3xl font-bold text-espresso dark:text-white mb-3">Job Seeker Registration</h1>
                     <p className="text-espresso/70 dark:text-white/70">Create an account to find opportunities.</p>
@@ -86,7 +87,7 @@ export function SeekerRegister() {
                             required
                             value={formData.name}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary/50 outline-none transition-all"
+                            className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:ring-2 focus:ring-espresso/50 outline-none transition-all placeholder:text-espresso/30"
                             placeholder="John Doe"
                         />
                     </div>
@@ -97,7 +98,7 @@ export function SeekerRegister() {
                             name="genre"
                             value={formData.genre}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary/50 outline-none transition-all"
+                            className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:ring-2 focus:ring-espresso/50 outline-none transition-all placeholder:text-espresso/30"
                         >
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
@@ -112,7 +113,7 @@ export function SeekerRegister() {
                             required
                             value={formData.email}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary/50 outline-none transition-all"
+                            className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:ring-2 focus:ring-espresso/50 outline-none transition-all placeholder:text-espresso/30"
                             placeholder="john@example.com"
                         />
                     </div>
@@ -125,7 +126,7 @@ export function SeekerRegister() {
                             required
                             value={formData.phone}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary/50 outline-none transition-all"
+                            className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:ring-2 focus:ring-espresso/50 outline-none transition-all placeholder:text-espresso/30"
                             placeholder="+250..."
                         />
                     </div>
@@ -138,7 +139,7 @@ export function SeekerRegister() {
                             required
                             value={formData.password}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary/50 outline-none transition-all"
+                            className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:ring-2 focus:ring-espresso/50 outline-none transition-all placeholder:text-espresso/30"
                             placeholder="••••••••"
                         />
                     </div>

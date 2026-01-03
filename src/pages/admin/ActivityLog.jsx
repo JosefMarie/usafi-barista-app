@@ -16,61 +16,82 @@ export function ActivityLog() {
     };
 
     return (
-        <div className="max-w-2xl mx-auto min-h-screen bg-background-light dark:bg-background-dark shadow-sm md:shadow-none">
-            {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-primary/10">
-                <h2 className="text-espresso dark:text-white text-2xl font-serif font-bold leading-tight">Activity Log</h2>
-                <button className="text-primary hover:text-espresso dark:hover:text-white transition-colors">
-                    <span className="material-symbols-outlined text-2xl">filter_list</span>
-                </button>
-            </div>
+        <div className="flex-1 flex flex-col h-full bg-[#F5DEB3] dark:bg-[#1c1916] overflow-y-auto animate-fade-in pb-32">
+            <div className=" w-full px-2 py-10 space-y-10">
+                {/* Header Section */}
+                <div className="flex items-center justify-between relative">
+                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 -ml-10"></div>
+                    <div>
+                        <h1 className="text-4xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none">Operational Audit Log</h1>
+                        <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] mt-2">Historical Trace & System Event Ledger</p>
+                    </div>
+                    <button className="w-12 h-12 rounded-2xl bg-white/40 hover:bg-espresso hover:text-white transition-all flex items-center justify-center shadow-sm group">
+                        <span className="material-symbols-outlined text-[24px] group-hover:rotate-180 transition-transform duration-500">filter_list</span>
+                    </button>
+                </div>
 
-            {/* Search */}
-            <div className="p-4">
-                <div className="flex w-full items-stretch rounded-xl h-12 shadow-sm bg-white dark:bg-[#2c2825]">
-                    <div className="text-primary/70 flex items-center justify-center pl-4 rounded-l-xl">
-                        <span className="material-symbols-outlined text-xl">search</span>
+                {/* Audit Search Array */}
+                <div className="relative group">
+                    <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none text-espresso/30">
+                        <span className="material-symbols-outlined">analytics</span>
                     </div>
                     <input
-                        className="flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-xl bg-transparent text-espresso dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/20 border-none h-full placeholder:text-espresso/40 px-3 text-base font-normal leading-normal"
-                        placeholder="Search logs..."
+                        className="w-full h-16 pl-16 pr-8 bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-[1.5rem] text-espresso dark:text-white font-serif text-lg focus:outline-none focus:ring-2 focus:ring-espresso transition-all shadow-inner placeholder:text-espresso/20 placeholder:font-black placeholder:uppercase placeholder:tracking-[0.4em] placeholder:text-[10px]"
+                        placeholder="Trace operational vectors..."
+                        type="text"
                     />
                 </div>
-            </div>
 
-            {/* Logs */}
-            <div className="flex flex-col">
-                {Object.entries(logs).map(([date, entries]) => (
-                    <div key={date} className="flex flex-col mt-2">
-                        <div className="sticky top-0 z-10 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm px-4 py-2 border-b border-primary/5">
-                            <h4 className="text-primary text-xs font-bold uppercase tracking-widest">{date}</h4>
-                        </div>
-                        {entries.map((log, idx) => (
-                            <div key={idx} className="group flex gap-4 px-4 py-4 justify-between items-start border-b border-primary/10 hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer">
-                                <div className="flex items-start gap-3 w-full">
-                                    <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
-                                        <span className="font-bold text-xs text-primary">{log.user.split(' ').map(n => n[0]).join('')}</span>
-                                    </div>
-                                    <div className="flex flex-col justify-start gap-1 w-full">
-                                        <div className="flex justify-between items-start w-full">
-                                            <p className="text-espresso dark:text-white text-sm font-medium leading-snug">
-                                                {log.action}
-                                            </p>
-                                            <span className="text-espresso/50 dark:text-white/50 text-xs font-medium whitespace-nowrap ml-2">{log.time}</span>
-                                        </div>
-                                        <p className="text-primary text-xs font-semibold">{log.user}</p>
-                                    </div>
-                                </div>
-                                <div className="shrink-0 pt-1">
-                                    <div className={`rounded-full p-1 flex size-6 items-center justify-center ${log.color}`}>
-                                        <span className="material-symbols-outlined text-sm font-bold">{log.icon}</span>
-                                    </div>
-                                </div>
+                {/* Audit Stream */}
+                <div className="space-y-12">
+                    {Object.entries(logs).map(([date, entries]) => (
+                        <div key={date} className="space-y-6">
+                            <div className="sticky top-0 z-20 bg-[#F5DEB3]/95 dark:bg-[#1c1916]/95 backdrop-blur-md py-4 border-b border-espresso/10">
+                                <h3 className="text-[10px] font-black text-espresso uppercase tracking-[0.4em] flex items-center gap-3">
+                                    <span className="w-8 h-px bg-espresso/20"></span>
+                                    {date.toUpperCase()}
+                                </h3>
                             </div>
-                        ))}
-                    </div>
-                ))}
+
+                            <div className="grid gap-4">
+                                {entries.map((log, idx) => (
+                                    <div
+                                        key={idx}
+                                        className="group relative bg-white/40 dark:bg-black/20 rounded-[2rem] p-6 border border-espresso/10 hover:shadow-xl hover:-translate-y-1 transition-all flex items-center justify-between overflow-hidden"
+                                    >
+                                        <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover:bg-espresso transition-colors"></div>
+
+                                        <div className="flex items-center gap-6 flex-1 min-w-0">
+                                            <div className="h-14 w-14 rounded-2xl bg-espresso text-white flex items-center justify-center font-serif font-black text-lg shadow-xl shrink-0 group-hover:scale-110 transition-transform">
+                                                {log.user.split(' ').map(n => n[0]).join('')}
+                                            </div>
+
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-center justify-between mb-1">
+                                                    <p className="text-[10px] font-black text-espresso/40 uppercase tracking-widest">{log.user}</p>
+                                                    <span className="text-[9px] font-black text-espresso/20 uppercase tracking-widest">{log.time}</span>
+                                                </div>
+                                                <h4 className="text-xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight truncate leading-tight group-hover:text-espresso/80 transition-colors">
+                                                    {log.action}
+                                                </h4>
+                                            </div>
+                                        </div>
+
+                                        <div className="ml-8 shrink-0">
+                                            <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-inner border border-espresso/5 ${log.color}`}>
+                                                <span className="material-symbols-outlined text-[20px] font-black">{log.icon}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );
 }
+
+
+

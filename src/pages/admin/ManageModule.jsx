@@ -210,183 +210,230 @@ export function ManageModule() {
     if (loading) return <div className="p-10 text-center">Loading Module...</div>;
 
     return (
-        <div className="flex flex-col h-full bg-background-light dark:bg-background-dark overflow-y-auto">
+        <div className="flex flex-col h-full bg-[#F5DEB3] dark:bg-[#1c1916] overflow-y-auto animate-fade-in">
             {/* Header */}
-            <header className="sticky top-0 z-20 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm border-b border-primary/10 px-6 py-4 flex items-center justify-between">
-                <div className="flex items-center gap-3">
+            <header className="sticky top-0 z-50 bg-[#F5DEB3]/90 dark:bg-[#1c1916]/90 backdrop-blur-md border-b border-espresso/10 px-8 py-6 flex items-center justify-between">
+                <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20"></div>
+                <div className="flex items-center gap-6">
                     <button
-                        onClick={() => navigate('/admin/courses')}
-                        className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                        onClick={() => navigate(`/admin/courses/${courseId}`)}
+                        className="w-12 h-12 rounded-2xl bg-white/40 hover:bg-espresso hover:text-white transition-all flex items-center justify-center active:scale-95 shadow-sm group"
                     >
-                        <span className="material-symbols-outlined text-espresso dark:text-white">arrow_back</span>
+                        <span className="material-symbols-outlined text-[24px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
                     </button>
                     <div>
-                        <h1 className="text-xl font-serif font-bold text-espresso dark:text-white">{module?.title}</h1>
-                        <p className="text-xs text-espresso/60 dark:text-white/60">Module Management</p>
+                        <h1 className="text-3xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none">{module?.title}</h1>
+                        <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] mt-2">Instructional Logic Controller</p>
                     </div>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-4">
                     <button
                         onClick={togglePublish}
                         className={cn(
-                            "px-4 py-2 font-bold text-sm rounded-lg transition-colors border",
+                            "px-8 py-3.5 font-black text-[10px] uppercase tracking-[0.2em] rounded-2xl transition-all border shadow-sm active:scale-95 flex items-center gap-2",
                             module?.status === 'published'
                                 ? "bg-white text-green-600 border-green-200 hover:bg-green-50"
                                 : "bg-white text-amber-600 border-amber-200 hover:bg-amber-50"
                         )}
                     >
-                        {module?.status === 'published' ? 'Unpublish' : 'Publish'}
+                        <span className="material-symbols-outlined text-[18px]">
+                            {module?.status === 'published' ? 'verified' : 'pending'}
+                        </span>
+                        {module?.status === 'published' ? 'PRODUCTION LIVE' : 'DRAFT PROTOCOL'}
                     </button>
                     <button
                         onClick={handleSave}
-                        className="px-6 py-2 bg-primary text-white text-sm font-bold rounded-lg shadow-md hover:bg-primary-dark transition-colors"
+                        className="px-8 py-3.5 bg-espresso text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl shadow-xl hover:shadow-espresso/40 active:scale-95 transition-all flex items-center gap-2"
                     >
-                        Save All Changes
+                        <span className="material-symbols-outlined text-[18px]">synchronized</span>
+                        Sync State
                     </button>
                 </div>
             </header>
 
             {/* Tabs */}
-            <div className="flex border-b border-gray-200 dark:border-white/5 px-6 bg-white dark:bg-[#1e1e1e]">
+            <div className="flex border-b border-espresso/10 px-4 bg-white/20 dark:bg-black/20 backdrop-blur-sm sticky top-24 z-40">
                 {['content', 'quiz', 'assignments'].map(tab => (
                     <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}
                         className={cn(
-                            "px-6 py-3 text-sm font-bold capitalize border-b-2 transition-colors",
+                            "px-8 py-5 text-[10px] font-black uppercase tracking-[0.3em] border-b-2 transition-all relative group",
                             activeTab === tab
-                                ? "border-primary text-primary"
-                                : "border-transparent text-espresso/60 dark:text-white/60 hover:text-espresso dark:hover:text-white"
+                                ? "border-espresso text-espresso"
+                                : "border-transparent text-espresso/40 dark:text-white/40 hover:text-espresso dark:hover:text-white"
                         )}
                     >
                         {tab}
+                        {activeTab === tab && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-espresso animate-in slide-in-from-left"></span>}
                     </button>
                 ))}
             </div>
 
-            <main className="p-6 max-w-5xl mx-auto w-full pb-20">
+            <main className="p-10  w-full pb-32">
 
                 {/* CONTENT TAB */}
                 {activeTab === 'content' && (
-                    <div className="space-y-6">
-                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gray-50 dark:bg-white/5 p-4 rounded-xl border border-gray-100 dark:border-white/10">
+                    <div className="space-y-10">
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-white/40 dark:bg-black/20 p-8 rounded-[2rem] border border-espresso/10 shadow-xl relative overflow-hidden group/meta">
+                            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/10 group-hover/meta:bg-espresso transition-colors"></div>
                             <div>
-                                <h2 className="text-lg font-bold text-espresso dark:text-white">Slide Content</h2>
-                                <p className="text-xs text-espresso/60 dark:text-white/60">Manage the educational slides for this module.</p>
+                                <h2 className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] flex items-center gap-3 mb-2">
+                                    <span className="w-6 h-px bg-espresso/20"></span>
+                                    Node Attributes
+                                </h2>
+                                <p className="text-xl font-serif font-black text-espresso dark:text-white">Instructional Narrative & Media Assets</p>
                             </div>
-                            <div className="flex items-center gap-4">
-                                <div className="flex items-center gap-2">
-                                    <label className="text-sm font-bold text-espresso/70 dark:text-white/70">Duration (mins):</label>
-                                    <input
-                                        type="number"
-                                        min="0"
-                                        value={duration}
-                                        onChange={(e) => setDuration(e.target.value)}
-                                        className="w-20 p-2 rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-black/20 text-center font-bold"
-                                    />
+                            <div className="flex items-center gap-6">
+                                <div className="flex items-center gap-4 bg-white/40 dark:bg-black/20 px-6 py-3 rounded-2xl border border-espresso/5 shadow-inner">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-espresso/40">Duration:</label>
+                                    <div className="flex items-center gap-2">
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            value={duration}
+                                            onChange={(e) => setDuration(e.target.value)}
+                                            className="w-16 bg-transparent text-center font-black text-espresso dark:text-white text-sm outline-none"
+                                        />
+                                        <span className="text-[9px] font-black uppercase text-espresso/30">MIN</span>
+                                    </div>
                                 </div>
-                                <button onClick={addSlide} className="flex items-center gap-2 bg-white dark:bg-white/10 px-3 py-2 rounded-lg text-sm font-bold border border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/20 shadow-sm">
-                                    <span className="material-symbols-outlined text-primary">add_circle</span> Add Slide
+                                <button onClick={addSlide} className="flex items-center gap-3 bg-espresso text-white px-6 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl hover:shadow-espresso/40 active:scale-95 transition-all group/add">
+                                    <span className="material-symbols-outlined text-[18px] group-hover:rotate-90 transition-transform">add_circle</span>
+                                    Insert Slide
                                 </button>
                             </div>
                         </div>
 
                         {slides.map((slide, index) => (
-                            <div key={index} className="bg-white dark:bg-[#2c2825] p-6 rounded-xl border border-black/5 dark:border-white/5 relative group">
-                                <button onClick={() => removeSlide(index)} className="absolute top-4 right-4 text-red-400 hover:text-red-500 p-1">
-                                    <span className="material-symbols-outlined">delete</span>
+                            <div key={index} className="bg-white/40 dark:bg-black/20 p-10 rounded-[2.5rem] border border-espresso/10 relative overflow-hidden group/slide shadow-2xl animate-in fade-in slide-in-from-bottom-4">
+                                <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/10 group-hover/slide:bg-espresso transition-colors"></div>
+                                <button onClick={() => removeSlide(index)} className="absolute top-8 right-8 text-espresso/20 hover:text-red-500 transition-colors p-2 rounded-xl hover:bg-red-50">
+                                    <span className="material-symbols-outlined text-[24px]">delete_sweep</span>
                                 </button>
-                                <div className="space-y-4">
-                                    <div className="flex gap-2 items-center">
-                                        <span className="bg-primary/10 text-primary w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">{index + 1}</span>
-                                        <input
-                                            className="flex-1 font-bold text-lg bg-transparent border-b border-transparent focus:border-primary/50 outline-none"
-                                            placeholder="Slide Title..."
-                                            value={slide.title}
-                                            onChange={(e) => updateSlide(index, 'title', e.target.value)}
-                                        />
+                                <div className="space-y-8">
+                                    <div className="flex gap-6 items-center">
+                                        <div className="w-12 h-12 rounded-2xl bg-espresso text-white flex items-center justify-center font-black text-lg shadow-xl shadow-espresso/20 font-serif">
+                                            {index + 1}
+                                        </div>
+                                        <div className="flex-1">
+                                            <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-espresso/40 mb-2 ml-1">Slide Identification</label>
+                                            <input
+                                                className="w-full text-2xl font-serif font-black bg-transparent border-b-2 border-espresso/5 focus:border-espresso outline-none px-1 py-2 text-espresso dark:text-white transition-all"
+                                                placeholder="Initialize title..."
+                                                value={slide.title}
+                                                onChange={(e) => updateSlide(index, 'title', e.target.value)}
+                                            />
+                                        </div>
                                     </div>
-                                    <RichTextEditor
-                                        value={slide.text}
-                                        onChange={(val) => updateSlide(index, 'text', val)}
-                                        placeholder="Slide Text / Content..."
-                                        className="border-gray-200 dark:border-white/10"
-                                        minHeight="150px"
-                                    />
-                                    <div className="flex gap-2">
-                                        <input
-                                            className="flex-1 p-2 rounded-lg bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 text-sm"
-                                            placeholder="Image URL (Optional)"
-                                            value={slide.image}
-                                            onChange={(e) => updateSlide(index, 'image', e.target.value)}
-                                        />
-                                        {slide.image && <img src={slide.image} alt="Preview" className="h-10 w-10 object-cover rounded-lg border border-gray-200" />}
+                                    <div className="space-y-3">
+                                        <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-espresso/40 ml-1">Rich Narrative Content</label>
+                                        <div className="rounded-[2rem] overflow-hidden border border-espresso/10 bg-white/20 dark:bg-black/20 shadow-inner">
+                                            <RichTextEditor
+                                                value={slide.text}
+                                                onChange={(val) => updateSlide(index, 'text', val)}
+                                                placeholder="Synthesize slide narrative..."
+                                                className="border-none"
+                                                minHeight="200px"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="space-y-3">
+                                        <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-espresso/40 ml-1">Visual Asset Synchronization</label>
+                                        <div className="flex gap-4">
+                                            <input
+                                                className="flex-1 px-6 py-4 rounded-2xl bg-white/20 dark:bg-black/20 border border-espresso/10 text-sm font-medium text-espresso dark:text-white outline-none focus:ring-2 focus:ring-espresso shadow-inner transition-all"
+                                                placeholder="Endpoint URL (Optional)"
+                                                value={slide.image}
+                                                onChange={(e) => updateSlide(index, 'image', e.target.value)}
+                                            />
+                                            {slide.image && (
+                                                <div className="h-14 w-14 rounded-2xl overflow-hidden border-2 border-espresso/20 shadow-xl group/preview relative">
+                                                    <img src={slide.image} alt="Preview" className="h-full w-full object-cover" />
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         ))}
-                        {slides.length === 0 && <div className="text-center text-espresso/50 py-10 border-2 border-dashed border-gray-200 rounded-xl">No slides yet. Add one to get started.</div>}
+                        {slides.length === 0 && (
+                            <div className="text-center py-32 bg-white/20 dark:bg-black/10 border-2 border-dashed border-espresso/10 rounded-[3rem] flex flex-col items-center justify-center gap-6">
+                                <div className="w-20 h-20 rounded-[2rem] bg-espresso/5 flex items-center justify-center text-espresso/20">
+                                    <span className="material-symbols-outlined text-5xl">auto_stories</span>
+                                </div>
+                                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-espresso/30 italic">No slide patterns detected. Initialize narrative sequence.</p>
+                            </div>
+                        )}
                     </div>
                 )}
 
                 {/* QUIZ TAB */}
                 {activeTab === 'quiz' && (
-                    <div className="space-y-6">
-                        <div className="flex justify-between items-center bg-blue-50 dark:bg-blue-900/10 p-4 rounded-xl border border-blue-100 dark:border-blue-900/30">
+                    <div className="space-y-10">
+                        <div className="flex justify-between items-center bg-espresso text-white p-10 rounded-[2.5rem] shadow-2xl shadow-espresso/20 relative overflow-hidden group/score">
+                            <div className="absolute right-0 top-0 bottom-0 w-32 bg-white/5 skew-x-12 translate-x-16 group-hover/score:translate-x-12 transition-transform duration-700"></div>
                             <div>
-                                <h3 className="font-bold text-blue-800 dark:text-blue-200">Passing Score</h3>
-                                <p className="text-xs text-blue-600 dark:text-blue-300">Minimum score required to unlock next module</p>
+                                <h3 className="text-[10px] font-black uppercase tracking-[0.4em] mb-3 text-white/60">Integrity Threshold</h3>
+                                <p className="text-2xl font-serif font-black tracking-tight">Certification Pass Protocol</p>
                             </div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-4 bg-white/10 px-8 py-4 rounded-2xl border border-white/20 shadow-inner group-hover/score:scale-105 transition-transform">
                                 <input
                                     type="number"
                                     min="0"
                                     max="100"
                                     value={quiz.passMark}
                                     onChange={(e) => setQuiz({ ...quiz, passMark: parseInt(e.target.value) })}
-                                    className="w-20 p-2 text-center font-bold rounded-lg border border-blue-200 dark:border-blue-800 dark:bg-black/20"
+                                    className="w-20 bg-transparent text-center font-black text-3xl outline-none"
                                 />
-                                <span className="font-bold text-blue-800 dark:text-blue-200">%</span>
+                                <span className="font-serif font-black text-2xl text-white/40">%</span>
                             </div>
                         </div>
 
-                        <div className="flex justify-between items-center mt-6">
-                            <h2 className="text-lg font-bold text-espresso dark:text-white">Questions</h2>
+                        <div className="flex justify-between items-center px-2">
+                            <h2 className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] flex items-center gap-3">
+                                <span className="w-8 h-px bg-espresso/20"></span>
+                                Query Matrix
+                            </h2>
                             <div className="flex gap-2">
                                 <select
-                                    onChange={(e) => addQuestion(e.target.value)}
-                                    className="bg-white dark:bg-white/10 px-3 py-1.5 rounded-lg text-sm font-bold border border-gray-200 dark:border-white/10 outline-none"
+                                    onChange={(e) => {
+                                        if (e.target.value) addQuestion(e.target.value);
+                                        e.target.value = '';
+                                    }}
+                                    className="bg-espresso text-white px-8 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl hover:shadow-espresso/40 active:scale-95 transition-all outline-none"
                                     defaultValue=""
                                 >
-                                    <option value="" disabled>+ Add Question</option>
-                                    <option value="multiple_choice">Multiple Choice</option>
-                                    <option value="true_false">True / False</option>
-                                    <option value="fill_in">Fill in the Blank</option>
-                                    <option value="matching">Matching</option>
+                                    <option value="" disabled>+ SELECT QUERY TYPE</option>
+                                    <option value="multiple_choice">MULTIPLE CHOICE</option>
+                                    <option value="true_false">LOGIC: TRUE / FALSE</option>
+                                    <option value="fill_in">NARRATIVE DATA: FILL IN</option>
+                                    <option value="matching">RELATIONAL: MATCHING</option>
                                 </select>
                             </div>
                         </div>
 
                         {quiz.questions.map((q, qIndex) => (
-                            <div key={qIndex} className="bg-white dark:bg-[#2c2825] p-6 rounded-xl border border-black/5 dark:border-white/5 relative">
-                                <button onClick={() => removeQuestion(qIndex)} className="absolute top-4 right-4 text-red-400 hover:text-red-500 p-1">
-                                    <span className="material-symbols-outlined">delete</span>
+                            <div key={qIndex} className="bg-white/40 dark:bg-black/20 p-10 rounded-[2.5rem] border border-espresso/10 relative overflow-hidden shadow-2xl group/q animate-in fade-in slide-in-from-bottom-4">
+                                <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover/q:bg-espresso transition-colors"></div>
+                                <button onClick={() => removeQuestion(qIndex)} className="absolute top-8 right-8 text-espresso/20 hover:text-red-500 transition-colors p-2 rounded-xl hover:bg-red-50">
+                                    <span className="material-symbols-outlined text-[24px]">delete_sweep</span>
                                 </button>
-                                <div className="mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <div className="md:col-span-2">
-                                        <label className="text-xs font-bold uppercase text-espresso/50 mb-1 block">Question {qIndex + 1}</label>
+                                <div className="mb-10 grid grid-cols-1 md:grid-cols-4 gap-8">
+                                    <div className="md:col-span-3">
+                                        <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-espresso/40 mb-3 ml-1">Query Designation {qIndex + 1}</label>
                                         <input
-                                            className="w-full p-2 font-medium bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-lg"
-                                            placeholder="Enter question text..."
+                                            className="w-full px-6 py-4 text-lg font-serif font-black bg-white/20 dark:bg-black/20 border border-espresso/10 rounded-2xl outline-none focus:ring-2 focus:ring-espresso shadow-inner text-espresso dark:text-white transition-all"
+                                            placeholder="Specify query protocol..."
                                             value={q.question}
                                             onChange={(e) => updateQuestion(qIndex, 'question', e.target.value)}
                                         />
                                     </div>
                                     <div>
-                                        <label className="text-xs font-bold uppercase text-espresso/50 mb-1 block">Duration (Secs)</label>
+                                        <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-espresso/40 mb-3 ml-1">Time Delta (Sec)</label>
                                         <input
                                             type="number"
-                                            className="w-full p-2 font-medium bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-lg"
+                                            className="w-full px-6 py-4 font-black text-center bg-white/20 dark:bg-black/20 border border-espresso/10 rounded-2xl outline-none focus:ring-2 focus:ring-espresso shadow-inner text-espresso dark:text-white transition-all"
                                             value={q.duration}
                                             onChange={(e) => updateQuestion(qIndex, 'duration', parseInt(e.target.value))}
                                         />
@@ -395,19 +442,19 @@ export function ManageModule() {
 
                                 {/* QUESTION TYPE UI */}
                                 {q.type === 'multiple_choice' && (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         {q.options.map((opt, oIndex) => (
-                                            <div key={oIndex} className="flex items-center gap-2">
+                                            <div key={oIndex} className="flex items-center gap-4 group/opt">
                                                 <input
                                                     type="radio"
                                                     name={`correct-${qIndex}`}
                                                     checked={q.correctOption === oIndex}
                                                     onChange={() => updateQuestion(qIndex, 'correctOption', oIndex)}
-                                                    className="accent-primary"
+                                                    className="w-6 h-6 accent-espresso"
                                                 />
                                                 <input
-                                                    className="flex-1 p-2 text-sm bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-lg"
-                                                    placeholder={`Option ${oIndex + 1}`}
+                                                    className="flex-1 px-6 py-4 text-sm font-bold bg-white/10 dark:bg-black/20 border border-espresso/10 rounded-2xl outline-none focus:ring-2 focus:ring-espresso shadow-sm text-espresso dark:text-white transition-all"
+                                                    placeholder={`Option Result ${oIndex + 1}`}
                                                     value={opt}
                                                     onChange={(e) => updateOption(qIndex, oIndex, e.target.value)}
                                                 />
@@ -417,61 +464,72 @@ export function ManageModule() {
                                 )}
 
                                 {q.type === 'true_false' && (
-                                    <div className="flex gap-4">
+                                    <div className="flex gap-6">
                                         <button
                                             onClick={() => updateQuestion(qIndex, 'correctAnswer', true)}
                                             className={cn(
-                                                "flex-1 py-3 rounded-xl border-2 font-bold transition-all",
-                                                q.correctAnswer === true ? "bg-primary/10 border-primary text-primary" : "border-gray-100 dark:border-white/5 opacity-50"
+                                                "flex-1 py-5 rounded-2xl border-2 text-[10px] font-black uppercase tracking-[0.3em] transition-all relative overflow-hidden",
+                                                q.correctAnswer === true
+                                                    ? "bg-espresso text-white border-espresso shadow-xl shadow-espresso/20"
+                                                    : "bg-white/20 border-espresso/10 text-espresso/40 hover:bg-espresso/5"
                                             )}
                                         >
-                                            True
+                                            AFFIRMATIVE: TRUE
                                         </button>
                                         <button
                                             onClick={() => updateQuestion(qIndex, 'correctAnswer', false)}
                                             className={cn(
-                                                "flex-1 py-3 rounded-xl border-2 font-bold transition-all",
-                                                q.correctAnswer === false ? "bg-red-50 border-red-200 text-red-600" : "border-gray-100 dark:border-white/5 opacity-50"
+                                                "flex-1 py-5 rounded-2xl border-2 text-[10px] font-black uppercase tracking-[0.3em] transition-all relative overflow-hidden",
+                                                q.correctAnswer === false
+                                                    ? "bg-espresso text-white border-espresso shadow-xl shadow-espresso/20"
+                                                    : "bg-white/20 border-espresso/10 text-espresso/40 hover:bg-espresso/5"
                                             )}
                                         >
-                                            False
+                                            NEGATIVE: FALSE
                                         </button>
                                     </div>
                                 )}
 
                                 {q.type === 'fill_in' && (
-                                    <input
-                                        className="w-full p-3 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl font-bold text-primary"
-                                        placeholder="Correct Answer..."
-                                        value={q.correctAnswer}
-                                        onChange={(e) => updateQuestion(qIndex, 'correctAnswer', e.target.value)}
-                                    />
+                                    <div className="space-y-3">
+                                        <label className="block text-[10px] font-black uppercase tracking-widest text-espresso/30 ml-2 italic">Validation String</label>
+                                        <input
+                                            className="w-full px-8 py-5 bg-white/20 dark:bg-black/20 border border-espresso/10 rounded-2xl font-black text-espresso dark:text-white tracking-widest outline-none shadow-inner focus:ring-2 focus:ring-espresso transition-all"
+                                            placeholder="Specify correct terminology..."
+                                            value={q.correctAnswer}
+                                            onChange={(e) => updateQuestion(qIndex, 'correctAnswer', e.target.value)}
+                                        />
+                                    </div>
                                 )}
 
                                 {q.type === 'matching' && (
-                                    <div className="space-y-3">
-                                        {q.pairs.map((pair, pIndex) => (
-                                            <div key={pIndex} className="flex gap-2">
-                                                <input
-                                                    className="flex-1 p-2 text-sm bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-lg"
-                                                    placeholder="Item A"
-                                                    value={pair.key}
-                                                    onChange={(e) => updatePair(qIndex, pIndex, 'key', e.target.value)}
-                                                />
-                                                <span className="material-symbols-outlined text-espresso/20 self-center">link</span>
-                                                <input
-                                                    className="flex-1 p-2 text-sm bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-lg"
-                                                    placeholder="Match with B"
-                                                    value={pair.value}
-                                                    onChange={(e) => updatePair(qIndex, pIndex, 'value', e.target.value)}
-                                                />
-                                                <button onClick={() => removePair(qIndex, pIndex)} className="text-red-400">
-                                                    <span className="material-symbols-outlined text-sm">remove_circle</span>
-                                                </button>
-                                            </div>
-                                        ))}
-                                        <button onClick={() => addPair(qIndex)} className="text-xs font-bold text-primary flex items-center gap-1">
-                                            <span className="material-symbols-outlined text-xs">add</span> Add Pair
+                                    <div className="space-y-6">
+                                        <div className="grid grid-cols-1 gap-4">
+                                            {q.pairs.map((pair, pIndex) => (
+                                                <div key={pIndex} className="flex gap-4 group/pair items-center bg-white/10 p-4 rounded-2xl border border-espresso/5 shadow-inner">
+                                                    <input
+                                                        className="flex-1 px-4 py-3 text-xs font-bold bg-transparent border-b border-espresso/10 outline-none text-espresso dark:text-white"
+                                                        placeholder="Signal A"
+                                                        value={pair.key}
+                                                        onChange={(e) => updatePair(qIndex, pIndex, 'key', e.target.value)}
+                                                    />
+                                                    <div className="w-10 h-10 rounded-full bg-espresso/5 flex items-center justify-center text-espresso/20">
+                                                        <span className="material-symbols-outlined text-[20px]">sync_alt</span>
+                                                    </div>
+                                                    <input
+                                                        className="flex-1 px-4 py-3 text-xs font-bold bg-transparent border-b border-espresso/10 outline-none text-espresso dark:text-white"
+                                                        placeholder="Signal B"
+                                                        value={pair.value}
+                                                        onChange={(e) => updatePair(qIndex, pIndex, 'value', e.target.value)}
+                                                    />
+                                                    <button onClick={() => removePair(qIndex, pIndex)} className="w-10 h-10 rounded-xl text-red-400 hover:bg-red-50 transition-colors">
+                                                        <span className="material-symbols-outlined text-[20px]">close</span>
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <button onClick={() => addPair(qIndex)} className="px-6 py-3 bg-espresso/5 text-espresso text-[10px] font-black uppercase tracking-[0.2em] rounded-xl hover:bg-espresso hover:text-white transition-all flex items-center gap-2">
+                                            <span className="material-symbols-outlined text-[16px]">add_link</span> Insert Relational Pair
                                         </button>
                                     </div>
                                 )}
@@ -482,56 +540,63 @@ export function ManageModule() {
 
                 {/* ASSIGNMENTS TAB */}
                 {activeTab === 'assignments' && (
-                    <div className="space-y-6">
-                        <div className="bg-amber-50 dark:bg-amber-900/10 p-4 rounded-xl border border-amber-100 dark:border-amber-900/30 mb-4">
-                            <p className="text-sm text-amber-800 dark:text-amber-200">
-                                <span className="font-bold">Note:</span> Logic dictates that students must complete Module 1 to see Module 2, etc.
-                                However, assigning a user here manually grants them access regardless of progress in previous modules.
-                            </p>
+                    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4">
+                        <div className="bg-espresso text-white p-10 rounded-[2.5rem] shadow-2xl shadow-espresso/20 relative overflow-hidden group/intel">
+                            <div className="absolute left-0 top-0 bottom-0 w-2 bg-white/20"></div>
+                            <div className="flex gap-6 items-start">
+                                <span className="material-symbols-outlined text-4xl text-white/40">security</span>
+                                <div>
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.4em] mb-3 text-white/60">Logic Override Protocol</h3>
+                                    <p className="text-sm font-medium leading-relaxed max-w-2xl text-white/80 italic">
+                                        Sequential access is naturally enforced by the curriculum engine. Manual assignment here bypasses standard progression requirements for the selected participants. Use with caution.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
 
-                        <div className="bg-white dark:bg-[#2c2825] rounded-xl border border-black/5 dark:border-white/5 overflow-hidden">
+                        <div className="bg-white/40 dark:bg-black/20 rounded-[3rem] border border-espresso/10 overflow-hidden shadow-2xl">
                             <table className="w-full text-left">
-                                <thead className="bg-gray-50 dark:bg-white/5 border-b border-gray-200 dark:border-white/10">
+                                <thead className="bg-white/40 dark:bg-black/40 border-b border-espresso/10">
                                     <tr>
-                                        <th className="p-4 text-xs font-bold uppercase text-espresso/50">Student</th>
-                                        <th className="p-4 text-xs font-bold uppercase text-espresso/50">Email</th>
-                                        <th className="p-4 text-xs font-bold uppercase text-espresso/50">Progress</th>
-                                        <th className="p-4 text-xs font-bold uppercase text-espresso/50 text-right">Access</th>
+                                        <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-espresso/40">Participant Profile</th>
+                                        <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-espresso/40">Communication Endpoint</th>
+                                        <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-espresso/40">Operational Status</th>
+                                        <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-espresso/40 text-center">Access Grant</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-100 dark:divide-white/5">
+                                <tbody className="divide-y divide-espresso/5">
                                     {students.map(student => {
                                         const prog = studentProgress[student.id];
                                         return (
-                                            <tr key={student.id} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                                                <td className="p-4">
-                                                    <div className="flex items-center gap-3">
-                                                        <div className="h-8 w-8 rounded-full bg-gray-200 overflow-hidden">
+                                            <tr key={student.id} className="hover:bg-white/40 dark:hover:bg-black/40 transition-colors group/row">
+                                                <td className="px-8 py-6">
+                                                    <div className="flex items-center gap-4">
+                                                        <div className="h-12 w-12 rounded-2xl bg-espresso/10 overflow-hidden border border-espresso/5 shadow-sm group-hover/row:scale-110 transition-transform">
                                                             <img src={student.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(student.fullName || 'S')}`} alt="" className="h-full w-full object-cover" />
                                                         </div>
-                                                        <span className="font-medium text-espresso dark:text-white">{student.fullName}</span>
+                                                        <span className="font-serif font-black text-espresso dark:text-white text-lg tracking-tight">{student.fullName}</span>
                                                     </div>
                                                 </td>
-                                                <td className="p-4 text-sm text-espresso/70 dark:text-white/70">{student.email}</td>
-                                                <td className="p-4 text-sm">
+                                                <td className="px-8 py-6 text-sm font-medium text-espresso/60 dark:text-white/60 tracking-tight">{student.email}</td>
+                                                <td className="px-8 py-6">
                                                     {prog ? (
-                                                        <span className={cn(
-                                                            "px-2 py-1 rounded text-xs font-bold",
-                                                            prog.passed ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                                                        <div className={cn(
+                                                            "inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border shadow-inner",
+                                                            prog.passed ? "bg-green-50/50 text-green-700 border-green-200" : "bg-red-50/50 text-red-700 border-red-200"
                                                         )}>
-                                                            {prog.passed ? 'Completed' : 'Failed'} ({Math.round(prog.score)}%)
-                                                        </span>
+                                                            <span className="material-symbols-outlined text-[14px]">{prog.passed ? 'verified' : 'cancel'}</span>
+                                                            {prog.passed ? 'VERIFIED' : 'DEFICIENT'} ({Math.round(prog.score)}%)
+                                                        </div>
                                                     ) : (
-                                                        <span className="text-gray-400 text-xs">-</span>
+                                                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-espresso/20 italic">No Data</span>
                                                     )}
                                                 </td>
-                                                <td className="p-4 text-right">
+                                                <td className="px-8 py-6 text-center">
                                                     <input
                                                         type="checkbox"
                                                         checked={assignedStudents.includes(student.id)}
                                                         onChange={() => toggleAssignment(student.id)}
-                                                        className="w-5 h-5 rounded border-gray-300 text-primary focus:ring-primary"
+                                                        className="w-6 h-6 rounded-lg border-espresso/20 text-espresso focus:ring-espresso accent-espresso cursor-pointer"
                                                     />
                                                 </td>
                                             </tr>
@@ -547,3 +612,5 @@ export function ManageModule() {
         </div>
     );
 }
+
+

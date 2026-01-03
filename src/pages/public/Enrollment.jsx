@@ -107,7 +107,8 @@ export function Enrollment() {
                 </div>
 
                 {/* Section 1: Online Registration Form */}
-                <div className="bg-white dark:bg-white/5 p-8 rounded-3xl shadow-xl border border-[#e0dbd6] dark:border-white/10 mb-12">
+                <div className="bg-[#F5DEB3] dark:bg-white/5 p-8 rounded-3xl shadow-2xl border border-espresso/10 mb-12 relative overflow-hidden group">
+                    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                     {error && (
                         <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-600 dark:text-red-300 text-sm font-medium">
                             {error}
@@ -125,7 +126,7 @@ export function Enrollment() {
                                 id="fullName"
                                 name="fullName"
                                 required
-                                className="w-full px-4 py-3 rounded-xl bg-background-light dark:bg-black/20 border border-[#e0dbd6] dark:border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                                className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:border-espresso focus:ring-1 focus:ring-espresso outline-none transition-all"
                                 placeholder={t('enrollment.form.fullName.placeholder')}
                                 value={formData.fullName}
                                 onChange={handleChange}
@@ -143,7 +144,7 @@ export function Enrollment() {
                                     id="phone"
                                     name="phone"
                                     required
-                                    className="w-full px-4 py-3 rounded-xl bg-background-light dark:bg-black/20 border border-[#e0dbd6] dark:border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                                    className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:border-espresso focus:ring-1 focus:ring-espresso outline-none transition-all"
                                     placeholder={t('enrollment.form.phone.placeholder')}
                                     value={formData.phone}
                                     onChange={handleChange}
@@ -160,7 +161,7 @@ export function Enrollment() {
                                     id="email"
                                     name="email"
                                     required
-                                    className="w-full px-4 py-3 rounded-xl bg-background-light dark:bg-black/20 border border-[#e0dbd6] dark:border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                                    className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:border-espresso focus:ring-1 focus:ring-espresso outline-none transition-all"
                                     placeholder={t('enrollment.form.email.placeholder')}
                                     value={formData.email}
                                     onChange={handleChange}
@@ -179,7 +180,7 @@ export function Enrollment() {
                                 name="password"
                                 required
                                 minLength="6"
-                                className="w-full px-4 py-3 rounded-xl bg-background-light dark:bg-black/20 border border-[#e0dbd6] dark:border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                                className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:border-espresso focus:ring-1 focus:ring-espresso outline-none transition-all"
                                 placeholder={t('enrollment.form.password.placeholder')}
                                 value={formData.password}
                                 onChange={handleChange}
@@ -199,7 +200,7 @@ export function Enrollment() {
                                 id="residence"
                                 name="residence"
                                 required
-                                className="w-full px-4 py-3 rounded-xl bg-background-light dark:bg-black/20 border border-[#e0dbd6] dark:border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                                className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:border-espresso focus:ring-1 focus:ring-espresso outline-none transition-all"
                                 placeholder={t('enrollment.form.residence.placeholder')}
                                 value={formData.residence}
                                 onChange={handleChange}
@@ -280,7 +281,7 @@ export function Enrollment() {
                                         id="startDate"
                                         name="startDate"
                                         required
-                                        className="w-full px-4 py-3 rounded-xl bg-background-light dark:bg-black/20 border border-[#e0dbd6] dark:border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                                        className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:border-espresso focus:ring-1 focus:ring-espresso outline-none transition-all"
                                         value={formData.startDate}
                                         onChange={handleChange}
                                     />
@@ -341,13 +342,15 @@ export function Enrollment() {
                         </p>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                            <div className="bg-white dark:bg-white/5 p-4 rounded-xl border border-[#e0dbd6] dark:border-white/10">
+                            <div className="bg-[#F5DEB3] dark:bg-white/5 p-4 rounded-xl border border-espresso/10 shadow-lg relative overflow-hidden group">
+                                <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                                 <h3 className="font-bold text-primary mb-2 flex items-center gap-2">
                                     <span className="material-symbols-outlined">smartphone</span> {t('enrollment.payment.momo.title')}
                                 </h3>
                                 <p className="text-sm text-espresso/70 dark:text-white/70">{t('enrollment.payment.momo.description')}</p>
                             </div>
-                            <div className="bg-white dark:bg-white/5 p-4 rounded-xl border border-[#e0dbd6] dark:border-white/10">
+                            <div className="bg-[#F5DEB3] dark:bg-white/5 p-4 rounded-xl border border-espresso/10 shadow-lg relative overflow-hidden group">
+                                <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                                 <h3 className="font-bold text-primary mb-2 flex items-center gap-2">
                                     <span className="material-symbols-outlined">account_balance</span> {t('enrollment.payment.bank.title')}
                                 </h3>
@@ -355,7 +358,7 @@ export function Enrollment() {
                             </div>
                         </div>
 
-                        <div className="bg-primary/5 p-4 rounded-xl border-l-4 border-primary">
+                        <div className="bg-[#F5DEB3] dark:bg-white/5 p-4 rounded-xl border-l-4 border-espresso shadow-md">
                             <h4 className="font-bold text-espresso dark:text-white mb-1">{t('enrollment.payment.flexibility.title')}</h4>
                             <p className="text-sm text-espresso/80 dark:text-white/80">
                                 {t('enrollment.payment.flexibility.description')}

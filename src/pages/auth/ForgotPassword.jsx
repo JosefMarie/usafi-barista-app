@@ -50,7 +50,8 @@ export function ForgotPassword() {
                 </div>
 
                 {/* Form Card */}
-                <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-xl border border-black/5 dark:border-white/5 p-8">
+                <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-2xl border border-espresso/10 p-8 relative overflow-hidden group">
+                    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                     {success ? (
                         <div className="text-center space-y-4">
                             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/20 mb-4">
@@ -92,7 +93,7 @@ export function ForgotPassword() {
                                     value={email}
                                     onChange={e => setEmail(e.target.value)}
                                     required
-                                    className="w-full px-4 py-3 rounded-lg border border-black/10 dark:border-white/10 bg-transparent text-espresso dark:text-white placeholder:text-espresso/40 dark:placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary"
+                                    className="w-full px-4 py-3 rounded-lg border border-espresso/10 bg-white/50 dark:bg-white/5 text-espresso dark:text-white placeholder:text-espresso/40 dark:placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-espresso"
                                     placeholder="your.email@example.com"
                                 />
                             </div>

@@ -123,7 +123,7 @@ export function ChatWindow() {
 
             {/* Input Area */}
             <footer className="flex-none p-3 pb-6 bg-background-light dark:bg-[#1c1916] border-t border-[#E6DEC8] dark:border-white/10">
-                <div className="flex items-end gap-2 max-w-4xl mx-auto">
+                <div className="flex items-end gap-2 w-full px-4">
                     <div className="flex-1 bg-white dark:bg-[#2c2825] rounded-2xl border border-[#E6DEC8] dark:border-transparent shadow-sm flex items-center px-4 py-2 min-h-[44px]">
                         <input
                             value={newMessage}

@@ -54,7 +54,7 @@ export function ManagerMessages() {
     return (
         <div className="max-w-7xl mx-auto space-y-6 h-[calc(100vh-100px)] flex flex-col">
             <header>
-                <h1 className="text-2xl font-bold text-espresso dark:text-white font-serif">
+                <h1 className="text-3xl font-bold text-espresso dark:text-white font-serif">
                     Inbox
                 </h1>
                 <p className="text-espresso/60 dark:text-white/60">
@@ -62,10 +62,11 @@ export function ManagerMessages() {
                 </p>
             </header>
 
-            <div className="flex flex-1 gap-6 overflow-hidden min-h-0">
+            <div className="flex flex-1 gap-6 overflow-hidden min-h-0 relative">
                 {/* Message List */}
-                <div className="w-1/3 bg-white dark:bg-[#1e1e1e] rounded-xl border border-black/5 dark:border-white/5 flex flex-col overflow-hidden">
-                    <div className="overflow-y-auto flex-1">
+                <div className="w-1/3 bg-[#F5DEB3] dark:bg-[#1c1916] rounded-[2rem] border border-espresso/10 flex flex-col overflow-hidden shadow-xl relative group">
+                    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                    <div className="overflow-y-auto flex-1 relative z-10">
                         {loading && <div className="p-8 text-center text-espresso/60">Loading messages...</div>}
                         {error && (
                             <div className="p-4 bg-red-50 text-red-700 text-sm m-4 rounded-lg">
@@ -81,7 +82,7 @@ export function ManagerMessages() {
                                     <div
                                         key={msg.id}
                                         onClick={() => setSelectedMessage(msg)}
-                                        className={`p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 transition-colors ${selectedMessage?.id === msg.id ? 'bg-blue-50 dark:bg-blue-900/10' : ''}`}
+                                        className={`p-5 cursor-pointer hover:bg-white/40 dark:hover:bg-white/5 transition-all border-b border-espresso/5 ${selectedMessage?.id === msg.id ? 'bg-white/60 dark:bg-white/10' : ''}`}
                                     >
                                         <div className="flex justify-between items-start mb-1">
                                             <h4 className={`text-sm font-bold ${msg.status === 'new' ? 'text-espresso dark:text-white' : 'text-espresso/60 dark:text-white/60'}`}>
@@ -98,7 +99,7 @@ export function ManagerMessages() {
                                             {msg.message}
                                         </p>
                                         {msg.status === 'new' && (
-                                            <span className="inline-block mt-2 px-2 py-0.5 bg-blue-100 text-blue-700 text-[10px] font-bold rounded-full">
+                                            <span className="inline-block mt-2 px-3 py-1 bg-espresso text-white text-[9px] font-black uppercase tracking-widest rounded-full shadow-sm">
                                                 NEW
                                             </span>
                                         )}
@@ -110,10 +111,11 @@ export function ManagerMessages() {
                 </div>
 
                 {/* Message Detail */}
-                <div className="flex-1 bg-white dark:bg-[#1e1e1e] rounded-xl border border-black/5 dark:border-white/5 p-8 flex flex-col overflow-y-auto">
+                <div className="flex-1 bg-[#F5DEB3] dark:bg-[#1c1916] rounded-[2rem] border border-espresso/10 p-10 flex flex-col overflow-y-auto shadow-2xl relative group">
+                    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                     {selectedMessage ? (
-                        <>
-                            <div className="flex justify-between items-start mb-8 border-b border-black/5 dark:border-white/5 pb-6">
+                        <div className="relative z-10">
+                            <div className="flex justify-between items-start mb-10 border-b border-espresso/10 pb-8">
                                 <div>
                                     <h2 className="text-2xl font-bold text-espresso dark:text-white mb-2">
                                         {selectedMessage.subject || 'No Subject'}
@@ -135,18 +137,18 @@ export function ManagerMessages() {
                                 <div className="flex gap-2">
                                     <button
                                         onClick={(e) => toggleStatus(e, selectedMessage)}
-                                        className={`px-4 py-2 rounded-lg text-sm font-bold border transition-colors ${selectedMessage.status === 'replied'
-                                            ? 'bg-gray-100 text-gray-600 border-gray-200'
-                                            : 'bg-white text-blue-600 border-blue-200 hover:bg-blue-50'
+                                        className={`px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all border ${selectedMessage.status === 'replied'
+                                            ? 'bg-white/40 text-espresso/60 border-espresso/10'
+                                            : 'bg-white text-espresso border-espresso/20 hover:shadow-lg'
                                             }`}
                                     >
-                                        {selectedMessage.status === 'replied' ? 'Mark Unread' : 'Mark Replied'}
+                                        {selectedMessage.status === 'replied' ? 'Unread' : 'Replied'}
                                     </button>
                                     <button
                                         onClick={() => handleReply(selectedMessage)}
-                                        className="px-4 py-2 rounded-lg text-sm font-bold bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-2"
+                                        className="px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest bg-espresso text-white hover:shadow-xl transition-all flex items-center gap-2 active:scale-95"
                                     >
-                                        <span className="material-symbols-outlined text-lg">reply</span>
+                                        <span className="material-symbols-outlined text-[18px]">reply</span>
                                         Reply
                                     </button>
                                 </div>
@@ -155,7 +157,7 @@ export function ManagerMessages() {
                             <div className="flex-1 text-espresso/80 dark:text-white/80 leading-relaxed whitespace-pre-wrap">
                                 {selectedMessage.message}
                             </div>
-                        </>
+                        </div>
                     ) : (
                         <div className="flex-1 flex flex-col items-center justify-center text-espresso/40 dark:text-white/40">
                             <span className="material-symbols-outlined text-6xl mb-4">mail</span>

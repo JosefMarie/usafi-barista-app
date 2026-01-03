@@ -144,14 +144,14 @@ export function Certificates() {
     return (
         <div className="flex flex-col h-full w-full">
             {/* Header */}
-            <header className="bg-white dark:bg-[#1e1e1e] border-b border-black/5 dark:border-white/5 p-6 flex items-center justify-between sticky top-0 z-10">
-                <div className="flex items-center gap-3">
-                    <div className="p-2 bg-[#a77c52]/10 rounded-lg text-[#a77c52]">
-                        <span className="material-symbols-outlined text-xl">workspace_premium</span>
+            <header className="bg-[#F5DEB3]/80 dark:bg-[#1e1e1e]/80 backdrop-blur-md border-b border-espresso/10 p-8 flex items-center justify-between sticky top-0 z-30 transition-colors">
+                <div className="flex items-center gap-6">
+                    <div className="h-14 w-14 flex items-center justify-center bg-espresso text-white rounded-2xl shadow-xl rotate-3">
+                        <span className="material-symbols-outlined text-2xl">workspace_premium</span>
                     </div>
                     <div>
-                        <h1 className="font-serif font-bold text-xl text-[#321C00] dark:text-white">My Credentials</h1>
-                        <p className="text-xs font-medium text-[#321C00]/60 dark:text-white/60">Manage and print your earned certificates</p>
+                        <h1 className="font-serif font-bold text-3xl text-espresso dark:text-white leading-tight">Elite Credentials</h1>
+                        <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.2em] mt-1">Manage and export your verified professional certifications</p>
                     </div>
                 </div>
             </header>
@@ -159,43 +159,46 @@ export function Certificates() {
             {/* Content */}
             <main className="flex-1 p-6 overflow-y-auto">
                 {earnedCertificates.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {earnedCertificates.map((cert) => (
                             <div key={cert.id} className={cn(
-                                "group bg-white dark:bg-[#2c2825] rounded-xl border shadow-sm hover:shadow-md transition-all overflow-hidden flex flex-col",
-                                cert.type === 'Course Completion' ? "border-[#a77c52] ring-1 ring-[#a77c52]" : "border-black/5 dark:border-white/5"
+                                "group bg-[#F5DEB3] dark:bg-white/5 rounded-3xl border border-espresso/10 shadow-xl hover:shadow-2xl transition-all overflow-hidden flex flex-col relative",
+                                cert.type === 'Course Completion' ? "ring-2 ring-espresso" : ""
                             )}>
+                                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                                 <div className={cn(
-                                    "h-24 flex items-center justify-center relative overflow-hidden",
-                                    cert.type === 'Course Completion' ? "bg-[#a77c52] text-white" : "bg-[#a77c52]/5"
+                                    "h-32 flex items-center justify-center relative overflow-hidden transition-colors",
+                                    cert.type === 'Course Completion' ? "bg-espresso text-white" : "bg-espresso/5"
                                 )}>
                                     <span className={cn(
-                                        "material-symbols-outlined text-6xl absolute -bottom-4 -right-4 rotate-12",
-                                        cert.type === 'Course Completion' ? "text-white/20" : "text-[#a77c52]/20"
+                                        "material-symbols-outlined text-8xl absolute -bottom-6 -right-6 rotate-12 transition-transform group-hover:rotate-0 duration-700",
+                                        cert.type === 'Course Completion' ? "text-white/10" : "text-espresso/10"
                                     )}>workspace_premium</span>
 
                                     <div className={cn(
-                                        "text-xs font-bold px-3 py-1 rounded-full shadow-sm z-10 uppercase tracking-wider",
-                                        cert.type === 'Course Completion' ? "bg-white text-[#a77c52]" : "bg-[#a77c52] text-white"
+                                        "text-[10px] font-black px-4 py-1.5 rounded-full shadow-lg z-10 uppercase tracking-[0.2em] animate-fade-in",
+                                        cert.type === 'Course Completion' ? "bg-white text-espresso" : "bg-espresso text-white"
                                     )}>
-                                        {cert.type === 'Course Completion' ? 'Course Diploma' : 'Verified Module'}
+                                        {cert.type === 'Course Completion' ? 'Distinction Diploma' : 'Module Validation'}
                                     </div>
                                 </div>
-                                <div className="p-5 flex-1 flex flex-col">
-                                    <h3 className="font-bold text-[#321C00] dark:text-white text-lg leading-tight mb-1">{cert.moduleTitle}</h3>
+                                <div className="p-8 flex-1 flex flex-col relative z-10">
+                                    <h3 className="font-serif font-bold text-espresso dark:text-white text-xl leading-tight mb-2 group-hover:translate-x-1 transition-transform">{cert.moduleTitle}</h3>
                                     {cert.type !== 'Course Completion' && (
-                                        <p className="text-xs text-[#321C00]/60 dark:text-white/60 font-medium uppercase tracking-wide mb-4">{cert.courseTitle}</p>
+                                        <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest mb-6">{cert.courseTitle}</p>
                                     )}
 
-                                    <div className="mt-auto flex items-center justify-between pt-4 border-t border-black/5 dark:border-white/5">
-                                        <p className="text-xs text-[#321C00]/50 dark:text-white/50">Issued: {cert.completionDate}</p>
+                                    <div className="mt-auto flex items-center justify-between pt-6 border-t border-espresso/5">
+                                        <div>
+                                            <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest mb-1">Authenticated</p>
+                                            <p className="text-sm font-bold text-espresso dark:text-white">{cert.completionDate}</p>
+                                        </div>
                                         <button
                                             onClick={() => onPrintClick(cert)}
-                                            className="flex items-center gap-2 text-[#a77c52] hover:bg-[#a77c52]/10 px-3 py-2 rounded-lg transition-colors text-sm font-medium"
-                                            title="Download/Print Certificate"
+                                            className="h-12 w-12 flex items-center justify-center bg-espresso text-white rounded-2xl shadow-lg hover:shadow-xl hover:scale-110 active:scale-90 transition-all"
+                                            title="Export Credential"
                                         >
-                                            <span className="material-symbols-outlined text-lg">download</span>
-                                            Download
+                                            <span className="material-symbols-outlined text-xl">ios_share</span>
                                         </button>
                                     </div>
                                 </div>
@@ -203,14 +206,18 @@ export function Certificates() {
                         ))}
                     </div>
                 ) : (
-                    <div className="flex flex-col items-center justify-center h-[60vh] text-center">
-                        <div className="w-24 h-24 bg-gray-100 dark:bg-white/5 rounded-full flex items-center justify-center mb-4">
-                            <span className="material-symbols-outlined text-4xl text-gray-400">school</span>
+                    <div className="flex flex-col items-center justify-center h-[70vh] text-center space-y-8 animate-fade-in relative overflow-hidden group">
+                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/5 group-hover:bg-espresso/10 transition-colors"></div>
+                        <div className="w-32 h-32 bg-[#F5DEB3] dark:bg-white/5 rounded-3xl border border-espresso/10 flex items-center justify-center shadow-2xl relative overflow-hidden">
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/20"></div>
+                            <span className="material-symbols-outlined text-6xl text-espresso/20 animate-pulse">workspaces</span>
                         </div>
-                        <h2 className="text-xl font-bold text-[#321C00] dark:text-white mb-2">No Certificates Yet</h2>
-                        <p className="text-[#321C00]/60 dark:text-white/60 max-w-sm mx-auto">
-                            Complete modules and pass assessments to earn verified certificates.
-                        </p>
+                        <div>
+                            <h2 className="text-3xl font-serif font-bold text-espresso dark:text-white mb-3">Credential Repository Empty</h2>
+                            <p className="text-sm font-medium text-espresso/40 dark:text-white/40 max-w-sm mx-auto uppercase tracking-widest leading-relaxed">
+                                Complete your strategic modules and excel in evaluations to unlock verified professional credentials.
+                            </p>
+                        </div>
                     </div>
                 )}
             </main>

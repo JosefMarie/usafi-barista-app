@@ -331,30 +331,30 @@ export function BusinessCourseView() {
             onContextMenu={(e) => e.preventDefault()}
         >
             {/* Sidebar / Chapter List */}
-            <aside className="w-full md:w-80 bg-white dark:bg-[#1e1e1e] border-r border-black/5 flex flex-col h-[40vh] md:h-screen sticky top-0">
-                <div className="p-6 border-b border-black/5 bg-gray-50 dark:bg-black/20">
-                    <Link to="/business/dashboard" className="text-xs font-bold text-primary uppercase tracking-wider mb-2 block hover:underline">
+            <aside className="w-full md:w-80 bg-[#F5DEB3] dark:bg-[#1c1916] border-r border-espresso/10 flex flex-col h-[40vh] md:h-screen sticky top-0 shadow-2xl z-20">
+                <div className="p-8 border-b border-espresso/10 bg-white/20 backdrop-blur-sm">
+                    <Link to="/business/dashboard" className="text-[10px] font-black text-espresso/50 dark:text-white/50 uppercase tracking-[0.2em] mb-4 block hover:text-espresso transition-colors">
                         &larr; Back to Dashboard
                     </Link>
-                    <h2 className="font-serif text-xl font-bold text-espresso dark:text-white leading-tight mb-4">
+                    <h2 className="font-serif text-2xl font-bold text-espresso dark:text-white leading-tight mb-6">
                         {course.title}
                     </h2>
 
                     {/* Progress Bar in Sidebar */}
-                    <div className="space-y-1.5">
+                    <div className="space-y-2 p-4 bg-white/40 dark:bg-white/5 rounded-2xl border border-white/20">
                         <div className="flex justify-between items-end">
-                            <span className="text-[10px] font-bold text-espresso/40 dark:text-white/40 uppercase tracking-widest">Your Progress</span>
-                            <span className="text-xs font-bold text-primary">{progressPercent}%</span>
+                            <span className="text-[10px] font-black text-espresso/60 dark:text-white/60 uppercase tracking-widest">Your Progress</span>
+                            <span className="text-sm font-black text-espresso dark:text-white">{progressPercent}%</span>
                         </div>
-                        <div className="w-full h-1.5 bg-gray-200 dark:bg-white/10 rounded-full overflow-hidden">
+                        <div className="w-full h-2 bg-espresso/5 dark:bg-white/5 rounded-full overflow-hidden">
                             <div
-                                className="h-full bg-primary transition-all duration-500"
+                                className="h-full bg-espresso transition-all duration-700 ease-out"
                                 style={{ width: `${progressPercent}%` }}
                             />
                         </div>
                     </div>
                 </div>
-                <div className="flex-1 overflow-y-auto p-2">
+                <div className="flex-1 overflow-y-auto p-4 space-y-2">
                     {chapters.map((chapter, index) => (
                         <button
                             key={chapter.id}
@@ -364,17 +364,24 @@ export function BusinessCourseView() {
                                 synth.current.cancel();
                                 setIsSpeaking(false);
                             }}
-                            className={`w-full text-left p-4 rounded-xl mb-1 transition-all flex items-start gap-3 ${activeChapter?.id === chapter.id
-                                ? 'bg-primary text-white shadow-lg shadow-primary/20'
-                                : 'hover:bg-gray-100 dark:hover:bg-white/5 text-espresso/70 dark:text-white/70'
+                            className={`w-full text-left p-4 rounded-[1.25rem] transition-all flex items-start gap-4 group ${activeChapter?.id === chapter.id
+                                ? 'bg-espresso text-white shadow-xl shadow-espresso/20 scale-[1.02]'
+                                : 'hover:bg-white/40 dark:hover:bg-white/5 text-espresso/80 dark:text-white/80 hover:translate-x-1'
                                 }`}
                         >
-                            <span className={`flex-shrink-0 h-6 w-6 rounded-full flex items-center justify-center text-xs font-bold ${activeChapter?.id === chapter.id ? 'bg-white/20' : 'bg-gray-200 dark:bg-white/10'
+                            <span className={`flex-shrink-0 h-7 w-7 rounded-full flex items-center justify-center text-xs font-black ${activeChapter?.id === chapter.id ? 'bg-white/20 text-white' : 'bg-espresso/10 text-espresso/50'
                                 }`}>
                                 {index + 1}
                             </span>
-                            <span className="text-sm font-medium line-clamp-2">{chapter.title}</span>
-                            {chapter.quiz?.enabled && <span className="material-symbols-outlined text-[10px] opacity-70">assignment</span>}
+                            <div className="flex-1 min-w-0">
+                                <span className={`text-sm font-bold line-clamp-2 ${activeChapter?.id === chapter.id ? 'text-white' : 'text-espresso dark:text-white'}`}>{chapter.title}</span>
+                                {chapter.quiz?.enabled && (
+                                    <div className="flex items-center gap-1 mt-1 text-[10px] font-medium opacity-60 uppercase tracking-wide">
+                                        <span className="material-symbols-outlined text-[10px]">timer</span>
+                                        Quiz
+                                    </div>
+                                )}
+                            </div>
                         </button>
                     ))}
                 </div>

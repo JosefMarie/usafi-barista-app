@@ -101,8 +101,9 @@ export function ManagerDashboard() {
             </div>
 
             {/* Placeholder for future charts/graphs */}
-            <div className="bg-white dark:bg-[#1e1e1e] p-6 rounded-xl border border-black/5 dark:border-white/5 h-64 flex items-center justify-center text-espresso/40 dark:text-white/40">
-                <p>Engagement Chart Coming Soon</p>
+            <div className="bg-[#F5DEB3] dark:bg-[#1c1916] p-10 rounded-[2.5rem] border border-espresso/10 h-72 flex items-center justify-center text-espresso/40 dark:text-white/40 shadow-xl relative overflow-hidden group">
+                <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                <p className="font-black uppercase tracking-[0.2em] text-sm">Engagement Chart Coming Soon</p>
             </div>
         </div>
     );
@@ -110,18 +111,19 @@ export function ManagerDashboard() {
 
 function StatCard({ title, value, icon, color }) {
     return (
-        <div className="bg-white dark:bg-[#1e1e1e] p-6 rounded-xl border border-black/5 dark:border-white/5 shadow-sm">
-            <div className="flex items-center justify-between">
+        <div className="bg-[#F5DEB3] dark:bg-[#1c1916] p-8 rounded-[2.5rem] border border-espresso/10 shadow-xl relative overflow-hidden group hover:shadow-2xl transition-all hover:-translate-y-1">
+            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+            <div className="flex items-center justify-between relative z-10">
                 <div>
-                    <p className="text-sm font-medium text-espresso/60 dark:text-white/60 mb-1">
+                    <p className="text-[10px] font-black text-espresso/50 dark:text-white/50 uppercase tracking-[0.2em] mb-2">
                         {title}
                     </p>
-                    <h3 className="text-2xl font-bold text-espresso dark:text-white">
+                    <h3 className="text-4xl font-serif font-bold text-espresso dark:text-white leading-none">
                         {value.toLocaleString()}
                     </h3>
                 </div>
-                <div className={`h-12 w-12 rounded-full ${color} flex items-center justify-center text-white`}>
-                    <span className="material-symbols-outlined">{icon}</span>
+                <div className={`h-14 w-14 rounded-2xl bg-espresso flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform`}>
+                    <span className="material-symbols-outlined text-2xl">{icon}</span>
                 </div>
             </div>
         </div>

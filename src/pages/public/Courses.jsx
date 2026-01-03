@@ -27,7 +27,8 @@ export function Courses() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
 
                     {/* Card 1: Onsite */}
-                    <div className="flex flex-col rounded-3xl overflow-hidden bg-white dark:bg-white/5 border border-[#e0dbd6] dark:border-white/10 shadow-xl group hover:border-primary/50 transition-all duration-300">
+                    <div className="flex flex-col rounded-3xl overflow-hidden bg-[#F5DEB3] dark:bg-white/5 border border-espresso/10 dark:border-white/10 shadow-xl group hover:border-espresso/30 transition-all duration-300 relative">
+                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors z-10"></div>
                         {/* Card Image */}
                         <div className="h-64 bg-gray-200 relative">
                             <div
@@ -64,7 +65,8 @@ export function Courses() {
                     </div>
 
                     {/* Card 2: Online */}
-                    <div className="flex flex-col rounded-3xl overflow-hidden bg-white dark:bg-white/5 border border-[#e0dbd6] dark:border-white/10 shadow-xl group hover:border-primary/50 transition-all duration-300">
+                    <div className="flex flex-col rounded-3xl overflow-hidden bg-[#F5DEB3] dark:bg-white/5 border border-espresso/10 dark:border-white/10 shadow-xl group hover:border-espresso/30 transition-all duration-300 relative">
+                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors z-10"></div>
                         {/* Card Image */}
                         <div className="h-64 bg-gray-200 relative">
                             <div
@@ -101,7 +103,7 @@ export function Courses() {
             </section>
 
             {/* 3. Section 2: Core Curriculum */}
-            <section className="bg-[#FAF5E8] dark:bg-white/5 py-20 px-6">
+            <section className="bg-[#F5DEB3] dark:bg-white/5 py-20 px-6 border-y border-espresso/10">
                 <div className="container mx-auto max-w-5xl">
                     <div className="text-center mb-16">
                         <h2 className="font-serif text-3xl md:text-4xl font-bold text-espresso dark:text-white mb-4">
@@ -114,66 +116,73 @@ export function Courses() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {/* Module 1 */}
-                        <div className="bg-white dark:bg-white/5 p-6 rounded-2xl shadow-sm border border-transparent hover:border-primary/20 transition-all">
+                        <div className="bg-[#F5DEB3] dark:bg-white/5 p-6 rounded-2xl shadow-xl border border-espresso/5 hover:border-espresso/20 transition-all relative overflow-hidden group">
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/10 group-hover:bg-espresso transition-colors"></div>
                             <div className="flex items-center gap-3 mb-3">
-                                <span className="material-symbols-outlined text-primary text-3xl">coffee</span>
+                                <span className="material-symbols-outlined text-espresso bg-white/30 rounded-lg p-2 group-hover:scale-110 transition-transform text-2xl">coffee</span>
                                 <h3 className="font-serif font-bold text-lg text-espresso dark:text-white">{t('courses.curriculum.modules.m1.title')}</h3>
                             </div>
                             <p className="text-sm text-espresso/70 dark:text-white/70">{t('courses.curriculum.modules.m1.description')}</p>
                         </div>
 
                         {/* Module 2 */}
-                        <div className="bg-white dark:bg-white/5 p-6 rounded-2xl shadow-sm border border-transparent hover:border-primary/20 transition-all">
+                        <div className="bg-[#F5DEB3] dark:bg-white/5 p-6 rounded-2xl shadow-xl border border-espresso/5 hover:border-espresso/20 transition-all relative overflow-hidden group">
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/10 group-hover:bg-espresso transition-colors"></div>
                             <div className="flex items-center gap-3 mb-3">
-                                <span className="material-symbols-outlined text-primary text-3xl">build</span>
+                                <span className="material-symbols-outlined text-espresso bg-white/30 rounded-lg p-2 group-hover:scale-110 transition-transform text-2xl">build</span>
                                 <h3 className="font-serif font-bold text-lg text-espresso dark:text-white">{t('courses.curriculum.modules.m2.title')}</h3>
                             </div>
                             <p className="text-sm text-espresso/70 dark:text-white/70">{t('courses.curriculum.modules.m2.description')}</p>
                         </div>
 
                         {/* Module 3 */}
-                        <div className="bg-white dark:bg-white/5 p-6 rounded-2xl shadow-sm border border-transparent hover:border-primary/20 transition-all">
+                        <div className="bg-[#F5DEB3] dark:bg-white/5 p-6 rounded-2xl shadow-xl border border-espresso/5 hover:border-espresso/20 transition-all relative overflow-hidden group">
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/10 group-hover:bg-espresso transition-colors"></div>
                             <div className="flex items-center gap-3 mb-3">
-                                <span className="material-symbols-outlined text-primary text-3xl">science</span>
+                                <span className="material-symbols-outlined text-espresso bg-white/30 rounded-lg p-2 group-hover:scale-110 transition-transform text-2xl">science</span>
                                 <h3 className="font-serif font-bold text-lg text-espresso dark:text-white">{t('courses.curriculum.modules.m3.title')}</h3>
                             </div>
                             <p className="text-sm text-espresso/70 dark:text-white/70">{t('courses.curriculum.modules.m3.description')}</p>
                         </div>
 
                         {/* Module 4 */}
-                        <div className="bg-white dark:bg-white/5 p-6 rounded-2xl shadow-sm border border-transparent hover:border-primary/20 transition-all">
+                        <div className="bg-[#F5DEB3] dark:bg-white/5 p-6 rounded-2xl shadow-xl border border-espresso/5 hover:border-espresso/20 transition-all relative overflow-hidden group">
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/10 group-hover:bg-espresso transition-colors"></div>
                             <div className="flex items-center gap-3 mb-3">
-                                <span className="material-symbols-outlined text-primary text-3xl">palette</span>
+                                <span className="material-symbols-outlined text-espresso bg-white/30 rounded-lg p-2 group-hover:scale-110 transition-transform text-2xl">palette</span>
                                 <h3 className="font-serif font-bold text-lg text-espresso dark:text-white">{t('courses.curriculum.modules.m4.title')}</h3>
                             </div>
                             <p className="text-sm text-espresso/70 dark:text-white/70">{t('courses.curriculum.modules.m4.description')}</p>
                         </div>
 
                         {/* Module 5 */}
-                        <div className="bg-white dark:bg-white/5 p-6 rounded-2xl shadow-sm border border-transparent hover:border-primary/20 transition-all">
+                        <div className="bg-[#F5DEB3] dark:bg-white/5 p-6 rounded-2xl shadow-xl border border-espresso/5 hover:border-espresso/20 transition-all relative overflow-hidden group">
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/10 group-hover:bg-espresso transition-colors"></div>
                             <div className="flex items-center gap-3 mb-3">
-                                <span className="material-symbols-outlined text-primary text-3xl">cleaning_services</span>
+                                <span className="material-symbols-outlined text-espresso bg-white/30 rounded-lg p-2 group-hover:scale-110 transition-transform text-2xl">cleaning_services</span>
                                 <h3 className="font-serif font-bold text-lg text-espresso dark:text-white">{t('courses.curriculum.modules.m5.title')}</h3>
                             </div>
                             <p className="text-sm text-espresso/70 dark:text-white/70">{t('courses.curriculum.modules.m5.description')}</p>
                         </div>
 
                         {/* Module 6 */}
-                        <div className="bg-white dark:bg-white/5 p-6 rounded-2xl shadow-sm border border-transparent hover:border-primary/20 transition-all">
+                        <div className="bg-[#F5DEB3] dark:bg-white/5 p-6 rounded-2xl shadow-xl border border-espresso/5 hover:border-espresso/20 transition-all relative overflow-hidden group">
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/10 group-hover:bg-espresso transition-colors"></div>
                             <div className="flex items-center gap-3 mb-3">
-                                <span className="material-symbols-outlined text-primary text-3xl">handshake</span>
+                                <span className="material-symbols-outlined text-espresso bg-white/30 rounded-lg p-2 group-hover:scale-110 transition-transform text-2xl">handshake</span>
                                 <h3 className="font-serif font-bold text-lg text-espresso dark:text-white">{t('courses.curriculum.modules.m6.title')}</h3>
                             </div>
                             <p className="text-sm text-espresso/70 dark:text-white/70">{t('courses.curriculum.modules.m6.description')}</p>
                         </div>
 
                         {/* Module 7 (Bonus, Full Width) */}
-                        <div className="md:col-span-2 lg:col-span-3 bg-primary/5 p-6 rounded-2xl shadow-sm border border-primary/10">
-                            <div className="flex items-center gap-3 mb-3">
-                                <span className="material-symbols-outlined text-primary text-3xl">trending_up</span>
-                                <h3 className="font-serif font-bold text-lg text-espresso dark:text-white">{t('courses.curriculum.modules.m7.title')}</h3>
+                        <div className="md:col-span-2 lg:col-span-3 bg-espresso text-white p-8 rounded-2xl shadow-2xl border border-white/10 relative overflow-hidden group">
+                            <div className="absolute right-0 top-0 bottom-0 w-32 bg-white/5 -rotate-12 translate-x-16 group-hover:translate-x-12 transition-transform"></div>
+                            <div className="flex items-center gap-3 mb-3 relative z-10">
+                                <span className="material-symbols-outlined text-primary text-3xl group-hover:rotate-12 transition-transform">trending_up</span>
+                                <h3 className="font-serif font-bold text-xl text-[#F5DEB3]">{t('courses.curriculum.modules.m7.title')}</h3>
                             </div>
-                            <p className="text-sm text-espresso/70 dark:text-white/70">{t('courses.curriculum.modules.m7.description')}</p>
+                            <p className="text-sm text-white/80 relative z-10">{t('courses.curriculum.modules.m7.description')}</p>
                         </div>
                     </div>
                 </div>

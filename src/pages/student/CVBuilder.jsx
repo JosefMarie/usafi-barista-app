@@ -266,164 +266,186 @@ export function CVBuilder() {
         }, 500); // Increased timeout slightly to be safe
     };
 
-    if (loading) return <div className="h-full flex items-center justify-center"><span className="material-symbols-outlined animate-spin text-4xl text-[#a77c52]">progress_activity</span></div>;
+    if (loading) return <div className="h-full flex items-center justify-center"><span className="material-symbols-outlined animate-spin text-4xl text-espresso">progress_activity</span></div>;
 
     const completeness = calculateCompleteness(cvData);
 
     return (
-        <div className="flex flex-col h-full w-full items-center">
+        <div className="flex flex-col h-full w-full items-center animate-fade-in">
             <style>{`
                 ::-webkit-scrollbar { width: 0px; background: transparent; }
-                .accordion-content { transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out; max-height: 0; opacity: 0; overflow: hidden; }
+                .accordion-content { transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease-in-out; max-height: 0; opacity: 0; overflow: hidden; }
                 details[open] .accordion-content { max-height: 2000px; opacity: 1; }
                 details summary::-webkit-details-marker { display: none; }
             `}</style>
 
-            <div className="relative flex h-full min-h-[800px] w-full flex-col max-w-md shadow-2xl overflow-hidden bg-[#FAF5E8] dark:bg-[#1c1916] rounded-xl border border-[#a77c52]/10">
+            <div className="relative flex min-h-screen w-full flex-col max-w-5xl shadow-2xl overflow-hidden bg-[#F5DEB3] dark:bg-[#1c1916] rounded-[2.5rem] border border-espresso/10 my-8">
 
                 {/* Header */}
-                <div className="sticky top-0 z-50 bg-[#FAF5E8]/95 dark:bg-[#1c1916]/95 backdrop-blur-sm border-b border-[#a77c52]/10 text-[#321C00] dark:text-[#FAF5E8]">
-                    <div className="flex items-center p-4 pb-2 justify-between">
-                        <button className="text-[#321C00] dark:text-[#FAF5E8] hover:bg-[#a77c52]/10 rounded-full p-2 transition-colors flex items-center justify-center">
-                            <span className="material-symbols-outlined text-[24px]">arrow_back</span>
+                <div className="sticky top-0 z-50 bg-[#F5DEB3]/90 dark:bg-[#1c1916]/90 backdrop-blur-md border-b border-espresso/10 text-espresso dark:text-white">
+                    <div className="flex items-center px-8 py-6 justify-between">
+                        <button
+                            onClick={() => window.history.back()}
+                            className="text-espresso dark:text-white hover:bg-white/40 rounded-2xl w-12 h-12 transition-all flex items-center justify-center active:scale-95 shadow-sm"
+                        >
+                            <span className="material-symbols-outlined text-[24px]">arrow_back_ios_new</span>
                         </button>
-                        <h2 className="text-[#321C00] dark:text-[#FAF5E8] text-xl font-bold font-serif leading-tight">CV Builder</h2>
+                        <h2 className="text-espresso dark:text-white text-2xl font-black font-serif uppercase tracking-[0.2em] leading-tight">Career Architect</h2>
 
-                        <div className="flex w-24 items-center justify-end">
+                        <div className="flex w-32 items-center justify-end">
                             {saveSuccess ? (
-                                <span className="text-green-600 text-xs font-bold animate-fade-in flex items-center gap-1">
-                                    <span className="material-symbols-outlined text-[16px]">check_circle</span> Saved
+                                <span className="text-green-600 bg-green-50 dark:bg-green-900/20 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest animate-fade-in flex items-center gap-2 border border-green-200">
+                                    <span className="material-symbols-outlined text-[16px]">verified</span> Encloded
                                 </span>
                             ) : (
                                 <button
                                     onClick={handleSave}
                                     disabled={saving}
-                                    className="text-[#a77c52] text-sm font-bold tracking-wide hover:text-[#8c6642] transition-colors disabled:opacity-50 flex items-center gap-1"
+                                    className="bg-espresso text-white px-6 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:shadow-xl hover:-translate-y-0.5 active:scale-95 transition-all disabled:opacity-50 flex items-center gap-2"
                                 >
-                                    {saving ? <span className="material-symbols-outlined animate-spin text-xs">refresh</span> : null}
-                                    {saving ? "Saving" : "Save"}
+                                    {saving ? <span className="material-symbols-outlined animate-spin text-[16px]">sync</span> : <span className="material-symbols-outlined text-[16px]">save</span>}
+                                    {saving ? "Storing" : "Save Draft"}
                                 </button>
                             )}
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-1 px-6 pb-4">
+                    <div className="flex flex-col gap-2 px-10 pb-6">
                         <div className="flex gap-6 justify-between items-end">
-                            <p className="text-[#321C00]/70 dark:text-[#FAF5E8]/70 text-xs font-medium">Profile Completeness</p>
-                            <p className="text-[#a77c52] text-xs font-bold">{completeness}%</p>
+                            <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest">Profile Integrity Status</p>
+                            <p className="text-espresso dark:text-white text-xs font-black">{completeness}%</p>
                         </div>
-                        <div className="rounded-full bg-[#a77c52]/20 h-1.5 w-full overflow-hidden">
-                            <div className="h-full rounded-full bg-[#a77c52] transition-all duration-500 ease-out" style={{ width: `${completeness}%` }}></div>
+                        <div className="rounded-full bg-espresso/5 dark:bg-white/5 h-2 w-full overflow-hidden border border-espresso/5">
+                            <div className="h-full rounded-full bg-espresso transition-all duration-700 ease-out shadow-sm" style={{ width: `${completeness}%` }}></div>
                         </div>
                     </div>
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 overflow-y-auto pb-32 scrollbar-hide p-4 flex flex-col gap-4">
+                <div className="flex-1 overflow-y-auto pb-48 scrollbar-hide px-10 pt-6 flex flex-col gap-6">
 
                     {/* Personal Info */}
                     <SectionDetails
-                        title="Personal Info"
-                        icon="person"
+                        title="Strategic Identity"
+                        icon="person_pin"
                         isOpen={activeSection === 'personal'}
                         onToggle={(open) => setActiveSection(open ? 'personal' : null)}
                     >
-                        <div className="flex items-center gap-4 mb-2">
+                        <div className="flex flex-col md:flex-row items-center gap-10 mb-8 pt-4">
                             <div
                                 onClick={() => fileInputRef.current?.click()}
-                                className="w-16 h-16 rounded-full bg-[#a77c52]/10 flex items-center justify-center border-2 border-[#a77c52] border-dashed relative overflow-hidden cursor-pointer shrink-0"
+                                className="w-32 h-32 rounded-[2rem] bg-white/40 dark:bg-black/20 flex items-center justify-center border-2 border-espresso/20 border-dashed relative overflow-hidden cursor-pointer shrink-0 group/photo hover:border-espresso transition-all active:scale-95 shadow-lg"
                             >
-                                {uploading ? <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#a77c52]"></div> : (
+                                {uploading ? <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-espresso"></div> : (
                                     <>
                                         {cvData.personalInfo.photoURL ? (
-                                            <img src={cvData.personalInfo.photoURL} alt="Profile" className="w-full h-full object-cover" />
-                                        ) : <span className="material-symbols-outlined text-[#a77c52]">add_a_photo</span>}
+                                            <img src={cvData.personalInfo.photoURL} alt="Profile" className="w-full h-full object-cover transition-transform duration-700 group-hover/photo:scale-110" />
+                                        ) : <span className="material-symbols-outlined text-espresso/40 group-hover/photo:scale-110 transition-transform text-3xl">add_a_photo</span>}
                                     </>
                                 )}
+                                <div className="absolute inset-0 bg-espresso/20 opacity-0 group-hover/photo:opacity-100 transition-opacity flex items-center justify-center">
+                                    <span className="material-symbols-outlined text-white text-2xl">sync</span>
+                                </div>
                                 <input type="file" ref={fileInputRef} onChange={handleImageUpload} className="hidden" accept="image/*" />
                             </div>
-                            <div>
-                                <p className="text-[#321C00] font-medium text-sm dark:text-[#FAF5E8]">Profile Photo</p>
-                                <p className="text-[#321C00]/50 text-xs dark:text-[#FAF5E8]/50">Professional headshot</p>
+                            <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                                <Input label="Professional Name" name="fullName" value={cvData.personalInfo.fullName} onChange={handleInfoChange} placeholder="e.g. Jane Doe" />
+                                <Input label="Direct Line" name="phone" value={cvData.personalInfo.phone} onChange={handleInfoChange} placeholder="+254..." icon="call" />
+                                <Input label="Digital Correspondence" name="email" value={cvData.personalInfo.email} onChange={handleInfoChange} placeholder="email@example.com" type="email" icon="mail" />
+                                <Input label="Global Connectivity" name="linkedin" value={cvData.personalInfo.linkedin} onChange={handleInfoChange} placeholder="linkedin.com/in/..." icon="link" />
                             </div>
                         </div>
-
-                        <Input label="Full Name" name="fullName" value={cvData.personalInfo.fullName} onChange={handleInfoChange} placeholder="e.g. Jane Doe" />
-                        <Input label="Phone" name="phone" value={cvData.personalInfo.phone} onChange={handleInfoChange} placeholder="+254..." icon="call" />
-                        <Input label="Email" name="email" value={cvData.personalInfo.email} onChange={handleInfoChange} placeholder="email@example.com" type="email" icon="mail" />
-                        <Input label="LinkedIn" name="linkedin" value={cvData.personalInfo.linkedin} onChange={handleInfoChange} placeholder="linkedin.com/in/..." icon="link" />
                     </SectionDetails>
 
                     {/* Summary */}
                     <SectionDetails
-                        title="Summary"
-                        icon="description"
+                        title="Professional Narrative"
+                        icon="auto_awesome"
                         isOpen={activeSection === 'summary'}
                         onToggle={(open) => setActiveSection(open ? 'summary' : null)}
                     >
-                        <div className="w-full">
-                            <p className="text-[#321C00] dark:text-[#FAF5E8] text-sm font-medium pb-2">Professional Objective</p>
+                        <div className="w-full pt-4">
+                            <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest pb-3">Strategic Career Objective</p>
                             <textarea
                                 value={cvData.summary}
                                 onChange={handleSummaryChange}
-                                className="w-full rounded-lg text-[#321C00] border border-[#a77c52]/30 bg-[#FAF5E8]/30 dark:bg-neutral-900 min-h-[120px] p-3 text-sm resize-none focus:outline-none focus:border-[#a77c52] focus:ring-1 focus:ring-[#a77c52]"
-                                placeholder="Briefly describe your passion for coffee..."
+                                className="w-full rounded-2xl text-espresso border border-espresso/10 bg-white/40 dark:bg-black/20 min-h-[160px] p-6 text-sm font-medium leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-espresso transition-all placeholder:text-espresso/20 shadow-inner"
+                                placeholder="Craft a compelling narrative of your professional journey..."
                             />
-                            <p className="text-xs text-[#a77c52] mt-1 text-right">{cvData.summary.length} chars</p>
+                            <div className="flex justify-between items-center mt-3">
+                                <p className="text-[10px] text-espresso/30 italic">Tip: Highlight your most significant impact.</p>
+                                <p className="text-[10px] font-black text-espresso/40 uppercase tracking-widest">{cvData.summary.length} characters encoded</p>
+                            </div>
                         </div>
                     </SectionDetails>
 
                     {/* Certifications - Verified */}
                     <SectionDetails
-                        title="Certifications"
+                        title="Verified Intelligence"
                         icon="verified"
                         isOpen={activeSection === 'certs'}
                         onToggle={(open) => setActiveSection(open ? 'certs' : null)}
                     >
-                        <div className="bg-[#a77c52]/5 rounded-xl p-4 border border-[#a77c52]/20 mb-5 relative overflow-hidden">
-                            <div className="flex items-center gap-2 mb-3 relative z-10">
-                                <span className="material-symbols-outlined text-[#a77c52] text-[20px]">school</span>
-                                <p className="text-sm font-bold text-[#321C00] dark:text-[#FAF5E8] uppercase">Usafi Earned Credentials</p>
+                        <div className="bg-white/40 dark:bg-black/20 rounded-2xl p-8 border border-espresso/10 mb-2 relative overflow-hidden group/certs pt-6 mt-4">
+                            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/5 group-hover/certs:bg-espresso/20 transition-colors"></div>
+                            <div className="flex items-center gap-3 mb-6">
+                                <span className="material-symbols-outlined text-espresso/40 text-[24px]">workspace_premium</span>
+                                <h4 className="text-[10px] font-black text-espresso dark:text-white uppercase tracking-[0.2em]">Usafi Strategic Credentials</h4>
                             </div>
-                            {earnedCertificates.length > 0 ? earnedCertificates.map(cert => (
-                                <label key={cert.id} className={`flex items-start gap-3 p-3 rounded-lg border mb-2 cursor-pointer transition-colors ${cvData.selectedCertificates.includes(cert.id) ? "bg-white dark:bg-neutral-900 border-[#a77c52]/40" : "opacity-60 border-transparent hover:bg-black/5"}`}>
-                                    <input type="checkbox" className="hidden" checked={cvData.selectedCertificates.includes(cert.id)} onChange={() => toggleCertificate(cert.id)} />
-                                    <span className={`material-symbols-outlined text-[20px] ${cvData.selectedCertificates.includes(cert.id) ? "text-[#a77c52]" : "text-gray-400"}`}>
-                                        {cvData.selectedCertificates.includes(cert.id) ? 'check_circle' : 'circle'}
-                                    </span>
-                                    <div>
-                                        <p className="text-sm font-bold text-[#321C00] dark:text-[#FAF5E8]">{cert.title}</p>
-                                        <p className="text-xs text-[#321C00]/70">Verified • {cert.date}</p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {earnedCertificates.length > 0 ? earnedCertificates.map(cert => (
+                                    <label key={cert.id} className={`flex items-start gap-4 p-5 rounded-2xl border transition-all cursor-pointer group/item ${cvData.selectedCertificates.includes(cert.id) ? "bg-espresso text-white border-espresso shadow-xl -translate-y-1" : "bg-white/40 border-espresso/5 hover:border-espresso/20 hover:bg-white/60"}`}>
+                                        <input type="checkbox" className="hidden" checked={cvData.selectedCertificates.includes(cert.id)} onChange={() => toggleCertificate(cert.id)} />
+                                        <span className={`material-symbols-outlined text-[24px] transition-transform ${cvData.selectedCertificates.includes(cert.id) ? "text-white rotate-[360deg]" : "text-espresso/20"}`}>
+                                            {cvData.selectedCertificates.includes(cert.id) ? 'verified' : 'radio_button_unchecked'}
+                                        </span>
+                                        <div className="flex-1">
+                                            <p className={`text-sm font-black tracking-tight leading-tight ${cvData.selectedCertificates.includes(cert.id) ? "text-white" : "text-espresso dark:text-white"}`}>{cert.title}</p>
+                                            <p className={`text-[10px] uppercase tracking-widest mt-1 ${cvData.selectedCertificates.includes(cert.id) ? "text-white/60" : "text-espresso/40"}`}>{cert.date}</p>
+                                        </div>
+                                    </label>
+                                )) : (
+                                    <div className="col-span-full py-10 flex flex-col items-center justify-center text-espresso/30 opacity-60">
+                                        <span className="material-symbols-outlined text-5xl mb-2">history_edu</span>
+                                        <p className="text-sm font-serif italic">Awaiting certification milestones...</p>
                                     </div>
-                                </label>
-                            )) : <p className="text-sm italic opacity-60">No verified modules yet.</p>}
+                                )}
+                            </div>
                         </div>
                     </SectionDetails>
 
                     {/* Skills */}
                     <SectionDetails
-                        title="Skills"
-                        icon="psychology"
+                        title="Operational Capabilities"
+                        icon="construction"
                         isOpen={activeSection === 'skills'}
                         onToggle={(open) => setActiveSection(open ? 'skills' : null)}
                     >
-                        <div className="mb-4">
-                            <p className="text-xs font-bold uppercase text-[#321C00]/60 mb-2">My Skills</p>
-                            <div className="flex flex-wrap gap-2 mb-3">
+                        <div className="pt-4">
+                            <p className="text-[10px] font-black uppercase text-espresso/40 dark:text-white/40 tracking-widest mb-4">Tactical Skill Set</p>
+                            <div className="flex flex-wrap gap-3 mb-6">
                                 {cvData.skills.other?.map((skill, idx) => (
-                                    <span key={idx} className="px-3 py-1 rounded-full bg-white dark:bg-neutral-900 border border-[#a77c52]/30 text-xs font-medium flex items-center gap-2">
+                                    <span key={idx} className="px-5 py-2.5 rounded-full bg-espresso text-white text-[10px] font-black uppercase tracking-widest flex items-center gap-3 shadow-lg animate-fade-in group/skill hover:-translate-y-1 transition-all">
                                         {skill}
-                                        <button onClick={() => removeSkill('other', idx)} className="hover:text-red-500"><span className="material-symbols-outlined text-[14px]">close</span></button>
+                                        <button onClick={() => removeSkill('other', idx)} className="hover:text-red-300 w-5 h-5 flex items-center justify-center rounded-full bg-white/10 transition-colors">
+                                            <span className="material-symbols-outlined text-[14px]">close</span>
+                                        </button>
                                     </span>
                                 ))}
+                                {cvData.skills.other?.length === 0 && (
+                                    <p className="text-xs text-espresso/30 font-medium italic">Define your operational edge...</p>
+                                )}
                             </div>
-                            <div className="flex gap-2">
+                            <div className="flex gap-4 group/input">
                                 <input
-                                    className="flex-1 rounded-lg border border-[#a77c52]/30 bg-transparent h-10 px-3 text-sm placeholder:text-[#321C00]/30"
-                                    placeholder="Add skill (e.g. Latte Art)"
+                                    className="flex-1 rounded-2xl border border-espresso/10 bg-white/40 dark:bg-black/20 h-14 px-6 text-sm font-bold text-espresso dark:text-white placeholder:text-espresso/20 focus:outline-none focus:ring-2 focus:ring-espresso transition-all shadow-sm"
+                                    placeholder="Add capability (e.g. Precision Extraction)"
                                     onKeyDown={(e) => { if (e.key === 'Enter') { addSkill('other', e.target.value); e.target.value = ''; } }}
                                 />
-                                <button className="w-10 h-10 rounded-lg bg-[#a77c52] text-white flex items-center justify-center" onClick={(e) => { const input = e.currentTarget.previousSibling; addSkill('other', input.value); input.value = ''; }}>
+                                <button
+                                    className="w-14 h-14 rounded-2xl bg-espresso text-white flex items-center justify-center shadow-xl hover:shadow-espresso/40 active:scale-95 transition-all"
+                                    onClick={(e) => { const input = e.currentTarget.previousSibling; if (input.value) { addSkill('other', input.value); input.value = ''; } }}
+                                >
                                     <span className="material-symbols-outlined">add</span>
                                 </button>
                             </div>
@@ -432,76 +454,111 @@ export function CVBuilder() {
 
                     {/* Education - Dynamic List */}
                     <SectionDetails
-                        title="Education"
-                        icon="school"
+                        title="Academic Foundation"
+                        icon="history_edu"
                         isOpen={activeSection === 'education'}
                         onToggle={(open) => setActiveSection(open ? 'education' : null)}
                     >
-                        {cvData.education.map((edu, idx) => (
-                            <div key={edu.id} className="bg-[#FAF5E8]/50 dark:bg-neutral-900 rounded-lg p-3 border border-[#a77c52]/20 mb-3 relative group">
-                                <button onClick={() => removeEducation(idx)} className="absolute top-2 right-2 text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"><span className="material-symbols-outlined text-[18px]">delete</span></button>
-                                <div className="grid gap-3">
-                                    <Input placeholder="School Name" value={edu.school} onChange={(e) => updateEducation(idx, 'school', e.target.value)} />
-                                    <Input placeholder="Degree / Course" value={edu.degree} onChange={(e) => updateEducation(idx, 'degree', e.target.value)} />
-                                    <Input placeholder="Year" value={edu.year} onChange={(e) => updateEducation(idx, 'year', e.target.value)} />
+                        <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {cvData.education.map((edu, idx) => (
+                                <div key={edu.id} className="bg-white/40 dark:bg-black/20 rounded-3xl p-8 border border-espresso/10 relative group/item animate-fade-in shadow-sm hover:shadow-md transition-all">
+                                    <button
+                                        onClick={() => removeEducation(idx)}
+                                        className="absolute top-4 right-4 w-10 h-10 rounded-xl bg-red-50 text-red-500 opacity-0 group-hover/item:opacity-100 transition-opacity flex items-center justify-center hover:bg-red-500 hover:text-white"
+                                    >
+                                        <span className="material-symbols-outlined text-[20px]">delete_sweep</span>
+                                    </button>
+                                    <div className="grid gap-6">
+                                        <Input label="Institution" placeholder="e.g. University of Coffee Arts" value={edu.school} onChange={(e) => updateEducation(idx, 'school', e.target.value)} />
+                                        <Input label="Credential" placeholder="e.g. Master in Espresso Theory" value={edu.degree} onChange={(e) => updateEducation(idx, 'degree', e.target.value)} />
+                                        <Input label="Timeline" placeholder="e.g. 2020 - 2024" value={edu.year} onChange={(e) => updateEducation(idx, 'year', e.target.value)} />
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
-                        <button onClick={addEducation} className="w-full py-3 rounded-lg border border-dashed border-[#a77c52]/40 text-[#a77c52] bg-[#a77c52]/5 hover:bg-[#a77c52]/10 transition-colors flex items-center justify-center gap-2">
-                            <span className="material-symbols-outlined">add_circle</span> Add Education
-                        </button>
+                            ))}
+                            <button
+                                onClick={addEducation}
+                                className="w-full py-10 rounded-3xl border-2 border-dashed border-espresso/10 text-espresso/40 hover:bg-white/40 hover:border-espresso/30 hover:text-espresso transition-all flex flex-col items-center justify-center gap-3 transition-all"
+                            >
+                                <span className="material-symbols-outlined text-4xl">add_school</span>
+                                <span className="text-[10px] font-black uppercase tracking-widest">Append Education</span>
+                            </button>
+                        </div>
                     </SectionDetails>
 
                     {/* Experience - Dynamic List */}
                     <SectionDetails
-                        title="Work Experience"
-                        icon="work"
+                        title="Professional History"
+                        icon="work_history"
                         isOpen={activeSection === 'experience'}
                         onToggle={(open) => setActiveSection(open ? 'experience' : null)}
                     >
-                        {cvData.experience.map((exp, idx) => (
-                            <div key={exp.id} className="bg-[#FAF5E8]/50 dark:bg-neutral-900 rounded-lg p-3 border border-[#a77c52]/20 mb-3 relative group">
-                                <button onClick={() => removeExperience(idx)} className="absolute top-2 right-2 text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"><span className="material-symbols-outlined text-[18px]">delete</span></button>
-                                <div className="grid gap-3">
-                                    <Input placeholder="Job Title" value={exp.title} onChange={(e) => updateExperience(idx, 'title', e.target.value)} />
-                                    <Input placeholder="Company" value={exp.company} onChange={(e) => updateExperience(idx, 'company', e.target.value)} />
-                                    <div className="grid grid-cols-2 gap-2">
-                                        <Input type="month" label="Start" value={exp.startDate} onChange={(e) => updateExperience(idx, 'startDate', e.target.value)} />
-                                        <Input type="month" label="End" value={exp.endDate} onChange={(e) => updateExperience(idx, 'endDate', e.target.value)} />
+                        <div className="pt-4 space-y-6">
+                            {cvData.experience.map((exp, idx) => (
+                                <div key={exp.id} className="bg-white/40 dark:bg-black/20 rounded-3xl p-10 border border-espresso/10 relative group/item animate-fade-in shadow-sm hover:shadow-md transition-all">
+                                    <button
+                                        onClick={() => removeExperience(idx)}
+                                        className="absolute top-6 right-6 w-12 h-12 rounded-2xl bg-red-50 text-red-500 opacity-0 group-hover/item:opacity-100 transition-opacity flex items-center justify-center hover:bg-red-500 hover:text-white"
+                                    >
+                                        <span className="material-symbols-outlined text-[24px]">delete_forever</span>
+                                    </button>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                        <div className="space-y-6">
+                                            <Input label="Strategic Role" placeholder="e.g. Senior Barista Operator" value={exp.title} onChange={(e) => updateExperience(idx, 'title', e.target.value)} />
+                                            <Input label="Organization" placeholder="e.g. Global Bean Collective" value={exp.company} onChange={(e) => updateExperience(idx, 'company', e.target.value)} />
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <Input type="month" label="Activation" value={exp.startDate} onChange={(e) => updateExperience(idx, 'startDate', e.target.value)} />
+                                                <Input type="month" label="Termination" value={exp.endDate} onChange={(e) => updateExperience(idx, 'endDate', e.target.value)} />
+                                            </div>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest leading-normal pb-1.5">Operational Responsibilities</p>
+                                            <textarea
+                                                className="w-full rounded-2xl border border-espresso/10 bg-black/5 dark:bg-black/40 p-6 text-sm font-medium h-[180px] resize-none focus:outline-none focus:ring-2 focus:ring-espresso transition-all placeholder:text-espresso/20"
+                                                placeholder="Detail your primary mission objectives..."
+                                                value={exp.description}
+                                                onChange={(e) => updateExperience(idx, 'description', e.target.value)}
+                                            />
+                                        </div>
                                     </div>
-                                    <textarea
-                                        className="w-full rounded-lg border border-[#a77c52]/30 bg-transparent p-2 text-sm h-20 resize-none"
-                                        placeholder="Responsibilities..."
-                                        value={exp.description}
-                                        onChange={(e) => updateExperience(idx, 'description', e.target.value)}
-                                    />
                                 </div>
-                            </div>
-                        ))}
-                        <button onClick={addExperience} className="w-full py-3 rounded-lg border border-dashed border-[#a77c52]/40 text-[#a77c52] bg-[#a77c52]/5 hover:bg-[#a77c52]/10 transition-colors flex items-center justify-center gap-2">
-                            <span className="material-symbols-outlined">add_circle</span> Add Experience
-                        </button>
+                            ))}
+                            <button
+                                onClick={addExperience}
+                                className="w-full py-12 rounded-[2.5rem] border-2 border-dashed border-espresso/10 text-espresso/40 hover:bg-white/40 hover:border-espresso/30 hover:text-espresso transition-all flex flex-col items-center justify-center gap-4"
+                            >
+                                <span className="material-symbols-outlined text-5xl">assignment_add</span>
+                                <span className="text-[10px] font-black uppercase tracking-widest">Append Professional Experience</span>
+                            </button>
+                        </div>
                     </SectionDetails>
 
                 </div>
 
                 {/* Footer Actions */}
-                <div className="fixed bottom-0 w-full max-w-md bg-white dark:bg-neutral-900 border-t border-[#a77c52]/10 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-50 rounded-b-xl md:absolute">
-                    <div className="flex gap-3">
+                <div className="sticky bottom-0 w-full bg-[#F5DEB3]/90 dark:bg-[#1c1916]/90 backdrop-blur-md border-t border-espresso/10 p-8 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] z-50 rounded-b-[2.5rem]">
+                    <div className="flex flex-col md:flex-row gap-6 max-w-4xl mx-auto">
                         {saveSuccess ? (
-                            <button disabled className="flex-1 h-12 flex items-center justify-center gap-2 rounded-lg border-2 border-green-600 text-green-600 font-bold bg-green-50">
-                                <span className="material-symbols-outlined text-[20px]">check_circle</span>
-                                Saved!
+                            <button disabled className="flex-1 h-16 flex items-center justify-center gap-3 rounded-[1.25rem] border-2 border-green-600/50 text-green-600 font-black text-xs uppercase tracking-[0.2em] bg-green-50/50 backdrop-blur-sm shadow-inner transition-all">
+                                <span className="material-symbols-outlined text-[20px] animate-pulse">verified_user</span>
+                                State Synchronized
                             </button>
                         ) : (
-                            <button onClick={handleSave} disabled={saving} className="flex-1 h-12 flex items-center justify-center gap-2 rounded-lg border-2 border-[#a77c52] text-[#a77c52] font-bold hover:bg-[#a77c52]/5 transition-colors">
-                                {saving ? <span className="material-symbols-outlined animate-spin text-[20px]">refresh</span> : <span className="material-symbols-outlined text-[20px]">save</span>}
-                                {saving ? "Saving..." : "Save"}
+                            <button
+                                onClick={handleSave}
+                                disabled={saving}
+                                className="flex-1 h-16 flex items-center justify-center gap-3 rounded-[1.25rem] border-2 border-espresso/20 text-espresso/60 font-black text-xs uppercase tracking-[0.2em] hover:bg-white/40 hover:border-espresso/40 transition-all active:scale-95 shadow-lg"
+                            >
+                                {saving ? <span className="material-symbols-outlined animate-spin text-[20px]">sync</span> : <span className="material-symbols-outlined text-[20px]">save_as</span>}
+                                {saving ? "Synchronizing..." : "Synchronize State"}
                             </button>
                         )}
-                        <button onClick={handlePrint} disabled={isPrinting} className="flex-[1.5] h-12 flex items-center justify-center gap-2 rounded-lg bg-[#a77c52] text-white font-bold shadow-md hover:bg-[#8c6642] transition-colors">
-                            {isPrinting ? <span className="material-symbols-outlined animate-spin text-[20px]">refresh</span> : <span className="material-symbols-outlined text-[20px]">download</span>}
-                            {isPrinting ? "Preparing..." : "Download PDF"}
+                        <button
+                            onClick={handlePrint}
+                            disabled={isPrinting}
+                            className="flex-[1.5] h-16 flex items-center justify-center gap-3 rounded-[1.25rem] bg-espresso text-white font-black text-xs uppercase tracking-[0.2em] shadow-2xl hover:shadow-espresso/40 hover:-translate-y-1 transition-all active:scale-95 group"
+                        >
+                            {isPrinting ? <span className="material-symbols-outlined animate-spin text-[20px]">sync</span> : <span className="material-symbols-outlined text-[20px] group-hover:translate-y-1 transition-transform">picture_as_pdf</span>}
+                            {isPrinting ? "Compiling Assets..." : "Execute Print Protocol"}
                         </button>
                     </div>
                 </div>
@@ -523,21 +580,24 @@ export function CVBuilder() {
 
 function SectionDetails({ title, icon, children, isOpen, onToggle }) {
     return (
-        <details className="group flex flex-col rounded-xl bg-white dark:bg-neutral-800 shadow-sm border border-[#a77c52]/10 overflow-hidden" open={isOpen}>
+        <details className="group w-full shrink-0 rounded-[2rem] bg-[#F5DEB3] dark:bg-neutral-800 shadow-xl border border-espresso/10 overflow-hidden transition-all duration-300 hover:shadow-2xl relative" open={isOpen}>
+            <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
             <summary
                 onClick={(e) => { e.preventDefault(); onToggle(!isOpen); }}
-                className="flex cursor-pointer items-center justify-between gap-4 px-5 py-4 bg-white dark:bg-neutral-800 hover:bg-[#a77c52]/5 transition-colors list-none"
+                className="flex cursor-pointer items-center justify-between gap-6 px-10 py-8 bg-white/40 dark:bg-neutral-800 hover:bg-white/60 transition-all list-none"
             >
-                <div className="flex items-center gap-3">
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[#a77c52]/10 text-[#a77c52]">
-                        <span className="material-symbols-outlined text-[18px]">{icon}</span>
+                <div className="flex items-center gap-5">
+                    <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-espresso text-white shadow-lg shadow-espresso/20 transition-transform group-hover:scale-110">
+                        <span className="material-symbols-outlined text-[24px]">{icon}</span>
                     </div>
-                    <p className="text-[#321C00] dark:text-[#FAF5E8] text-lg font-serif font-bold leading-normal">{title}</p>
+                    <p className="text-espresso dark:text-white text-2xl font-serif font-black tracking-tight leading-normal">{title}</p>
                 </div>
-                <span className={`material-symbols-outlined text-[#a77c52] transition-transform duration-300 \${isOpen ? 'rotate-180' : ''}`}>expand_more</span>
+                <div className="w-12 h-12 rounded-2xl bg-espresso/5 flex items-center justify-center transition-all group-hover:bg-espresso/10">
+                    <span className={`material-symbols-outlined text-espresso transition-transform duration-500 ${isOpen ? 'rotate-180' : ''}`}>expand_more</span>
+                </div>
             </summary>
             {isOpen && (
-                <div className="px-5 pb-6 pt-2 border-t border-[#a77c52]/5 animate-fade-in">
+                <div className="px-10 pb-10 pt-4 border-t border-espresso/5 animate-fade-in bg-white/20">
                     {children}
                 </div>
             )}
@@ -547,12 +607,12 @@ function SectionDetails({ title, icon, children, isOpen, onToggle }) {
 
 function Input({ label, icon, ...props }) {
     return (
-        <label className="flex flex-col w-full">
-            {label && <p className="text-[#321C00] dark:text-[#FAF5E8] text-sm font-medium leading-normal pb-1.5">{label}</p>}
+        <label className="flex flex-col w-full group/input">
+            {label && <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest leading-normal pb-1.5 transition-colors group-focus-within/input:text-espresso">{label}</p>}
             <div className="relative">
-                {icon && <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#321C00]/40 material-symbols-outlined text-[18px]">{icon}</span>}
+                {icon && <span className="absolute left-5 top-1/2 -translate-y-1/2 text-espresso/40 material-symbols-outlined text-[20px] group-focus-within/input:text-espresso transition-colors">{icon}</span>}
                 <input
-                    className={`w-full rounded-lg text-[#321C00] dark:text-[#FAF5E8] border border-[#a77c52]/30 bg-[#FAF5E8]/30 dark:bg-neutral-900 focus:border-[#a77c52] h-10 p-3 text-sm placeholder:text-[#321C00]/30 outline-none transition-all ${icon ? 'pl-10' : ''}`}
+                    className={`w-full rounded-2xl text-espresso dark:text-white border border-espresso/10 bg-white/40 dark:bg-black/20 focus:border-espresso focus:ring-2 focus:ring-espresso focus:bg-white/60 h-14 p-6 text-sm font-bold placeholder:text-espresso/20 outline-none transition-all shadow-sm ${icon ? 'pl-14' : ''}`}
                     {...props}
                 />
             </div>
@@ -577,50 +637,62 @@ function calculateCompleteness(data) {
 // --- Print Component ---
 const CVPrintView = React.forwardRef(({ data, certificates }, ref) => {
     return (
-        <div ref={ref} className="w-[210mm] min-h-[297mm] bg-white text-black font-sans p-10 print:p-0">
-            <style>{`@media print { @page { margin: 10mm; } }`}</style>
+        <div ref={ref} className="w-[210mm] min-h-[297mm] bg-white text-[#1c1916] font-sans p-16 print:p-0">
+            <style>{`
+                @media print { 
+                    @page { margin: 15mm; } 
+                    body { -webkit-print-color-adjust: exact; }
+                }
+            `}</style>
 
-            {/* Header */}
-            <div className="flex items-start gap-6 border-b-2 border-[#a77c52] pb-6 mb-6">
+            {/* Header - Premium Alignment */}
+            <div className="flex items-start gap-10 border-b-2 border-espresso/20 pb-12 mb-12 relative">
+                <div className="absolute left-0 top-0 bottom-12 w-1 bg-espresso"></div>
                 {data.personalInfo.photoURL && (
-                    <img src={data.personalInfo.photoURL} className="w-24 h-24 rounded-full object-cover border-2 border-[#a77c52]" alt="Profile" />
+                    <div className="w-32 h-32 rounded-3xl overflow-hidden border-2 border-espresso/10 bg-gray-50 shrink-0">
+                        <img src={data.personalInfo.photoURL} className="w-full h-full object-cover" alt="Profile" />
+                    </div>
                 )}
-                <div className="flex-1">
-                    <h1 className="text-3xl font-bold text-[#321C00] mb-2 font-serif uppercase tracking-wide">{data.personalInfo.fullName}</h1>
-                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-600">
-                        {data.personalInfo.email && <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">mail</span> {data.personalInfo.email}</span>}
-                        {data.personalInfo.phone && <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">call</span> {data.personalInfo.phone}</span>}
-                        {data.personalInfo.linkedin && <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[14px]">link</span> {data.personalInfo.linkedin}</span>}
+                <div className="flex-1 pl-4">
+                    <h1 className="text-5xl font-serif font-black text-espresso mb-4 uppercase tracking-tight">{data.personalInfo.fullName}</h1>
+                    <div className="flex flex-wrap gap-x-8 gap-y-3 text-xs font-bold uppercase tracking-widest text-[#1c1916]/60">
+                        {data.personalInfo.email && <span className="flex items-center gap-2"><span className="material-symbols-outlined text-[16px]">mail</span> {data.personalInfo.email}</span>}
+                        {data.personalInfo.phone && <span className="flex items-center gap-2"><span className="material-symbols-outlined text-[16px]">call</span> {data.personalInfo.phone}</span>}
+                        {data.personalInfo.linkedin && <span className="flex items-center gap-2"><span className="material-symbols-outlined text-[16px]">link</span> LinkedIn Profile</span>}
                     </div>
                 </div>
             </div>
 
             {/* Content Grid */}
-            <div className="grid grid-cols-[2fr_1fr] gap-8">
+            <div className="grid grid-cols-[1.8fr_1fr] gap-16">
 
                 {/* Main Column */}
-                <div className="space-y-6">
+                <div className="space-y-12">
                     {/* Summary */}
                     {data.summary && (
-                        <div className="mb-6">
-                            <h3 className="text-[#a77c52] font-bold uppercase tracking-widest text-sm mb-2 border-b border-gray-100 pb-1">Professional Summary</h3>
-                            <p className="text-gray-700 text-sm leading-relaxed">{data.summary}</p>
+                        <div className="relative pl-6 border-l border-espresso/10">
+                            <h3 className="text-espresso font-black uppercase tracking-[0.3em] text-[10px] mb-4">Strategic Narrative</h3>
+                            <p className="text-[#1c1916]/80 text-sm leading-relaxed font-medium">{data.summary}</p>
                         </div>
                     )}
 
                     {/* Experience */}
                     {data.experience.length > 0 && (
-                        <div className="mb-6">
-                            <h3 className="text-[#a77c52] font-bold uppercase tracking-widest text-sm mb-3 border-b border-gray-100 pb-1">Experience</h3>
-                            <div className="space-y-4">
+                        <div>
+                            <div className="flex items-center gap-3 mb-6">
+                                <span className="w-8 h-px bg-espresso/20"></span>
+                                <h3 className="text-espresso font-black uppercase tracking-[0.3em] text-[10px]">Professional Milestone History</h3>
+                            </div>
+                            <div className="space-y-8">
                                 {data.experience.map((exp) => (
-                                    <div key={exp.id}>
-                                        <h4 className="font-bold text-gray-900">{exp.title}</h4>
-                                        <div className="flex justify-between text-xs text-gray-500 mb-1">
-                                            <span className="font-semibold">{exp.company}</span>
-                                            <span>{exp.startDate} - {exp.endDate || 'Present'}</span>
+                                    <div key={exp.id} className="relative pl-6 border-l border-espresso/10 group">
+                                        <div className="absolute -left-[4.5px] top-1.5 w-2 h-2 rounded-full bg-espresso/20"></div>
+                                        <h4 className="font-serif font-bold text-xl text-espresso leading-tight">{exp.title}</h4>
+                                        <div className="flex justify-between items-center mt-2 mb-3">
+                                            <span className="text-xs font-black uppercase tracking-widest text-espresso/60">{exp.company}</span>
+                                            <span className="text-[10px] font-bold text-[#1c1916]/40 uppercase tracking-widest bg-gray-50 px-3 py-1 rounded-full">{exp.startDate} — {exp.endDate || 'Active'}</span>
                                         </div>
-                                        <p className="text-sm text-gray-700 whitespace-pre-wrap">{exp.description}</p>
+                                        <p className="text-sm text-[#1c1916]/70 leading-relaxed whitespace-pre-wrap">{exp.description}</p>
                                     </div>
                                 ))}
                             </div>
@@ -629,15 +701,19 @@ const CVPrintView = React.forwardRef(({ data, certificates }, ref) => {
 
                     {/* Education */}
                     {data.education.length > 0 && (
-                        <div className="mb-6">
-                            <h3 className="text-[#a77c52] font-bold uppercase tracking-widest text-sm mb-3 border-b border-gray-100 pb-1">Education</h3>
-                            <div className="space-y-4">
+                        <div>
+                            <div className="flex items-center gap-3 mb-6">
+                                <span className="w-8 h-px bg-espresso/20"></span>
+                                <h3 className="text-espresso font-black uppercase tracking-[0.3em] text-[10px]">Academic Foundation</h3>
+                            </div>
+                            <div className="grid grid-cols-1 gap-6">
                                 {data.education.map((edu) => (
-                                    <div key={edu.id}>
-                                        <h4 className="font-bold text-gray-900">{edu.school}</h4>
-                                        <div className="flex justify-between text-xs text-gray-500 mb-1">
-                                            <span className="font-semibold">{edu.degree}</span>
-                                            <span>{edu.year}</span>
+                                    <div key={edu.id} className="relative pl-6 border-l border-espresso/10">
+                                        <div className="absolute -left-[4.5px] top-1.5 w-2 h-2 rounded-full bg-espresso/20"></div>
+                                        <h4 className="font-serif font-bold text-lg text-espresso">{edu.school}</h4>
+                                        <div className="flex justify-between items-center mt-1">
+                                            <span className="text-xs font-bold text-espresso/60 uppercase tracking-widest">{edu.degree}</span>
+                                            <span className="text-[10px] font-black text-[#1c1916]/30 uppercase tracking-widest">{edu.year}</span>
                                         </div>
                                     </div>
                                 ))}
@@ -647,21 +723,22 @@ const CVPrintView = React.forwardRef(({ data, certificates }, ref) => {
                 </div>
 
                 {/* Sidebar Column */}
-                <div className="space-y-6">
+                <div className="space-y-12">
 
                     {/* Certifications (Usafi) */}
                     {certificates.filter(c => data.selectedCertificates.includes(c.id)).length > 0 && (
                         <div>
-                            <h3 className="text-[#a77c52] font-bold uppercase tracking-widest text-sm mb-3 border-b border-gray-100 pb-1">Verified Credentials</h3>
-                            <div className="space-y-3">
+                            <h3 className="text-espresso font-black uppercase tracking-[0.3em] text-[10px] mb-6">Verified Credentials</h3>
+                            <div className="space-y-4">
                                 {certificates.filter(c => data.selectedCertificates.includes(c.id)).map(cert => (
-                                    <div key={cert.id} className="bg-[#FAF5E8] p-3 rounded-lg border border-[#a77c52]/20">
-                                        <div className="flex items-center gap-1 mb-1">
-                                            <span className="material-symbols-outlined text-[#a77c52] text-[16px]">verified</span>
-                                            <span className="text-xs font-bold text-[#a77c52] uppercase">Usafi Certified</span>
+                                    <div key={cert.id} className="bg-espresso/[0.03] p-6 rounded-2xl border border-espresso/5 relative overflow-hidden group">
+                                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/20"></div>
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <span className="material-symbols-outlined text-espresso text-[16px]">verified</span>
+                                            <span className="text-[9px] font-black text-espresso uppercase tracking-[0.2em]">Usafi Strategist</span>
                                         </div>
-                                        <p className="font-bold text-sm leading-tight text-[#321C00]">{cert.title}</p>
-                                        <p className="text-[10px] text-gray-500 mt-1">Issued: {cert.date}</p>
+                                        <p className="font-serif font-bold text-sm leading-tight text-espresso">{cert.title}</p>
+                                        <p className="text-[9px] font-bold text-[#1c1916]/40 mt-2 uppercase tracking-widest">Authenticated {cert.date}</p>
                                     </div>
                                 ))}
                             </div>
@@ -671,10 +748,10 @@ const CVPrintView = React.forwardRef(({ data, certificates }, ref) => {
                     {/* Skills */}
                     {(data.skills.other?.length > 0) && (
                         <div>
-                            <h3 className="text-[#a77c52] font-bold uppercase tracking-widest text-sm mb-3 border-b border-gray-100 pb-1">Skills</h3>
+                            <h3 className="text-espresso font-black uppercase tracking-[0.3em] text-[10px] mb-6">Core Capabilities</h3>
                             <div className="flex flex-wrap gap-2">
                                 {data.skills.other.map((skill, i) => (
-                                    <span key={i} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md">{skill}</span>
+                                    <span key={i} className="px-4 py-2 bg-gray-50 text-espresso text-[10px] font-black uppercase tracking-widest rounded-xl border border-espresso/5">{skill}</span>
                                 ))}
                             </div>
                         </div>
@@ -684,8 +761,10 @@ const CVPrintView = React.forwardRef(({ data, certificates }, ref) => {
 
             </div>
 
-            <div className="mt-12 text-center text-xs text-gray-400 border-t pt-4">
-                Generated by Usafi Barista Training Center CV Builder
+            {/* Footer */}
+            <div className="mt-20 pt-10 border-t border-espresso/10 flex justify-between items-center text-[#1c1916]/30">
+                <p className="text-[10px] font-black uppercase tracking-[0.4em]">Usafi Barista Training Center • Career Division</p>
+                <p className="text-[10px] font-bold italic">Authenticated Digital Document</p>
             </div>
         </div>
     );

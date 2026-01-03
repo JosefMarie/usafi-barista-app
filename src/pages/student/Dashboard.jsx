@@ -102,25 +102,30 @@ export function Dashboard() {
                     <h1 className="text-3xl font-serif font-bold text-espresso dark:text-white">
                         Welcome back, {(user?.name || user?.fullName || user?.email || 'Student').split(' ')[0]}!
                     </h1>
-                    <p className="text-espresso/70 dark:text-white/70 mt-1">
+                    <p className="text-espresso/60 dark:text-white/60 font-medium mt-1">
                         Ready to brew some excellence today?
                     </p>
                 </div>
-                <div className="text-sm text-espresso/60 dark:text-white/60 bg-white dark:bg-[#2c2825] px-4 py-2 rounded-lg shadow-sm border border-gray-100 dark:border-white/5">
-                    {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                <div className="bg-[#F5DEB3] dark:bg-white/5 px-6 py-3 rounded-2xl shadow-xl border border-espresso/10 relative overflow-hidden group">
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">Current Expedition</p>
+                    <p className="text-sm font-serif font-bold text-espresso dark:text-white">
+                        {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+                    </p>
                 </div>
             </div>
 
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {stats.map((stat) => (
-                    <div key={stat.label} className="bg-white dark:bg-[#2c2825] p-6 rounded-xl shadow-sm border border-gray-100 dark:border-white/5 flex items-center gap-4 transition-transform hover:scale-[1.02]">
-                        <div className={cn("h-12 w-12 rounded-full flex items-center justify-center text-white shadow-md", stat.color)}>
+                    <div key={stat.label} className="bg-[#F5DEB3] dark:bg-white/5 p-6 rounded-3xl shadow-xl border border-espresso/10 flex items-center gap-5 transition-all hover:-translate-y-1 relative overflow-hidden group">
+                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                        <div className={cn("h-14 w-14 rounded-2xl flex items-center justify-center text-white shadow-2xl relative z-10 rotate-3 group-hover:rotate-0 transition-transform", stat.color.replace('bg-', 'bg-espresso/80 '))}>
                             <span className="material-symbols-outlined text-2xl">{stat.icon}</span>
                         </div>
-                        <div>
-                            <p className="text-2xl font-bold text-espresso dark:text-white">{stat.value}</p>
-                            <p className="text-sm font-medium text-espresso/60 dark:text-white/60">{stat.label}</p>
+                        <div className="relative z-10">
+                            <p className="text-2xl font-black text-espresso dark:text-white tracking-tight">{stat.value}</p>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">{stat.label}</p>
                         </div>
                     </div>
                 ))}
@@ -132,107 +137,115 @@ export function Dashboard() {
                 {/* Left Column: Featured Course */}
                 <div className="lg:col-span-2 space-y-6">
                     <div className="flex items-center justify-between">
-                        <h2 className="text-xl font-bold text-espresso dark:text-white">Your Main Course</h2>
-                        <Link to="/student/courses" className="text-sm font-medium text-primary hover:underline">View Map</Link>
+                        <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 uppercase tracking-[0.2em] flex items-center gap-3">
+                            <span className="h-2 w-2 rounded-full bg-espresso"></span>
+                            Primary Curriculum
+                        </h2>
+                        <Link to="/student/courses" className="text-[10px] font-black uppercase tracking-widest text-espresso/40 hover:text-espresso transition-colors">View Learning Map</Link>
                     </div>
 
                     {course ? (
-                        <div className="bg-white dark:bg-[#2c2825] rounded-xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden flex flex-col md:flex-row group cursor-pointer hover:shadow-md transition-all">
-                            <div className="md:w-1/3 h-48 md:h-auto overflow-hidden relative">
+                        <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/10 overflow-hidden flex flex-col md:flex-row group cursor-pointer hover:shadow-2xl transition-all relative">
+                            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                            <div className="md:w-2/5 h-56 md:h-auto overflow-hidden relative">
                                 <div
-                                    className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
+                                    className="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-700"
                                     style={{ backgroundImage: `url('${course.thumbnail}')` }}
                                 ></div>
-                                <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors" />
+                                <div className="absolute inset-0 bg-espresso/20 group-hover:bg-transparent transition-colors" />
                             </div>
-                            <div className="p-6 md:w-2/3 flex flex-col justify-between">
+                            <div className="p-8 md:w-3/5 flex flex-col justify-between relative z-10">
                                 <div>
-                                    <div className="flex items-center justify-between mb-2">
-                                        <span className="text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded-full uppercase tracking-wider">Active</span>
-                                        <span className="text-xs text-espresso/50 dark:text-white/50">
-                                            Updated: {course.updatedAt?.toDate ? new Date(course.updatedAt.toDate()).toLocaleDateString() : 'Recently'}
+                                    <div className="flex items-center justify-between mb-4">
+                                        <span className="text-[10px] font-black text-white bg-espresso px-3 py-1 rounded-full uppercase tracking-widest shadow-lg">In Extraction</span>
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">
+                                            Sync: {course.updatedAt?.toDate ? new Date(course.updatedAt.toDate()).toLocaleDateString() : 'Active'}
                                         </span>
                                     </div>
-                                    <h3 className="text-lg font-bold text-espresso dark:text-white mb-2 group-hover:text-primary transition-colors">
+                                    <h3 className="text-2xl font-serif font-bold text-espresso dark:text-white mb-3 group-hover:translate-x-1 transition-transform">
                                         {course.title}
                                     </h3>
-                                    <p className="text-sm text-espresso/70 dark:text-white/70 line-clamp-2 mb-4">
+                                    <p className="text-sm font-medium text-espresso/60 dark:text-white/60 line-clamp-2 mb-6 leading-relaxed">
                                         {course.description || 'Master the art of coffee with this comprehensive guide.'}
                                     </p>
                                 </div>
 
-                                <div className="space-y-2">
-                                    {/* Progress Bar placeholder if needed */}
-                                    <button
-                                        onClick={() => navigate('/student/courses')}
-                                        className="w-full mt-2 text-center py-2 rounded-lg bg-espresso text-white text-sm font-medium hover:bg-espresso/90 dark:bg-white dark:text-espresso dark:hover:bg-white/90 transition-colors"
-                                    >
-                                        Continue Learning
-                                    </button>
-                                </div>
+                                <button
+                                    onClick={() => navigate('/student/courses')}
+                                    className="w-full py-4 bg-espresso text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:shadow-2xl transition-all shadow-xl active:scale-95"
+                                >
+                                    Resume Professional Journey
+                                </button>
                             </div>
                         </div>
                     ) : (
-                        <div className="bg-white dark:bg-[#2c2825] rounded-xl shadow-sm border border-gray-100 dark:border-white/5 p-8 text-center">
-                            <p className="text-espresso/60">No active course found.</p>
+                        <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/10 p-12 text-center relative overflow-hidden group">
+                            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                            <p className="text-espresso/40 dark:text-white/40 font-black uppercase tracking-widest text-sm">No active curriculum detected.</p>
                         </div>
                     )}
                 </div>
 
                 {/* Right Column: Up Next */}
                 <div className="space-y-6">
-                    <h2 className="text-xl font-bold text-espresso dark:text-white">Up Next</h2>
+                    <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 uppercase tracking-[0.2em] flex items-center gap-3">
+                        <span className="h-2 w-2 rounded-full bg-espresso"></span>
+                        Strategic Next Step
+                    </h2>
 
                     {nextModule ? (
-                        <div className="bg-white dark:bg-[#2c2825] rounded-xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden animate-slide-in">
-                            <div className="relative h-32">
+                        <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/10 overflow-hidden animate-slide-in relative group">
+                            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                            <div className="relative h-40 overflow-hidden">
                                 <img
                                     src={nextModule.content?.[0]?.image || 'https://images.unsplash.com/photo-1447933601400-b8a90d437166?q=80&w=2555&auto=format&fit=crop'}
                                     alt="Module"
-                                    className="w-full h-full object-cover"
+                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
+                                <div className="absolute inset-0 bg-gradient-to-t from-espresso via-espresso/20 to-transparent flex items-end p-6">
                                     <div className="text-white">
-                                        <p className="text-xs font-medium opacity-90">Next Module</p>
-                                        <h3 className="font-bold text-lg leading-tight line-clamp-1">{nextModule.title}</h3>
+                                        <p className="text-[10px] font-black uppercase tracking-widest opacity-80 mb-1">Upcoming Module</p>
+                                        <h3 className="font-serif font-bold text-xl leading-tight line-clamp-1">{nextModule.title}</h3>
                                     </div>
                                 </div>
                             </div>
-                            <div className="p-5 space-y-4">
-                                <div className="flex items-start gap-3">
-                                    <div className="bg-primary/10 p-2 rounded-lg text-primary">
-                                        <span className="material-symbols-outlined text-xl">timer</span>
+                            <div className="p-6 space-y-5 relative z-10">
+                                <div className="flex items-center justify-between py-1">
+                                    <div className="flex items-center gap-3">
+                                        <div className="bg-espresso/5 p-2 rounded-xl text-espresso/40">
+                                            <span className="material-symbols-outlined text-xl">timer</span>
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">Duration</p>
+                                            <p className="text-sm font-black text-espresso dark:text-white">{nextModule.duration || '30'} mins</p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p className="text-sm font-bold text-espresso dark:text-white">{nextModule.duration || '30'} mins</p>
-                                        <p className="text-xs text-espresso/60 dark:text-white/60">Estimated Time</p>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-start gap-3">
-                                    <div className="bg-primary/10 p-2 rounded-lg text-primary">
-                                        <span className="material-symbols-outlined text-xl">topic</span>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-bold text-espresso dark:text-white">{nextModule.content?.length || 0} Slides</p>
-                                        <p className="text-xs text-espresso/60 dark:text-white/60">Content & Quiz</p>
+                                    <div className="flex items-center gap-3">
+                                        <div className="bg-espresso/5 p-2 rounded-xl text-espresso/40">
+                                            <span className="material-symbols-outlined text-xl">layers</span>
+                                        </div>
+                                        <div>
+                                            <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">Units</p>
+                                            <p className="text-sm font-black text-espresso dark:text-white">{nextModule.content?.length || 0} Slides</p>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <button
                                     onClick={() => navigate(`/student/courses/${BEAN_TO_BREW_ID}?module=${nextModule.id}`)}
-                                    className="w-full py-2.5 bg-primary text-white font-bold rounded-lg hover:bg-primary-dark transition-colors flex items-center justify-center gap-2"
+                                    className="w-full py-4 bg-white/40 hover:bg-white text-espresso font-black uppercase tracking-widest text-[10px] rounded-2xl transition-all shadow-sm flex items-center justify-center gap-2 border border-espresso/5 active:scale-95"
                                 >
-                                    Start Module <span className="material-symbols-outlined text-lg">arrow_forward</span>
+                                    Initiate Module <span className="material-symbols-outlined text-lg">arrow_forward</span>
                                 </button>
                             </div>
                         </div>
                     ) : (
-                        <div className="bg-green-50 dark:bg-green-900/10 p-6 rounded-xl border border-green-100 dark:border-green-900/30 text-center">
-                            <span className="material-symbols-outlined text-4xl text-green-600 mb-2">check_circle</span>
-                            <h3 className="font-bold text-green-800 dark:text-green-200">All Caught Up!</h3>
-                            <p className="text-xs text-green-600 dark:text-green-400 mt-1">
-                                You have completed all assigned modules. Great job!
+                        <div className="bg-espresso/5 dark:bg-white/5 p-8 rounded-3xl border border-espresso/10 dark:border-white/10 text-center relative overflow-hidden group">
+                            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                            <span className="material-symbols-outlined text-5xl text-espresso/20 dark:text-white/20 mb-4 block group-hover:scale-110 transition-transform">auto_awesome</span>
+                            <h3 className="font-serif font-bold text-espresso dark:text-white text-lg">Peak Excellence Achieved</h3>
+                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-espresso/40 dark:text-white/40 mt-2">
+                                All objectives successfully extracted.
                             </p>
                         </div>
                     )}

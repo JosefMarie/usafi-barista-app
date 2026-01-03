@@ -198,10 +198,11 @@ export function ManageBusinessCourse() {
     if (!course) return <div className="p-8">Course not found</div>;
 
     return (
-        <div className="container mx-auto max-w-5xl space-y-8">
+        <div className="w-full px-4 space-y-8">
             {/* Header */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white dark:bg-white/5 p-6 rounded-2xl border border-gray-100 dark:border-white/5">
-                <div>
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-[#F5DEB3] dark:bg-[#1c1916] p-6 rounded-[2rem] border border-espresso/10 relative overflow-hidden shadow-lg">
+                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso"></div>
+                <div className="pl-4">
                     <div className="flex items-center gap-2 mb-2">
                         <Link to="/admin/business/courses" className="text-sm text-espresso/50 dark:text-white/50 hover:text-primary">
                             Courses
@@ -243,7 +244,7 @@ export function ManageBusinessCourse() {
                     </div>
                 ) : (
                     chapters.map((chapter) => (
-                        <div key={chapter.id} className="bg-white dark:bg-white/5 p-4 rounded-xl border border-gray-100 dark:border-white/5 flex items-center gap-4 group hover:shadow-md transition-all">
+                        <div key={chapter.id} className="bg-white/50 dark:bg-white/5 p-5 rounded-[1.5rem] border border-espresso/5 dark:border-white/5 flex items-center gap-4 group hover:shadow-xl hover:bg-white/80 transition-all">
                             <div className="h-10 w-10 bg-gray-100 dark:bg-white/10 rounded-lg flex items-center justify-center font-bold text-espresso/50 dark:text-white/50">
                                 {chapter.order}
                             </div>
@@ -280,8 +281,8 @@ export function ManageBusinessCourse() {
 
             {/* Edit/Create Modal - Full Screen Style or Large Modal */}
             {isChapterModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-                    <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl w-full max-w-4xl h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
+                    <div className="bg-[#FAF5E8] dark:bg-[#1e1e1e] rounded-[2rem] w-full max-w-4xl h-[90vh] flex flex-col shadow-2xl overflow-hidden border border-espresso/10">
                         <div className="p-6 border-b border-gray-200 dark:border-white/10 flex justify-between items-center bg-gray-50 dark:bg-black/20">
                             <h2 className="text-lg font-bold text-espresso dark:text-white">
                                 {editingChapter ? 'Edit Chapter' : 'New Chapter'}
@@ -592,3 +593,4 @@ export function ManageBusinessCourse() {
         </div>
     );
 }
+

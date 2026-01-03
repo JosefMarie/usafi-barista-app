@@ -5,8 +5,9 @@ export function PrivacyPolicy() {
     const navigate = useNavigate();
 
     return (
-        <div className="min-h-screen bg-background-light dark:bg-background-dark py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto bg-white dark:bg-[#2c2825] p-8 sm:p-12 rounded-2xl shadow-xl">
+        <div className="min-h-screen bg-background-light dark:bg-background-dark py-24 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-4xl mx-auto bg-[#F5DEB3] dark:bg-white/5 p-8 sm:p-12 rounded-3xl shadow-2xl border border-espresso/10 relative overflow-hidden group">
+                <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                 <button
                     onClick={() => navigate(-1)}
                     className="flex items-center gap-2 text-primary font-bold hover:underline mb-8"

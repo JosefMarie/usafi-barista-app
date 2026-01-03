@@ -12,8 +12,9 @@ export function PaymentPending() {
 
     return (
         <div className="min-h-screen bg-background-light dark:bg-background-dark flex items-center justify-center p-4 font-display">
-            <div className="bg-white dark:bg-white/5 p-8 md:p-12 rounded-3xl shadow-xl max-w-lg w-full text-center border border-espresso/5">
-                <div className="h-24 w-24 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <div className="bg-[#F5DEB3] dark:bg-white/5 p-8 md:p-12 rounded-3xl shadow-2xl max-w-lg w-full text-center border border-espresso/10 relative overflow-hidden group">
+                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                <div className="h-24 w-24 bg-espresso text-white rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-lg group-hover:scale-110 transition-transform">
                     <span className="material-symbols-outlined text-5xl">payments</span>
                 </div>
 
@@ -25,7 +26,7 @@ export function PaymentPending() {
                     To access the exclusive job opportunities, you need to pay the one-time "Ready for Opportunity" fee.
                 </p>
 
-                <div className="bg-gray-50 dark:bg-black/20 p-6 rounded-2xl mb-8 text-left">
+                <div className="bg-white/50 dark:bg-black/20 p-6 rounded-2xl mb-8 text-left border border-espresso/10">
                     <p className="text-sm font-bold text-espresso/50 dark:text-white/50 uppercase tracking-wide mb-2">Instructions:</p>
                     <ol className="list-decimal list-inside space-y-3 text-espresso dark:text-white font-medium">
                         <li>Send <strong>5,000 RWF</strong> to Momo Pay.</li>

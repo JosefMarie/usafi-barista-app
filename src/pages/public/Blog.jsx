@@ -81,8 +81,8 @@ export function Blog() {
                             className={cn(
                                 "px-6 py-2 rounded-full text-sm font-bold transition-all",
                                 activeCategory === cat
-                                    ? "bg-primary text-white shadow-lg scale-105"
-                                    : "bg-white dark:bg-white/5 border border-[#e0dbd6] dark:border-white/10 text-espresso/70 dark:text-white/70 hover:bg-primary/10 hover:text-primary"
+                                    ? "bg-espresso text-white shadow-lg scale-105"
+                                    : "bg-[#F5DEB3] dark:bg-white/5 border border-espresso/10 dark:border-white/10 text-espresso/70 dark:text-white/70 hover:bg-espresso/10 hover:text-espresso"
                             )}
                         >
                             {cat}
@@ -95,23 +95,25 @@ export function Blog() {
             <section className="container mx-auto px-6 mb-20">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {filteredPosts.map((post) => (
-                        <article key={post.id} className="bg-white dark:bg-white/5 rounded-2xl overflow-hidden shadow-md border border-[#e0dbd6] dark:border-white/10 hover:-translate-y-1 transition-transform duration-300">
+                        <article key={post.id} className="bg-[#F5DEB3] dark:bg-white/5 rounded-2xl overflow-hidden shadow-xl border border-espresso/10 hover:-translate-y-2 transition-all duration-300 relative group">
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/20 group-hover:bg-espresso transition-colors z-10"></div>
                             <div className="h-56 overflow-hidden">
-                                <img src={post.image} alt={post.title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
+                                <img src={post.image} alt={post.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                             </div>
                             <div className="p-6">
-                                <div className="flex items-center justify-between mb-3 text-xs text-espresso/50 dark:text-white/50 uppercase tracking-widest font-bold">
-                                    <span className="text-primary">{post.category}</span>
-                                    <span>{post.date}</span>
+                                <div className="flex items-center justify-between mb-3 text-[10px] text-espresso uppercase tracking-[0.2em] font-black">
+                                    <span className="bg-espresso text-white px-2 py-0.5 rounded-md">{post.category}</span>
+                                    <span className="opacity-50">{post.date}</span>
                                 </div>
-                                <h3 className="font-serif text-xl font-bold text-espresso dark:text-white mb-3 hover:text-primary transition-colors cursor-pointer">
+                                <h3 className="font-serif text-xl font-bold text-espresso dark:text-white mb-3 hover:text-primary transition-colors cursor-pointer leading-tight">
                                     {post.title}
                                 </h3>
-                                <p className="text-sm text-espresso/70 dark:text-white/70 mb-4 line-clamp-3">
+                                <p className="text-sm text-espresso/70 dark:text-white/70 mb-4 line-clamp-3 leading-relaxed">
                                     {post.snippet}
                                 </p>
-                                <Link to="#" className="inline-flex items-center text-primary font-bold text-sm group">
-                                    {t('blog.posts.read_more')} <span className="material-symbols-outlined text-lg ml-1 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                                <Link to="#" className="inline-flex items-center text-espresso font-black text-[11px] uppercase tracking-widest group/link">
+                                    {t('blog.posts.read_more')}
+                                    <span className="material-symbols-outlined text-lg ml-2 group-hover/link:translate-x-1 transition-transform">arrow_right_alt</span>
                                 </Link>
                             </div>
                         </article>

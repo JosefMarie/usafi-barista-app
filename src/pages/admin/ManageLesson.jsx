@@ -136,7 +136,7 @@ export function ManageLesson() {
             </div>
 
             {/* Main Content */}
-            <main className="flex-1 w-full max-w-md mx-auto flex flex-col pb-24 px-4 pt-2 gap-6 overflow-y-auto">
+            <main className="flex-1 w-full  flex flex-col pb-24 px-2 pt-2 gap-6 overflow-y-auto">
 
                 {/* Lesson Title Section */}
                 <div>
@@ -268,7 +268,7 @@ export function ManageLesson() {
             </main>
 
             {/* Sticky Footer Actions */}
-            <div className="fixed bottom-0 w-full max-w-md mx-auto left-0 right-0 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-t border-primary/10 p-4 safe-area-pb z-20">
+            <div className="fixed bottom-0 w-full  left-0 right-0 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-t border-primary/10 p-4 safe-area-pb z-20">
                 <div className="flex gap-3">
                     <button
                         onClick={() => handleSave('draft')}
@@ -293,3 +293,6 @@ export function ManageLesson() {
         </div>
     );
 }
+
+
+

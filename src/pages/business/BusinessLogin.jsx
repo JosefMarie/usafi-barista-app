@@ -73,7 +73,8 @@ export function BusinessLogin() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-background-light dark:bg-background-dark py-12 px-4 sm:px-6 lg:px-8 font-display">
-            <div className="max-w-md w-full space-y-8 bg-white dark:bg-white/5 p-8 rounded-3xl shadow-xl border border-espresso/10 dark:border-white/10">
+            <div className="max-w-md w-full space-y-8 bg-[#F5DEB3] dark:bg-white/5 p-10 rounded-3xl shadow-2xl border border-espresso/10 relative overflow-hidden group">
+                <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                 <div className="text-center">
                     <span className="material-symbols-outlined text-5xl text-primary mb-2">business_center</span>
                     <h2 className="mt-2 text-3xl font-bold text-espresso dark:text-white font-serif">
@@ -100,7 +101,7 @@ export function BusinessLogin() {
                                 type="email"
                                 autoComplete="email"
                                 required
-                                className="appearance-none relative block w-full px-4 py-3 border border-gray-300 dark:border-white/20 placeholder-gray-500 text-espresso dark:text-white rounded-xl focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm bg-transparent"
+                                className="appearance-none relative block w-full px-4 py-3 border border-espresso/10 placeholder-espresso/40 text-espresso dark:text-white rounded-xl focus:outline-none focus:ring-espresso focus:border-espresso focus:z-10 sm:text-sm bg-white/50 dark:bg-white/5"
                                 placeholder="Email address"
                                 value={formData.email}
                                 onChange={handleChange}
@@ -114,7 +115,7 @@ export function BusinessLogin() {
                                 type="password"
                                 autoComplete="current-password"
                                 required
-                                className="appearance-none relative block w-full px-4 py-3 border border-gray-300 dark:border-white/20 placeholder-gray-500 text-espresso dark:text-white rounded-xl focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm bg-transparent"
+                                className="appearance-none relative block w-full px-4 py-3 border border-espresso/10 placeholder-espresso/40 text-espresso dark:text-white rounded-xl focus:outline-none focus:ring-espresso focus:border-espresso focus:z-10 sm:text-sm bg-white/50 dark:bg-white/5"
                                 placeholder="Password"
                                 value={formData.password}
                                 onChange={handleChange}

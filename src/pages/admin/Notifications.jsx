@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { collection, query, where, onSnapshot, orderBy, doc, writeBatch } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
+import { cn } from '../../lib/utils';
 
 export function Notifications() {
     const [activeTab, setActiveTab] = useState('All');
@@ -72,87 +73,124 @@ export function Notifications() {
     const earlierNotifications = notifications.filter(n => n.read);
 
     return (
-        <div className="max-w-xl mx-auto min-h-screen bg-background-light dark:bg-background-dark shadow-xl">
-            {/* Header */}
-            <header className="sticky top-0 z-20 flex items-center justify-between px-6 py-5 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm">
-                <h1 className="text-espresso dark:text-white text-2xl font-serif font-bold leading-tight tracking-tight">Notifications</h1>
-                <button
-                    onClick={handleMarkAllRead}
-                    className="text-primary hover:text-primary/80 text-sm font-semibold transition-colors"
-                >
-                    Mark all read
-                </button>
-            </header>
+        <div className="flex-1 flex flex-col h-full bg-[#F5DEB3] dark:bg-[#1c1916] overflow-y-auto animate-fade-in pb-32">
+            <div className=" w-full px-2 py-10 space-y-10">
+                {/* Header Section */}
+                <div className="flex items-center justify-between relative">
+                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 -ml-10"></div>
+                    <div>
+                        <h1 className="text-4xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none">Directive Registry</h1>
+                        <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] mt-2">Administrative Protocol & Intelligence Feed</p>
+                    </div>
+                    <button
+                        onClick={handleMarkAllRead}
+                        className="text-[10px] font-black text-espresso uppercase tracking-[0.2em] hover:text-espresso/60 transition-colors border-b-2 border-espresso/20 pb-1"
+                    >
+                        Mark all archived
+                    </button>
+                </div>
 
-            {/* Filter Chips */}
-            <div className="w-full overflow-x-auto no-scrollbar pb-2 pt-1 px-6">
-                <div className="flex gap-3 min-w-max">
+                {/* Filter Array */}
+                <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
                     {['All', 'Urgency', 'Enrollment', 'Inventory'].map(tab => (
                         <button
                             key={tab}
                             onClick={() => setActiveTab(tab)}
-                            className={`flex h-9 shrink-0 items-center justify-center px-5 rounded-full shadow-md transition-transform active:scale-95 ${activeTab === tab ? 'bg-primary text-white' : 'bg-white dark:bg-[#2c2825] border border-primary/20 text-espresso dark:text-white/90'}`}
+                            className={cn(
+                                "flex h-10 shrink-0 items-center justify-center px-6 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all shadow-sm",
+                                activeTab === tab
+                                    ? "bg-espresso text-white shadow-lg"
+                                    : "bg-white/40 dark:bg-black/20 border border-espresso/10 text-espresso/60 hover:bg-white/60"
+                            )}
                         >
-                            <span className="text-sm font-medium">{tab}</span>
+                            {tab}
                         </button>
                     ))}
                 </div>
+
+                {/* Directives Stream */}
+                <div className="space-y-12">
+                    {/* New Directives */}
+                    {newNotifications.length > 0 && (
+                        <div className="space-y-6">
+                            <h3 className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.4em] flex items-center gap-3">
+                                <span className="w-8 h-px bg-espresso/20"></span>
+                                Priority Synchronizations
+                            </h3>
+                            <div className="grid gap-6">
+                                {newNotifications.map(n => (
+                                    <div key={n.id} className="group relative bg-white dark:bg-black/40 rounded-[2.5rem] p-8 border border-primary/20 shadow-xl transition-all hover:shadow-2xl hover:-translate-y-1 overflow-hidden">
+                                        <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso group-hover:bg-espresso/80 transition-colors"></div>
+                                        <div className="flex gap-8 items-start">
+                                            <div className={`w-16 h-16 rounded-3xl flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform ${getColor(n.type)}`}>
+                                                <span className="material-symbols-outlined text-[32px]">{getIcon(n.type)}</span>
+                                            </div>
+                                            <div className="flex-1 space-y-2">
+                                                <div className="flex justify-between items-start">
+                                                    <h4 className="text-2xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-tight group-hover:text-espresso/80 transition-colors">
+                                                        {n.title}
+                                                    </h4>
+                                                    <span className="text-[9px] font-black text-espresso/40 uppercase tracking-widest">{n.time}</span>
+                                                </div>
+                                                <p className="text-espresso/60 dark:text-white/60 text-sm leading-relaxed font-medium italic">
+                                                    "{n.desc}"
+                                                </p>
+                                                <div className="absolute top-8 right-8 h-3 w-3 rounded-full bg-espresso animate-pulse shadow-[0_0_15px_rgba(75,56,50,0.5)]"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Archived Directives */}
+                    {earlierNotifications.length > 0 && (
+                        <div className="space-y-6">
+                            <h3 className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.4em] flex items-center gap-3">
+                                <span className="w-8 h-px bg-espresso/20"></span>
+                                Historical Archives
+                            </h3>
+                            <div className="grid gap-4">
+                                {earlierNotifications.map(n => (
+                                    <div key={n.id} className="group relative bg-white/20 dark:bg-black/20 rounded-3xl p-6 border border-espresso/5 shadow-sm transition-all hover:bg-white/40 overflow-hidden opacity-60 hover:opacity-100">
+                                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/10 group-hover:bg-espresso/20 transition-colors"></div>
+                                        <div className="flex gap-6 items-center">
+                                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-inner ${getColor(n.type)} opacity-50 group-hover:opacity-100 transition-opacity`}>
+                                                <span className="material-symbols-outlined text-[24px]">{getIcon(n.type)}</span>
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex justify-between items-center mb-1">
+                                                    <h4 className="text-base font-serif font-black text-espresso dark:text-white uppercase tracking-tight truncate">
+                                                        {n.title}
+                                                    </h4>
+                                                    <span className="text-[8px] font-black text-espresso/30 uppercase tracking-widest">{n.time}</span>
+                                                </div>
+                                                <p className="text-espresso/40 dark:text-white/40 text-[10px] font-medium truncate uppercase tracking-wider">
+                                                    {n.desc}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {notifications.length === 0 && (
+                        <div className="flex flex-col items-center justify-center py-32 gap-6 opacity-20">
+                            <span className="material-symbols-outlined text-8xl">encryption_lock</span>
+                            <div className="text-center">
+                                <h3 className="text-[10px] font-black uppercase tracking-[0.5em]">System Lockdown</h3>
+                                <p className="text-[8px] font-black uppercase tracking-[0.3em] mt-2">Zero active directives detected in primary stream</p>
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
-
-            <main className="flex-1 flex flex-col gap-4 p-6 pt-4">
-                {/* New Section */}
-                {newNotifications.length > 0 && (
-                    <div className="flex flex-col gap-3">
-                        <h3 className="text-xs font-bold uppercase tracking-wider text-espresso/60 dark:text-white/50 pl-1 font-serif">New (Unread)</h3>
-                        {newNotifications.map(n => (
-                            <div key={n.id} className="group relative flex items-start gap-4 rounded-2xl bg-white dark:bg-[#2c2825] p-4 shadow-sm border-l-4 border-primary transition-all active:bg-gray-50 dark:active:bg-gray-800">
-                                <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${getColor(n.type)}`}>
-                                    <span className="material-symbols-outlined">{getIcon(n.type)}</span>
-                                </div>
-                                <div className="flex flex-1 flex-col gap-1">
-                                    <div className="flex justify-between items-start">
-                                        <p className="text-espresso dark:text-white text-base font-semibold leading-tight">{n.title}</p>
-                                        <span className="text-xs font-medium text-primary shrink-0 ml-2">{n.time}</span>
-                                    </div>
-                                    <p className="text-espresso/70 dark:text-white/70 text-sm leading-normal">{n.desc}</p>
-                                </div>
-                                <div className="absolute top-4 right-4 h-2 w-2 rounded-full bg-primary ring-2 ring-white dark:ring-[#2c2825]"></div>
-                            </div>
-                        ))}
-                    </div>
-                )}
-
-                {/* Earlier Section */}
-                {earlierNotifications.length > 0 && (
-                    <div className="flex flex-col gap-3 mt-2">
-                        <h3 className="text-xs font-bold uppercase tracking-wider text-espresso/60 dark:text-white/50 pl-1 font-serif">Earlier (Read)</h3>
-                        {earlierNotifications.map(n => (
-                            <div key={n.id} className="relative flex items-start gap-4 rounded-2xl bg-transparent p-4 hover:bg-white/50 dark:hover:bg-[#2c2825]/50 transition-colors border border-transparent hover:border-black/5">
-                                <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${getColor(n.type)}`}>
-                                    <span className="material-symbols-outlined">{getIcon(n.type)}</span>
-                                </div>
-                                <div className="flex flex-1 flex-col gap-1">
-                                    <div className="flex justify-between items-start">
-                                        <p className="text-espresso dark:text-white text-base font-medium leading-tight opacity-90">{n.title}</p>
-                                        <span className="text-xs text-espresso/50 dark:text-white/40 shrink-0 ml-2">{n.time}</span>
-                                    </div>
-                                    <p className="text-espresso/60 dark:text-white/60 text-sm leading-normal">{n.desc}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
-
-                {notifications.length === 0 && (
-                    <div className="flex flex-col items-center justify-center h-40 text-center text-espresso/50 dark:text-white/50">
-                        <span className="material-symbols-outlined text-4xl mb-2">notifications_off</span>
-                        <p>No notifications yet</p>
-                    </div>
-                )}
-            </main>
-
-            {/* Bottom Nav Simulation */}
-            <div className="h-24"></div>
         </div>
     );
 }
+
+
+

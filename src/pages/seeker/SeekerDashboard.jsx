@@ -58,30 +58,30 @@ export function SeekerDashboard() {
 
     /* Simple Header for Seeker */
     const SeekerHeader = () => (
-        <header className="bg-white dark:bg-white/5 border-b border-espresso/5 sticky top-0 z-20 px-6 py-4">
+        <header className="bg-[#F5DEB3] dark:bg-[#1c1916] border-b border-espresso/10 sticky top-0 z-20 px-6 py-4 shadow-sm">
             <div className="container mx-auto flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-white">
-                        <span className="material-symbols-outlined text-lg">coffee</span>
+                <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-xl bg-espresso flex items-center justify-center text-white shadow-lg shadow-espresso/20">
+                        <span className="material-symbols-outlined text-xl">coffee</span>
                     </div>
-                    <span className="font-serif text-lg font-bold text-espresso dark:text-white">
+                    <span className="font-serif text-xl font-bold text-espresso dark:text-white tracking-tight">
                         Usafi Opportunities
                     </span>
                 </div>
                 <div className="flex items-center gap-4">
-                    <span className="text-sm font-medium text-espresso dark:text-white hidden md:block">
-                        Welcome, {user.name}
+                    <span className="text-sm font-bold text-espresso dark:text-white hidden md:block bg-white/40 dark:bg-white/5 px-4 py-2 rounded-xl border border-white/20">
+                        Hello, {user.name}
                     </span>
                     <Link
                         to="/seeker/profile"
-                        className="text-sm font-bold text-primary hover:bg-primary/5 px-4 py-2 rounded-xl transition-colors flex items-center gap-1"
+                        className="text-sm font-black text-white bg-espresso hover:bg-espresso/90 px-5 py-2.5 rounded-xl transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-2 uppercase tracking-wide"
                     >
                         <span className="material-symbols-outlined text-lg">person</span>
                         <span className="hidden sm:inline">Profile</span>
                     </Link>
                     <button
                         onClick={handleLogout}
-                        className="text-sm font-bold text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 px-4 py-2 rounded-xl transition-colors"
+                        className="text-sm font-bold text-espresso hover:bg-white/40 px-4 py-2 rounded-xl transition-colors flex items-center gap-1"
                     >
                         Sign Out
                     </button>
@@ -119,7 +119,8 @@ export function SeekerDashboard() {
                             </div>
                         ) : (
                             jobs.map(job => (
-                                <div key={job.id} className="bg-white dark:bg-white/5 p-6 md:p-8 rounded-3xl shadow-sm border border-espresso/5 hover:border-primary/30 hover:shadow-md transition-all group">
+                                <div key={job.id} className="bg-[#F5DEB3] dark:bg-[#1c1916] p-8 md:p-10 rounded-[2.5rem] shadow-xl border border-espresso/10 hover:border-espresso/20 hover:shadow-2xl transition-all group relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-espresso/5 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
                                     <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
                                         <div className="flex-1">
                                             <div className="flex flex-wrap items-center gap-3 mb-3">
@@ -137,7 +138,7 @@ export function SeekerDashboard() {
                                                 </span>
                                             </div>
 
-                                            <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-2 group-hover:text-primary transition-colors">
+                                            <h3 className="font-serif text-3xl font-bold text-espresso dark:text-white mb-3 group-hover:text-primary transition-colors leading-tight">
                                                 {job.type} Role at {job.orgName}
                                             </h3>
 
@@ -152,7 +153,7 @@ export function SeekerDashboard() {
                                                 </span>
                                             </div>
 
-                                            <div className="bg-gray-50 dark:bg-black/20 p-4 rounded-xl mb-6">
+                                            <div className="bg-white/40 dark:bg-white/5 p-6 rounded-2xl mb-8 border border-white/20">
                                                 <h4 className="font-bold text-sm text-espresso dark:text-white mb-2">Requirements / Details:</h4>
                                                 <p className="text-sm text-espresso/80 dark:text-white/80 leading-relaxed whitespace-pre-line">
                                                     {job.experience}

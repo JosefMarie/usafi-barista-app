@@ -29,7 +29,8 @@ export function Equipment() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
                     {/* Espresso Machine Card */}
-                    <div className="bg-white dark:bg-white/5 rounded-2xl overflow-hidden shadow-lg border border-[#e0dbd6] dark:border-white/10 flex flex-col">
+                    <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl overflow-hidden shadow-xl border border-espresso/10 flex flex-col relative group">
+                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors z-10"></div>
                         <div className="h-64 bg-gray-200 relative">
                             <div
                                 className="absolute inset-0 bg-cover bg-center"
@@ -54,7 +55,8 @@ export function Equipment() {
                     </div>
 
                     {/* Grinder Card */}
-                    <div className="bg-white dark:bg-white/5 rounded-2xl overflow-hidden shadow-lg border border-[#e0dbd6] dark:border-white/10 flex flex-col">
+                    <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl overflow-hidden shadow-xl border border-espresso/10 flex flex-col relative group">
+                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors z-10"></div>
                         <div className="h-64 bg-gray-200 relative">
                             <div
                                 className="absolute inset-0 bg-cover bg-center"
@@ -82,7 +84,7 @@ export function Equipment() {
             </section>
 
             {/* Section 2: Essential Barista Tools */}
-            <section className="bg-[#FAF5E8] dark:bg-white/5 py-20 px-6 border-y border-[#e0dbd6] dark:border-white/10">
+            <section className="bg-[#F5DEB3] dark:bg-white/5 py-20 px-6 border-y border-espresso/10">
                 <div className="container mx-auto px-6">
                     <h2 className="font-serif text-3xl font-bold text-espresso dark:text-white mb-8 border-b-2 border-primary/20 pb-2 inline-block">
                         {t('equipment.smallwares.title')}
@@ -90,8 +92,9 @@ export function Equipment() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
                         {/* Tool 1 */}
-                        <div className="bg-white dark:bg-white/5 p-6 rounded-xl shadow-sm hover:shadow-md transition-all">
-                            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4">
+                        <div className="bg-[#F5DEB3] dark:bg-white/5 p-6 rounded-2xl shadow-xl border border-espresso/5 hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group">
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/10 group-hover:bg-espresso transition-colors"></div>
+                            <div className="w-12 h-12 rounded-2xl bg-espresso text-white flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform">
                                 <span className="material-symbols-outlined text-2xl">hardware</span>
                             </div>
                             <h3 className="font-bold text-lg text-espresso dark:text-white mb-2">{t('equipment.smallwares.tamper.title')}</h3>
@@ -101,8 +104,9 @@ export function Equipment() {
                         </div>
 
                         {/* Tool 2 */}
-                        <div className="bg-white dark:bg-white/5 p-6 rounded-xl shadow-sm hover:shadow-md transition-all">
-                            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4">
+                        <div className="bg-[#F5DEB3] dark:bg-white/5 p-6 rounded-2xl shadow-xl border border-espresso/5 hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group">
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/10 group-hover:bg-espresso transition-colors"></div>
+                            <div className="w-12 h-12 rounded-2xl bg-espresso text-white flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform">
                                 <span className="material-symbols-outlined text-2xl">local_cafe</span>
                             </div>
                             <h3 className="font-bold text-lg text-espresso dark:text-white mb-2">{t('equipment.smallwares.pitcher.title')}</h3>
@@ -112,8 +116,9 @@ export function Equipment() {
                         </div>
 
                         {/* Tool 3 */}
-                        <div className="bg-white dark:bg-white/5 p-6 rounded-xl shadow-sm hover:shadow-md transition-all">
-                            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4">
+                        <div className="bg-[#F5DEB3] dark:bg-white/5 p-6 rounded-2xl shadow-xl border border-espresso/5 hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group">
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/10 group-hover:bg-espresso transition-colors"></div>
+                            <div className="w-12 h-12 rounded-2xl bg-espresso text-white flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform">
                                 <span className="material-symbols-outlined text-2xl">delete</span>
                             </div>
                             <h3 className="font-bold text-lg text-espresso dark:text-white mb-2">{t('equipment.smallwares.knock.title')}</h3>
@@ -123,8 +128,9 @@ export function Equipment() {
                         </div>
 
                         {/* Tool 4 */}
-                        <div className="bg-white dark:bg-white/5 p-6 rounded-xl shadow-sm hover:shadow-md transition-all">
-                            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4">
+                        <div className="bg-[#F5DEB3] dark:bg-white/5 p-6 rounded-2xl shadow-xl border border-espresso/5 hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group">
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/10 group-hover:bg-espresso transition-colors"></div>
+                            <div className="w-12 h-12 rounded-2xl bg-espresso text-white flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform">
                                 <span className="material-symbols-outlined text-2xl">scale</span>
                             </div>
                             <h3 className="font-bold text-lg text-espresso dark:text-white mb-2">{t('equipment.smallwares.scales.title')}</h3>

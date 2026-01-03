@@ -23,7 +23,8 @@ export function Inclusion() {
 
             {/* 2. Section 1: Adapted Curriculum */}
             <section className="container mx-auto px-6 mb-20">
-                <div className="bg-white dark:bg-white/5 rounded-3xl overflow-hidden shadow-lg border border-[#e0dbd6] dark:border-white/10">
+                <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl overflow-hidden shadow-xl border border-espresso/10 relative">
+                    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 z-10"></div>
                     <div className="grid grid-cols-1 lg:grid-cols-2">
 
                         {/* Image Side */}
@@ -79,7 +80,7 @@ export function Inclusion() {
             </section>
 
             {/* 3. Section 2: Customer Service Adaptation */}
-            <section className="bg-[#FAF5E8] dark:bg-white/5 py-20 px-6 border-y border-[#e0dbd6] dark:border-white/10">
+            <section className="bg-[#F5DEB3] dark:bg-white/5 py-20 px-6 border-y border-espresso/10">
                 <div className="container mx-auto max-w-4xl text-center">
                     <h2 className="font-serif text-3xl font-bold text-espresso dark:text-white mb-8">
                         {t('inclusion.service.title')}
@@ -89,25 +90,28 @@ export function Inclusion() {
                     </p>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-                        <div className="bg-white dark:bg-white/5 p-6 rounded-2xl shadow-sm">
-                            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4">
+                        <div className="bg-[#F5DEB3] dark:bg-white/5 p-6 rounded-2xl shadow-xl border border-espresso/5 hover:-translate-y-1 transition-all relative overflow-hidden group">
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/10 group-hover:bg-espresso transition-colors"></div>
+                            <div className="w-12 h-12 rounded-2xl bg-espresso text-white flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform">
                                 <span className="material-symbols-outlined text-2xl">touch_app</span>
                             </div>
-                            <h4 className="font-bold text-lg mb-2">{t('inclusion.service.ordering.title')}</h4>
+                            <h4 className="font-bold text-lg mb-2 text-espresso dark:text-white">{t('inclusion.service.ordering.title')}</h4>
                             <p className="text-sm text-espresso/70 dark:text-white/70">{t('inclusion.service.ordering.description')}</p>
                         </div>
-                        <div className="bg-white dark:bg-white/5 p-6 rounded-2xl shadow-sm">
-                            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4">
+                        <div className="bg-[#F5DEB3] dark:bg-white/5 p-6 rounded-2xl shadow-xl border border-espresso/5 hover:-translate-y-1 transition-all relative overflow-hidden group">
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/10 group-hover:bg-espresso transition-colors"></div>
+                            <div className="w-12 h-12 rounded-2xl bg-espresso text-white flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform">
                                 <span className="material-symbols-outlined text-2xl">diversity_3</span>
                             </div>
-                            <h4 className="font-bold text-lg mb-2">{t('inclusion.service.etiquette.title')}</h4>
+                            <h4 className="font-bold text-lg mb-2 text-espresso dark:text-white">{t('inclusion.service.etiquette.title')}</h4>
                             <p className="text-sm text-espresso/70 dark:text-white/70">{t('inclusion.service.etiquette.description')}</p>
                         </div>
-                        <div className="bg-white dark:bg-white/5 p-6 rounded-2xl shadow-sm">
-                            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4">
+                        <div className="bg-[#F5DEB3] dark:bg-white/5 p-6 rounded-2xl shadow-xl border border-espresso/5 hover:-translate-y-1 transition-all relative overflow-hidden group">
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/10 group-hover:bg-espresso transition-colors"></div>
+                            <div className="w-12 h-12 rounded-2xl bg-espresso text-white flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform">
                                 <span className="material-symbols-outlined text-2xl">door_open</span>
                             </div>
-                            <h4 className="font-bold text-lg mb-2">{t('inclusion.service.awareness.title')}</h4>
+                            <h4 className="font-bold text-lg mb-2 text-espresso dark:text-white">{t('inclusion.service.awareness.title')}</h4>
                             <p className="text-sm text-espresso/70 dark:text-white/70">{t('inclusion.service.awareness.description')}</p>
                         </div>
                     </div>
@@ -116,7 +120,8 @@ export function Inclusion() {
 
             {/* 4. Section 3: Consultation */}
             <section className="container mx-auto px-6 py-20 text-center">
-                <div className="max-w-3xl mx-auto bg-primary/5 rounded-3xl p-10 border border-primary/10">
+                <div className="max-w-3xl mx-auto bg-[#F5DEB3] dark:bg-white/5 rounded-3xl p-10 shadow-2xl border border-espresso/10 relative overflow-hidden group">
+                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                     <h2 className="font-serif text-3xl font-bold text-espresso dark:text-white mb-4">
                         {t('inclusion.consultation.title')}
                     </h2>

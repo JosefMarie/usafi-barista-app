@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { collection, query, where, onSnapshot, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { GradientButton } from '../../components/ui/GradientButton';
+import { cn } from '../../lib/utils';
+
 
 export function AdminSeekers() {
     const [seekers, setSeekers] = useState([]);
@@ -36,73 +38,123 @@ export function AdminSeekers() {
     if (loading) return <div className="p-8">Loading...</div>;
 
     return (
-        <div className="container mx-auto max-w-6xl">
-            <h1 className="font-serif text-3xl font-bold text-espresso dark:text-white mb-8">Manage Job Seekers</h1>
+        <div className="flex-1 flex flex-col h-full bg-[#F5DEB3] dark:bg-[#1c1916] overflow-y-auto animate-fade-in pb-32">
+            <div className=" w-full px-2 py-10 space-y-10">
+                {/* Header Section */}
+                <div className="flex items-center justify-between relative">
+                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 -ml-10"></div>
+                    <div>
+                        <h1 className="text-4xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none">Talent Registry</h1>
+                        <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] mt-2">Candidate Database & Verification Oversight</p>
+                    </div>
+                </div>
 
-            <div className="bg-white dark:bg-white/5 rounded-2xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden">
-                <table className="w-full text-left text-sm">
-                    <thead className="bg-gray-50 dark:bg-black/20 text-espresso/70 dark:text-white/70 font-bold uppercase tracking-wide">
-                        <tr>
-                            <th className="p-4">Name</th>
-                            <th className="p-4">Contact</th>
-                            <th className="p-4">Gender</th>
-                            <th className="p-4">Joined</th>
-                            <th className="p-4">Payment Status</th>
-                            <th className="p-4 text-right">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-100 dark:divide-white/5">
-                        {seekers.length === 0 ? (
-                            <tr>
-                                <td colSpan="6" className="p-8 text-center text-espresso/50 dark:text-white/50">
-                                    No job seekers found.
-                                </td>
-                            </tr>
-                        ) : (
-                            seekers.map(seeker => (
-                                <tr key={seeker.id} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                                    <td className="p-4 font-bold text-espresso dark:text-white">{seeker.name}</td>
-                                    <td className="p-4 text-espresso/80 dark:text-white/80">
-                                        <div className="flex flex-col">
-                                            <span>{seeker.email}</span>
-                                            <span className="text-xs text-opacity-50">{seeker.phone}</span>
-                                        </div>
-                                    </td>
-                                    <td className="p-4 text-espresso/80 dark:text-white/80">{seeker.gender}</td>
-                                    <td className="p-4 text-espresso/80 dark:text-white/80">
-                                        {seeker.createdAt?.toDate().toLocaleDateString() || 'N/A'}
-                                    </td>
-                                    <td className="p-4">
-                                        <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${seeker.paymentStatus === 'paid'
-                                            ? 'bg-green-100 text-green-700'
-                                            : 'bg-yellow-100 text-yellow-700'
-                                            }`}>
-                                            {seeker.paymentStatus || 'pending'}
-                                        </span>
-                                    </td>
-                                    <td className="p-4 text-right">
-                                        {seeker.paymentStatus === 'paid' ? (
-                                            <button
-                                                onClick={() => togglePaymentStatus(seeker.id, 'paid')}
-                                                className="text-xs text-red-500 hover:underline"
-                                            >
-                                                Revoke Payment
-                                            </button>
-                                        ) : (
-                                            <button
-                                                onClick={() => togglePaymentStatus(seeker.id, 'pending')}
-                                                className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-orange-500 to-red-600 px-4 py-2 text-xs font-bold text-white uppercase tracking-wider shadow-md hover:scale-105 hover:shadow-lg transition-all"
-                                            >
-                                                Approve
-                                            </button>
-                                        )}
-                                    </td>
+                <div className="bg-white/40 dark:bg-black/20 rounded-[3rem] shadow-2xl border border-espresso/10 overflow-hidden relative backdrop-blur-md">
+                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/10"></div>
+                    <div className="overflow-x-auto no-scrollbar">
+                        <table className="w-full text-left border-collapse">
+                            <thead className="bg-espresso text-white dark:bg-black/40">
+                                <tr>
+                                    <th className="p-8 text-[10px] font-black uppercase tracking-[0.2em] border-b border-white/10">Candidate Identity</th>
+                                    <th className="p-8 text-[10px] font-black uppercase tracking-[0.2em] border-b border-white/10">Communications</th>
+                                    <th className="p-8 text-[10px] font-black uppercase tracking-[0.2em] border-b border-white/10 text-center">Protocol</th>
+                                    <th className="p-8 text-[10px] font-black uppercase tracking-[0.2em] border-b border-white/10">Registration</th>
+                                    <th className="p-8 text-[10px] font-black uppercase tracking-[0.2em] border-b border-white/10">Verification</th>
+                                    <th className="p-8 text-[10px] font-black uppercase tracking-[0.2em] border-b border-white/10 text-right">Synchronization</th>
                                 </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
+                            </thead>
+                            <tbody className="divide-y divide-espresso/5">
+                                {seekers.length === 0 ? (
+                                    <tr>
+                                        <td colSpan="6" className="p-24 text-center">
+                                            <div className="flex flex-col items-center gap-6 opacity-20">
+                                                <span className="material-symbols-outlined text-8xl">database_off</span>
+                                                <div className="text-center">
+                                                    <h3 className="text-[10px] font-black uppercase tracking-[0.5em]">Ledger Depleted</h3>
+                                                    <p className="text-[8px] font-black uppercase tracking-[0.3em] mt-2">No active seekers detected in current registry</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    seekers.map(seeker => (
+                                        <tr key={seeker.id} className="group hover:bg-white/40 transition-all">
+                                            <td className="p-8">
+                                                <div className="flex flex-col">
+                                                    <span className="text-xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none group-hover:text-espresso/70 transition-colors">
+                                                        {seeker.name}
+                                                    </span>
+                                                    <span className="text-[9px] font-black text-espresso/40 uppercase tracking-widest mt-1">ID: {seeker.id.slice(0, 8).toUpperCase()}</span>
+                                                </div>
+                                            </td>
+                                            <td className="p-8">
+                                                <div className="flex flex-col gap-1">
+                                                    <span className="text-sm font-black text-espresso/80 dark:text-white/80 lowercase tracking-tight">{seeker.email}</span>
+                                                    <span className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.2em] flex items-center gap-2">
+                                                        <span className="material-symbols-outlined text-[14px]">call</span>
+                                                        {seeker.phone}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td className="p-8 text-center">
+                                                <span className="px-5 py-1.5 rounded-xl bg-espresso/5 border border-espresso/10 text-espresso text-[9px] font-black uppercase tracking-[0.3em] shadow-inner">
+                                                    {seeker.gender || 'UNDEF'}
+                                                </span>
+                                            </td>
+                                            <td className="p-8">
+                                                <div className="flex flex-col">
+                                                    <span className="text-[9px] font-black text-espresso/40 uppercase tracking-[0.4em]">TIMESTAMP</span>
+                                                    <span className="text-sm font-serif font-black text-espresso/70 dark:text-white/70">
+                                                        {seeker.createdAt?.toDate().toLocaleDateString().toUpperCase() || 'EXTERNAL'}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td className="p-8">
+                                                <div className={cn(
+                                                    "flex items-center gap-3 px-5 py-2.5 rounded-2xl w-fit shadow-sm border",
+                                                    seeker.paymentStatus === 'paid'
+                                                        ? 'bg-green-600/10 text-green-700 border-green-200'
+                                                        : 'bg-amber-600/10 text-amber-700 border-amber-200'
+                                                )}>
+                                                    <div className={cn(
+                                                        "w-2.5 h-2.5 rounded-full animate-pulse shadow-sm",
+                                                        seeker.paymentStatus === 'paid' ? 'bg-green-600' : 'bg-amber-600'
+                                                    )}></div>
+                                                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">
+                                                        {seeker.paymentStatus?.toUpperCase() || 'PENDING'}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td className="p-8 text-right">
+                                                {seeker.paymentStatus === 'paid' ? (
+                                                    <button
+                                                        onClick={() => togglePaymentStatus(seeker.id, 'paid')}
+                                                        className="text-[9px] font-black text-red-600/40 hover:text-red-600 uppercase tracking-[0.4em] transition-all flex items-center gap-2 justify-end ml-auto"
+                                                    >
+                                                        <span className="material-symbols-outlined text-[16px]">history</span>
+                                                        REVOKE ACCESS
+                                                    </button>
+                                                ) : (
+                                                    <button
+                                                        onClick={() => togglePaymentStatus(seeker.id, 'pending')}
+                                                        className="h-12 inline-flex items-center justify-center rounded-2xl bg-espresso text-white px-8 text-[10px] font-black uppercase tracking-[0.2em] shadow-xl hover:shadow-espresso/40 hover:-translate-y-1 transition-all active:scale-95 group/btn"
+                                                    >
+                                                        <span className="material-symbols-outlined mr-3 text-[18px] group-hover:rotate-12 transition-transform">verified_user</span>
+                                                        AUTHORIZE
+                                                    </button>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     );
 }
+
+
+

@@ -97,231 +97,226 @@ export function Profile() {
     const studentId = user?.uid?.substring(0, 8).toUpperCase() || 'UNKNOWN';
 
     return (
-        <div className="flex flex-col w-full max-w-md mx-auto pb-8 animate-fade-in">
-            {/* TopAppBar */}
-            <header className="sticky top-0 z-50 bg-gray-50/90 dark:bg-[#1c1916]/90 backdrop-blur-sm transition-colors duration-200">
-                <div className="flex items-center justify-between px-4 py-3">
+        <div className="flex flex-col w-full pb-16 animate-fade-in px-4">
+            {/* TopAppBar - Enhanced for Wheat Theme */}
+            <header className="sticky top-0 z-50 bg-[#F5DEB3]/90 dark:bg-[#1c1916]/90 backdrop-blur-md transition-colors duration-200 rounded-b-3xl shadow-sm mb-12 border-b border-espresso/10">
+                <div className="flex items-center justify-between px-8 py-5">
                     <button
                         onClick={() => navigate('/student/dashboard')}
-                        className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-espresso dark:text-white"
+                        className="flex items-center justify-center w-12 h-12 rounded-2xl bg-white/40 hover:bg-white transition-all text-espresso shadow-sm active:scale-95"
                     >
                         <span className="material-symbols-outlined text-[24px]">arrow_back_ios_new</span>
                     </button>
-                    <h2 className="text-espresso dark:text-white text-lg font-bold leading-tight tracking-tight text-center flex-1">
-                        Student Profile
+                    <h2 className="text-espresso dark:text-white text-2xl font-serif font-black uppercase tracking-[0.2em] leading-tight text-center flex-1">
+                        Professional Identity
                     </h2>
                     <button
                         onClick={handleEditClick}
-                        className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+                        className="flex items-center justify-center h-12 px-8 rounded-2xl bg-espresso text-white text-[10px] font-black uppercase tracking-[0.2em] shadow-xl hover:shadow-espresso/40 hover:-translate-y-0.5 active:scale-95 transition-all"
                     >
-                        <span className="text-primary text-base font-bold leading-normal tracking-wide">Edit</span>
+                        Adjust
                     </button>
                 </div>
             </header>
 
-            {/* ProfileHeader */}
-            <section className="flex flex-col items-center pt-6 pb-8 px-6">
-                <div
-                    onClick={handleAvatarClick}
-                    className="relative mb-5 group cursor-pointer"
-                >
-                    <div
-                        className="w-32 h-32 rounded-full border-4 border-white dark:border-[#2c2825] shadow-lg bg-cover bg-center overflow-hidden flex items-center justify-center bg-gray-100 dark:bg-white/5"
-                        style={{ backgroundImage: uploading ? 'none' : `url('${avatarUrl}')` }}
-                    >
-                        {uploading && (
-                            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
-                        )}
-                    </div>
-                    {/* Camera Badge */}
-                    <div className="absolute bottom-1 right-1 bg-primary text-white p-1.5 rounded-full shadow-md flex items-center justify-center border-2 border-gray-50 dark:border-[#1c1916]">
-                        <span className="material-symbols-outlined text-[18px]">photo_camera</span>
-                    </div>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                {/* Left Column: Avatar and Quick Info */}
+                <div className="lg:col-span-4 flex flex-col items-center">
+                    <div className="bg-[#F5DEB3] dark:bg-[#1c1916] rounded-[2.5rem] p-12 shadow-2xl border border-espresso/10 w-full flex flex-col items-center relative overflow-hidden group">
+                        <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
 
-                    <input
-                        type="file"
-                        ref={fileInputRef}
-                        onChange={handleAvatarUpload}
-                        className="hidden"
-                        accept="image/*"
-                    />
-                </div>
-                <div className="flex flex-col items-center text-center space-y-1">
-                    <h1 className="text-espresso dark:text-white text-2xl font-serif font-bold leading-tight">
-                        {displayName}
-                    </h1>
-                    <p className="text-primary font-medium text-sm tracking-wide uppercase opacity-90">
-                        Student ID: {studentId}
-                    </p>
-                    <div className="mt-2 px-3 py-1 bg-primary/10 dark:bg-primary/20 rounded-full">
-                        <p className="text-primary text-xs font-bold tracking-wider uppercase">
-                            {user?.role === 'student' ? 'Level 1 Certified' : user?.role || 'Student'}
+                        <div
+                            onClick={handleAvatarClick}
+                            className="relative mb-8 group/avatar cursor-pointer"
+                        >
+                            <div
+                                className="w-48 h-48 rounded-3xl border-4 border-white dark:border-[#2c2825] shadow-2xl bg-cover bg-center overflow-hidden flex items-center justify-center bg-white/50 backdrop-blur-sm transition-all duration-700 group-hover/avatar:scale-105 group-hover/avatar:rotate-2"
+                                style={{ backgroundImage: uploading ? 'none' : `url('${avatarUrl}')` }}
+                            >
+                                {uploading && (
+                                    <div className="animate-spin rounded-full h-14 w-14 border-b-2 border-espresso"></div>
+                                )}
+                            </div>
+                            <div className="absolute -bottom-2 -right-2 bg-espresso text-white p-4 rounded-2xl shadow-2xl flex items-center justify-center border-4 border-[#F5DEB3] dark:border-[#1c1916] group-hover/avatar:scale-110 transition-transform">
+                                <span className="material-symbols-outlined text-[24px]">photo_camera</span>
+                            </div>
+                            <input
+                                type="file"
+                                ref={fileInputRef}
+                                onChange={handleAvatarUpload}
+                                className="hidden"
+                                accept="image/*"
+                            />
+                        </div>
+
+                        <h1 className="text-3xl font-serif font-bold text-espresso dark:text-white text-center mb-1">
+                            {displayName}
+                        </h1>
+                        <p className="text-espresso/40 dark:text-white/40 font-black text-[10px] tracking-[0.2em] uppercase mb-6 bg-white/30 dark:bg-black/20 px-4 py-2 rounded-full border border-white/20">
+                            Identifier: {studentId}
                         </p>
-                    </div>
-                </div>
-            </section>
 
-            {/* Personal Information Section */}
-            <section className="px-4 mb-6">
-                <h3 className="text-espresso/70 dark:text-white/60 text-xs font-bold uppercase tracking-wider mb-2 ml-4">
-                    Personal Information
-                </h3>
-                <div className="bg-white dark:bg-[#2c2825] rounded-xl overflow-hidden shadow-sm border border-black/5 dark:border-white/5">
-                    {/* List Item: Email */}
-                    <div className="flex items-center gap-4 px-4 py-3.5 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors cursor-pointer group">
-                        <div className="flex items-center justify-center rounded-lg bg-gray-50 dark:bg-white/10 shrink-0 w-10 h-10 text-primary">
-                            <span className="material-symbols-outlined">mail</span>
-                        </div>
-                        <div className="flex flex-col flex-1 min-w-0">
-                            <p className="text-espresso dark:text-white text-sm font-medium leading-normal">Email</p>
-                            <p className="text-espresso/60 dark:text-white/60 text-sm font-normal truncate">
-                                {user?.email}
+                        <div className="px-6 py-2 bg-espresso text-white rounded-2xl mb-10 shadow-xl border border-white/10">
+                            <p className="text-[10px] font-black tracking-[0.3em] uppercase">
+                                {user?.role === 'student' ? 'Master Class Certified' : user?.role || 'Executive Student'}
                             </p>
                         </div>
-                        <div className="shrink-0 text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                            <span className="material-symbols-outlined text-[20px]">edit</span>
-                        </div>
-                    </div>
-                    <div className="h-px bg-black/5 dark:bg-white/5 mx-4"></div>
 
-                    {/* List Item: Phone */}
-                    <div className="flex items-center gap-4 px-4 py-3.5 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors cursor-pointer group">
-                        <div className="flex items-center justify-center rounded-lg bg-gray-50 dark:bg-white/10 shrink-0 w-10 h-10 text-primary">
-                            <span className="material-symbols-outlined">call</span>
-                        </div>
-                        <div className="flex flex-col flex-1 min-w-0">
-                            <p className="text-espresso dark:text-white text-sm font-medium leading-normal">Phone Number</p>
-                            <p className="text-espresso/60 dark:text-white/60 text-sm font-normal truncate">
-                                {user?.phone || 'Not provided'}
-                            </p>
-                        </div>
-                        <div className="shrink-0 text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                            <span className="material-symbols-outlined text-[20px]">edit</span>
-                        </div>
+                        <button
+                            onClick={handleLogout}
+                            className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-white/40 text-red-600 border border-red-200/50 hover:bg-red-50 hover:border-red-300 transition-all font-black text-[10px] uppercase tracking-widest shadow-sm active:scale-95"
+                        >
+                            <span className="material-symbols-outlined text-[20px]">logout</span>
+                            Terminate Session
+                        </button>
                     </div>
                 </div>
-            </section>
 
-            {/* Account Settings Section */}
-            <section className="px-4 mb-8">
-                <h3 className="text-espresso/70 dark:text-white/60 text-xs font-bold uppercase tracking-wider mb-2 ml-4">
-                    Account Settings
-                </h3>
-                <div className="bg-white dark:bg-[#2c2825] rounded-xl overflow-hidden shadow-sm border border-black/5 dark:border-white/5">
-                    {/* Change Password */}
-                    <div
-                        onClick={() => setShowPasswordModal(true)}
-                        className="flex items-center gap-4 px-4 py-3.5 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors cursor-pointer border-b border-black/5 dark:border-white/5"
-                    >
-                        <div className="flex items-center justify-center rounded-lg bg-primary/10 dark:bg-primary/20 shrink-0 w-8 h-8 text-primary">
-                            <span className="material-symbols-outlined text-[18px]">lock</span>
+                {/* Right Column: Settings and Info */}
+                <div className="lg:col-span-8 space-y-10">
+                    {/* Personal Info Card */}
+                    <div className="bg-[#F5DEB3] dark:bg-[#1c1916] rounded-3xl shadow-xl border border-espresso/10 overflow-hidden relative group">
+                        <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                        <div className="px-10 py-6 border-b border-espresso/10 bg-white/20">
+                            <div className="flex items-center gap-4">
+                                <span className="material-symbols-outlined text-espresso/40">contact_mail</span>
+                                <h3 className="font-black text-espresso dark:text-white uppercase tracking-[0.2em] text-[10px]">Strategic Information</h3>
+                            </div>
                         </div>
-                        <div className="flex-1">
-                            <p className="text-espresso dark:text-white text-base font-normal">Change Password</p>
-                        </div>
-                        <div className="text-espresso/30 dark:text-white/30">
-                            <span className="material-symbols-outlined text-[20px]">chevron_right</span>
+                        <div className="p-10 grid grid-cols-1 md:grid-cols-2 gap-10 relative z-10">
+                            <div className="space-y-2 hover:translate-x-1 transition-transform">
+                                <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">Authorized Communications</p>
+                                <p className="text-espresso dark:text-white font-serif font-bold text-xl truncate">{user?.email}</p>
+                            </div>
+                            <div className="space-y-2 hover:translate-x-1 transition-transform">
+                                <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">Contact Protocol</p>
+                                <p className="text-espresso dark:text-white font-serif font-bold text-xl">{user?.phone || 'Awaiting activation'}</p>
+                            </div>
+                            <div className="space-y-2 hover:translate-x-1 transition-transform">
+                                <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">Deployment Zone</p>
+                                <p className="text-espresso dark:text-white font-serif font-bold text-xl">{user?.location || 'Undisclosed'}</p>
+                            </div>
                         </div>
                     </div>
 
-                    {/* Privacy */}
-                    <div
-                        onClick={() => navigate('../privacy-settings')}
-                        className="flex items-center gap-4 px-4 py-3.5 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors cursor-pointer border-b border-black/5 dark:border-white/5"
-                    >
-                        <div className="flex items-center justify-center rounded-lg bg-primary/10 dark:bg-primary/20 shrink-0 w-8 h-8 text-primary">
-                            <span className="material-symbols-outlined text-[18px]">shield</span>
+                    {/* Account Settings Card */}
+                    <div className="bg-[#F5DEB3] dark:bg-[#1c1916] rounded-3xl shadow-xl border border-espresso/10 overflow-hidden relative group">
+                        <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                        <div className="px-10 py-6 border-b border-espresso/10 bg-white/20">
+                            <div className="flex items-center gap-4">
+                                <span className="material-symbols-outlined text-espresso/40">fingerprint</span>
+                                <h3 className="font-black text-espresso dark:text-white uppercase tracking-[0.2em] text-[10px]">Access Control & Protocols</h3>
+                            </div>
                         </div>
-                        <div className="flex-1">
-                            <p className="text-espresso dark:text-white text-base font-normal">Privacy & Permissions</p>
-                        </div>
-                        <div className="text-espresso/30 dark:text-white/30">
-                            <span className="material-symbols-outlined text-[20px]">chevron_right</span>
+                        <div className="divide-y divide-espresso/10 relative z-10">
+                            <button
+                                onClick={() => setShowPasswordModal(true)}
+                                className="w-full flex items-center justify-between px-10 py-8 hover:bg-white/30 dark:hover:bg-white/5 transition-all group/item active:scale-[0.98]"
+                            >
+                                <div className="flex items-center gap-6 text-left">
+                                    <div className="w-14 h-14 rounded-2xl bg-espresso text-white flex items-center justify-center group-hover/item:scale-110 transition-transform shadow-xl rotate-2 group-hover/item:rotate-0">
+                                        <span className="material-symbols-outlined text-2xl">key</span>
+                                    </div>
+                                    <div>
+                                        <p className="font-black text-espresso dark:text-white text-[12px] uppercase tracking-widest leading-none mb-2">Master Password</p>
+                                        <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest">Re-configure access credentials</p>
+                                    </div>
+                                </div>
+                                <span className="material-symbols-outlined text-espresso/30 group-hover/item:translate-x-2 transition-transform">arrow_forward_ios</span>
+                            </button>
+
+                            <button
+                                onClick={() => navigate('../privacy-settings')}
+                                className="w-full flex items-center justify-between px-10 py-8 hover:bg-white/30 dark:hover:bg-white/5 transition-all group/item active:scale-[0.98]"
+                            >
+                                <div className="flex items-center gap-6 text-left">
+                                    <div className="w-14 h-14 rounded-2xl bg-white/50 text-espresso flex items-center justify-center group-hover/item:scale-110 transition-transform shadow-sm border border-white/20">
+                                        <span className="material-symbols-outlined text-2xl">policy</span>
+                                    </div>
+                                    <div>
+                                        <p className="font-black text-espresso dark:text-white text-[12px] uppercase tracking-widest leading-none mb-2">Privacy Protocols</p>
+                                        <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest">Govern your data visibility</p>
+                                    </div>
+                                </div>
+                                <span className="material-symbols-outlined text-espresso/30 group-hover/item:translate-x-2 transition-transform">arrow_forward_ios</span>
+                            </button>
+
+                            <button
+                                onClick={() => navigate('/student/notifications')}
+                                className="w-full flex items-center justify-between px-10 py-8 hover:bg-white/30 dark:hover:bg-white/5 transition-all group/item active:scale-[0.98]"
+                            >
+                                <div className="flex items-center gap-6 text-left">
+                                    <div className="w-14 h-14 rounded-2xl bg-white/50 text-espresso flex items-center justify-center group-hover/item:scale-110 transition-transform shadow-sm border border-white/20">
+                                        <span className="material-symbols-outlined text-2xl">notifications_active</span>
+                                    </div>
+                                    <div>
+                                        <p className="font-black text-espresso dark:text-white text-[12px] uppercase tracking-widest leading-none mb-2">Intelligence Stream</p>
+                                        <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest">Configure communication alerts</p>
+                                    </div>
+                                </div>
+                                <span className="material-symbols-outlined text-espresso/30 group-hover/item:translate-x-2 transition-transform">arrow_forward_ios</span>
+                            </button>
                         </div>
                     </div>
 
-                    {/* Notifications */}
-                    <div
-                        onClick={() => navigate('/student/notifications')}
-                        className="flex items-center gap-4 px-4 py-3.5 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors cursor-pointer"
-                    >
-                        <div className="flex items-center justify-center rounded-lg bg-primary/10 dark:bg-primary/20 shrink-0 w-8 h-8 text-primary">
-                            <span className="material-symbols-outlined text-[18px]">notifications</span>
-                        </div>
-                        <div className="flex-1">
-                            <p className="text-espresso dark:text-white text-base font-normal">Notifications</p>
-                        </div>
-                        <div className="text-espresso/30 dark:text-white/30">
-                            <span className="material-symbols-outlined text-[20px]">chevron_right</span>
-                        </div>
-                    </div>
+                    <p className="text-center text-espresso/20 dark:text-white/20 text-[10px] font-black uppercase tracking-[0.5em] py-8">
+                        Usafi Strategic Systems • V2.4.1 • BUILD 203
+                    </p>
                 </div>
-            </section>
-
-            {/* Logout / Danger Zone */}
-            <div className="px-4 mt-auto">
-                <button
-                    onClick={handleLogout}
-                    className="w-full bg-white dark:bg-[#2c2825] text-[#D32F2F] font-medium py-3.5 rounded-xl shadow-sm border border-black/5 dark:border-white/5 flex items-center justify-center gap-2 active:scale-[0.98] transition-transform hover:bg-red-50 dark:hover:bg-red-900/10"
-                >
-                    <span className="material-symbols-outlined text-[20px]">logout</span>
-                    Log Out
-                </button>
-                <p className="text-center text-espresso/40 dark:text-white/40 text-xs mt-4">
-                    Version 2.4.1 (Build 203)
-                </p>
             </div>
 
             {/* Edit Modal */}
             {showEditModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setShowEditModal(false)}>
-                    <div className="bg-white dark:bg-[#2c2825] rounded-2xl p-6 w-full max-w-md shadow-xl" onClick={e => e.stopPropagation()}>
-                        <h3 className="text-xl font-bold text-espresso dark:text-white mb-6">
-                            Edit Personal Information
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-espresso/40 backdrop-blur-sm animate-fade-in" onClick={() => setShowEditModal(false)}>
+                    <div className="bg-[#F5DEB3] dark:bg-[#1c1916] rounded-[2.5rem] p-10 w-full max-w-lg shadow-2xl border border-espresso/10 relative overflow-hidden group" onClick={e => e.stopPropagation()}>
+                        <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+
+                        <h3 className="text-3xl font-serif font-bold text-espresso dark:text-white mb-8">
+                            Adjustment Protocol
                         </h3>
 
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-espresso dark:text-white mb-2">
-                                    Phone Number
+                        <div className="space-y-6">
+                            <div className="space-y-2">
+                                <label className="block text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest">
+                                    Contact Frequency
                                 </label>
                                 <input
                                     type="tel"
                                     value={editData.phone}
                                     onChange={e => setEditData({ ...editData, phone: e.target.value })}
-                                    placeholder="e.g., +250 712 345 678"
-                                    className="w-full px-4 py-3 rounded-lg border border-black/10 dark:border-white/10 bg-white dark:bg-[#1c1916] text-espresso dark:text-white placeholder:text-espresso/40 dark:placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary"
+                                    placeholder="+250 000 000 000"
+                                    className="w-full px-6 py-4 rounded-2xl bg-white/40 dark:bg-black/20 border border-espresso/10 text-espresso dark:text-white font-bold placeholder:text-espresso/20 focus:outline-none focus:ring-2 focus:ring-espresso transition-all"
                                 />
                             </div>
 
-                            <div>
-                                <label className="block text-sm font-medium text-espresso dark:text-white mb-2">
-                                    Location
+                            <div className="space-y-2">
+                                <label className="block text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest">
+                                    Geospatial Assignment
                                 </label>
                                 <input
                                     type="text"
                                     value={editData.location}
                                     onChange={e => setEditData({ ...editData, location: e.target.value })}
-                                    placeholder="e.g., Kigali, Rwanda"
-                                    className="w-full px-4 py-3 rounded-lg border border-black/10 dark:border-white/10 bg-white dark:bg-[#1c1916] text-espresso dark:text-white placeholder:text-espresso/40 dark:placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary"
+                                    placeholder="City, Country"
+                                    className="w-full px-6 py-4 rounded-2xl bg-white/40 dark:bg-black/20 border border-espresso/10 text-espresso dark:text-white font-bold placeholder:text-espresso/20 focus:outline-none focus:ring-2 focus:ring-espresso transition-all"
                                 />
                             </div>
                         </div>
 
-                        <div className="flex gap-3 mt-6">
+                        <div className="flex gap-4 mt-10">
                             <button
                                 type="button"
                                 onClick={() => setShowEditModal(false)}
-                                className="flex-1 py-3 rounded-full border border-black/10 dark:border-white/10 text-espresso dark:text-white font-medium hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                                className="flex-1 py-4 rounded-2xl border border-espresso/10 text-espresso/60 dark:text-white/60 font-black text-[10px] uppercase tracking-widest hover:bg-white/40 transition-all active:scale-95"
                             >
-                                Cancel
+                                Abort
                             </button>
                             <button
                                 onClick={handleSaveInfo}
                                 disabled={saving}
-                                className="flex-1 py-3 rounded-full bg-primary text-white font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+                                className="flex-2 py-4 px-10 rounded-2xl bg-espresso text-white font-black text-[10px] uppercase tracking-widest shadow-xl hover:shadow-espresso/40 transition-all disabled:opacity-50 active:scale-95"
                             >
-                                {saving ? 'Saving...' : 'Save Changes'}
+                                {saving ? 'Encoding...' : 'Commit Changes'}
                             </button>
                         </div>
                     </div>

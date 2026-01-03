@@ -23,8 +23,9 @@ export function Opportunities() {
                 <div className="flex flex-col md:flex-row items-center justify-center gap-8 max-w-4xl mx-auto">
 
                     {/* For Organizations */}
-                    <div className="flex-1 w-full bg-white dark:bg-white/5 p-8 rounded-3xl shadow-xl border border-espresso/5 hover:border-primary/30 transition-all group">
-                        <div className="h-16 w-16 mx-auto bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
+                    <div className="flex-1 w-full bg-[#F5DEB3] dark:bg-white/5 p-8 rounded-3xl shadow-xl border border-espresso/10 hover:border-espresso/30 transition-all relative overflow-hidden group">
+                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                        <div className="h-16 w-16 mx-auto bg-espresso text-white rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 shadow-md transition-transform">
                             <span className="material-symbols-outlined text-4xl">business_center</span>
                         </div>
                         <h2 className="font-serif text-2xl font-bold mb-4">Hiring?</h2>
@@ -37,8 +38,9 @@ export function Opportunities() {
                     </div>
 
                     {/* For Job Seekers */}
-                    <div className="flex-1 w-full bg-white dark:bg-white/5 p-8 rounded-3xl shadow-xl border border-espresso/5 hover:border-primary/30 transition-all group">
-                        <div className="h-16 w-16 mx-auto bg-green-500/10 rounded-2xl flex items-center justify-center text-green-600 mb-6 group-hover:scale-110 transition-transform">
+                    <div className="flex-1 w-full bg-[#F5DEB3] dark:bg-white/5 p-8 rounded-3xl shadow-xl border border-espresso/10 hover:border-espresso/30 transition-all relative overflow-hidden group">
+                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                        <div className="h-16 w-16 mx-auto bg-green-700 text-white rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 shadow-md transition-transform">
                             <span className="material-symbols-outlined text-4xl">person_search</span>
                         </div>
                         <h2 className="font-serif text-2xl font-bold mb-4">Job Seeker?</h2>
@@ -48,13 +50,13 @@ export function Opportunities() {
                         <div className="flex flex-col gap-3">
                             <Link
                                 to="/opportunities/register"
-                                className="flex items-center justify-center w-full h-14 rounded-xl border-2 border-green-600 text-green-700 dark:text-green-400 font-bold hover:bg-green-50 dark:hover:bg-green-900/10 transition-all"
+                                className="flex items-center justify-center w-full h-14 rounded-xl border-2 border-green-700 text-green-700 dark:text-green-400 font-bold hover:bg-green-50 dark:hover:bg-green-900/10 transition-all"
                             >
                                 Register to Find a Job
                             </Link>
                             <Link
                                 to="/seeker/login"
-                                className="flex items-center justify-center w-full h-10 text-sm font-bold text-green-600 hover:underline"
+                                className="flex items-center justify-center w-full h-10 text-sm font-bold text-green-700 hover:underline"
                             >
                                 Already have an account? Login
                             </Link>
@@ -65,7 +67,7 @@ export function Opportunities() {
             </div>
 
             {/* Stats / Info Section */}
-            <div className="bg-[#FAF5E8] dark:bg-white/5 py-16">
+            <div className="bg-[#F5DEB3] dark:bg-white/5 py-16 border-y border-espresso/10">
                 <div className="container mx-auto px-6">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                         <div>

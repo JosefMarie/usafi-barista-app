@@ -23,7 +23,8 @@ export function CareerSupport() {
 
             {/* 2. Section 1: Internship Placement Program */}
             <section className="container mx-auto px-6 mb-20">
-                <div className="bg-white dark:bg-white/5 rounded-3xl overflow-hidden shadow-lg border border-[#e0dbd6] dark:border-white/10">
+                <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl overflow-hidden shadow-xl border border-espresso/10 relative">
+                    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 z-10"></div>
                     <div className="grid grid-cols-1 lg:grid-cols-2">
 
                         {/* Image Side */}
@@ -80,7 +81,7 @@ export function CareerSupport() {
             </section>
 
             {/* 3. Section 2: Job Hunting & Interview Skills */}
-            <section className="bg-[#FAF5E8] dark:bg-white/5 py-20 px-6 border-y border-[#e0dbd6] dark:border-white/10">
+            <section className="bg-[#F5DEB3] dark:bg-white/5 py-20 px-6 border-y border-espresso/10">
                 <div className="container mx-auto max-w-5xl">
                     <div className="text-center mb-16">
                         <h2 className="font-serif text-3xl md:text-4xl font-bold text-espresso dark:text-white mb-4">
@@ -90,8 +91,9 @@ export function CareerSupport() {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {/* Resource 1 */}
-                        <div className="bg-white dark:bg-white/5 p-8 rounded-2xl shadow-sm hover:-translate-y-1 transition-transform duration-300">
-                            <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4">
+                        <div className="bg-[#F5DEB3] dark:bg-white/5 p-8 rounded-2xl shadow-xl border border-espresso/5 hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group">
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/10 group-hover:bg-espresso transition-colors"></div>
+                            <div className="h-14 w-14 rounded-2xl bg-espresso text-white flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform">
                                 <span className="material-symbols-outlined text-3xl">description</span>
                             </div>
                             <h3 className="font-serif font-bold text-xl text-espresso dark:text-white mb-3">{t('careerSupport.market.cv.title')}</h3>
@@ -101,8 +103,9 @@ export function CareerSupport() {
                         </div>
 
                         {/* Resource 2 */}
-                        <div className="bg-white dark:bg-white/5 p-8 rounded-2xl shadow-sm hover:-translate-y-1 transition-transform duration-300">
-                            <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4">
+                        <div className="bg-[#F5DEB3] dark:bg-white/5 p-8 rounded-2xl shadow-xl border border-espresso/5 hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group">
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/10 group-hover:bg-espresso transition-colors"></div>
+                            <div className="h-14 w-14 rounded-2xl bg-espresso text-white flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform">
                                 <span className="material-symbols-outlined text-3xl">notifications_active</span>
                             </div>
                             <h3 className="font-serif font-bold text-xl text-espresso dark:text-white mb-3">{t('careerSupport.market.alerts.title')}</h3>
@@ -112,8 +115,9 @@ export function CareerSupport() {
                         </div>
 
                         {/* Resource 3 */}
-                        <div className="bg-white dark:bg-white/5 p-8 rounded-2xl shadow-sm hover:-translate-y-1 transition-transform duration-300">
-                            <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center text-primary mb-4">
+                        <div className="bg-[#F5DEB3] dark:bg-white/5 p-8 rounded-2xl shadow-xl border border-espresso/5 hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group">
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/10 group-hover:bg-espresso transition-colors"></div>
+                            <div className="h-14 w-14 rounded-2xl bg-espresso text-white flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform">
                                 <span className="material-symbols-outlined text-3xl">supervisor_account</span>
                             </div>
                             <h3 className="font-serif font-bold text-xl text-espresso dark:text-white mb-3">{t('careerSupport.market.interview.title')}</h3>

@@ -3,6 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { cn } from '../../lib/utils'; // Assuming you have a utils file
 
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../../lib/firebase';
+
 export function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -17,10 +20,23 @@ export function Login() {
         setLoading(true);
 
         try {
-            await login(email, password);
-            navigate('/student/dashboard'); // Redirect to dashboard after login
+            const userCredential = await login(email, password);
+            const user = userCredential.user;
+
+            // Fetch user role
+            const userDoc = await getDoc(doc(db, 'users', user.uid));
+            const userData = userDoc.data();
+            const role = userData?.role || 'student';
+
+            if (role === 'admin') navigate('/admin/dashboard');
+            else if (role === 'instructor') navigate('/instructor/dashboard');
+            else if (role === 'manager') navigate('/manager/dashboard');
+            else if (role === 'business_student') navigate('/business/dashboard');
+            else navigate('/student/dashboard');
+
         } catch (err) {
-            setError('Invalid email or password. Try student@usafi.com / password');
+            console.error("Login Error:", err);
+            setError('Invalid email or password.');
         } finally {
             setLoading(false);
         }
@@ -28,7 +44,8 @@ export function Login() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-background-light dark:bg-background-dark py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full space-y-8 bg-white dark:bg-[#2c2825] p-10 rounded-2xl shadow-xl">
+            <div className="max-w-md w-full space-y-8 bg-[#F5DEB3] dark:bg-white/5 p-10 rounded-3xl shadow-2xl border border-espresso/10 relative overflow-hidden group">
+                <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                 <div className="text-center">
                     <Link to="/" className="inline-flex items-center gap-2 justify-center mb-6">
                         <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-white shadow-lg">
@@ -62,7 +79,7 @@ export function Login() {
                                     type="email"
                                     autoComplete="email"
                                     required
-                                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-white/10 rounded-lg bg-gray-50 dark:bg-white/5 text-espresso dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                                    className="block w-full pl-10 pr-3 py-3 border border-espresso/10 rounded-lg bg-white/50 dark:bg-white/5 text-espresso dark:text-white placeholder-espresso/40 focus:outline-none focus:ring-2 focus:ring-espresso focus:border-transparent transition-all"
                                     placeholder="Email address"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
@@ -83,7 +100,7 @@ export function Login() {
                                     type="password"
                                     autoComplete="current-password"
                                     required
-                                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-white/10 rounded-lg bg-gray-50 dark:bg-white/5 text-espresso dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                                    className="block w-full pl-10 pr-3 py-3 border border-espresso/10 rounded-lg bg-white/50 dark:bg-white/5 text-espresso dark:text-white placeholder-espresso/40 focus:outline-none focus:ring-2 focus:ring-espresso focus:border-transparent transition-all"
                                     placeholder="Password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}

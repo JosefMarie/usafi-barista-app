@@ -86,51 +86,60 @@ export function ELearning() {
     };
 
     return (
-        <div className="max-w-4xl mx-auto space-y-6">
-            <h1 className="text-2xl font-serif font-bold text-espresso dark:text-white">E-Learning</h1>
-            <p className="text-espresso/70 dark:text-white/70">Access your scheduled Zoom sessions and video tutorials from your instructor.</p>
+        <div className="w-full space-y-8">
+            <div>
+                <h1 className="text-3xl font-serif font-bold text-espresso dark:text-white">Active Learning Sphere</h1>
+                <p className="text-espresso/60 dark:text-white/60 font-medium mt-1">Engage with live masterclasses and curated instructional media</p>
+            </div>
 
             {/* Tabs */}
-            <div className="flex gap-2 border-b border-black/5 dark:border-white/5 pb-2">
+            <div className="flex gap-4 border-b border-espresso/10 pb-4">
                 <button
                     onClick={() => setActiveTab('schedule')}
-                    className={`px-4 py-2 rounded-t-lg font-medium transition-colors ${activeTab === 'schedule' ? 'bg-primary text-white' : 'text-espresso/70 dark:text-white/70 hover:bg-black/5 dark:hover:bg-white/5'}`}
+                    className={cn(
+                        "flex items-center gap-3 px-6 py-3 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all",
+                        activeTab === 'schedule' ? "bg-espresso text-white shadow-xl" : "text-espresso/40 dark:text-white/40 hover:bg-white/40 dark:hover:bg-white/5"
+                    )}
                 >
-                    <span className="material-symbols-outlined align-middle mr-1">schedule</span>
-                    Schedule
+                    <span className="material-symbols-outlined text-[20px]">event_repeat</span>
+                    Live Sessions
                 </button>
                 <button
                     onClick={() => setActiveTab('videos')}
-                    className={`px-4 py-2 rounded-t-lg font-medium transition-colors ${activeTab === 'videos' ? 'bg-primary text-white' : 'text-espresso/70 dark:text-white/70 hover:bg-black/5 dark:hover:bg-white/5'}`}
+                    className={cn(
+                        "flex items-center gap-3 px-6 py-3 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all",
+                        activeTab === 'videos' ? "bg-espresso text-white shadow-xl" : "text-espresso/40 dark:text-white/40 hover:bg-white/40 dark:hover:bg-white/5"
+                    )}
                 >
-                    <span className="material-symbols-outlined align-middle mr-1">video_library</span>
-                    Videos
+                    <span className="material-symbols-outlined text-[20px]">broadcast_on_personal</span>
+                    On-Demand Media
                 </button>
             </div>
 
             {/* View Toggle for Schedule */}
             {activeTab === 'schedule' && !loading && schedules.length > 0 && (
                 <div className="flex justify-end">
-                    <div className="bg-white dark:bg-[#2c2825] p-1 rounded-lg border border-black/5 flex items-center shadow-sm">
+                    <div className="bg-[#F5DEB3] dark:bg-white/5 p-1 rounded-2xl border border-espresso/10 flex items-center shadow-lg relative overflow-hidden">
+                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/10"></div>
                         <button
                             onClick={() => setViewMode('list')}
                             className={cn(
-                                "p-2 rounded-md transition-all",
-                                viewMode === 'list' ? "bg-primary text-white shadow-sm" : "text-espresso/60 dark:text-white/60 hover:bg-black/5 dark:hover:bg-white/5"
+                                "p-2.5 rounded-xl transition-all",
+                                viewMode === 'list' ? "bg-espresso text-white shadow-md rotate-3" : "text-espresso/40 dark:text-white/40 hover:bg-white/40 dark:hover:bg-white/5"
                             )}
                             title="List View"
                         >
-                            <span className="material-symbols-outlined text-[20px]">list</span>
+                            <span className="material-symbols-outlined text-[20px]">format_list_bulleted</span>
                         </button>
                         <button
                             onClick={() => setViewMode('calendar')}
                             className={cn(
-                                "p-2 rounded-md transition-all",
-                                viewMode === 'calendar' ? "bg-primary text-white shadow-sm" : "text-espresso/60 dark:text-white/60 hover:bg-black/5 dark:hover:bg-white/5"
+                                "p-2.5 rounded-xl transition-all",
+                                viewMode === 'calendar' ? "bg-espresso text-white shadow-md -rotate-3" : "text-espresso/40 dark:text-white/40 hover:bg-white/40 dark:hover:bg-white/5"
                             )}
                             title="Calendar View"
                         >
-                            <span className="material-symbols-outlined text-[20px]">calendar_month</span>
+                            <span className="material-symbols-outlined text-[20px]">calendar_apps_script</span>
                         </button>
                     </div>
                 </div>
@@ -143,33 +152,47 @@ export function ELearning() {
             ) : activeTab === 'schedule' ? (
                 /* Schedules */
                 schedules.length === 0 ? (
-                    <p className="text-center py-12 text-espresso/60 dark:text-white/60">No scheduled sessions yet.</p>
+                    <div className="text-center py-20 bg-[#F5DEB3] dark:bg-white/5 rounded-3xl border border-espresso/10 shadow-xl relative overflow-hidden group">
+                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                        <span className="material-symbols-outlined text-6xl text-espresso/20 dark:text-white/20 mb-4 block group-hover:scale-110 transition-transform">event_busy</span>
+                        <p className="text-espresso/40 dark:text-white/40 font-black uppercase tracking-widest text-sm">Silence in the schedule. No masterclasses pending.</p>
+                    </div>
                 ) : viewMode === 'list' ? (
-                    <div className="grid gap-4">
+                    <div className="grid gap-6">
                         {schedules.map(s => (
-                            <div key={s.id} className="bg-white dark:bg-[#2c2825] rounded-xl p-4 shadow-sm border border-black/5 flex flex-col md:flex-row md:items-center gap-4">
-                                <div className="flex-1">
-                                    <h3 className="font-bold text-espresso dark:text-white">{s.title || 'Zoom Session'}</h3>
-                                    <p className="text-sm text-espresso/60 dark:text-white/60">
-                                        {s.isRecurring ? (
-                                            <span className="flex items-center gap-1">
-                                                <span className="material-symbols-outlined text-[16px]">repeat</span>
-                                                Every {s.repeatDays?.join(', ')} at {s.dateTime ? format(s.dateTime.toDate ? s.dateTime.toDate() : new Date(s.dateTime), 'HH:mm') : ''}
-                                            </span>
-                                        ) : (
-                                            s.dateTime ? new Date(s.dateTime.seconds ? s.dateTime.toDate() : s.dateTime).toLocaleString() : 'Date TBD'
-                                        )}
-                                    </p>
+                            <div key={s.id} className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl p-6 shadow-xl border border-espresso/10 flex flex-col md:flex-row md:items-center gap-6 group hover:-translate-y-1 transition-all relative overflow-hidden">
+                                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                                <div className="flex-1 relative z-10">
+                                    <h3 className="font-serif font-bold text-xl text-espresso dark:text-white mb-2">{s.title || 'Zoom Masterclass'}</h3>
+                                    <div className="flex flex-wrap gap-4">
+                                        <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40 flex items-center gap-2">
+                                            {s.isRecurring ? (
+                                                <>
+                                                    <span className="material-symbols-outlined text-[16px]">sync</span>
+                                                    Spectral Frequency: Every {s.repeatDays?.join(', ')}
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <span className="material-symbols-outlined text-[16px]">event</span>
+                                                    Extraction Date: {s.dateTime ? new Date(s.dateTime.seconds ? s.dateTime.toDate() : s.dateTime).toLocaleDateString() : 'Pending'}
+                                                </>
+                                            )}
+                                        </p>
+                                        <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40 flex items-center gap-2">
+                                            <span className="material-symbols-outlined text-[16px]">schedule</span>
+                                            Operational Time: {s.dateTime ? format(s.dateTime.toDate ? s.dateTime.toDate() : new Date(s.dateTime), 'HH:mm') : 'TBD'}
+                                        </p>
+                                    </div>
                                 </div>
                                 {s.zoomLink && (
                                     <a
                                         href={s.zoomLink}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition-colors"
+                                        className="inline-flex items-center gap-3 px-8 py-4 bg-espresso text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:shadow-2xl transition-all shadow-xl active:scale-95 group-hover:scale-105"
                                     >
-                                        <span className="material-symbols-outlined">videocam</span>
-                                        Join Meeting
+                                        <span className="material-symbols-outlined text-[20px]">videocam</span>
+                                        Commence Uplink
                                     </a>
                                 )}
                             </div>
@@ -177,20 +200,21 @@ export function ELearning() {
                     </div>
                 ) : (
                     /* CALENDAR VIEW */
-                    <div className="bg-white dark:bg-[#2c2825] rounded-xl shadow-sm border border-black/5 overflow-hidden animate-fade-in">
-                        <div className="flex items-center justify-between p-4 border-b border-black/5">
-                            <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))} className="p-1 hover:bg-black/5 rounded-full">
+                    <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-2xl border border-espresso/10 overflow-hidden animate-fade-in relative group">
+                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                        <div className="flex items-center justify-between p-6 border-b border-espresso/10 relative z-10">
+                            <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))} className="h-10 w-10 flex items-center justify-center rounded-xl bg-white/40 hover:bg-white text-espresso transition-all shadow-sm active:scale-90">
                                 <span className="material-symbols-outlined">chevron_left</span>
                             </button>
-                            <h2 className="font-bold text-lg text-espresso dark:text-white">{format(currentMonth, 'MMMM yyyy')}</h2>
-                            <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))} className="p-1 hover:bg-black/5 rounded-full">
+                            <h2 className="font-serif font-bold text-xl text-espresso dark:text-white">{format(currentMonth, 'MMMM yyyy')}</h2>
+                            <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))} className="h-10 w-10 flex items-center justify-center rounded-xl bg-white/40 hover:bg-white text-espresso transition-all shadow-sm active:scale-90">
                                 <span className="material-symbols-outlined">chevron_right</span>
                             </button>
                         </div>
-                        <div className="grid grid-cols-7 text-center py-2 bg-black/5 dark:bg-white/5 text-sm font-bold text-espresso/70 dark:text-white/70">
+                        <div className="grid grid-cols-7 text-center py-4 bg-white/20 dark:bg-black/20 text-[10px] font-black uppercase tracking-[0.2em] text-espresso/50 dark:text-white/50 relative z-10">
                             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => <div key={d}>{d}</div>)}
                         </div>
-                        <div className="grid grid-cols-7 auto-rows-fr">
+                        <div className="grid grid-cols-7 relative z-10">
                             {calendarDays().map((day, idx) => {
                                 const isCurrentMonth = isSameMonth(day, currentMonth);
                                 const daySchedules = getSchedulesForDay(day);
@@ -230,28 +254,40 @@ export function ELearning() {
             ) : (
                 /* Videos */
                 videos.length === 0 ? (
-                    <p className="text-center py-12 text-espresso/60 dark:text-white/60">No videos shared yet.</p>
+                    <div className="text-center py-20 bg-[#F5DEB3] dark:bg-white/5 rounded-3xl border border-espresso/10 shadow-xl relative overflow-hidden group">
+                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                        <span className="material-symbols-outlined text-6xl text-espresso/20 dark:text-white/20 mb-4 block group-hover:scale-110 transition-transform">video_library</span>
+                        <p className="text-espresso/40 dark:text-white/40 font-black uppercase tracking-widest text-sm">Strategic media vault is empty.</p>
+                    </div>
                 ) : (
-                    <div className="grid gap-4 md:grid-cols-2">
+                    <div className="grid gap-8 md:grid-cols-2">
                         {videos.map(v => (
-                            <div key={v.id} className="bg-white dark:bg-[#2c2825] rounded-xl overflow-hidden shadow-sm border border-black/5">
-                                {v.thumbnailUrl && (
-                                    <img src={v.thumbnailUrl} alt={v.title} className="w-full h-40 object-cover" />
-                                )}
-                                <div className="p-4">
-                                    <h3 className="font-bold text-espresso dark:text-white">{v.title || 'Video'}</h3>
-                                    <p className="text-sm text-espresso/60 dark:text-white/60 mt-1 line-clamp-2">{v.description || ''}</p>
-                                    {v.url && (
-                                        <a
-                                            href={v.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="inline-flex items-center gap-1 mt-3 text-primary font-medium hover:underline"
-                                        >
-                                            <span className="material-symbols-outlined text-lg">play_circle</span>
-                                            Watch Video
-                                        </a>
+                            <div key={v.id} className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl overflow-hidden shadow-xl border border-espresso/10 group hover:shadow-2xl transition-all relative">
+                                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                                <div className="relative z-10">
+                                    {v.thumbnailUrl && (
+                                        <div className="relative aspect-video overflow-hidden">
+                                            <img src={v.thumbnailUrl} alt={v.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                                            <div className="absolute inset-0 bg-espresso/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                                                <span className="material-symbols-outlined text-white text-6xl animate-pulse">play_circle</span>
+                                            </div>
+                                        </div>
                                     )}
+                                    <div className="p-8">
+                                        <h3 className="font-serif font-bold text-xl text-espresso dark:text-white mb-2 leading-tight">{v.title || 'Instructional Media'}</h3>
+                                        <p className="text-sm font-medium text-espresso/60 dark:text-white/60 line-clamp-2 leading-relaxed">{v.description || ''}</p>
+                                        {v.url && (
+                                            <a
+                                                href={v.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-3 mt-6 px-8 py-3 bg-espresso text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:shadow-2xl transition-all shadow-xl active:scale-95"
+                                            >
+                                                <span className="material-symbols-outlined text-[20px]">play_circle</span>
+                                                Engage Content
+                                            </a>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         ))}

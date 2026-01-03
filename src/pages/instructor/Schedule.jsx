@@ -192,28 +192,29 @@ export function InstructorSchedule() {
         <div className="max-w-4xl mx-auto space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-serif font-bold text-espresso dark:text-white">E-Learning Schedule</h1>
-                    <p className="text-sm text-espresso/70 dark:text-white/70 mt-1">Manage your Zoom sessions and schedules</p>
+                    <h1 className="text-3xl font-serif font-bold text-espresso dark:text-white">Live Learning Hub</h1>
+                    <p className="text-espresso/60 dark:text-white/60 font-medium mt-1">Orchestrate your Zoom sessions and interactive schedules</p>
                 </div>
-                <div className="flex items-center gap-3">
-                    <div className="bg-white dark:bg-[#2c2825] p-1 rounded-lg border border-black/5 flex items-center shadow-sm">
+                <div className="flex items-center gap-4">
+                    <div className="bg-[#F5DEB3] dark:bg-white/5 p-1 rounded-xl border border-espresso/10 flex items-center shadow-lg relative overflow-hidden group">
+                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/10"></div>
                         <button
                             onClick={() => setViewMode('list')}
                             className={cn(
-                                "p-2 rounded-md transition-all",
-                                viewMode === 'list' ? "bg-primary text-white shadow-sm" : "text-espresso/60 dark:text-white/60 hover:bg-black/5 dark:hover:bg-white/5"
+                                "p-2.5 rounded-lg transition-all relative z-10",
+                                viewMode === 'list' ? "bg-espresso text-white shadow-xl" : "text-espresso/40 dark:text-white/40 hover:bg-white/40 dark:hover:bg-white/5"
                             )}
-                            title="List View"
+                            title="Analytical List"
                         >
                             <span className="material-symbols-outlined text-[20px]">list</span>
                         </button>
                         <button
                             onClick={() => setViewMode('calendar')}
                             className={cn(
-                                "p-2 rounded-md transition-all",
-                                viewMode === 'calendar' ? "bg-primary text-white shadow-sm" : "text-espresso/60 dark:text-white/60 hover:bg-black/5 dark:hover:bg-white/5"
+                                "p-2.5 rounded-lg transition-all relative z-10",
+                                viewMode === 'calendar' ? "bg-espresso text-white shadow-xl" : "text-espresso/40 dark:text-white/40 hover:bg-white/40 dark:hover:bg-white/5"
                             )}
-                            title="Calendar View"
+                            title="Interactive Grid"
                         >
                             <span className="material-symbols-outlined text-[20px]">calendar_month</span>
                         </button>
@@ -232,10 +233,10 @@ export function InstructorSchedule() {
                             });
                             setShowAddModal(true);
                         }}
-                        className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition-colors shadow-sm"
+                        className="flex items-center gap-3 px-6 py-3 bg-espresso text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:shadow-2xl transition-all shadow-xl active:scale-95"
                     >
-                        <span className="material-symbols-outlined text-[20px]">add</span>
-                        <span className="hidden sm:inline">Add Session</span>
+                        <span className="material-symbols-outlined text-[20px]">add_circle</span>
+                        <span className="hidden sm:inline">Launch Session</span>
                     </button>
                 </div>
             </div>
@@ -245,9 +246,10 @@ export function InstructorSchedule() {
                     <span className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></span>
                 </div>
             ) : schedules.length === 0 ? (
-                <div className="text-center py-12 bg-white dark:bg-[#2c2825] rounded-xl border border-black/5">
-                    <span className="material-symbols-outlined text-5xl text-espresso/30 dark:text-white/30 mb-3 block">event</span>
-                    <p className="text-espresso/60 dark:text-white/60">No schedules yet. Create your first session!</p>
+                <div className="text-center py-20 bg-[#F5DEB3] dark:bg-white/5 rounded-3xl border border-espresso/10 shadow-xl relative overflow-hidden group">
+                    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                    <span className="material-symbols-outlined text-6xl text-espresso/20 dark:text-white/20 mb-4 block group-hover:scale-110 transition-transform">event_busy</span>
+                    <p className="text-espresso/40 dark:text-white/40 font-black uppercase tracking-widest text-sm">Silence in the schedule. Launch something new.</p>
                 </div>
             ) : viewMode === 'list' ? (
                 /* LIST VIEW */
@@ -256,36 +258,39 @@ export function InstructorSchedule() {
                         const dateObj = schedule.dateTime?.toDate ? schedule.dateTime.toDate() : new Date(schedule.dateTime);
                         const isPast = dateObj < new Date();
                         return (
-                            <div key={schedule.id} className={cn("bg-white dark:bg-[#2c2825] rounded-xl p-5 shadow-sm border border-black/5", isPast && 'opacity-60')}>
-                                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                            <div key={schedule.id} className={cn("bg-[#F5DEB3] dark:bg-white/5 rounded-3xl p-6 shadow-xl border border-espresso/10 relative overflow-hidden group transition-all hover:-translate-y-1", isPast && 'opacity-60 grayscale')}>
+                                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-5 relative z-10">
                                     <div className="flex-1">
                                         <div className="flex items-start gap-3">
-                                            <span className="material-symbols-outlined text-primary mt-1">videocam</span>
+                                            <span className="h-10 w-10 rounded-2xl bg-espresso flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform">
+                                                <span className="material-symbols-outlined text-[20px]">videocam</span>
+                                            </span>
                                             <div className="flex-1">
-                                                <h3 className="font-bold text-lg text-espresso dark:text-white">{schedule.title}</h3>
-                                                <p className="text-sm text-espresso/70 dark:text-white/70 mt-1">
-                                                    <span className="material-symbols-outlined text-[16px] align-middle mr-1">schedule</span>
+                                                <h3 className="font-serif font-bold text-xl text-espresso dark:text-white mb-1">{schedule.title}</h3>
+                                                <p className="text-[10px] font-black uppercase tracking-widest text-espresso/50 dark:text-white/50 flex items-center gap-2">
+                                                    <span className="material-symbols-outlined text-[14px]">calendar_today</span>
                                                     {dateObj.toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}
                                                 </p>
                                                 {schedule.description && (
-                                                    <p className="text-sm text-espresso/60 dark:text-white/60 mt-2">{schedule.description}</p>
+                                                    <p className="text-sm font-medium text-espresso/60 dark:text-white/60 mt-3 leading-relaxed">{schedule.description}</p>
                                                 )}
                                                 {schedule.zoomLink && (
                                                     <a
                                                         href={schedule.zoomLink}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="inline-flex items-center gap-1 mt-3 text-primary font-medium hover:underline text-sm"
+                                                        className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-white/50 dark:bg-white/5 rounded-xl text-espresso dark:text-white font-black uppercase tracking-widest text-[9px] hover:bg-white transition-all shadow-sm group/link"
                                                     >
-                                                        <span className="material-symbols-outlined text-[18px]">link</span>
-                                                        {schedule.zoomLink.length > 50 ? schedule.zoomLink.slice(0, 50) + '...' : schedule.zoomLink}
+                                                        <span className="material-symbols-outlined text-[16px] group-hover/link:rotate-12 transition-transform">link</span>
+                                                        Strategic Gateway
                                                     </a>
                                                 )}
                                                 {schedule.isRecurring && (
-                                                    <div className="mt-2 flex flex-wrap gap-1">
-                                                        <span className="text-[10px] font-bold text-primary uppercase bg-primary/10 px-2 py-0.5 rounded">Recurring</span>
+                                                    <div className="mt-4 flex flex-wrap gap-2 text-[9px] font-black uppercase tracking-widest">
+                                                        <span className="text-white bg-espresso px-2.5 py-1 rounded-full shadow-sm">Recurring Chain</span>
                                                         {schedule.repeatDays?.map(d => (
-                                                            <span key={d} className="text-[10px] text-espresso/50 dark:text-white/50 bg-gray-100 dark:bg-white/5 px-2 py-0.5 rounded">{d.slice(0, 3)}</span>
+                                                            <span key={d} className="text-espresso/50 dark:text-white/50 bg-white/40 dark:bg-white/5 px-2.5 py-1 rounded-full border border-espresso/5">{d.slice(0, 3)}</span>
                                                         ))}
                                                     </div>
                                                 )}
@@ -293,11 +298,11 @@ export function InstructorSchedule() {
                                         </div>
                                     </div>
                                     <div className="flex gap-2">
-                                        <button onClick={() => handleEdit(schedule)} className="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg text-espresso/60 dark:text-white/60">
-                                            <span className="material-symbols-outlined text-[20px]">edit</span>
+                                        <button onClick={() => handleEdit(schedule)} className="p-3 bg-white/40 dark:bg-white/5 hover:bg-white dark:hover:bg-white/10 rounded-2xl text-espresso/40 hover:text-espresso transition-all shadow-sm active:scale-95">
+                                            <span className="material-symbols-outlined text-[20px]">edit_note</span>
                                         </button>
-                                        <button onClick={() => handleDelete(schedule.id)} className="p-2 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg text-red-500">
-                                            <span className="material-symbols-outlined text-[20px]">delete</span>
+                                        <button onClick={() => handleDelete(schedule.id)} className="p-3 bg-red-500/5 hover:bg-red-500 hover:text-white rounded-2xl text-red-500 transition-all shadow-sm active:scale-95">
+                                            <span className="material-symbols-outlined text-[20px]">delete_sweep</span>
                                         </button>
                                     </div>
                                 </div>
@@ -307,17 +312,18 @@ export function InstructorSchedule() {
                 </div>
             ) : (
                 /* CALENDAR VIEW */
-                <div className="bg-white dark:bg-[#2c2825] rounded-xl shadow-sm border border-black/5 overflow-hidden">
-                    <div className="flex items-center justify-between p-4 border-b border-black/5">
-                        <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))} className="p-1 hover:bg-black/5 rounded-full">
-                            <span className="material-symbols-outlined">chevron_left</span>
+                <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-2xl border border-espresso/10 overflow-hidden relative group">
+                    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                    <div className="flex items-center justify-between p-6 border-b border-espresso/10 relative z-10">
+                        <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))} className="p-2 hover:bg-white/50 dark:hover:bg-white/5 rounded-full text-espresso/40 hover:text-espresso transition-all">
+                            <span className="material-symbols-outlined">west</span>
                         </button>
-                        <h2 className="font-bold text-lg text-espresso dark:text-white">{format(currentMonth, 'MMMM yyyy')}</h2>
-                        <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))} className="p-1 hover:bg-black/5 rounded-full">
-                            <span className="material-symbols-outlined">chevron_right</span>
+                        <h2 className="font-serif font-bold text-2xl text-espresso dark:text-white">{format(currentMonth, 'MMMM yyyy')}</h2>
+                        <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))} className="p-2 hover:bg-white/50 dark:hover:bg-white/5 rounded-full text-espresso/40 hover:text-espresso transition-all">
+                            <span className="material-symbols-outlined">east</span>
                         </button>
                     </div>
-                    <div className="grid grid-cols-7 text-center py-2 bg-black/5 dark:bg-white/5 text-sm font-bold text-espresso/70 dark:text-white/70">
+                    <div className="grid grid-cols-7 text-center py-4 bg-white/20 dark:bg-black/20 text-[10px] font-black uppercase tracking-[0.2em] text-espresso/50 dark:text-white/50 relative z-10">
                         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => <div key={d}>{d}</div>)}
                     </div>
                     <div className="grid grid-cols-7 auto-rows-fr">
@@ -327,12 +333,12 @@ export function InstructorSchedule() {
 
                             return (
                                 <div key={day.toString()} className={cn(
-                                    "min-h-[100px] p-2 border-b border-r border-black/5 dark:border-white/5 relative group cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 transition-colors",
-                                    !isCurrentMonth && "bg-black/[0.02] dark:bg-white/[0.02] text-opacity-30"
+                                    "min-h-[120px] p-3 border-b border-r border-espresso/5 dark:border-white/5 relative group cursor-pointer hover:bg-white/40 dark:hover:bg-white/5 transition-all z-10",
+                                    !isCurrentMonth && "opacity-20 pointer-events-none grayscale"
                                 )}>
                                     <span className={cn(
-                                        "text-sm font-medium block mb-1",
-                                        isSameDay(day, new Date()) ? "bg-primary text-white w-6 h-6 rounded-full flex items-center justify-center" : "text-espresso dark:text-white"
+                                        "text-xs font-black block mb-3 uppercase tracking-tighter",
+                                        isSameDay(day, new Date()) ? "text-primary scale-110 drop-shadow-sm" : "text-espresso dark:text-white"
                                     )}>
                                         {format(day, 'd')}
                                     </span>

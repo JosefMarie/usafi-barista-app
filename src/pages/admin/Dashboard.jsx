@@ -178,176 +178,216 @@ export function AdminDashboard() {
     }
 
     return (
-        <div className="max-w-5xl mx-auto space-y-8">
-            {/* Header */}
-            <div>
-                <p className="text-primary font-display font-medium text-sm mb-1">
-                    {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
-                </p>
-                <h1 className="text-espresso dark:text-white text-3xl md:text-4xl font-bold font-serif leading-tight">
-                    Dashboard & Analytics
-                </h1>
-            </div>
-
-            {/* Top Stats Scrollable Row */}
-            <div className="flex overflow-x-auto hide-scrollbar gap-4 pb-2 snap-x">
-                <div className="flex min-w-[200px] flex-1 snap-center flex-col gap-3 rounded-2xl p-6 bg-white dark:bg-[#2c2825] shadow-sm border border-black/5">
-                    <div className="flex items-center gap-2">
-                        <span className="material-symbols-outlined text-primary">school</span>
-                        <p className="text-espresso/70 dark:text-white/70 text-sm font-medium font-display">Students</p>
-                    </div>
-                    <div>
-                        <p className="text-espresso dark:text-white text-4xl font-bold font-serif leading-none">{stats.totalStudents}</p>
-                        <div className="flex items-center gap-1 mt-2">
-                            <span className="material-symbols-outlined text-green-600 text-sm">trending_up</span>
-                            <p className="text-green-600 text-xs font-bold font-display">+12% this week</p>
-                        </div>
-                    </div>
+        <div className="flex-1 flex flex-col h-full bg-[#F5DEB3] dark:bg-[#1c1916] overflow-y-auto animate-fade-in pb-20">
+            <div className="w-full px-2 py-10 space-y-10">
+                {/* Header */}
+                <div className="relative">
+                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 -ml-10"></div>
+                    <p className="text-espresso/40 dark:text-white/40 font-black text-[10px] uppercase tracking-[0.4em] mb-2">
+                        {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })} // COMMAND CENTER ALPHA
+                    </p>
+                    <h1 className="text-4xl md:text-5xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none">
+                        Dashboard & <span className="text-espresso/60">Analytics</span>
+                    </h1>
                 </div>
 
-                <div className="flex min-w-[200px] flex-1 snap-center flex-col gap-3 rounded-2xl p-6 bg-white dark:bg-[#2c2825] shadow-sm border border-black/5">
-                    <div className="flex items-center gap-2">
-                        <span className="material-symbols-outlined text-primary">local_cafe</span>
-                        <p className="text-espresso/70 dark:text-white/70 text-sm font-medium font-display">Active Courses</p>
-                    </div>
-                    <div>
-                        <p className="text-espresso dark:text-white text-4xl font-bold font-serif leading-none">{stats.activeCourses}</p>
-                        <p className="text-espresso/40 dark:text-white/40 text-xs font-medium font-display mt-2">All available</p>
-                    </div>
-                </div>
-
-                <div className="flex min-w-[200px] flex-1 snap-center flex-col gap-3 rounded-2xl p-6 bg-white dark:bg-[#2c2825] shadow-sm border border-black/5">
-                    <div className="flex items-center gap-2">
-                        <span className="material-symbols-outlined text-primary">approval_delegation</span>
-                        <p className="text-espresso/70 dark:text-white/70 text-sm font-medium font-display">Pending</p>
-                    </div>
-                    <div>
-                        <p className="text-espresso dark:text-white text-4xl font-bold font-serif leading-none">{stats.pendingApprovals}</p>
-                        <p className="text-espresso/40 dark:text-white/40 text-xs font-medium font-display mt-2">Approvals needed</p>
-                    </div>
-                </div>
-            </div>
-
-            {/* Revenue & Engagement Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex flex-col gap-2 rounded-2xl p-6 bg-primary text-white shadow-lg shadow-primary/20">
-                    <div className="flex justify-between items-start">
-                        <div className="bg-white/20 p-2 rounded-lg">
-                            <span className="material-symbols-outlined text-white text-xl">payments</span>
-                        </div>
-                        <span className="bg-white/20 text-white text-xs font-bold px-2 py-1 rounded-full">+8.5%</span>
-                    </div>
-                    <div className="mt-4">
-                        <p className="text-white/80 text-sm font-medium font-display">Monthly Revenue</p>
-                        <p className="text-white text-3xl font-bold font-serif leading-tight">
-                            {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'RWF' }).format(stats.monthlyRevenue)}
-                        </p>
-                    </div>
-                </div>
-
-                <div className="flex flex-col gap-2 rounded-2xl p-6 bg-white dark:bg-[#2c2825] border border-black/5 shadow-sm">
-                    <div className="flex justify-between items-start">
-                        <div className="bg-primary/10 p-2 rounded-lg">
-                            <span className="material-symbols-outlined text-primary text-xl">diversity_3</span>
-                        </div>
-                        <span className="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-full">+4.2%</span>
-                    </div>
-                    <div className="mt-4">
-                        <p className="text-espresso/60 dark:text-white/60 text-sm font-medium font-display">Student Engagement</p>
-                        <p className="text-espresso dark:text-white text-3xl font-bold font-serif leading-tight">{stats.studentEngagement}%</p>
-                    </div>
-                </div>
-            </div>
-
-            {/* Monthly Enrollments Chart */}
-            <div className="rounded-2xl bg-white dark:bg-[#2c2825] border border-black/5 p-6 shadow-sm overflow-hidden">
-                <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-espresso dark:text-white text-lg font-bold font-serif">Monthly Enrollments</h3>
-                    <button className="text-primary text-xs font-bold font-display uppercase tracking-wide">Past 12 Months</button>
-                </div>
-                <div className="w-full h-64 flex items-end justify-between gap-1 sm:gap-2 relative mt-8">
-                    {/* Background Grid Lines */}
-                    <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
-                        {[...Array(5)].map((_, i) => (
-                            <div key={i} className="border-t border-dashed border-espresso/5 dark:border-white/5 w-full h-0"></div>
-                        ))}
-                    </div>
-
-                    {/* Bars */}
-                    {enrollmentData.length > 0 ? enrollmentData.map((item, index) => (
-                        <div key={index} className="flex flex-col items-center gap-2 flex-1 z-10 group cursor-pointer h-full justify-end">
-                            <div
-                                className={`w-full max-w-[20px] sm:max-w-[30px] rounded-t-sm sm:rounded-t-lg relative transition-all duration-300 ${index === enrollmentData.length - 1
-                                    ? 'bg-primary shadow-lg shadow-primary/30'
-                                    : 'bg-primary/30 dark:bg-primary/20 hover:bg-primary'
-                                    }`}
-                                style={{ height: item.height }}
-                            >
-                                <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-espresso text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-20 pointer-events-none">
-                                    {item.count} Students
-                                </div>
+                {/* Top Stats Scrollable Row */}
+                <div className="flex overflow-x-auto hide-scrollbar gap-6 pb-4 snap-x">
+                    <div className="flex min-w-[280px] flex-1 snap-center flex-col gap-4 rounded-[2rem] p-8 bg-espresso text-white shadow-2xl shadow-espresso/20 relative overflow-hidden group">
+                        <div className="absolute left-0 top-0 bottom-0 w-2 bg-white/10 group-hover:bg-white transition-colors"></div>
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <span className="material-symbols-outlined text-white/40">school</span>
+                                <p className="text-white/40 text-[10px] font-black uppercase tracking-widest">Global Students</p>
                             </div>
-                            <span className={`text-[9px] sm:text-[10px] font-bold uppercase font-display truncate w-full text-center ${index === enrollmentData.length - 1 ? 'text-primary' : 'text-espresso/40 dark:text-white/40'
-                                }`}>
-                                {item.month}
-                            </span>
+                            <span className="bg-white/10 text-white text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-tighter self-start">+12.4%</span>
                         </div>
-                    )) : (
-                        <div className="text-center w-full text-xs text-espresso/40">No enrollment data for this period</div>
-                    )}
-                </div>
-            </div>
+                        <div>
+                            <p className="text-5xl font-serif font-black leading-none">{stats.totalStudents}</p>
+                            <p className="text-white/30 text-[9px] font-black mt-4 uppercase tracking-[0.2em]">Active participants in matrix</p>
+                        </div>
+                    </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Course Enrollments Stats */}
-                <div>
-                    <h3 className="text-espresso dark:text-white text-lg font-bold font-serif mb-4 leading-tight">Popular Courses</h3>
-                    <div className="flex flex-col gap-6 bg-white dark:bg-[#2c2825] p-6 rounded-2xl border border-black/5 shadow-sm">
-                        {courseStats.length > 0 ? courseStats.map((course) => (
-                            <div key={course.id}>
-                                <div className="flex justify-between items-end mb-2">
-                                    <div>
-                                        <p className="text-espresso dark:text-white font-bold font-display text-sm">{course.name}</p>
-                                        <p className="text-espresso/50 dark:text-white/50 text-xs font-display">{course.students} active students</p>
+                    <div className="flex min-w-[280px] flex-1 snap-center flex-col gap-4 rounded-[2rem] p-8 bg-white/40 dark:bg-black/20 text-espresso dark:text-white border border-espresso/10 shadow-xl relative overflow-hidden group">
+                        <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover:bg-espresso transition-colors"></div>
+                        <div className="flex items-center gap-3">
+                            <span className="material-symbols-outlined text-espresso/40 dark:text-white/40">local_cafe</span>
+                            <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest">Active Architecture</p>
+                        </div>
+                        <div>
+                            <p className="text-5xl font-serif font-black leading-none">{stats.activeCourses}</p>
+                            <p className="text-espresso/30 dark:text-white/30 text-[9px] font-black mt-4 uppercase tracking-[0.2em]">Validated course nodes</p>
+                        </div>
+                    </div>
+
+                    <div className="flex min-w-[280px] flex-1 snap-center flex-col gap-4 rounded-[2rem] p-8 bg-white/40 dark:bg-black/20 text-espresso dark:text-white border border-espresso/10 shadow-xl relative overflow-hidden group">
+                        <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover:bg-espresso transition-colors"></div>
+                        <div className="flex items-center gap-3">
+                            <span className="material-symbols-outlined text-espresso/40 dark:text-white/40">approval_delegation</span>
+                            <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest">Queue Status</p>
+                        </div>
+                        <div>
+                            <p className="text-5xl font-serif font-black leading-none text-amber-600">{stats.pendingApprovals}</p>
+                            <p className="text-espresso/30 dark:text-white/30 text-[9px] font-black mt-4 uppercase tracking-[0.2em]">Approvals required</p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Revenue & Engagement Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="flex items-center gap-8 rounded-[2.5rem] p-10 bg-white/40 dark:bg-black/20 border border-espresso/10 shadow-2xl relative overflow-hidden group/rev">
+                        <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover/rev:bg-espresso transition-colors"></div>
+                        <div className="h-20 w-20 rounded-[1.5rem] bg-espresso text-white flex items-center justify-center shadow-xl shadow-espresso/20 shrink-0">
+                            <span className="material-symbols-outlined text-4xl">payments</span>
+                        </div>
+                        <div>
+                            <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-[0.4em] mb-2">Monthly Fluid Revenue</p>
+                            <p className="text-4xl font-serif font-black text-espresso dark:text-white leading-tight">
+                                {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'RWF' }).format(stats.monthlyRevenue)}
+                            </p>
+                        </div>
+                        <div className="absolute right-8 top-8">
+                            <span className="text-green-600 text-[10px] font-black uppercase tracking-widest bg-green-50 px-3 py-1 rounded-full">+8.5%</span>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-8 rounded-[2.5rem] p-10 bg-white/40 dark:bg-black/20 border border-espresso/10 shadow-2xl relative overflow-hidden group/eng">
+                        <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover/eng:bg-espresso transition-colors"></div>
+                        <div className="h-20 w-20 rounded-[1.5rem] bg-espresso text-white flex items-center justify-center shadow-xl shadow-espresso/20 shrink-0">
+                            <span className="material-symbols-outlined text-4xl">diversity_3</span>
+                        </div>
+                        <div>
+                            <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-[0.4em] mb-2">Efficiency Index</p>
+                            <p className="text-5xl font-serif font-black text-espresso dark:text-white leading-tight">{stats.studentEngagement}%</p>
+                        </div>
+                        <div className="absolute right-8 top-8">
+                            <span className="text-green-600 text-[10px] font-black uppercase tracking-widest bg-green-50 px-3 py-1 rounded-full">+4.2%</span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Monthly Enrollments Chart */}
+                <div className="rounded-[3rem] bg-white/40 dark:bg-black/20 border border-espresso/10 p-12 shadow-2xl relative overflow-hidden group/chart">
+                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/10 group-hover/chart:bg-espresso transition-colors"></div>
+                    <div className="flex justify-between items-center mb-12">
+                        <div>
+                            <h3 className="text-2xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight">Growth Projection</h3>
+                            <p className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em] mt-1">12-Month Enrollment Cadence</p>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <span className="w-3 h-3 rounded-full bg-espresso"></span>
+                            <span className="text-[10px] font-black text-espresso uppercase tracking-widest">Primary Metrics</span>
+                        </div>
+                    </div>
+                    <div className="w-full h-72 flex items-end justify-between gap-4 relative mt-16 px-4">
+                        {/* Background Grid Lines */}
+                        <div className="absolute inset-x-0 bottom-0 top-0 flex flex-col justify-between pointer-events-none pb-8">
+                            {[...Array(5)].map((_, i) => (
+                                <div key={i} className="border-t border-espresso/5 dark:border-white/5 w-full h-0"></div>
+                            ))}
+                        </div>
+
+                        {/* Bars */}
+                        {enrollmentData.length > 0 ? enrollmentData.map((item, index) => (
+                            <div key={index} className="flex flex-col items-center gap-4 flex-1 z-10 group/bar cursor-pointer h-full justify-end">
+                                <div
+                                    className={`w-full max-w-[40px] rounded-2xl relative transition-all duration-500 delay-[${index * 50}ms] ${index === enrollmentData.length - 1
+                                        ? 'bg-espresso shadow-2xl shadow-espresso/40'
+                                        : 'bg-espresso/10 dark:bg-espresso/20 group-hover/bar:bg-espresso/80 group-hover/bar:shadow-xl'
+                                        }`}
+                                    style={{ height: item.height }}
+                                >
+                                    <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-espresso text-white text-[9px] font-black py-2 px-3 rounded-xl opacity-0 group-hover/bar:opacity-100 transition-all scale-75 group-hover/bar:scale-100 whitespace-nowrap z-20 pointer-events-none shadow-xl uppercase tracking-widest">
+                                        {item.count} NODES
                                     </div>
-                                    {/* <p className={`font-bold text-sm ${course.progress > 90 ? 'text-green-600' : 'text-primary'}`}>{course.progress}%</p> */}
                                 </div>
-                                {/* <div className="h-2 w-full bg-black/5 dark:bg-white/5 rounded-full overflow-hidden">
-                                    <div className={`h-full rounded-full ${course.color}`} style={{ width: `${course.progress}%` }}></div>
-                                </div> */}
-                                {/* Replaced progress bar with simple visual since we don't have real progress data yet */}
-                                <div className="h-1.5 w-full bg-black/5 dark:bg-white/5 rounded-full overflow-hidden">
-                                    <div className="h-full bg-primary/50" style={{ width: '100%' }}></div>
-                                </div>
+                                <span className={`text-[10px] font-black uppercase tracking-widest transition-colors ${index === enrollmentData.length - 1 ? 'text-espresso' : 'text-espresso/30 dark:text-white/20'
+                                    }`}>
+                                    {item.month}
+                                </span>
                             </div>
                         )) : (
-                            <div className="text-sm text-espresso/50">No active courses data available.</div>
+                            <div className="flex flex-col items-center justify-center w-full h-full gap-4 opacity-20">
+                                <span className="material-symbols-outlined text-4xl">monitoring</span>
+                                <p className="text-[10px] font-black uppercase tracking-[0.4em]">Awaiting Data Feed</p>
+                            </div>
                         )}
                     </div>
                 </div>
 
-                {/* Recent Enrollments */}
-                <div>
-                    <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-espresso dark:text-white text-lg font-bold leading-tight font-serif">Recent Enrollments</h3>
-                        <Link to="/admin/students" className="text-primary text-sm font-semibold font-display hover:underline">View All</Link>
-                    </div>
-                    <div className="flex flex-col bg-white dark:bg-[#2c2825] rounded-2xl border border-black/5 shadow-sm overflow-hidden">
-                        {recentEnrollments.length > 0 ? recentEnrollments.map((student, i) => (
-                            <div key={i} className="flex items-center gap-4 p-4 border-b border-black/5 last:border-0 hover:bg-black/5 transition-colors">
-                                <img src={student.img} alt={student.name} className="w-10 h-10 rounded-full object-cover" />
-                                <div className="flex flex-1 flex-col">
-                                    <h4 className="text-espresso dark:text-white text-sm font-semibold font-display">{student.name}</h4>
-                                    <p className="text-espresso/60 dark:text-white/60 text-xs font-display">Enrolled in <span className="text-primary font-medium">{student.course}</span></p>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 pt-4">
+                    {/* Course Enrollments Stats */}
+                    <div className="space-y-6">
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.4em] flex items-center gap-3">
+                                <span className="w-8 h-px bg-espresso/20"></span>
+                                Strategic Assets
+                            </h3>
+                            <span className="text-[10px] font-black text-espresso/20 uppercase tracking-widest">Capacity: Unlimited</span>
+                        </div>
+                        <div className="flex flex-col gap-8 bg-white/40 dark:bg-black/20 p-10 rounded-[3rem] border border-espresso/10 shadow-2xl relative overflow-hidden group/pop">
+                            <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover/pop:bg-espresso transition-colors"></div>
+                            {courseStats.length > 0 ? courseStats.map((course) => (
+                                <div key={course.id} className="relative z-10 space-y-4 group/item">
+                                    <div className="flex justify-between items-end">
+                                        <div>
+                                            <p className="text-xl font-serif font-black text-espresso dark:text-white tracking-tight group-hover/item:translate-x-1 transition-transform">{course.name}</p>
+                                            <div className="flex items-center gap-3 mt-1">
+                                                <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                                                <p className="text-espresso/40 dark:text-white/40 text-[9px] font-black uppercase tracking-widest">{course.students} ACTIVE NODES</p>
+                                            </div>
+                                        </div>
+                                        <span className="text-[10px] font-black text-espresso/20 uppercase font-serif italic">0{courseStats.indexOf(course) + 1}</span>
+                                    </div>
+                                    <div className="h-2 w-full bg-espresso/5 rounded-full overflow-hidden border border-espresso/5 shadow-inner">
+                                        <div className="h-full bg-espresso shadow-lg" style={{ width: '100%' }}></div>
+                                    </div>
                                 </div>
-                                <span className="text-espresso/40 dark:text-white/40 text-xs font-display whitespace-nowrap">{student.time}</span>
-                            </div>
-                        )) : (
-                            <div className="p-4 text-center text-xs text-espresso/40">No recent enrollments found.</div>
-                        )}
+                            )) : (
+                                <div className="text-[10px] font-black uppercase tracking-[0.3em] text-espresso/20 italic text-center py-10">Historical data only</div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Recent Enrollments */}
+                    <div className="space-y-6">
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.4em] flex items-center gap-3">
+                                <span className="w-8 h-px bg-espresso/20"></span>
+                                Fresh Connections
+                            </h3>
+                            <Link to="/admin/students" className="text-[10px] font-black text-espresso uppercase tracking-widest hover:underline">Full Registry</Link>
+                        </div>
+                        <div className="flex flex-col bg-white/40 dark:bg-black/20 rounded-[3rem] border border-espresso/10 shadow-2xl overflow-hidden relative group/rec">
+                            <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover/rec:bg-espresso transition-colors"></div>
+                            {recentEnrollments.length > 0 ? recentEnrollments.map((student, i) => (
+                                <div key={i} className="flex items-center gap-6 p-6 border-b border-espresso/5 last:border-0 hover:bg-espresso/5 transition-all relative z-10 group/stu">
+                                    <div className="relative shrink-0">
+                                        <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-espresso/10 shadow-lg group-hover/stu:scale-110 transition-transform">
+                                            <img src={student.img} alt={student.name} className="w-full h-full object-cover" />
+                                        </div>
+                                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-[#F5DEB3]"></div>
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <h4 className="text-lg font-serif font-black text-espresso dark:text-white truncate">{student.name}</h4>
+                                        <p className="text-[9px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest mt-1">
+                                            Integrated into <span className="text-espresso font-black">{student.course}</span>
+                                        </p>
+                                    </div>
+                                    <span className="text-[10px] font-black text-espresso/20 uppercase italic transition-colors group-hover/stu:text-espresso/60">{student.time}</span>
+                                </div>
+                            )) : (
+                                <div className="p-20 text-center flex flex-col items-center gap-4 opacity-20">
+                                    <span className="material-symbols-outlined text-4xl">person_add_disabled</span>
+                                    <p className="text-[10px] font-black uppercase tracking-[0.4em]">Zero fresh intake detected</p>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     );
 }
+
+

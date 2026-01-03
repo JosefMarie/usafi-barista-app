@@ -77,43 +77,44 @@ export function PrivacySettings() {
                 <div className="mb-8">
                     <button
                         onClick={() => navigate(-1)}
-                        className="flex items-center gap-2 text-espresso/70 dark:text-white/70 hover:text-primary mb-4"
+                        className="flex items-center gap-2 text-espresso/70 dark:text-white/70 hover:text-espresso font-black uppercase tracking-widest text-[10px] mb-6 group transition-all"
                     >
-                        <span className="material-symbols-outlined">arrow_back</span>
-                        Back
+                        <span className="material-symbols-outlined text-[18px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                        Back to Portal
                     </button>
-                    <h1 className="text-3xl font-serif font-bold text-espresso dark:text-white mb-2">
+                    <h1 className="text-4xl font-serif font-bold text-espresso dark:text-white mb-2">
                         Privacy & Permissions
                     </h1>
-                    <p className="text-espresso/60 dark:text-white/60">
-                        Manage your privacy settings and control how your information is shared
+                    <p className="text-espresso/60 dark:text-white/60 font-medium">
+                        Manage your digital presence and secure your platform interactions
                     </p>
                 </div>
 
                 {/* Profile Visibility */}
-                <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-sm border border-black/5 dark:border-white/5 p-6 mb-6">
-                    <h2 className="text-xl font-bold text-espresso dark:text-white mb-4">Profile Visibility</h2>
+                <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/10 p-8 mb-8 relative overflow-hidden group">
+                    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                    <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 mb-6 uppercase tracking-[0.2em] relative z-10">Access & Identification</h2>
 
                     <div className="space-y-4">
-                        <div>
-                            <label className="block text-sm font-medium text-espresso dark:text-white mb-2">
-                                Who can see your profile?
+                        <div className="relative z-10">
+                            <label className="block text-[10px] font-black text-espresso/40 dark:text-white/40 mb-2 uppercase tracking-widest">
+                                Global Visibility Threshold
                             </label>
                             <select
                                 value={settings.profileVisibility}
                                 onChange={e => setSettings({ ...settings, profileVisibility: e.target.value })}
-                                className="w-full px-4 py-3 rounded-lg border border-black/10 dark:border-white/10 bg-transparent text-espresso dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                                className="w-full px-4 py-3.5 rounded-xl border border-espresso/10 bg-white/40 dark:bg-white/5 text-espresso dark:text-white focus:outline-none focus:ring-2 focus:ring-espresso transition-all font-bold text-sm"
                             >
-                                <option value="public">Public - Anyone can see</option>
-                                <option value="connections">Connections Only - Only people you know</option>
-                                <option value="private">Private - Only you</option>
+                                <option value="public">Public - Worldwide Presence</option>
+                                <option value="connections">Connections Only - Internal Network</option>
+                                <option value="private">Private - Stealth Mode</option>
                             </select>
                         </div>
 
-                        <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-lg">
+                        <div className="flex items-center justify-between p-5 bg-white/30 dark:bg-white/5 rounded-2xl border border-espresso/5 relative z-10">
                             <div>
-                                <p className="font-medium text-espresso dark:text-white">Show Email Address</p>
-                                <p className="text-sm text-espresso/60 dark:text-white/60">Allow others to see your email</p>
+                                <p className="font-bold text-espresso dark:text-white text-sm">Broadcast Email</p>
+                                <p className="text-xs text-espresso/50 dark:text-white/50">Allow network to view your contact path</p>
                             </div>
                             <label className="relative inline-flex items-center cursor-pointer">
                                 <input
@@ -122,14 +123,14 @@ export function PrivacySettings() {
                                     onChange={e => setSettings({ ...settings, showEmail: e.target.checked })}
                                     className="sr-only peer"
                                 />
-                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                                <div className="w-12 h-6 bg-espresso/10 border border-espresso/10 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-espresso"></div>
                             </label>
                         </div>
 
-                        <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-lg">
+                        <div className="flex items-center justify-between p-5 bg-white/30 dark:bg-white/5 rounded-2xl border border-espresso/5 relative z-10">
                             <div>
-                                <p className="font-medium text-espresso dark:text-white">Show Phone Number</p>
-                                <p className="text-sm text-espresso/60 dark:text-white/60">Allow others to see your phone</p>
+                                <p className="font-bold text-espresso dark:text-white text-sm">Show Mobile Link</p>
+                                <p className="text-xs text-espresso/50 dark:text-white/50">Enable direct phone communication</p>
                             </div>
                             <label className="relative inline-flex items-center cursor-pointer">
                                 <input
@@ -138,15 +139,16 @@ export function PrivacySettings() {
                                     onChange={e => setSettings({ ...settings, showPhone: e.target.checked })}
                                     className="sr-only peer"
                                 />
-                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                                <div className="w-12 h-6 bg-espresso/10 border border-espresso/10 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-espresso"></div>
                             </label>
                         </div>
                     </div>
                 </div>
 
                 {/* Communication Preferences */}
-                <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-sm border border-black/5 dark:border-white/5 p-6 mb-6">
-                    <h2 className="text-xl font-bold text-espresso dark:text-white mb-4">Communication</h2>
+                <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/10 p-8 mb-8 relative overflow-hidden group">
+                    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                    <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 mb-6 uppercase tracking-[0.2em] relative z-10">Communication Channels</h2>
 
                     <div className="space-y-4">
                         <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-lg">
@@ -200,8 +202,9 @@ export function PrivacySettings() {
                 </div>
 
                 {/* Data & Privacy */}
-                <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-sm border border-black/5 dark:border-white/5 p-6 mb-6">
-                    <h2 className="text-xl font-bold text-espresso dark:text-white mb-4">Data & Privacy</h2>
+                <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/10 p-8 mb-8 relative overflow-hidden group">
+                    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                    <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 mb-6 uppercase tracking-[0.2em] relative z-10">Data Integrity & Trust</h2>
 
                     <div className="space-y-4">
                         <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-lg">
@@ -238,24 +241,24 @@ export function PrivacySettings() {
                 <div className="flex gap-4">
                     <button
                         onClick={() => navigate(-1)}
-                        className="flex-1 py-3 rounded-full border border-black/10 dark:border-white/10 text-espresso dark:text-white font-medium hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                        className="flex-1 py-4 rounded-2xl border border-espresso/10 text-espresso dark:text-white font-black uppercase tracking-widest text-xs hover:bg-white/40 dark:hover:bg-white/5 transition-all active:scale-95"
                     >
                         Cancel
                     </button>
                     <button
                         onClick={handleSave}
                         disabled={saving}
-                        className="flex-1 py-3 rounded-full bg-primary text-white font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                        className="flex-1 py-4 rounded-2xl bg-espresso text-white font-black uppercase tracking-widest text-xs hover:shadow-2xl transition-all disabled:opacity-50 flex items-center justify-center gap-2 active:scale-95"
                     >
                         {saving ? (
                             <>
-                                <span className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></span>
+                                <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
                                 Saving...
                             </>
                         ) : (
                             <>
-                                <span className="material-symbols-outlined">save</span>
-                                Save Settings
+                                <span className="material-symbols-outlined text-[18px]">save</span>
+                                Save Permissions
                             </>
                         )}
                     </button>
