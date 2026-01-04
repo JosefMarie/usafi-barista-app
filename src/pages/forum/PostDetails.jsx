@@ -4,8 +4,10 @@ import { doc, getDoc, collection, addDoc, query, orderBy, onSnapshot, serverTime
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
 import { formatDistanceToNow } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 
 export function PostDetails() {
+    const { t } = useTranslation();
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
@@ -25,7 +27,7 @@ export function PostDetails() {
                 if (docSnap.exists()) {
                     setPost({ id: docSnap.id, ...docSnap.data() });
                 } else {
-                    alert("Post not found");
+                    alert(t('forum.post_not_found'));
                     navigate(-1);
                 }
             } catch (err) {
@@ -35,7 +37,7 @@ export function PostDetails() {
             }
         };
         fetchPost();
-    }, [id, navigate]);
+    }, [id, navigate, t]);
 
     // Fetch Comments Real-time
     useEffect(() => {
@@ -73,7 +75,7 @@ export function PostDetails() {
         }
     };
 
-    if (loading) return <div className="p-8 text-center">Loading discussion...</div>;
+    if (loading) return <div className="p-8 text-center">{t('forum.loading_details')}</div>;
     if (!post) return null;
 
     return (
@@ -88,7 +90,7 @@ export function PostDetails() {
                     >
                         <span className="material-symbols-outlined block">arrow_back</span>
                     </button>
-                    <h1 className="text-espresso dark:text-white text-lg font-serif font-bold tracking-tight">Student Forum</h1>
+                    <h1 className="text-espresso dark:text-white text-lg font-serif font-bold tracking-tight">{t('forum.details_title')}</h1>
                     <button className="text-espresso dark:text-[#FAF5E8] hover:bg-black/5 dark:hover:bg-white/10 rounded-full p-2 transition-colors active:scale-95">
                         <span className="material-symbols-outlined block">more_horiz</span>
                     </button>
@@ -113,7 +115,7 @@ export function PostDetails() {
                     {/* Chips */}
                     <div className="flex gap-2 mb-3">
                         <span className="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-semibold border border-primary/20">
-                            {post.topic}
+                            {t(`forum.topics.${post.topic}`, { defaultValue: post.topic })}
                         </span>
                     </div>
 
@@ -137,7 +139,7 @@ export function PostDetails() {
                                 <span className="font-bold text-sm">{comments.length}</span>
                             </div>
                         </div>
-                        <button className="text-espresso/60 dark:text-[#FAF5E8]/60 hover:text-primary transition-colors">
+                        <button className="text-espresso/60 dark:text-[#FAF5E8]/60 hover:text-primary transition-colors" title={t('forum.share')}>
                             <span className="material-symbols-outlined">share</span>
                         </button>
                     </div>
@@ -146,7 +148,7 @@ export function PostDetails() {
                 {/* Comments Section */}
                 <section className="mt-2 bg-white/50 dark:bg-white/5 rounded-t-3xl border-t border-primary/5 shadow-[0_-1px_3px_rgba(0,0,0,0.02)] min-h-[300px]">
                     <div className="px-5 py-6">
-                        <h3 className="font-serif font-bold text-lg text-espresso dark:text-white mb-6">Comments ({comments.length})</h3>
+                        <h3 className="font-serif font-bold text-lg text-espresso dark:text-white mb-6">{t('forum.comment_count', { count: comments.length })}</h3>
                         <div className="space-y-6">
                             {comments.map(comment => (
                                 <div key={comment.id} className="flex gap-3 animate-fade-in">
@@ -169,7 +171,7 @@ export function PostDetails() {
                                 </div>
                             ))}
                             {comments.length === 0 && (
-                                <p className="text-center text-sm text-espresso/40 dark:text-white/40 italic py-4">No comments yet. Be the first to reply!</p>
+                                <p className="text-center text-sm text-espresso/40 dark:text-white/40 italic py-4">{t('forum.no_comments')}</p>
                             )}
                         </div>
                     </div>
@@ -190,7 +192,7 @@ export function PostDetails() {
                                 }
                             }}
                             className="w-full bg-white dark:bg-white/5 border border-primary/30 focus:border-primary text-espresso dark:text-[#FAF5E8] placeholder:text-espresso/40 dark:placeholder:text-[#FAF5E8]/40 rounded-2xl py-3 pl-4 pr-10 text-sm focus:ring-1 focus:ring-primary/50 resize-none overflow-hidden outline-none"
-                            placeholder="Add a comment... (Enter to send)"
+                            placeholder={t('forum.add_comment')}
                             rows="1"
                             style={{ minHeight: '46px' }}
                         ></textarea>
@@ -201,7 +203,7 @@ export function PostDetails() {
                         className="shrink-0 h-[46px] w-[46px] rounded-full bg-primary hover:bg-[#8e6a46] disabled:opacity-50 text-white flex items-center justify-center shadow-lg shadow-primary/25 active:scale-95 transition-all"
                     >
                         {sending ? (
-                            <span className="material-symbols-outlined animate-spin text-[20px]">progress_activity</span>
+                            <span className="material-symbols-outlined animate-spin text-[20px]">{t('forum.sending')}</span>
                         ) : (
                             <span className="material-symbols-outlined text-[20px] ml-0.5">send</span>
                         )}

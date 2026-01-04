@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 export function CreatePost() {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const { user } = useAuth();
     const [loading, setLoading] = useState(false);
@@ -16,7 +18,13 @@ export function CreatePost() {
     });
 
     const topics = [
-        "Coffee Talk", "Latte Art", "Brewing", "Beans", "Equipment", "Roasting", "Barista Life"
+        { id: "coffee_talk", label: t('forum.topics.coffee_talk') },
+        { id: "latte_art", label: t('forum.topics.latte_art') },
+        { id: "brewing", label: t('forum.topics.brewing') },
+        { id: "beans", label: t('forum.topics.beans') },
+        { id: "equipment", label: t('forum.topics.equipment') },
+        { id: "roasting", label: t('forum.topics.roasting') },
+        { id: "barista_life", label: t('forum.topics.barista_life') }
     ];
 
     const handleSubmit = async () => {
@@ -38,7 +46,7 @@ export function CreatePost() {
             navigate(-1); // Go back
         } catch (error) {
             console.error("Error creating post:", error);
-            alert("Failed to create post");
+            alert(t('forum.fail_create'));
         } finally {
             setLoading(false);
         }
@@ -53,11 +61,11 @@ export function CreatePost() {
                         onClick={() => navigate(-1)}
                         className="text-primary hover:text-primary/80 transition-colors text-base font-medium active:scale-95 transform"
                     >
-                        Cancel
+                        {t('forum.cancel')}
                     </button>
-                    <h1 className="text-espresso dark:text-white text-lg font-serif font-bold tracking-tight">Create Post</h1>
+                    <h1 className="text-espresso dark:text-white text-lg font-serif font-bold tracking-tight">{t('forum.create_title')}</h1>
                     <button className="text-primary hover:text-primary/80 transition-colors text-base font-bold active:scale-95 transform opacity-50 cursor-not-allowed">
-                        Drafts
+                        {t('forum.drafts')}
                     </button>
                 </div>
             </header>
@@ -65,12 +73,12 @@ export function CreatePost() {
             <main className="flex-1 flex flex-col w-full">
                 {/* Post Title Input */}
                 <div className="px-5 pt-6 pb-2">
-                    <label className="block mb-2 text-sm font-bold text-espresso/80 dark:text-white/80 uppercase tracking-wider">Title</label>
+                    <label className="block mb-2 text-sm font-bold text-espresso/80 dark:text-white/80 uppercase tracking-wider">{t('forum.title_label')}</label>
                     <input
                         value={formData.title}
                         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                         className="w-full bg-transparent border-b-2 border-primary/20 focus:border-primary text-2xl font-serif font-bold text-espresso dark:text-white placeholder:text-espresso/30 dark:placeholder:text-white/30 px-0 py-2 focus:ring-0 transition-colors rounded-t-sm outline-none"
-                        placeholder="What's brewing today?"
+                        placeholder={t('forum.title_placeholder')}
                         type="text"
                     />
                 </div>
@@ -79,20 +87,20 @@ export function CreatePost() {
                 <div className="py-4">
                     <div className="px-5 flex items-center gap-2 mb-3">
                         <span className="material-symbols-outlined text-primary text-lg">label</span>
-                        <h2 className="text-espresso dark:text-white text-base font-bold font-serif">Select a Topic</h2>
+                        <h2 className="text-espresso dark:text-white text-base font-bold font-serif">{t('forum.select_topic')}</h2>
                     </div>
                     <div className="flex gap-3 px-5 overflow-x-auto hide-scrollbar pb-2">
                         {topics.map(topic => (
                             <button
-                                key={topic}
-                                onClick={() => setFormData({ ...formData, topic })}
-                                className={`group flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full pl-4 pr-4 transition-all active:scale-95 whitespace-nowrap ${formData.topic === topic
+                                key={topic.id}
+                                onClick={() => setFormData({ ...formData, topic: topic.id })}
+                                className={`group flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full pl-4 pr-4 transition-all active:scale-95 whitespace-nowrap ${formData.topic === topic.id
                                     ? "bg-primary text-white shadow-md shadow-primary/20"
                                     : "bg-white dark:bg-white/5 border border-primary/30 hover:border-primary hover:bg-primary/5 text-espresso dark:text-white"
                                     }`}
                             >
-                                <span className="text-sm font-medium leading-normal">{topic}</span>
-                                {formData.topic === topic && <span className="material-symbols-outlined text-[18px]">check</span>}
+                                <span className="text-sm font-medium leading-normal">{topic.label}</span>
+                                {formData.topic === topic.id && <span className="material-symbols-outlined text-[18px]">check</span>}
                             </button>
                         ))}
                     </div>
@@ -101,14 +109,14 @@ export function CreatePost() {
                 {/* Body Content */}
                 <div className="px-5 flex-1 flex flex-col min-h-[300px]">
                     <label className="block mb-2 text-sm font-bold text-espresso/80 dark:text-white/80 uppercase tracking-wider flex items-center justify-between">
-                        <span>Discussion</span>
-                        <span className="text-xs font-normal text-espresso/50 dark:text-white/50">Markdown supported</span>
+                        <span>{t('forum.discussion_label')}</span>
+                        <span className="text-xs font-normal text-espresso/50 dark:text-white/50">{t('forum.markdown')}</span>
                     </label>
                     <textarea
                         value={formData.content}
                         onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                         className="flex-1 w-full resize-none bg-white/50 dark:bg-white/5 border border-primary/20 focus:border-primary rounded-xl text-espresso dark:text-white placeholder:text-espresso/40 dark:placeholder:text-white/30 p-4 text-base leading-relaxed focus:ring-1 focus:ring-primary/50 transition-all shadow-sm outline-none"
-                        placeholder="Share your thoughts, recipe, or question here. Be descriptive!"
+                        placeholder={t('forum.discussion_placeholder')}
                     ></textarea>
                 </div>
 
@@ -144,7 +152,7 @@ export function CreatePost() {
                             <span className="material-symbols-outlined animate-spin">progress_activity</span>
                         ) : (
                             <>
-                                <span>Post to Forum</span>
+                                <span>{t('forum.post_to_forum')}</span>
                                 <span className="material-symbols-outlined text-[20px]">send</span>
                             </>
                         )}

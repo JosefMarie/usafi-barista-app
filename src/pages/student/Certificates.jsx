@@ -150,8 +150,8 @@ export function Certificates() {
                         <span className="material-symbols-outlined text-2xl">workspace_premium</span>
                     </div>
                     <div>
-                        <h1 className="font-serif font-bold text-3xl text-espresso dark:text-white leading-tight">Elite Credentials</h1>
-                        <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.2em] mt-1">Manage and export your verified professional certifications</p>
+                        <h1 className="font-serif font-bold text-3xl text-espresso dark:text-white leading-tight">{t('student.certificates.title_alt')}</h1>
+                        <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.2em] mt-1">{t('student.certificates.subtitle_alt')}</p>
                     </div>
                 </div>
             </header>
@@ -179,7 +179,7 @@ export function Certificates() {
                                         "text-[10px] font-black px-4 py-1.5 rounded-full shadow-lg z-10 uppercase tracking-[0.2em] animate-fade-in",
                                         cert.type === 'Course Completion' ? "bg-white text-espresso" : "bg-espresso text-white"
                                     )}>
-                                        {cert.type === 'Course Completion' ? 'Distinction Diploma' : 'Module Validation'}
+                                        {cert.type === 'Course Completion' ? t('student.certificates.distinction_diploma') : t('student.certificates.module_validation')}
                                     </div>
                                 </div>
                                 <div className="p-8 flex-1 flex flex-col relative z-10">
@@ -190,13 +190,13 @@ export function Certificates() {
 
                                     <div className="mt-auto flex items-center justify-between pt-6 border-t border-espresso/5">
                                         <div>
-                                            <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest mb-1">Authenticated</p>
+                                            <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest mb-1">{t('student.certificates.authenticated')}</p>
                                             <p className="text-sm font-bold text-espresso dark:text-white">{cert.completionDate}</p>
                                         </div>
                                         <button
                                             onClick={() => onPrintClick(cert)}
                                             className="h-12 w-12 flex items-center justify-center bg-espresso text-white rounded-2xl shadow-lg hover:shadow-xl hover:scale-110 active:scale-90 transition-all"
-                                            title="Export Credential"
+                                            title={t('student.certificates.export_btn')}
                                         >
                                             <span className="material-symbols-outlined text-xl">ios_share</span>
                                         </button>
@@ -213,9 +213,9 @@ export function Certificates() {
                             <span className="material-symbols-outlined text-6xl text-espresso/20 animate-pulse">workspaces</span>
                         </div>
                         <div>
-                            <h2 className="text-3xl font-serif font-bold text-espresso dark:text-white mb-3">Credential Repository Empty</h2>
+                            <h2 className="text-3xl font-serif font-bold text-espresso dark:text-white mb-3">{t('student.certificates.empty.title_alt')}</h2>
                             <p className="text-sm font-medium text-espresso/40 dark:text-white/40 w-full uppercase tracking-widest leading-relaxed">
-                                Complete your strategic modules and excel in evaluations to unlock verified professional credentials.
+                                {t('student.certificates.empty.description_alt')}
                             </p>
                         </div>
                     </div>

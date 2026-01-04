@@ -3,9 +3,11 @@ import { collection, query, where, orderBy, onSnapshot } from 'firebase/firestor
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
 import { Navigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { GradientButton } from '../../components/ui/GradientButton';
 
 export function SeekerDashboard() {
+    const { t } = useTranslation();
     const { user, logout, loading: authLoading } = useAuth();
     const [jobs, setJobs] = useState([]);
     const [dataLoading, setDataLoading] = useState(true);
@@ -44,7 +46,7 @@ export function SeekerDashboard() {
         window.location.href = '/seeker/login';
     };
 
-    if (authLoading) return <div className="p-8 text-center">Loading authentication...</div>;
+    if (authLoading) return <div className="p-8 text-center">{t('common.loading')}</div>;
 
     if (!user) return <Navigate to="/seeker/login" replace />;
 
@@ -65,25 +67,25 @@ export function SeekerDashboard() {
                         <span className="material-symbols-outlined text-xl">coffee</span>
                     </div>
                     <span className="font-serif text-xl font-bold text-espresso dark:text-white tracking-tight">
-                        Usafi Opportunities
+                        {t('seeker.usafi_opportunities')}
                     </span>
                 </div>
                 <div className="flex items-center gap-4">
                     <span className="text-sm font-bold text-espresso dark:text-white hidden md:block bg-white/40 dark:bg-white/5 px-4 py-2 rounded-xl border border-white/20">
-                        Hello, {user.name}
+                        {t('seeker.hello_user', { name: user.name })}
                     </span>
                     <Link
                         to="/seeker/profile"
                         className="text-sm font-black text-white bg-espresso hover:bg-espresso/90 px-5 py-2.5 rounded-xl transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-2 uppercase tracking-wide"
                     >
                         <span className="material-symbols-outlined text-lg">person</span>
-                        <span className="hidden sm:inline">Profile</span>
+                        <span className="hidden sm:inline">{t('seeker.profile')}</span>
                     </Link>
                     <button
                         onClick={handleLogout}
                         className="text-sm font-bold text-espresso hover:bg-white/40 px-4 py-2 rounded-xl transition-colors flex items-center gap-1"
                     >
-                        Sign Out
+                        {t('seeker.sign_out')}
                     </button>
                 </div>
             </div>
@@ -94,7 +96,7 @@ export function SeekerDashboard() {
         <div className="min-h-screen bg-background-light dark:bg-background-dark">
             <SeekerHeader />
             <div className="container mx-auto px-6 py-12 text-center">
-                Loading opportunities...
+                {t('seeker.loading_opportunities')}
             </div>
         </div>
     );
@@ -105,17 +107,17 @@ export function SeekerDashboard() {
 
             <div className="container mx-auto px-6 py-12">
                 <div className="max-w-4xl mx-auto">
-                    <h1 className="font-serif text-3xl font-bold text-espresso dark:text-white mb-2">Available Opportunities</h1>
+                    <h1 className="font-serif text-3xl font-bold text-espresso dark:text-white mb-2">{t('seeker.available_opportunities')}</h1>
                     <p className="text-espresso/70 dark:text-white/70 mb-8">
-                        Exclusive job listings matches for you.
+                        {t('seeker.exclusive_listings')}
                     </p>
 
                     <div className="grid gap-6">
                         {jobs.length === 0 ? (
                             <div className="text-center py-16 bg-white dark:bg-white/5 rounded-3xl border border-dashed border-espresso/10">
                                 <span className="material-symbols-outlined text-4xl text-espresso/30 mb-4">work_off</span>
-                                <h3 className="text-lg font-bold text-espresso/70 dark:text-white/70">No opportunities found</h3>
-                                <p className="text-espresso/50 dark:text-white/50">Check back later for new updates.</p>
+                                <h3 className="text-lg font-bold text-espresso/70 dark:text-white/70">{t('seeker.no_opportunities_found')}</h3>
+                                <p className="text-espresso/50 dark:text-white/50">{t('seeker.check_back_later')}</p>
                             </div>
                         ) : (
                             jobs.map(job => (
@@ -134,7 +136,7 @@ export function SeekerDashboard() {
                                                     <span className="material-symbols-outlined text-sm">schedule</span> {job.jobType}
                                                 </span>
                                                 <span className="text-xs text-espresso/40">
-                                                    Posted {job.createdAt?.toDate().toLocaleDateString()}
+                                                    {t('seeker.posted')} {job.createdAt?.toDate().toLocaleDateString()}
                                                 </span>
                                             </div>
 
@@ -149,12 +151,12 @@ export function SeekerDashboard() {
                                                 </span>
                                                 <span className="flex items-center gap-1">
                                                     <span className="material-symbols-outlined text-lg">payments</span>
-                                                    {job.salaryRange || 'Competitive'}
+                                                    {job.salaryRange || t('seeker.salary_competitive')}
                                                 </span>
                                             </div>
 
                                             <div className="bg-white/40 dark:bg-white/5 p-6 rounded-2xl mb-8 border border-white/20">
-                                                <h4 className="font-bold text-sm text-espresso dark:text-white mb-2">Requirements / Details:</h4>
+                                                <h4 className="font-bold text-sm text-espresso dark:text-white mb-2">{t('seeker.requirements_details')}</h4>
                                                 <p className="text-sm text-espresso/80 dark:text-white/80 leading-relaxed whitespace-pre-line">
                                                     {job.experience}
                                                 </p>
@@ -168,12 +170,12 @@ export function SeekerDashboard() {
                                                         rel="noreferrer"
                                                         className="inline-flex items-center justify-center h-12 px-8 rounded-xl bg-primary text-white font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
                                                     >
-                                                        Apply Now
+                                                        {t('seeker.apply_now')}
                                                         <span className="material-symbols-outlined ml-2 text-lg">open_in_new</span>
                                                     </a>
                                                 ) : (
                                                     <div className="flex items-center gap-4 bg-primary/5 px-6 py-3 rounded-xl border border-primary/10">
-                                                        <span className="text-sm font-bold text-primary">Contact to Apply:</span>
+                                                        <span className="text-sm font-bold text-primary">{t('seeker.contact_to_apply')}:</span>
                                                         <div className="flex flex-col md:flex-row gap-4">
                                                             <a href={`tel:${job.contactPhone}`} className="flex items-center gap-1 text-sm font-bold text-espresso hover:text-primary">
                                                                 <span className="material-symbols-outlined">call</span> {job.contactPhone}

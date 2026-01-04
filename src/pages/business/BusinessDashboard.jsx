@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { collection, query, where, onSnapshot, orderBy, doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
 
 export function BusinessDashboard() {
+    const { t } = useTranslation();
     const { user, logout } = useAuth();
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -58,19 +60,19 @@ export function BusinessDashboard() {
         navigate('/business/login');
     };
 
-    if (loading) return <div className="p-8">Loading...</div>;
+    if (loading) return <div className="p-8">{t('common.loading')}</div>;
 
     if (approvalStatus === 'pending') {
         return (
             <div className="min-h-screen bg-background-light dark:bg-background-dark flex items-center justify-center p-4">
                 <div className="bg-white dark:bg-[#1e1e1e] p-8 rounded-2xl shadow-xl max-w-md text-center border border-espresso/10 dark:border-white/10">
                     <span className="material-symbols-outlined text-6xl text-yellow-500 mb-4">hourglass_top</span>
-                    <h1 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-2">Approval Pending</h1>
+                    <h1 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-2">{t('business.approval_pending')}</h1>
                     <p className="text-espresso/70 dark:text-white/70 mb-6">
-                        Your account is currently under review by the administrator. You will gain access to the business courses once approved.
+                        {t('business.approval_pending_desc')}
                     </p>
                     <button onClick={handleLogout} className="text-primary font-bold hover:underline">
-                        Sign Out
+                        {t('business.sign_out')}
                     </button>
                 </div>
             </div>
@@ -84,23 +86,23 @@ export function BusinessDashboard() {
                 <div className="p-6 border-b border-espresso/10">
                     <Link to="/" className="flex items-center gap-2">
                         <span className="material-symbols-outlined text-espresso text-3xl dark:text-white">domain_verification</span>
-                        <span className="font-serif text-lg font-bold text-espresso dark:text-white">Business Class</span>
+                        <span className="font-serif text-lg font-bold text-espresso dark:text-white">{t('business.business_class_title')}</span>
                     </Link>
                 </div>
                 <nav className="flex-1 p-4 space-y-2">
                     <Link to="/business/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-[1rem] bg-espresso text-white shadow-lg shadow-espresso/20 transform transition-transform hover:scale-[1.02]">
                         <span className="material-symbols-outlined">dashboard</span>
-                        Dashboard
+                        {t('business.dashboard')}
                     </Link>
                     <Link to="/business/profile" className="flex items-center gap-3 px-4 py-3 rounded-[1rem] text-espresso/70 dark:text-white/70 hover:bg-white/40 dark:hover:bg-white/5 transition-all hover:translate-x-1">
                         <span className="material-symbols-outlined">person</span>
-                        My Profile
+                        {t('business.my_profile')}
                     </Link>
                 </nav>
                 <div className="p-4 border-t border-espresso/10">
                     <button onClick={handleLogout} className="flex items-center gap-2 text-espresso font-bold px-4 py-2 hover:bg-white/20 rounded-[1rem] w-full transition-colors uppercase tracking-widest text-xs">
                         <span className="material-symbols-outlined">logout</span>
-                        Sign Out
+                        {t('business.sign_out')}
                     </button>
                 </div>
             </aside>
@@ -109,8 +111,8 @@ export function BusinessDashboard() {
             <main className="flex-1 md:ml-64 p-4 md:p-8">
                 <header className="flex justify-between items-center mb-8">
                     <div>
-                        <h1 className="font-serif text-3xl font-bold text-espresso dark:text-white">Welcome, {user?.displayName || 'Student'}</h1>
-                        <p className="text-espresso/60 dark:text-white/60">Access your exclusive business content.</p>
+                        <h1 className="font-serif text-3xl font-bold text-espresso dark:text-white">{t('business.welcome_student', { name: user?.displayName || 'Student' })}</h1>
+                        <p className="text-espresso/60 dark:text-white/60">{t('business.exclusive_content')}</p>
                     </div>
                 </header>
 
@@ -135,7 +137,7 @@ export function BusinessDashboard() {
                                 <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-3 leading-tight">{course.title}</h3>
                                 <p className="text-sm text-espresso/70 dark:text-white/70 line-clamp-2 mb-6 font-medium leading-relaxed">{course.description}</p>
                                 <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/40 dark:bg-white/5 text-espresso font-black text-[10px] uppercase tracking-widest group-hover:bg-espresso group-hover:text-white transition-all shadow-sm">
-                                    Start Learning <span className="material-symbols-outlined text-base">arrow_forward</span>
+                                    {t('business.start_learning')} <span className="material-symbols-outlined text-base">arrow_forward</span>
                                 </span>
                             </div>
                         </Link>
@@ -144,7 +146,7 @@ export function BusinessDashboard() {
                     {courses.length === 0 && (
                         <div className="col-span-full py-24 text-center bg-[#F5DEB3]/50 dark:bg-white/5 rounded-[2.5rem] border-2 border-dashed border-espresso/10">
                             <span className="material-symbols-outlined text-6xl text-espresso/20 mb-4 block">school</span>
-                            <p className="text-espresso/50 dark:text-white/50 font-medium text-lg">No courses available at the moment.</p>
+                            <p className="text-espresso/50 dark:text-white/50 font-medium text-lg">{t('business.no_courses')}</p>
                         </div>
                     )}
                 </div>

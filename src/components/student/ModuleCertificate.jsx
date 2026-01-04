@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { cn } from '../../lib/utils';
+import { useTranslation } from 'react-i18next';
 
 export const ModuleCertificate = React.forwardRef(({
     studentName = "Jane Doe",
@@ -13,6 +14,7 @@ export const ModuleCertificate = React.forwardRef(({
     type = "Module Completion",
     className
 }, ref) => {
+    const { t } = useTranslation();
     return (
         <div ref={ref} className={cn("w-[210mm] h-[297mm] bg-[#FAF5E8] text-[#321C00] font-sans relative overflow-hidden mx-auto shadow-2xl print:shadow-none print:w-full print:h-full print:absolute print:top-0 print:left-0 print:m-0", className)}>
             {/* Styles matching the reference Tailwind config */}
@@ -52,16 +54,16 @@ export const ModuleCertificate = React.forwardRef(({
                 </div>
 
                 {/* Title */}
-                <h1 className="z-10 font-serif text-5xl font-bold text-[#321C00] mb-2">Certificate</h1>
-                <p className="z-10 font-serif text-xl italic text-[#321C00]/60 mb-12">of Professional Achievement</p>
+                <h1 className="z-10 font-serif text-5xl font-bold text-[#321C00] mb-2">{t('student.certificate_design.title')}</h1>
+                <p className="z-10 font-serif text-xl italic text-[#321C00]/60 mb-12">{t('student.certificate_design.achievement')}</p>
 
                 {/* Recipient */}
-                <p className="z-10 text-[11px] uppercase tracking-widest text-[#321C00]/50 font-bold mb-4">This is to certify that</p>
+                <p className="z-10 text-[11px] uppercase tracking-widest text-[#321C00]/50 font-bold mb-4">{t('student.certificate_design.certify_text')}</p>
                 <h2 className="z-10 font-serif text-4xl font-bold text-[#321C00] w-full max-w-2xl pb-4 border-b border-[#a77c52]/20 mb-8 px-8">{studentName}</h2>
 
                 {/* Achievement */}
                 <p className="z-10 text-[11px] uppercase tracking-widest text-[#321C00]/50 font-bold mb-4">
-                    {type === 'Course Completion' ? 'Has successfully completed the course' : 'Has successfully completed the module'}
+                    {type === 'Course Completion' ? t('student.certificate_design.completed_course') : t('student.certificate_design.completed_module')}
                 </p>
 
                 <div className="z-10 mb-12 max-w-3xl">
@@ -74,11 +76,11 @@ export const ModuleCertificate = React.forwardRef(({
                 {/* Details Grid */}
                 <div className="z-10 w-full grid grid-cols-2 gap-8 mb-12 pt-6 border-t border-dashed border-[#a77c52]/10 max-w-2xl">
                     <div className="flex flex-col text-left pl-4">
-                        <span className="text-[10px] uppercase tracking-wider text-[#321C00]/40 font-bold mb-1">Date of Completion</span>
+                        <span className="text-[10px] uppercase tracking-wider text-[#321C00]/40 font-bold mb-1">{t('student.certificate_design.date_label')}</span>
                         <span className="font-serif text-lg text-[#321C00] font-semibold">{completionDate}</span>
                     </div>
                     <div className="flex flex-col text-right pr-4">
-                        <span className="text-[10px] uppercase tracking-wider text-[#321C00]/40 font-bold mb-1">Certificate ID</span>
+                        <span className="text-[10px] uppercase tracking-wider text-[#321C00]/40 font-bold mb-1">{t('student.certificate_design.id_label')}</span>
                         <span className="font-display text-base text-[#321C00] font-semibold tracking-wide">{certificateId}</span>
                     </div>
                 </div>
@@ -95,12 +97,12 @@ export const ModuleCertificate = React.forwardRef(({
                         <div className="absolute inset-0 bg-[#4CAF50]/20 rounded-full blur-md"></div>
                         <span className="material-symbols-outlined text-[64px] text-[#4CAF50] relative z-10 drop-shadow-sm">workspace_premium</span>
                         {/* Verified text below badge */}
-                        <div className="absolute -bottom-6 text-[9px] font-bold text-[#4CAF50] uppercase tracking-wider">Verified</div>
+                        <div className="absolute -bottom-6 text-[9px] font-bold text-[#4CAF50] uppercase tracking-wider">{t('student.certificate_design.verified')}</div>
                     </div>
                 </div>
 
                 <p className="absolute bottom-4 text-[9px] text-[#321C00]/30 text-center w-full">
-                    This certificate verifies that the student has met all the requirements established by the Usafi Barista Training Center.
+                    {t('student.certificate_design.disclaimer')}
                 </p>
             </div>
         </div>

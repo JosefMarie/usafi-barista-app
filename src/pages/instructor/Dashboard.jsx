@@ -4,8 +4,10 @@ import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { cn } from '../../lib/utils';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export function InstructorDashboard() {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const [stats, setStats] = useState({
         totalStudents: 0,
@@ -64,8 +66,10 @@ export function InstructorDashboard() {
     return (
         <div className="max-w-6xl mx-auto space-y-8">
             <div>
-                <h1 className="text-3xl font-serif font-bold text-espresso dark:text-white">Welcome back, {user?.name?.split(' ')[0] || 'Instructor'}!</h1>
-                <p className="text-espresso/70 dark:text-white/70 mt-1">Here's what's happening with your students today.</p>
+                <h1 className="text-3xl font-serif font-bold text-espresso dark:text-white">
+                    {t('instructor.dashboard.welcome_back', { name: user?.name?.split(' ')[0] || t('instructor.nav.instructor_default') })}
+                </h1>
+                <p className="text-espresso/70 dark:text-white/70 mt-1">{t('instructor.dashboard.student_pulse')}</p>
             </div>
 
             {loading ? (
@@ -76,17 +80,17 @@ export function InstructorDashboard() {
                 <>
                     {/* Stats Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <StatCard icon="group" label="Assigned Students" value={stats.totalStudents} color="bg-espresso" />
-                        <StatCard icon="menu_book" label="Active Courses" value={stats.assignedCourses} color="bg-espresso" />
-                        <StatCard icon="videocam" label="Upcoming Sessions" value={stats.upcomingSessions} color="bg-espresso" />
-                        <StatCard icon="star" label="Avg. Student Rating" value={stats.averageRating} color="bg-espresso" />
+                        <StatCard icon="group" label={t('instructor.dashboard.assigned_students')} value={stats.totalStudents} color="bg-espresso" />
+                        <StatCard icon="menu_book" label={t('instructor.dashboard.active_courses')} value={stats.assignedCourses} color="bg-espresso" />
+                        <StatCard icon="videocam" label={t('instructor.dashboard.upcoming_sessions')} value={stats.upcomingSessions} color="bg-espresso" />
+                        <StatCard icon="star" label={t('instructor.dashboard.avg_rating')} value={stats.averageRating} color="bg-espresso" />
                     </div>
 
                     <div className="grid lg:grid-cols-3 gap-6">
                         {/* Chart Section */}
                         <div className="lg:col-span-2 bg-[#F5DEB3] dark:bg-white/5 p-8 rounded-3xl border border-espresso/10 shadow-xl relative overflow-hidden group">
                             <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                            <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 mb-8 uppercase tracking-[0.2em] relative z-10">Course Completion Performance</h2>
+                            <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 mb-8 uppercase tracking-[0.2em] relative z-10">{t('instructor.dashboard.completion_performance')}</h2>
                             <div className="h-64 flex items-end justify-between gap-4 px-2 relative z-10">
                                 {studentProgressData.map((item, index) => (
                                     <div key={index} className="flex flex-col items-center gap-3 flex-1 group/bar">
@@ -106,7 +110,7 @@ export function InstructorDashboard() {
                         {/* Recent Activity */}
                         <div className="bg-[#F5DEB3] dark:bg-white/5 p-8 rounded-3xl border border-espresso/10 shadow-xl relative overflow-hidden group">
                             <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                            <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 mb-8 uppercase tracking-[0.2em] relative z-10">Live Student Pulse</h2>
+                            <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 mb-8 uppercase tracking-[0.2em] relative z-10">{t('instructor.dashboard.live_pulse')}</h2>
                             <div className="space-y-5 relative z-10">
                                 {recentActivity.map((activity) => (
                                     <div key={activity.id} className="flex items-start gap-4 pb-5 border-b border-espresso/5 dark:border-white/5 last:border-0 last:pb-0 group/activity">
@@ -117,15 +121,26 @@ export function InstructorDashboard() {
                                         </div>
                                         <div className="flex-1">
                                             <p className="text-sm font-black text-espresso dark:text-white">{activity.student}</p>
-                                            <p className="text-xs font-bold text-espresso/60 dark:text-white/60 mb-2">{activity.action}</p>
+                                            <p className="text-xs font-bold text-espresso/60 dark:text-white/60 mb-2">
+                                                {activity.action.includes('Quiz') ? t('instructor.dashboard.activity.quiz', { name: activity.action.split(': ')[1] }) :
+                                                    activity.action.includes('Session') ? t('instructor.dashboard.activity.session', { name: activity.action.split(': ')[1] }) :
+                                                        activity.action.includes('Assignment') ? t('instructor.dashboard.activity.assignment', { name: activity.action.split(': ')[1] }) :
+                                                            activity.action.includes('Module') ? t('instructor.dashboard.activity.module', { name: activity.action.split(': ')[1] }) :
+                                                                activity.action}
+                                            </p>
                                             <div className="flex items-center gap-3">
-                                                <span className="text-[9px] font-black text-espresso/30 dark:text-white/30 uppercase tracking-[0.2em]">{activity.time}</span>
+                                                <span className="text-[9px] font-black text-espresso/30 dark:text-white/30 uppercase tracking-[0.2em]">
+                                                    {activity.time.includes('hours') ? t('instructor.dashboard.time_ago.hours', { count: activity.time.split(' ')[0] }) :
+                                                        activity.time.includes('1 day') ? t('instructor.dashboard.time_ago.day') :
+                                                            activity.time.includes('days') ? t('instructor.dashboard.time_ago.days', { count: activity.time.split(' ')[0] }) :
+                                                                activity.time}
+                                                </span>
                                                 {activity.score && (
                                                     <span className={cn(
                                                         "text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest shadow-sm",
                                                         activity.score === 'Pending' ? "bg-white/40 text-espresso/50" : "bg-espresso text-white"
                                                     )}>
-                                                        {activity.score}
+                                                        {activity.score === 'Pending' ? t('instructor.dashboard.status.pending') : activity.score}
                                                     </span>
                                                 )}
                                             </div>
@@ -134,7 +149,7 @@ export function InstructorDashboard() {
                                 ))}
                             </div>
                             <Link to="/instructor/students" className="flex items-center justify-center gap-2 mt-8 py-3 bg-white/40 dark:bg-white/5 text-[10px] font-black uppercase tracking-widest text-espresso/60 hover:bg-white/60 dark:hover:bg-white/10 rounded-xl transition-all relative z-10 active:scale-95 shadow-sm">
-                                Explore All Students
+                                {t('instructor.dashboard.explore_all')}
                                 <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
                             </Link>
                         </div>

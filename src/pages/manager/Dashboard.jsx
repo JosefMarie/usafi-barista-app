@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { collection, query, where, getCountFromServer } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
+import { useTranslation } from 'react-i18next';
 
 export function ManagerDashboard() {
+    const { t } = useTranslation();
     const [stats, setStats] = useState({
         totalUsers: 0,
         subscribers: 0,
@@ -66,34 +68,34 @@ export function ManagerDashboard() {
         <div className="max-w-7xl mx-auto space-y-6">
             <header className="mb-8">
                 <h1 className="text-3xl font-bold text-espresso dark:text-white font-serif">
-                    Marketing Overview
+                    {t('manager.dashboard.marketing_overview')}
                 </h1>
                 <p className="text-espresso/60 dark:text-white/60">
-                    Track user growth and engagement
+                    {t('manager.dashboard.track_growth')}
                 </p>
             </header>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatCard
-                    title="Total Users"
+                    title={t('manager.dashboard.total_users')}
                     value={stats.totalUsers}
                     icon="group"
                     color="bg-blue-500"
                 />
                 <StatCard
-                    title="Students"
+                    title={t('manager.dashboard.students')}
                     value={stats.students}
                     icon="school"
                     color="bg-primary" // orange
                 />
                 <StatCard
-                    title="Instructors"
+                    title={t('manager.dashboard.instructors')}
                     value={stats.instructors}
                     icon="person_apron"
                     color="bg-purple-500"
                 />
                 <StatCard
-                    title="Newsletter Subs"
+                    title={t('manager.dashboard.newsletter_subs')}
                     value={stats.subscribers}
                     icon="mail"
                     color="bg-green-500"
@@ -103,7 +105,7 @@ export function ManagerDashboard() {
             {/* Placeholder for future charts/graphs */}
             <div className="bg-[#F5DEB3] dark:bg-[#1c1916] p-10 rounded-[2.5rem] border border-espresso/10 h-72 flex items-center justify-center text-espresso/40 dark:text-white/40 shadow-xl relative overflow-hidden group">
                 <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                <p className="font-black uppercase tracking-[0.2em] text-sm">Engagement Chart Coming Soon</p>
+                <p className="font-black uppercase tracking-[0.2em] text-sm">{t('manager.dashboard.engagement_chart_soon')}</p>
             </div>
         </div>
     );

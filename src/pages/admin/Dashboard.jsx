@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { collection, query, where, getDocs, orderBy, limit, getCountFromServer } from 'firebase/firestore';
+import { useTranslation } from 'react-i18next';
 import { db } from '../../lib/firebase';
 import { Link } from 'react-router-dom';
 
 export function AdminDashboard() {
+    const { t, i18n } = useTranslation();
     const [loading, setLoading] = useState(true);
     const [stats, setStats] = useState({
         totalStudents: 0,
@@ -139,9 +141,9 @@ export function AdminDashboard() {
                     const diffDays = Math.floor(diffHrs / 24);
 
                     let timeStr = "";
-                    if (diffDays > 0) timeStr = `${diffDays}d ago`;
-                    else if (diffHrs > 0) timeStr = `${diffHrs}h ago`;
-                    else timeStr = "Just now";
+                    if (diffDays > 0) timeStr = t('admin.dashboard.time_ago.days', { count: diffDays });
+                    else if (diffHrs > 0) timeStr = t('admin.dashboard.time_ago.hours', { count: diffHrs });
+                    else timeStr = t('admin.dashboard.time_ago.now');
 
                     return {
                         name: s.fullName,
@@ -184,10 +186,10 @@ export function AdminDashboard() {
                 <div className="relative">
                     <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 -ml-10"></div>
                     <p className="text-espresso/40 dark:text-white/40 font-black text-[10px] uppercase tracking-[0.4em] mb-2">
-                        {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })} // COMMAND CENTER ALPHA
+                        {new Date().toLocaleDateString(i18n.language, { weekday: 'long', month: 'short', day: 'numeric' })}
                     </p>
                     <h1 className="text-4xl md:text-5xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none">
-                        Dashboard & <span className="text-espresso/60">Analytics</span>
+                        {t('admin.dashboard.metrics_analytics').split('&')[0]} & <span className="text-espresso/60">{t('admin.dashboard.metrics_analytics').split('&')[1]}</span>
                     </h1>
                 </div>
 
@@ -198,13 +200,13 @@ export function AdminDashboard() {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <span className="material-symbols-outlined text-white/40">school</span>
-                                <p className="text-white/40 text-[10px] font-black uppercase tracking-widest">Global Students</p>
+                                <p className="text-white/40 text-[10px] font-black uppercase tracking-widest">{t('admin.dashboard.global_students')}</p>
                             </div>
                             <span className="bg-white/10 text-white text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-tighter self-start">+12.4%</span>
                         </div>
                         <div>
                             <p className="text-5xl font-serif font-black leading-none">{stats.totalStudents}</p>
-                            <p className="text-white/30 text-[9px] font-black mt-4 uppercase tracking-[0.2em]">Active participants in matrix</p>
+                            <p className="text-white/30 text-[9px] font-black mt-4 uppercase tracking-[0.2em]">{t('admin.dashboard.active_participants')}</p>
                         </div>
                     </div>
 
@@ -212,11 +214,11 @@ export function AdminDashboard() {
                         <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover:bg-espresso transition-colors"></div>
                         <div className="flex items-center gap-3">
                             <span className="material-symbols-outlined text-espresso/40 dark:text-white/40">local_cafe</span>
-                            <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest">Active Architecture</p>
+                            <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest">{t('admin.dashboard.active_architecture')}</p>
                         </div>
                         <div>
                             <p className="text-5xl font-serif font-black leading-none">{stats.activeCourses}</p>
-                            <p className="text-espresso/30 dark:text-white/30 text-[9px] font-black mt-4 uppercase tracking-[0.2em]">Validated course nodes</p>
+                            <p className="text-espresso/30 dark:text-white/30 text-[9px] font-black mt-4 uppercase tracking-[0.2em]">{t('admin.dashboard.validated_nodes')}</p>
                         </div>
                     </div>
 
@@ -224,11 +226,11 @@ export function AdminDashboard() {
                         <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover:bg-espresso transition-colors"></div>
                         <div className="flex items-center gap-3">
                             <span className="material-symbols-outlined text-espresso/40 dark:text-white/40">approval_delegation</span>
-                            <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest">Queue Status</p>
+                            <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest">{t('admin.dashboard.queue_status')}</p>
                         </div>
                         <div>
                             <p className="text-5xl font-serif font-black leading-none text-amber-600">{stats.pendingApprovals}</p>
-                            <p className="text-espresso/30 dark:text-white/30 text-[9px] font-black mt-4 uppercase tracking-[0.2em]">Approvals required</p>
+                            <p className="text-espresso/30 dark:text-white/30 text-[9px] font-black mt-4 uppercase tracking-[0.2em]">{t('admin.dashboard.approvals_required')}</p>
                         </div>
                     </div>
                 </div>
@@ -241,9 +243,9 @@ export function AdminDashboard() {
                             <span className="material-symbols-outlined text-4xl">payments</span>
                         </div>
                         <div>
-                            <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-[0.4em] mb-2">Monthly Fluid Revenue</p>
+                            <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-[0.4em] mb-2">{t('admin.dashboard.monthly_revenue')}</p>
                             <p className="text-4xl font-serif font-black text-espresso dark:text-white leading-tight">
-                                {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'RWF' }).format(stats.monthlyRevenue)}
+                                {new Intl.NumberFormat(i18n.language === 'rw' ? 'rw-RW' : (i18n.language === 'en' ? 'en-US' : (i18n.language === 'fr' ? 'fr-FR' : 'sw-TZ')), { style: 'currency', currency: 'RWF', maximumFractionDigits: 0 }).format(stats.monthlyRevenue)}
                             </p>
                         </div>
                         <div className="absolute right-8 top-8">
@@ -257,7 +259,7 @@ export function AdminDashboard() {
                             <span className="material-symbols-outlined text-4xl">diversity_3</span>
                         </div>
                         <div>
-                            <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-[0.4em] mb-2">Efficiency Index</p>
+                            <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-[0.4em] mb-2">{t('admin.dashboard.efficiency_index')}</p>
                             <p className="text-5xl font-serif font-black text-espresso dark:text-white leading-tight">{stats.studentEngagement}%</p>
                         </div>
                         <div className="absolute right-8 top-8">
@@ -271,12 +273,12 @@ export function AdminDashboard() {
                     <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/10 group-hover/chart:bg-espresso transition-colors"></div>
                     <div className="flex justify-between items-center mb-12">
                         <div>
-                            <h3 className="text-2xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight">Growth Projection</h3>
-                            <p className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em] mt-1">12-Month Enrollment Cadence</p>
+                            <h3 className="text-2xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight">{t('admin.dashboard.growth_projection')}</h3>
+                            <p className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em] mt-1">{t('admin.dashboard.enrollment_cadence')}</p>
                         </div>
                         <div className="flex items-center gap-3">
                             <span className="w-3 h-3 rounded-full bg-espresso"></span>
-                            <span className="text-[10px] font-black text-espresso uppercase tracking-widest">Primary Metrics</span>
+                            <span className="text-[10px] font-black text-espresso uppercase tracking-widest">{t('admin.dashboard.primary_metrics')}</span>
                         </div>
                     </div>
                     <div className="w-full h-72 flex items-end justify-between gap-4 relative mt-16 px-4">
@@ -298,7 +300,7 @@ export function AdminDashboard() {
                                     style={{ height: item.height }}
                                 >
                                     <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-espresso text-white text-[9px] font-black py-2 px-3 rounded-xl opacity-0 group-hover/bar:opacity-100 transition-all scale-75 group-hover/bar:scale-100 whitespace-nowrap z-20 pointer-events-none shadow-xl uppercase tracking-widest">
-                                        {item.count} NODES
+                                        {item.count} {t('admin.dashboard.nodes')}
                                     </div>
                                 </div>
                                 <span className={`text-[10px] font-black uppercase tracking-widest transition-colors ${index === enrollmentData.length - 1 ? 'text-espresso' : 'text-espresso/30 dark:text-white/20'
@@ -309,7 +311,7 @@ export function AdminDashboard() {
                         )) : (
                             <div className="flex flex-col items-center justify-center w-full h-full gap-4 opacity-20">
                                 <span className="material-symbols-outlined text-4xl">monitoring</span>
-                                <p className="text-[10px] font-black uppercase tracking-[0.4em]">Awaiting Data Feed</p>
+                                <p className="text-[10px] font-black uppercase tracking-[0.4em]">{t('admin.dashboard.awaiting_feed')}</p>
                             </div>
                         )}
                     </div>
@@ -321,9 +323,9 @@ export function AdminDashboard() {
                         <div className="flex items-center justify-between">
                             <h3 className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.4em] flex items-center gap-3">
                                 <span className="w-8 h-px bg-espresso/20"></span>
-                                Strategic Assets
+                                {t('admin.dashboard.strategic_assets')}
                             </h3>
-                            <span className="text-[10px] font-black text-espresso/20 uppercase tracking-widest">Capacity: Unlimited</span>
+                            <span className="text-[10px] font-black text-espresso/20 uppercase tracking-widest">{t('admin.dashboard.capacity')}</span>
                         </div>
                         <div className="flex flex-col gap-8 bg-white/40 dark:bg-black/20 p-10 rounded-[3rem] border border-espresso/10 shadow-2xl relative overflow-hidden group/pop">
                             <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover/pop:bg-espresso transition-colors"></div>
@@ -334,7 +336,7 @@ export function AdminDashboard() {
                                             <p className="text-xl font-serif font-black text-espresso dark:text-white tracking-tight group-hover/item:translate-x-1 transition-transform">{course.name}</p>
                                             <div className="flex items-center gap-3 mt-1">
                                                 <span className="w-2 h-2 rounded-full bg-green-500"></span>
-                                                <p className="text-espresso/40 dark:text-white/40 text-[9px] font-black uppercase tracking-widest">{course.students} ACTIVE NODES</p>
+                                                <p className="text-espresso/40 dark:text-white/40 text-[9px] font-black uppercase tracking-widest">{course.students} {t('admin.dashboard.active_nodes')}</p>
                                             </div>
                                         </div>
                                         <span className="text-[10px] font-black text-espresso/20 uppercase font-serif italic">0{courseStats.indexOf(course) + 1}</span>
@@ -344,7 +346,7 @@ export function AdminDashboard() {
                                     </div>
                                 </div>
                             )) : (
-                                <div className="text-[10px] font-black uppercase tracking-[0.3em] text-espresso/20 italic text-center py-10">Historical data only</div>
+                                <div className="text-[10px] font-black uppercase tracking-[0.3em] text-espresso/20 italic text-center py-10">{t('admin.dashboard.historical_data')}</div>
                             )}
                         </div>
                     </div>
@@ -354,9 +356,9 @@ export function AdminDashboard() {
                         <div className="flex items-center justify-between">
                             <h3 className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.4em] flex items-center gap-3">
                                 <span className="w-8 h-px bg-espresso/20"></span>
-                                Fresh Connections
+                                {t('admin.dashboard.fresh_connections')}
                             </h3>
-                            <Link to="/admin/students" className="text-[10px] font-black text-espresso uppercase tracking-widest hover:underline">Full Registry</Link>
+                            <Link to="/admin/students" className="text-[10px] font-black text-espresso uppercase tracking-widest hover:underline">{t('admin.dashboard.full_registry')}</Link>
                         </div>
                         <div className="flex flex-col bg-white/40 dark:bg-black/20 rounded-[3rem] border border-espresso/10 shadow-2xl overflow-hidden relative group/rec">
                             <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover/rec:bg-espresso transition-colors"></div>
@@ -371,7 +373,7 @@ export function AdminDashboard() {
                                     <div className="flex-1 min-w-0">
                                         <h4 className="text-lg font-serif font-black text-espresso dark:text-white truncate">{student.name}</h4>
                                         <p className="text-[9px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest mt-1">
-                                            Integrated into <span className="text-espresso font-black">{student.course}</span>
+                                            {t('admin.dashboard.integrated_into')} <span className="text-espresso font-black">{student.course}</span>
                                         </p>
                                     </div>
                                     <span className="text-[10px] font-black text-espresso/20 uppercase italic transition-colors group-hover/stu:text-espresso/60">{student.time}</span>
@@ -379,7 +381,7 @@ export function AdminDashboard() {
                             )) : (
                                 <div className="p-20 text-center flex flex-col items-center gap-4 opacity-20">
                                     <span className="material-symbols-outlined text-4xl">person_add_disabled</span>
-                                    <p className="text-[10px] font-black uppercase tracking-[0.4em]">Zero fresh intake detected</p>
+                                    <p className="text-[10px] font-black uppercase tracking-[0.4em]">{t('admin.dashboard.zero_intake')}</p>
                                 </div>
                             )}
                         </div>

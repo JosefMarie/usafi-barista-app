@@ -3,8 +3,10 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { db } from '../../lib/firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { useTranslation } from 'react-i18next';
 
 export function PrivacySettings() {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
@@ -49,10 +51,10 @@ export function PrivacySettings() {
             await updateDoc(doc(db, 'users', user.uid), {
                 privacySettings: settings
             });
-            alert('Privacy settings saved successfully!');
+            alert(t('privacy_settings.success'));
         } catch (error) {
             console.error('Error saving privacy settings:', error);
-            alert('Failed to save settings. Please try again.');
+            alert(t('privacy_settings.error'));
         } finally {
             setSaving(false);
         }
@@ -80,41 +82,41 @@ export function PrivacySettings() {
                         className="flex items-center gap-2 text-espresso/70 dark:text-white/70 hover:text-espresso font-black uppercase tracking-widest text-[10px] mb-6 group transition-all"
                     >
                         <span className="material-symbols-outlined text-[18px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
-                        Back to Portal
+                        {t('privacy_settings.back')}
                     </button>
                     <h1 className="text-4xl font-serif font-bold text-espresso dark:text-white mb-2">
-                        Privacy & Permissions
+                        {t('privacy_settings.title')}
                     </h1>
                     <p className="text-espresso/60 dark:text-white/60 font-medium">
-                        Manage your digital presence and secure your platform interactions
+                        {t('privacy_settings.subtitle')}
                     </p>
                 </div>
 
                 {/* Profile Visibility */}
                 <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/10 p-8 mb-8 relative overflow-hidden group">
                     <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                    <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 mb-6 uppercase tracking-[0.2em] relative z-10">Access & Identification</h2>
+                    <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 mb-6 uppercase tracking-[0.2em] relative z-10">{t('privacy_settings.section_access')}</h2>
 
                     <div className="space-y-4">
                         <div className="relative z-10">
                             <label className="block text-[10px] font-black text-espresso/40 dark:text-white/40 mb-2 uppercase tracking-widest">
-                                Global Visibility Threshold
+                                {t('privacy_settings.visibility_label')}
                             </label>
                             <select
                                 value={settings.profileVisibility}
                                 onChange={e => setSettings({ ...settings, profileVisibility: e.target.value })}
                                 className="w-full px-4 py-3.5 rounded-xl border border-espresso/10 bg-white/40 dark:bg-white/5 text-espresso dark:text-white focus:outline-none focus:ring-2 focus:ring-espresso transition-all font-bold text-sm"
                             >
-                                <option value="public">Public - Worldwide Presence</option>
-                                <option value="connections">Connections Only - Internal Network</option>
-                                <option value="private">Private - Stealth Mode</option>
+                                <option value="public">{t('privacy_settings.opt_public')}</option>
+                                <option value="connections">{t('privacy_settings.opt_connections')}</option>
+                                <option value="private">{t('privacy_settings.opt_private')}</option>
                             </select>
                         </div>
 
                         <div className="flex items-center justify-between p-5 bg-white/30 dark:bg-white/5 rounded-2xl border border-espresso/5 relative z-10">
                             <div>
-                                <p className="font-bold text-espresso dark:text-white text-sm">Broadcast Email</p>
-                                <p className="text-xs text-espresso/50 dark:text-white/50">Allow network to view your contact path</p>
+                                <p className="font-bold text-espresso dark:text-white text-sm">{t('privacy_settings.email_label')}</p>
+                                <p className="text-xs text-espresso/50 dark:text-white/50">{t('privacy_settings.email_desc')}</p>
                             </div>
                             <label className="relative inline-flex items-center cursor-pointer">
                                 <input
@@ -129,8 +131,8 @@ export function PrivacySettings() {
 
                         <div className="flex items-center justify-between p-5 bg-white/30 dark:bg-white/5 rounded-2xl border border-espresso/5 relative z-10">
                             <div>
-                                <p className="font-bold text-espresso dark:text-white text-sm">Show Mobile Link</p>
-                                <p className="text-xs text-espresso/50 dark:text-white/50">Enable direct phone communication</p>
+                                <p className="font-bold text-espresso dark:text-white text-sm">{t('privacy_settings.phone_label')}</p>
+                                <p className="text-xs text-espresso/50 dark:text-white/50">{t('privacy_settings.phone_desc')}</p>
                             </div>
                             <label className="relative inline-flex items-center cursor-pointer">
                                 <input
@@ -148,13 +150,13 @@ export function PrivacySettings() {
                 {/* Communication Preferences */}
                 <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/10 p-8 mb-8 relative overflow-hidden group">
                     <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                    <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 mb-6 uppercase tracking-[0.2em] relative z-10">Communication Channels</h2>
+                    <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 mb-6 uppercase tracking-[0.2em] relative z-10">{t('privacy_settings.section_comm')}</h2>
 
                     <div className="space-y-4">
                         <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-lg">
                             <div>
-                                <p className="font-medium text-espresso dark:text-white">Allow Messages</p>
-                                <p className="text-sm text-espresso/60 dark:text-white/60">Receive messages from other users</p>
+                                <p className="font-medium text-espresso dark:text-white">{t('privacy_settings.messages_label')}</p>
+                                <p className="text-sm text-espresso/60 dark:text-white/60">{t('privacy_settings.messages_desc')}</p>
                             </div>
                             <label className="relative inline-flex items-center cursor-pointer">
                                 <input
@@ -169,8 +171,8 @@ export function PrivacySettings() {
 
                         <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-lg">
                             <div>
-                                <p className="font-medium text-espresso dark:text-white">Push Notifications</p>
-                                <p className="text-sm text-espresso/60 dark:text-white/60">Receive notifications about updates</p>
+                                <p className="font-medium text-espresso dark:text-white">{t('privacy_settings.push_label')}</p>
+                                <p className="text-sm text-espresso/60 dark:text-white/60">{t('privacy_settings.push_desc')}</p>
                             </div>
                             <label className="relative inline-flex items-center cursor-pointer">
                                 <input
@@ -185,8 +187,8 @@ export function PrivacySettings() {
 
                         <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-lg">
                             <div>
-                                <p className="font-medium text-espresso dark:text-white">Marketing Emails</p>
-                                <p className="text-sm text-espresso/60 dark:text-white/60">Receive promotional emails and updates</p>
+                                <p className="font-medium text-espresso dark:text-white">{t('privacy_settings.marketing_label')}</p>
+                                <p className="text-sm text-espresso/60 dark:text-white/60">{t('privacy_settings.marketing_desc')}</p>
                             </div>
                             <label className="relative inline-flex items-center cursor-pointer">
                                 <input
@@ -204,13 +206,13 @@ export function PrivacySettings() {
                 {/* Data & Privacy */}
                 <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/10 p-8 mb-8 relative overflow-hidden group">
                     <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                    <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 mb-6 uppercase tracking-[0.2em] relative z-10">Data Integrity & Trust</h2>
+                    <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 mb-6 uppercase tracking-[0.2em] relative z-10">{t('privacy_settings.section_data')}</h2>
 
                     <div className="space-y-4">
                         <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-white/5 rounded-lg">
                             <div>
-                                <p className="font-medium text-espresso dark:text-white">Data Sharing</p>
-                                <p className="text-sm text-espresso/60 dark:text-white/60">Share anonymized data for platform improvement</p>
+                                <p className="font-medium text-espresso dark:text-white">{t('privacy_settings.sharing_label')}</p>
+                                <p className="text-sm text-espresso/60 dark:text-white/60">{t('privacy_settings.sharing_desc')}</p>
                             </div>
                             <label className="relative inline-flex items-center cursor-pointer">
                                 <input
@@ -227,9 +229,13 @@ export function PrivacySettings() {
                             <div className="flex items-start gap-3">
                                 <span className="material-symbols-outlined text-blue-600 dark:text-blue-400">info</span>
                                 <div>
-                                    <p className="font-medium text-blue-900 dark:text-blue-100 text-sm mb-1">Your Privacy Matters</p>
+                                    <p className="font-medium text-blue-900 dark:text-blue-100 text-sm mb-1">{t('privacy_settings.info_title')}</p>
                                     <p className="text-blue-800 dark:text-blue-200 text-xs">
-                                        We never sell your personal data. Read our <button onClick={() => navigate('/privacy-policy')} className="underline font-bold">Privacy Policy</button> to learn more about how we protect your information.
+                                        {t('privacy_settings.info_desc').split('<link>')[0]}
+                                        <button onClick={() => navigate('/privacy-policy')} className="underline font-bold">
+                                            {t('privacy_settings.info_desc').split('<link>')[1].split('</link>')[0]}
+                                        </button>
+                                        {t('privacy_settings.info_desc').split('</link>')[1]}
                                     </p>
                                 </div>
                             </div>
@@ -243,7 +249,7 @@ export function PrivacySettings() {
                         onClick={() => navigate(-1)}
                         className="flex-1 py-4 rounded-2xl border border-espresso/10 text-espresso dark:text-white font-black uppercase tracking-widest text-xs hover:bg-white/40 dark:hover:bg-white/5 transition-all active:scale-95"
                     >
-                        Cancel
+                        {t('privacy_settings.cancel')}
                     </button>
                     <button
                         onClick={handleSave}
@@ -253,12 +259,12 @@ export function PrivacySettings() {
                         {saving ? (
                             <>
                                 <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
-                                Saving...
+                                {t('privacy_settings.saving')}
                             </>
                         ) : (
                             <>
                                 <span className="material-symbols-outlined text-[18px]">save</span>
-                                Save Permissions
+                                {t('privacy_settings.save')}
                             </>
                         )}
                     </button>

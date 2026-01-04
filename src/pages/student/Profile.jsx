@@ -5,8 +5,10 @@ import { storage, db } from '../../lib/firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { doc, updateDoc } from 'firebase/firestore';
 import { ChangePasswordModal } from '../../components/auth/ChangePasswordModal';
+import { useTranslation } from 'react-i18next';
 
 export function Profile() {
+    const { t } = useTranslation();
     const { user, logout } = useAuth();
     const navigate = useNavigate();
     const fileInputRef = useRef(null);
@@ -46,7 +48,7 @@ export function Profile() {
             window.location.reload();
         } catch (error) {
             console.error("Error updating profile:", error);
-            alert("Failed to update profile information.");
+            alert(t('profile.fail_update'));
         } finally {
             setSaving(false);
         }
@@ -68,15 +70,10 @@ export function Profile() {
                 avatar: downloadURL
             });
 
-            // Note: AuthContext might need a way to refresh the local user state if not using onSnapshot
-            // However, StudentLayout seems to use onSnapshot for chats/notifications, but AuthContext 
-            // uses onAuthStateChanged. onAuthStateChanged won't trigger on Firestore updates.
-            // Let's assume the user will see the change on next load or we might need to reload.
-            // In a better version, the AuthContext would listen to the user doc.
-            window.location.reload(); // Simple way to refresh data for now
+            window.location.reload();
         } catch (error) {
             console.error("Error uploading avatar:", error);
-            alert("Failed to update profile picture.");
+            alert(t('profile.fail_avatar'));
         } finally {
             setUploading(false);
         }
@@ -92,9 +89,13 @@ export function Profile() {
     };
 
     const displayName = user?.name || user?.fullName || user?.email?.split('@')[0] || 'Student';
-    // Use UI Avatars as fallback if no avatar provided
     const avatarUrl = user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=random&size=128`;
     const studentId = user?.uid?.substring(0, 8).toUpperCase() || 'UNKNOWN';
+
+    const getRoleBadge = () => {
+        if (user?.role === 'student') return t('profile.role_student');
+        return user?.role || t('profile.role_executive');
+    };
 
     return (
         <div className="flex flex-col w-full pb-16 animate-fade-in px-4">
@@ -108,13 +109,13 @@ export function Profile() {
                         <span className="material-symbols-outlined text-[24px]">arrow_back_ios_new</span>
                     </button>
                     <h2 className="text-espresso dark:text-white text-2xl font-serif font-black uppercase tracking-[0.2em] leading-tight text-center flex-1">
-                        Professional Identity
+                        {t('profile.title')}
                     </h2>
                     <button
                         onClick={handleEditClick}
                         className="flex items-center justify-center h-12 px-8 rounded-2xl bg-espresso text-white text-[10px] font-black uppercase tracking-[0.2em] shadow-xl hover:shadow-espresso/40 hover:-translate-y-0.5 active:scale-95 transition-all"
                     >
-                        Adjust
+                        {t('profile.edit_info')}
                     </button>
                 </div>
             </header>
@@ -153,12 +154,12 @@ export function Profile() {
                             {displayName}
                         </h1>
                         <p className="text-espresso/40 dark:text-white/40 font-black text-[10px] tracking-[0.2em] uppercase mb-6 bg-white/30 dark:bg-black/20 px-4 py-2 rounded-full border border-white/20">
-                            Identifier: {studentId}
+                            {t('profile.id_student', { id: studentId })}
                         </p>
 
                         <div className="px-6 py-2 bg-espresso text-white rounded-2xl mb-10 shadow-xl border border-white/10">
                             <p className="text-[10px] font-black tracking-[0.3em] uppercase">
-                                {user?.role === 'student' ? 'Master Class Certified' : user?.role || 'Executive Student'}
+                                {getRoleBadge()}
                             </p>
                         </div>
 
@@ -167,7 +168,7 @@ export function Profile() {
                             className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-white/40 text-red-600 border border-red-200/50 hover:bg-red-50 hover:border-red-300 transition-all font-black text-[10px] uppercase tracking-widest shadow-sm active:scale-95"
                         >
                             <span className="material-symbols-outlined text-[20px]">logout</span>
-                            Terminate Session
+                            {t('profile.sign_out')}
                         </button>
                     </div>
                 </div>
@@ -180,21 +181,21 @@ export function Profile() {
                         <div className="px-10 py-6 border-b border-espresso/10 bg-white/20">
                             <div className="flex items-center gap-4">
                                 <span className="material-symbols-outlined text-espresso/40">contact_mail</span>
-                                <h3 className="font-black text-espresso dark:text-white uppercase tracking-[0.2em] text-[10px]">Strategic Information</h3>
+                                <h3 className="font-black text-espresso dark:text-white uppercase tracking-[0.2em] text-[10px]">{t('profile.identity')}</h3>
                             </div>
                         </div>
                         <div className="p-10 grid grid-cols-1 md:grid-cols-2 gap-10 relative z-10">
                             <div className="space-y-2 hover:translate-x-1 transition-transform">
-                                <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">Authorized Communications</p>
+                                <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">{t('profile.email')}</p>
                                 <p className="text-espresso dark:text-white font-serif font-bold text-xl truncate">{user?.email}</p>
                             </div>
                             <div className="space-y-2 hover:translate-x-1 transition-transform">
-                                <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">Contact Protocol</p>
-                                <p className="text-espresso dark:text-white font-serif font-bold text-xl">{user?.phone || 'Awaiting activation'}</p>
+                                <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">{t('profile.phone')}</p>
+                                <p className="text-espresso dark:text-white font-serif font-bold text-xl">{user?.phone || t('profile.not_set')}</p>
                             </div>
                             <div className="space-y-2 hover:translate-x-1 transition-transform">
-                                <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">Deployment Zone</p>
-                                <p className="text-espresso dark:text-white font-serif font-bold text-xl">{user?.location || 'Undisclosed'}</p>
+                                <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">{t('profile.location')}</p>
+                                <p className="text-espresso dark:text-white font-serif font-bold text-xl">{user?.location || t('profile.not_provided')}</p>
                             </div>
                         </div>
                     </div>
@@ -205,7 +206,7 @@ export function Profile() {
                         <div className="px-10 py-6 border-b border-espresso/10 bg-white/20">
                             <div className="flex items-center gap-4">
                                 <span className="material-symbols-outlined text-espresso/40">fingerprint</span>
-                                <h3 className="font-black text-espresso dark:text-white uppercase tracking-[0.2em] text-[10px]">Access Control & Protocols</h3>
+                                <h3 className="font-black text-espresso dark:text-white uppercase tracking-[0.2em] text-[10px]">{t('profile.security')}</h3>
                             </div>
                         </div>
                         <div className="divide-y divide-espresso/10 relative z-10">
@@ -218,8 +219,8 @@ export function Profile() {
                                         <span className="material-symbols-outlined text-2xl">key</span>
                                     </div>
                                     <div>
-                                        <p className="font-black text-espresso dark:text-white text-[12px] uppercase tracking-widest leading-none mb-2">Master Password</p>
-                                        <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest">Re-configure access credentials</p>
+                                        <p className="font-black text-espresso dark:text-white text-[12px] uppercase tracking-widest leading-none mb-2">{t('profile.update_password')}</p>
+                                        <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest">{t('profile.update_password_desc')}</p>
                                     </div>
                                 </div>
                                 <span className="material-symbols-outlined text-espresso/30 group-hover/item:translate-x-2 transition-transform">arrow_forward_ios</span>
@@ -234,8 +235,8 @@ export function Profile() {
                                         <span className="material-symbols-outlined text-2xl">policy</span>
                                     </div>
                                     <div>
-                                        <p className="font-black text-espresso dark:text-white text-[12px] uppercase tracking-widest leading-none mb-2">Privacy Protocols</p>
-                                        <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest">Govern your data visibility</p>
+                                        <p className="font-black text-espresso dark:text-white text-[12px] uppercase tracking-widest leading-none mb-2">{t('profile.privacy')}</p>
+                                        <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest">{t('profile.digital_vis')}</p>
                                     </div>
                                 </div>
                                 <span className="material-symbols-outlined text-espresso/30 group-hover/item:translate-x-2 transition-transform">arrow_forward_ios</span>
@@ -250,8 +251,8 @@ export function Profile() {
                                         <span className="material-symbols-outlined text-2xl">notifications_active</span>
                                     </div>
                                     <div>
-                                        <p className="font-black text-espresso dark:text-white text-[12px] uppercase tracking-widest leading-none mb-2">Intelligence Stream</p>
-                                        <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest">Configure communication alerts</p>
+                                        <p className="font-black text-espresso dark:text-white text-[12px] uppercase tracking-widest leading-none mb-2">{t('profile.alerts')}</p>
+                                        <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest">{t('profile.comm_flow')}</p>
                                     </div>
                                 </div>
                                 <span className="material-symbols-outlined text-espresso/30 group-hover/item:translate-x-2 transition-transform">arrow_forward_ios</span>
@@ -272,13 +273,13 @@ export function Profile() {
                         <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
 
                         <h3 className="text-3xl font-serif font-bold text-espresso dark:text-white mb-8">
-                            Adjustment Protocol
+                            {t('profile.edit_title')}
                         </h3>
 
                         <div className="space-y-6">
                             <div className="space-y-2">
                                 <label className="block text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest">
-                                    Contact Frequency
+                                    {t('profile.phone')}
                                 </label>
                                 <input
                                     type="tel"
@@ -291,7 +292,7 @@ export function Profile() {
 
                             <div className="space-y-2">
                                 <label className="block text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest">
-                                    Geospatial Assignment
+                                    {t('profile.location')}
                                 </label>
                                 <input
                                     type="text"
@@ -309,14 +310,14 @@ export function Profile() {
                                 onClick={() => setShowEditModal(false)}
                                 className="flex-1 py-4 rounded-2xl border border-espresso/10 text-espresso/60 dark:text-white/60 font-black text-[10px] uppercase tracking-widest hover:bg-white/40 transition-all active:scale-95"
                             >
-                                Abort
+                                {t('profile.cancel')}
                             </button>
                             <button
                                 onClick={handleSaveInfo}
                                 disabled={saving}
                                 className="flex-2 py-4 px-10 rounded-2xl bg-espresso text-white font-black text-[10px] uppercase tracking-widest shadow-xl hover:shadow-espresso/40 transition-all disabled:opacity-50 active:scale-95"
                             >
-                                {saving ? 'Encoding...' : 'Commit Changes'}
+                                {saving ? t('profile.saving') : t('profile.save')}
                             </button>
                         </div>
                     </div>

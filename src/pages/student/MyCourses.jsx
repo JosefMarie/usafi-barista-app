@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 import { collection, query, where, orderBy, onSnapshot, doc, getDoc, getDocs } from 'firebase/firestore';
@@ -8,6 +9,7 @@ import { useAuth } from '../../context/AuthContext';
 const BEAN_TO_BREW_ID = 'bean-to-brew';
 
 export function MyCourses() {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const { user } = useAuth();
     const [course, setCourse] = useState(null);
@@ -65,7 +67,7 @@ export function MyCourses() {
     if (!course) {
         return (
             <div className="text-center py-20">
-                <p className="text-espresso/60">Course not found.</p>
+                <p className="text-espresso/60">{t('student.courses.not_found')}</p>
             </div>
         );
     }
@@ -90,11 +92,11 @@ export function MyCourses() {
                     <div className="flex flex-wrap gap-4 justify-center md:justify-start pt-2">
                         <div className="flex items-center gap-3 px-5 py-2 bg-espresso text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg">
                             <span className="material-symbols-outlined text-lg">verified</span>
-                            Academic Standard
+                            {t('student.courses.academic_standard')}
                         </div>
                         <div className="flex items-center gap-3 px-5 py-2 bg-white/40 dark:bg-white/10 text-espresso dark:text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-sm border border-espresso/5">
                             <span className="material-symbols-outlined text-lg">view_module</span>
-                            {modules.length} Strategic Units
+                            {t('student.courses.units_count', { count: modules.length })}
                         </div>
                     </div>
                 </div>
@@ -104,7 +106,7 @@ export function MyCourses() {
             <div>
                 <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 uppercase tracking-[0.2em] flex items-center gap-3 mb-8">
                     <span className="h-2 w-2 rounded-full bg-espresso"></span>
-                    Curriculum Map
+                    {t('student.courses.curriculum_map')}
                 </h2>
 
                 <div className="space-y-4">
@@ -152,11 +154,11 @@ export function MyCourses() {
                                     <div className="flex-1">
                                         <div className="flex items-center gap-3 mb-2">
                                             <span className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">
-                                                Strategic Unit {index + 1}
+                                                {t('student.courses.unit_label')} {index + 1}
                                             </span>
                                             {!isAssigned && (
                                                 <span className="text-[10px] font-black text-red-500 bg-red-500/10 px-3 py-1 rounded-full uppercase tracking-widest shadow-sm">
-                                                    Authorization Required
+                                                    {t('student.courses.auth_required')}
                                                 </span>
                                             )}
                                         </div>
@@ -166,7 +168,7 @@ export function MyCourses() {
                                         {status === 'locked' && (
                                             <div className="text-[10px] font-black uppercase tracking-widest text-espresso/40 flex items-center gap-2 mt-2">
                                                 <span className="material-symbols-outlined text-sm">notification_important</span>
-                                                Contact instructor for strategic clearance
+                                                {t('student.courses.locked_note')}
                                             </div>
                                         )}
                                     </div>
@@ -177,12 +179,12 @@ export function MyCourses() {
                                                 onClick={() => navigate(`/student/courses/${BEAN_TO_BREW_ID}?module=${module.id}`)}
                                                 className="px-8 py-3 bg-espresso text-white font-black uppercase tracking-widest text-[10px] rounded-2xl hover:shadow-2xl transition-all shadow-xl active:scale-95"
                                             >
-                                                {status === 'completed' ? 'Re-examine' : 'Commence'}
+                                                {status === 'completed' ? t('student.courses.reexamine') : t('student.courses.commence')}
                                             </button>
                                         )}
                                         {status === 'locked' && (
                                             <button disabled className="px-8 py-3 bg-espresso/5 text-espresso/20 font-black uppercase tracking-widest text-[10px] rounded-2xl cursor-not-allowed border border-espresso/10">
-                                                Locked
+                                                {t('student.courses.locked_btn')}
                                             </button>
                                         )}
                                     </div>

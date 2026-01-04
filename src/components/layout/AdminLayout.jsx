@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate, Navigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { cn } from '../../lib/utils';
@@ -8,6 +9,7 @@ import { PortalTopBar } from './PortalTopBar';
 import { useAuth } from '../../context/AuthContext';
 
 export function AdminLayout() {
+    const { t } = useTranslation();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [unreadCount, setUnreadCount] = useState(0);
     const location = useLocation();
@@ -58,20 +60,20 @@ export function AdminLayout() {
     }
 
     const navItems = [
-        { icon: 'dashboard', label: 'Dashboard', path: '/admin/dashboard' },
-        { icon: 'menu_book', label: 'Courses', path: '/admin/courses' },
-        { icon: 'forum', label: 'Forum', path: '/admin/forum' },
-        { icon: 'groups', label: 'Instructors', path: '/admin/instructors' },
-        { icon: 'school', label: 'Students', path: '/admin/students' },
-        { icon: 'quiz', label: 'Quizzes', path: '/admin/quizzes' },
-        { icon: 'campaign', label: 'Announcements', path: '/admin/announcements' },
-        { icon: 'record_voice_over', label: 'Testimonials', path: '/admin/testimonials' },
-        { icon: 'notifications', label: 'Notifications', path: '/admin/notifications' },
-        { icon: 'work', label: 'Manage Jobs', path: '/admin/opportunities' },
-        { icon: 'diversity_3', label: 'Job Seekers', path: '/admin/seekers' },
-        { icon: 'admin_panel_settings', label: 'Business Students', path: '/admin/business/users' },
-        { icon: 'menu_book', label: 'Business Courses', path: '/admin/business/courses' },
-        { icon: 'person', label: 'My Profile', path: '/admin/profile' },
+        { icon: 'dashboard', label: t('admin.nav.dashboard'), path: '/admin/dashboard' },
+        { icon: 'menu_book', label: t('admin.nav.courses'), path: '/admin/courses' },
+        { icon: 'forum', label: t('admin.nav.forum'), path: '/admin/forum' },
+        { icon: 'groups', label: t('admin.nav.instructors'), path: '/admin/instructors' },
+        { icon: 'school', label: t('admin.nav.students'), path: '/admin/students' },
+        { icon: 'quiz', label: t('admin.nav.quizzes'), path: '/admin/quizzes' },
+        { icon: 'campaign', label: t('admin.nav.announcements'), path: '/admin/announcements' },
+        { icon: 'record_voice_over', label: t('admin.nav.testimonials'), path: '/admin/testimonials' },
+        { icon: 'notifications', label: t('admin.nav.notifications'), path: '/admin/notifications' },
+        { icon: 'work', label: t('admin.nav.manage_jobs'), path: '/admin/opportunities' },
+        { icon: 'diversity_3', label: t('admin.nav.job_seekers'), path: '/admin/seekers' },
+        { icon: 'admin_panel_settings', label: t('admin.nav.business_students'), path: '/admin/business/users' },
+        { icon: 'menu_book', label: t('admin.nav.business_courses'), path: '/admin/business/courses' },
+        { icon: 'person', label: t('admin.nav.my_profile'), path: '/admin/profile' },
     ];
 
     return (
@@ -137,7 +139,7 @@ export function AdminLayout() {
                         className="flex items-center gap-4 w-full px-4 py-3.5 rounded-2xl text-[11px] font-black uppercase tracking-widest text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all relative overflow-hidden shadow-sm border border-transparent hover:border-red-200"
                     >
                         <span className="material-symbols-outlined text-[20px]">logout</span>
-                        Sign Out
+                        {t('admin.nav.sign_out')}
                     </button>
                 </div>
             </aside>
@@ -159,7 +161,7 @@ export function AdminLayout() {
                                 <div className="h-10 w-10 rounded-2xl bg-espresso flex items-center justify-center text-white shadow-xl">
                                     <span className="material-symbols-outlined text-2xl">coffee</span>
                                 </div>
-                                <span className="font-serif text-lg font-bold text-espresso dark:text-white">Admin Menu</span>
+                                <span className="font-serif text-lg font-bold text-espresso dark:text-white">{t('admin.nav.admin_menu')}</span>
                             </div>
                             <button onClick={() => setIsMobileMenuOpen(false)} className="h-12 w-12 flex items-center justify-center rounded-2xl bg-espresso/5 text-espresso dark:text-white hover:bg-espresso/10 transition-colors">
                                 <span className="material-symbols-outlined">close</span>
@@ -179,7 +181,7 @@ export function AdminLayout() {
                                     </div>
                                     <div>
                                         <p className="font-bold text-espresso dark:text-white">
-                                            {user?.name || 'Administrator'}
+                                            {user?.name || t('admin.nav.admin_default')}
                                         </p>
                                         <p className="text-sm text-espresso/60 dark:text-white/60">
                                             {user?.email || 'admin@usafi.com'}
@@ -208,7 +210,7 @@ export function AdminLayout() {
                                 className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors mt-2"
                             >
                                 <span className="material-symbols-outlined text-[24px]">logout</span>
-                                Sign Out
+                                {t('admin.nav.sign_out')}
                             </button>
                         </nav>
                     </div>

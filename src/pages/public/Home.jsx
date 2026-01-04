@@ -34,7 +34,7 @@ export function Home() {
                         </h2>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-4 w-full max-w-2xl">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-4 w-full max-w-3xl">
                         {/* 1. Apply Now - Growing Orange/Red */}
                         <GradientButton to="/enroll">
                             {t('home.hero.cta_apply')}
@@ -63,6 +63,15 @@ export function Home() {
                             <div className="relative flex h-14 w-full items-center justify-center rounded-xl bg-transparent px-8 transition-all duration-300 group-hover:bg-white/10">
                                 <span className="text-lg font-bold tracking-wide text-white">
                                     {t('home.hero.cta_business')}
+                                </span>
+                            </div>
+                        </Link>
+
+                        {/* 5. Tools and Equipment - Golden/Amber */}
+                        <Link to="/equipment" className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-amber-600 to-yellow-700 p-[2px] transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-amber-600/30">
+                            <div className="relative flex h-14 w-full items-center justify-center rounded-xl bg-transparent px-8 transition-all duration-300 group-hover:bg-white/10">
+                                <span className="text-lg font-bold tracking-wide text-white">
+                                    {t('home.hero.cta_equipment')}
                                 </span>
                             </div>
                         </Link>

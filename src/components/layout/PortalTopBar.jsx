@@ -3,9 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
 import { GlobalSearch } from '../common/GlobalSearch';
 import { ThemeToggle } from '../common/ThemeToggle';
+import { LanguageSwitcher } from '../LanguageSwitcher';
 
 export function PortalTopBar({ user, unreadNotifications = 0, onLogout, onToggleMobileMenu }) {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -26,11 +27,11 @@ export function PortalTopBar({ user, unreadNotifications = 0, onLogout, onToggle
         };
     }, []);
 
-    const displayName = user?.name || user?.fullName || user?.email || 'User';
+    const displayName = user?.name || user?.fullName || user?.email || t('nav.user_default');
     const avatarUrl = user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=random`;
 
     return (
-        <div className="h-20 border-b border-espresso/10 bg-[#F5DEB3]/80 dark:bg-[#1c1916]/80 backdrop-blur-md sticky top-0 z-30 px-4 sm:px-8 flex items-center justify-between transition-colors gap-2">
+        <div className="h-20 border-b border-espresso/10 bg-[#F5DEB3]/80 dark:bg-[#1c1916]/80 backdrop-blur-md sticky top-0 z-30 px-4 sm:px-8 flex items-center transition-colors gap-4">
 
             {/* Mobile Menu Toggle */}
             <button
@@ -40,46 +41,46 @@ export function PortalTopBar({ user, unreadNotifications = 0, onLogout, onToggle
                 <span className="material-symbols-outlined text-[24px]">menu</span>
             </button>
 
-            {/* Search Trigger (Desktop) */}
-            <div className="hidden sm:flex items-center flex-1">
+            {/* Mobile Search Icon */}
+            <button
+                onClick={() => setIsSearchOpen(true)}
+                className="sm:hidden p-2 rounded-lg text-espresso/60 dark:text-white/60 hover:bg-black/5 dark:hover:bg-white/5 transition-colors ml-auto"
+            >
+                <span className="material-symbols-outlined">search</span>
+            </button>
+
+            {/* Right-Aligned Content */}
+            <div className="hidden sm:flex items-center gap-4 ml-auto">
+                {/* Search Trigger */}
                 <button
                     onClick={() => setIsSearchOpen(true)}
-                    className="flex items-center w-full gap-4 px-5 py-2.5 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/10 dark:border-white/5 text-espresso/40 dark:text-white/40 hover:bg-white/60 dark:hover:bg-white/10 transition-all group shadow-sm"
+                    className="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/10 dark:border-white/5 text-espresso/40 dark:text-white/40 hover:bg-white/60 dark:hover:bg-white/10 transition-all group shadow-sm w-[280px]"
                 >
                     <span className="material-symbols-outlined text-[20px] group-hover:text-espresso transition-colors">search</span>
                     <span className="text-[11px] font-black uppercase tracking-widest flex-1 text-left">
                         {t('search.placeholder', 'Search everything...')}
                     </span>
-                    <kbd className="hidden md:inline-flex h-6 items-center gap-1 rounded-lg border border-espresso/10 dark:border-white/10 bg-white dark:bg-[#2c2825] px-2 font-mono text-[10px] font-black opacity-100 shadow-sm text-espresso/60">
+                    <kbd className="hidden lg:inline-flex h-6 items-center gap-1 rounded-lg border border-espresso/10 dark:border-white/10 bg-white dark:bg-[#2c2825] px-2 font-mono text-[10px] font-black opacity-100 shadow-sm text-espresso/60">
                         <span className="text-xs">⌘</span>K
                     </kbd>
                 </button>
-            </div>
-
-            {/* Mobile Search Icon */}
-            <button
-                onClick={() => setIsSearchOpen(true)}
-                className="sm:hidden p-2 rounded-lg text-espresso/60 dark:text-white/60 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-            >
-                <span className="material-symbols-outlined">search</span>
-            </button>
-
-            {/* Right Side Actions */}
-            <div className="flex items-center gap-2 sm:gap-4">
 
                 {/* Date/Time (Desktop) */}
-                <div className="hidden lg:flex flex-col items-end mr-4">
+                <div className="hidden lg:flex flex-col items-end">
                     <p className="text-[10px] font-bold uppercase tracking-widest text-espresso/40 dark:text-white/40">
-                        {currentTime.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
+                        {currentTime.toLocaleDateString(i18n.language, { weekday: 'long', month: 'short', day: 'numeric' })}
                     </p>
                     <p className="text-sm font-serif font-bold text-espresso dark:text-white">
-                        {currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                        {currentTime.toLocaleTimeString(i18n.language, { hour: '2-digit', minute: '2-digit' })}
                     </p>
                 </div>
 
-                <div className="h-8 w-[1px] bg-black/5 dark:bg-white/5 hidden sm:block"></div>
+                <div className="h-8 w-[1px] bg-black/5 dark:bg-white/5 hidden lg:block"></div>
 
-                {/* Notifications & Theme */}
+                {/* Language Switcher */}
+                <LanguageSwitcher className="hidden lg:block" />
+
+                {/* Theme Toggle */}
                 <ThemeToggle className="hover:bg-primary/10 transition-colors" />
 
                 {/* User Menu */}
@@ -109,7 +110,7 @@ export function PortalTopBar({ user, unreadNotifications = 0, onLogout, onToggle
                                     className="w-full flex items-center gap-4 px-4 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-sm group-hover/btn:shadow-lg"
                                 >
                                     <span className="material-symbols-outlined text-[18px]">logout</span>
-                                    Log Out
+                                    {t('nav.logout')}
                                 </button>
                             </div>
                         </div>

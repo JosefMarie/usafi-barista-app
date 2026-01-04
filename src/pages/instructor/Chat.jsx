@@ -3,8 +3,10 @@ import { collection, query, where, getDocs, onSnapshot, orderBy } from 'firebase
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export function InstructorChat() {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const [assignedStudents, setAssignedStudents] = useState([]);
     const [chats, setChats] = useState([]);
@@ -68,9 +70,9 @@ export function InstructorChat() {
     return (
         <div className="max-w-4xl mx-auto space-y-6">
             <div>
-                <h1 className="text-3xl font-serif font-bold text-espresso dark:text-white">Mentor Communications</h1>
+                <h1 className="text-3xl font-serif font-bold text-espresso dark:text-white">{t('chat.instructor_title')}</h1>
                 <p className="text-espresso/60 dark:text-white/60 font-medium mt-1">
-                    Engage in strategic dialogue with your assigned cohort ({assignedStudents.length} student{assignedStudents.length !== 1 ? 's' : ''})
+                    {t('chat.instructor_subtitle', { count: assignedStudents.length })}
                 </p>
             </div>
 
@@ -83,7 +85,7 @@ export function InstructorChat() {
                     <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                     <span className="material-symbols-outlined text-6xl text-espresso/20 dark:text-white/20 mb-4 block group-hover:scale-110 transition-transform">chat_bubble</span>
                     <p className="text-espresso/40 dark:text-white/40 font-black uppercase tracking-widest text-sm">
-                        {assignedStudents.length > 0 ? 'Silence in the lines. Start a strategic dialogue.' : 'No cohort members detected for communication.'}
+                        {assignedStudents.length > 0 ? t('chat.no_chats') : t('chat.no_cohort')}
                     </p>
                 </div>
             ) : (
@@ -124,7 +126,7 @@ export function InstructorChat() {
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <p className="text-sm font-medium text-espresso/60 dark:text-white/60 truncate leading-relaxed">
-                                            {chat.lastMessage || 'Channel established. Awaiting input.'}
+                                            {chat.lastMessage || t('chat.awaiting_input')}
                                         </p>
                                         {unreadCount > 0 && (
                                             <span className="ml-3 flex items-center justify-center min-w-[24px] h-6 px-2.5 bg-espresso text-white text-[10px] font-black rounded-full shadow-lg">
@@ -142,7 +144,7 @@ export function InstructorChat() {
             <div className="mt-12">
                 <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 mb-6 uppercase tracking-[0.2em] flex items-center gap-3">
                     <span className="h-2 w-2 rounded-full bg-espresso"></span>
-                    Initiate Connection
+                    {t('chat.initiate')}
                 </h2>
                 <div className="grid gap-4">
                     {assignedStudents

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { collection, query, where, getDocs, limit, orderBy } from 'firebase/firestore';
+import { collection, query, where, getDocs, limit, orderBy, collectionGroup } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { cn } from '../../lib/utils';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +10,7 @@ export function GlobalSearch({ isOpen, onClose }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [results, setResults] = useState({
         courses: [],
+        curriculum: [],
         forum: [],
         opportunities: [],
         pages: [],
@@ -35,15 +36,19 @@ export function GlobalSearch({ isOpen, onClose }) {
     useEffect(() => {
         const handleKeyDown = (e) => {
             if (e.key === 'Escape') onClose();
+            if (e.key === 'Enter' && searchTerm.length >= 2) {
+                const firstResult = Object.values(results).flat()[0];
+                if (firstResult) handleResultClick(firstResult);
+            }
         };
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [onClose]);
+    }, [onClose, results, searchTerm]);
 
 
     useEffect(() => {
         if (searchTerm.length < 2) {
-            setResults({ courses: [], forum: [], opportunities: [], pages: [], equipment: [], testimonials: [] });
+            setResults({ courses: [], curriculum: [], forum: [], opportunities: [], pages: [], equipment: [], testimonials: [] });
             return;
         }
 
@@ -51,87 +56,124 @@ export function GlobalSearch({ isOpen, onClose }) {
             setLoading(true);
             try {
                 const term = searchTerm.toLowerCase();
-                // console.log('DEBUG: GlobalSearch term:', term);
+                console.log('DEBUG: OmniSearch Initiated for:', term);
 
+                // 1. Static Pages Data (Guaranteed Fallback)
                 const STATIC_DATA = [
-                    // Courses
-                    { id: 'onsite', title: t('courses.onsite.title'), content: t('courses.onsite.description'), type: 'course', path: '/courses', tags: 'onsite class in-person barista training' },
-                    { id: 'online', title: t('courses.online.title'), content: t('courses.online.description'), type: 'course', path: '/courses', tags: 'online e-learning remote barista training' },
-                    // Curriculum Modules
-                    { id: 'm1', title: t('courses.curriculum.modules.m1.title'), content: t('courses.curriculum.modules.m1.description'), type: 'course', path: '/courses', tags: 'intro history origins bean varieties' },
-                    { id: 'm2', title: t('courses.curriculum.modules.m2.title'), content: t('courses.curriculum.modules.m2.description'), type: 'course', path: '/courses', tags: 'basics equipment grinder machine calibration tamping' },
-                    { id: 'm3', title: t('courses.curriculum.modules.m3.title'), content: t('courses.curriculum.modules.m3.description'), type: 'course', path: '/courses', tags: 'science espresso milk steaming extraction micro-foam' },
-                    { id: 'm4', title: t('courses.curriculum.modules.m4.title'), content: t('courses.curriculum.modules.m4.description'), type: 'course', path: '/courses', tags: 'latte art pouring heart rosetta tulip' },
-                    { id: 'm5', title: t('courses.curriculum.modules.m5.title'), content: t('courses.curriculum.modules.m5.description'), type: 'course', path: '/courses', tags: 'hygiene maintenance cleaning safety' },
-                    { id: 'm6', title: t('courses.curriculum.modules.m6.title'), content: t('courses.curriculum.modules.m6.description'), type: 'course', path: '/courses', tags: 'customer service communication body language loyalty' },
-                    { id: 'm7', title: t('courses.curriculum.modules.m7.title'), content: t('courses.curriculum.modules.m7.description'), type: 'course', path: '/courses', tags: 'business coffee shop planning pricing marketing startup' },
-                    // About
-                    { id: 'about', title: t('about.title'), content: t('about.hero.description'), type: 'public', path: '/about', tags: 'about us center school launchpad Rwanda coffee' },
-                    { id: 'mission', title: t('about.mission.title'), content: t('about.mission.description'), type: 'public', path: '/about', tags: 'mission vision goal purpose values' },
-                    // Equipment
-                    { id: 'equipment', title: t('equipment.title'), content: t('equipment.description'), type: 'equipment', path: '/equipment', tags: 'equipment machinery tools barista supplies machinery' },
-                    { id: 'espresso', title: t('equipment.machinery.espresso.title'), content: t('equipment.machinery.espresso.description'), type: 'equipment', path: '/equipment', tags: 'espresso machine machinery gear boiler extraction' },
-                    { id: 'grinder', title: t('equipment.machinery.grinder.title'), content: t('equipment.machinery.grinder.description'), type: 'equipment', path: '/equipment', tags: 'coffee grinder machinery gear burr grind particles' },
-                    // Testimonials
-                    { id: 'testimonials', title: t('testimonials.title'), content: t('testimonials.description'), type: 'testimonial', path: '/testimonials', tags: 'testimonials success stories alumni graduates reviews testimonies' },
-                    { id: 'grace', title: t('testimonials.items.grace.name'), content: t('testimonials.items.grace.text'), type: 'testimonial', path: '/testimonials', tags: 'grace mutesi story review recommendation success testimonies' },
-                    { id: 'kevin', title: t('testimonials.items.kevin.name'), content: t('testimonials.items.kevin.text'), type: 'testimonial', path: '/testimonials', tags: 'kevin mugisha story review recommendation success testimonies' },
-                    { id: 'patience', title: t('testimonials.items.patience.name'), content: t('testimonials.items.patience.text'), type: 'testimonial', path: '/testimonials', tags: 'patience uwamahoro story review recommendation success testimonies' },
-                    // Contact & Location
-                    { id: 'contact', title: t('contact.title'), content: t('contact.description'), type: 'public', path: '/contact', tags: 'contact us message support reach email phone call' },
-                    { id: 'location', title: t('contact.info.visit.title'), content: `${t('contact.info.visit.address')} - ${t('contact.info.visit.near')}`, type: 'public', path: '/contact', tags: 'location visit address Kimironko Kigali map office' },
-                    // Career/Business
-                    { id: 'career', title: t('careerSupport.title'), content: t('careerSupport.description'), type: 'public', path: '/career', tags: 'career support jobs employment internship launch success' },
-                    { id: 'business', title: t('careerSupport.business.title'), content: t('careerSupport.business.description'), type: 'public', path: '/career', tags: 'business class coffee shop entrepreneurship plan launch profit startup' },
+                    { id: 'onsite', title: t('courses.onsite.title'), content: t('courses.onsite.description'), type: 'course', path: '/courses', tags: 'onsite class barista training' },
+                    { id: 'online', title: t('courses.online.title'), content: t('courses.online.description'), type: 'course', path: '/courses', tags: 'online e-learning digital academy' },
+                    { id: 'quizzes', title: 'Evaluation Matrix & Quizzes', content: 'Manage and take barista certification quizzes.', type: 'course', path: '/admin/quizzes', tags: 'quiz testing assessment evaluation exams' },
+                    { id: 'about', title: t('about.title'), content: t('about.hero.description'), type: 'public', path: '/about', tags: 'about us center' },
+                    { id: 'equipment', title: t('equipment.title'), content: t('equipment.description'), type: 'equipment', path: '/equipment', tags: 'machinery gear' },
+                    { id: 'contact', title: t('contact.title'), content: t('contact.description'), type: 'public', path: '/contact', tags: 'contact email' },
                 ];
 
-                // 1. Search Local Static Data (Public Pages, Courses, Equipment, etc.)
+                // 2. Fetch Dynamic Data
+                const dynamicResults = [];
+                let forumResults = [];
+                let oppsResults = [];
+
+                try {
+                    // Optimized fetching: Limit to 100 docs per group to prevent timeout
+                    const coursesSnap = await getDocs(query(collectionGroup(db, 'modules'), limit(100)));
+                    const businessSnap = await getDocs(query(collectionGroup(db, 'chapters'), limit(50)));
+                    const forumSnap = await getDocs(query(collection(db, 'forum_posts'), limit(20)));
+                    const oppsSnap = await getDocs(query(collection(db, 'opportunities'), limit(20)));
+
+                    console.log(`DEBUG: Search Scanned ${coursesSnap.size + businessSnap.size} core/business docs.`);
+
+                    // Standard Modules
+                    coursesSnap.docs.forEach(doc => {
+                        const data = doc.data();
+                        if (!data) return;
+
+                        // Path construction
+                        const parentDoc = doc.ref.parent?.parent;
+                        const courseId = parentDoc ? parentDoc.id : null;
+                        if (!courseId) return;
+
+                        const moduleTitle = String(data.title || '');
+                        const slidesText = Array.isArray(data.content)
+                            ? data.content.map(s => `${s.title} ${s.text}`).join(' ')
+                            : '';
+                        const quizText = Array.isArray(data.quiz?.questions)
+                            ? data.quiz.questions.map(q => q.question || q.text || '').join(' ')
+                            : '';
+
+                        if (moduleTitle.toLowerCase().includes(term) || slidesText.toLowerCase().includes(term) || quizText.toLowerCase().includes(term)) {
+                            dynamicResults.push({
+                                id: doc.id,
+                                title: moduleTitle,
+                                content: slidesText.length > 0 ? (slidesText.substring(0, 100) + '...') : 'Module Content',
+                                type: 'curriculum',
+                                source: 'Core Course',
+                                path: `/student/courses/${courseId}?module=${doc.id}`
+                            });
+                        }
+                    });
+
+                    // Business Chapters
+                    businessSnap.docs.forEach(doc => {
+                        const data = doc.data();
+                        if (!data) return;
+
+                        const parentDoc = doc.ref.parent?.parent;
+                        const courseId = parentDoc ? parentDoc.id : null;
+                        if (!courseId) return;
+
+                        const title = String(data.title || '');
+                        const quizText = Array.isArray(data.quiz?.questions)
+                            ? data.quiz.questions.map(q => q.question || q.text || '').join(' ')
+                            : '';
+
+                        if (title.toLowerCase().includes(term) || quizText.toLowerCase().includes(term)) {
+                            dynamicResults.push({
+                                id: doc.id,
+                                title,
+                                content: `Business Strategy Chapter`,
+                                type: 'curriculum',
+                                source: 'Business Class',
+                                path: `/business/courses/${courseId}`
+                            });
+                        }
+                    });
+
+                    forumResults = forumSnap.docs
+                        .map(doc => ({ id: doc.id, ...doc.data(), type: 'forum' }))
+                        .filter(post => String(post.title || '').toLowerCase().includes(term) || String(post.content || '').toLowerCase().includes(term));
+
+                    oppsResults = oppsSnap.docs
+                        .map(doc => ({ id: doc.id, ...doc.data(), type: 'opportunity' }))
+                        .filter(opp => String(opp.title || '').toLowerCase().includes(term) || String(opp.description || '').toLowerCase().includes(term));
+
+                } catch (dbErr) {
+                    console.error("Firebase Search Execution Interrupted:", dbErr);
+                }
+
+                // Static Filtering
                 const matchedPages = STATIC_DATA.filter(item =>
                     item.title.toLowerCase().includes(term) ||
                     item.content.toLowerCase().includes(term) ||
                     (item.tags && item.tags.toLowerCase().includes(term))
                 );
 
-                // 2. Search Forum Posts (Case Sensitivity Hack: orderBy + prefix)
-                // Firestore doesn't support case-insensitive natively. 
-                // We typically need to store a 'title_lowercase' field. 
-                // Since we can't change schema easily now, we search by actual term,
-                // but we also search for capitalized if appropriate.
-                const forumQuery = query(
-                    collection(db, 'forum_posts'),
-                    orderBy('title'),
-                    where('title', '>=', searchTerm),
-                    where('title', '<=', searchTerm + '\uf8ff'),
-                    limit(5)
-                );
-
-                const oppsQuery = query(
-                    collection(db, 'opportunities'),
-                    orderBy('title'),
-                    where('title', '>=', searchTerm),
-                    where('title', '<=', searchTerm + '\uf8ff'),
-                    limit(5)
-                );
-
-                const [forumSnap, oppsSnap] = await Promise.all([
-                    getDocs(forumQuery),
-                    getDocs(oppsQuery)
-                ]);
+                console.log(`DEBUG: Static matches: ${matchedPages.length}, Dynamic matches: ${dynamicResults.length}`);
 
                 setResults({
-                    forum: forumSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), type: 'forum' })),
-                    opportunities: oppsSnap.docs.map(doc => ({ id: doc.id, ...doc.data(), type: 'opportunity' })),
+                    forum: forumResults.slice(0, 5),
+                    opportunities: oppsResults.slice(0, 5),
+                    curriculum: dynamicResults.slice(0, 10),
                     courses: matchedPages.filter(p => p.type === 'course'),
                     pages: matchedPages.filter(p => p.type === 'public'),
                     equipment: matchedPages.filter(p => p.type === 'equipment'),
                     testimonials: matchedPages.filter(p => p.type === 'testimonial')
                 });
             } catch (error) {
-                console.error("Search error:", error);
+                console.error("Deep search master error:", error);
             } finally {
                 setLoading(false);
             }
-        }, 300);
+        }, 600);
 
         return () => clearTimeout(timer);
     }, [searchTerm]);
@@ -193,11 +235,45 @@ export function GlobalSearch({ isOpen, onClose }) {
                         </div>
                     ) : (
                         <div className="space-y-6">
+                            {/* Curriculum Results */}
+                            {results.curriculum.length > 0 && (
+                                <div>
+                                    <h3 className="text-[10px] font-bold uppercase tracking-widest text-espresso/40 dark:text-white/40 mb-3 px-2">
+                                        Curriculum & Study Material
+                                    </h3>
+                                    <div className="space-y-1">
+                                        {results.curriculum.map(item => (
+                                            <button
+                                                key={item.id}
+                                                onClick={() => handleResultClick(item)}
+                                                className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-all text-left group"
+                                            >
+                                                <div className="h-10 w-10 rounded-lg bg-espresso/10 flex items-center justify-center text-espresso">
+                                                    <span className="material-symbols-outlined">menu_book</span>
+                                                </div>
+                                                <div className="flex-1">
+                                                    <div className="flex items-center gap-2">
+                                                        <p className="text-sm font-bold text-espresso dark:text-white group-hover:text-espresso transition-colors">
+                                                            {item.title}
+                                                        </p>
+                                                        <span className="px-2 py-0.5 rounded-md bg-espresso/5 text-[9px] font-black uppercase tracking-tight text-espresso/40">{item.source}</span>
+                                                    </div>
+                                                    <p className="text-xs text-espresso/50 dark:text-white/50 line-clamp-1 italic">
+                                                        {item.content}
+                                                    </p>
+                                                </div>
+                                                <span className="material-symbols-outlined text-espresso/10 dark:text-white/10 group-hover:text-espresso transition-colors">arrow_forward</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
                             {/* Course Results */}
                             {results.courses.length > 0 && (
                                 <div>
                                     <h3 className="text-[10px] font-bold uppercase tracking-widest text-espresso/40 dark:text-white/40 mb-3 px-2">
-                                        {t('search.courses', 'Courses')}
+                                        {t('search.courses', 'Training Programs')}
                                     </h3>
                                     <div className="space-y-1">
                                         {results.courses.map(course => (
@@ -381,6 +457,7 @@ export function GlobalSearch({ isOpen, onClose }) {
 
                             {/* No Results Fallback */}
                             {!loading &&
+                                results.curriculum.length === 0 &&
                                 results.forum.length === 0 &&
                                 results.opportunities.length === 0 &&
                                 results.courses.length === 0 &&

@@ -4,8 +4,10 @@ import { doc, getDoc, collection, query, orderBy, onSnapshot, addDoc, serverTime
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
 import { format } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 
 export function ChatWindow() {
+    const { t } = useTranslation();
     const { recipientId } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
@@ -13,55 +15,78 @@ export function ChatWindow() {
     const [recipient, setRecipient] = useState(null);
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
-    const bottomRef = useRef(null);
+    const messagesEndRef = useRef(null); // Renamed from bottomRef
 
     // Derived Chat ID (Alphabetical Sort)
     const chatId = [user.uid, recipientId].sort().join('_');
 
-    // Fetch Recipient Details
+    // Real-time Messages and Recipient Details
     useEffect(() => {
-        const fetchRecipient = async () => {
-            const docSnap = await getDoc(doc(db, 'users', recipientId));
+        if (!recipientId) return;
+
+        // Fetch recipient info from users collection
+        const unsubscribeRecipient = onSnapshot(doc(db, 'users', recipientId), (docSnap) => {
             if (docSnap.exists()) {
                 setRecipient(docSnap.data());
             }
-        };
-        fetchRecipient();
-    }, [recipientId]);
+        });
 
-    // Real-time Messages
-    useEffect(() => {
+        // Fetch messages
         const q = query(
             collection(db, 'chats', chatId, 'messages'),
             orderBy('createdAt', 'asc')
         );
-        const unsubscribe = onSnapshot(q, (snapshot) => {
+
+        const unsubscribeMessages = onSnapshot(q, (snapshot) => {
             setMessages(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
         });
-        return () => unsubscribe();
-    }, [chatId]);
+
+        // Reset unread count when opening chat
+        updateDoc(doc(db, 'chats', chatId), {
+            [`unreadCount_${user.uid}`]: 0
+        }).catch(() => { });
+
+        return () => {
+            unsubscribeRecipient();
+            unsubscribeMessages();
+        };
+    }, [chatId, recipientId, user.uid]);
 
     // Auto-scroll
     useEffect(() => {
-        bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
-    const handleSend = async () => {
+    const handleSendMessage = async (e) => { // Renamed from handleSend
+        e.preventDefault(); // Added to prevent default form submission
         if (!newMessage.trim()) return;
 
+        const messageData = {
+            text: newMessage,
+            senderId: user.uid,
+            createdAt: serverTimestamp()
+        };
+
+        setNewMessage(''); // Clear input immediately
+
         try {
-            await addDoc(collection(db, 'chats', chatId, 'messages'), {
-                text: newMessage,
-                senderId: user.uid,
-                createdAt: serverTimestamp()
-            });
-            setNewMessage('');
+            // 1. Add message to subcollection
+            await addDoc(collection(db, 'chats', chatId, 'messages'), messageData);
+
+            // 2. Update chat metadata
+            await setDoc(doc(db, 'chats', chatId), {
+                lastMessage: messageData.text,
+                lastMessageTime: serverTimestamp(),
+                participants: [user.uid, recipientId],
+                [`unreadCount_${recipientId}`]: increment(1)
+            }, { merge: true });
+
         } catch (error) {
             console.error("Error sending message:", error);
         }
     };
 
-    if (!recipient) return <div className="p-8 text-center">Loading chat...</div>;
+    if (!recipient) return null; // Changed from loading div to null
 
     const recipientAvatar = recipient.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(recipient.fullName || 'User')}&background=random`;
 
@@ -84,7 +109,7 @@ export function ChatWindow() {
                         </div>
                         <div className="flex flex-col">
                             <h2 className="text-espresso dark:text-white text-lg font-serif font-bold leading-tight">{recipient.fullName}</h2>
-                            <span className="text-[#837363] text-xs font-normal">Active now</span>
+                            <span className="text-[#837363] text-xs font-normal">{t('chat.active_now')}</span> {/* Translated */}
                         </div>
                     </div>
                 </div>
@@ -93,7 +118,9 @@ export function ChatWindow() {
             {/* Chat Area */}
             <main className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#FAF5E8] dark:bg-[#1c1916] scroll-smooth">
                 {messages.length === 0 && (
-                    <div className="text-center text-gray-500 text-sm py-10">Start a conversation with {recipient.fullName.split(' ')[0]}!</div>
+                    <div className="text-center text-gray-500 text-sm py-10">
+                        {t('chat.start_convo', { name: recipient.fullName.split(' ')[0] })} {/* Translated */}
+                    </div>
                 )}
 
                 {messages.map(msg => {

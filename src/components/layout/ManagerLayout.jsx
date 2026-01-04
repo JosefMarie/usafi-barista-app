@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate, Navigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
 import { ThemeToggle } from '../common/ThemeToggle';
 import { PortalTopBar } from './PortalTopBar';
 import { useAuth } from '../../context/AuthContext';
 
 export function ManagerLayout() {
+    const { t } = useTranslation();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
@@ -29,11 +31,11 @@ export function ManagerLayout() {
     }
 
     const navItems = [
-        { icon: 'dashboard', label: 'Dashboard', path: '/manager/dashboard' },
-        { icon: 'contacts', label: 'Contacts Directory', path: '/manager/contacts' },
-        { icon: 'mail', label: 'Subscribers', path: '/manager/subscribers' },
-        { icon: 'inbox', label: 'Inbox Messages', path: '/manager/messages' },
-        { icon: 'person', label: 'My Profile', path: '/manager/profile' },
+        { icon: 'dashboard', label: t('manager.nav.dashboard'), path: '/manager/dashboard' },
+        { icon: 'contacts', label: t('manager.nav.contacts'), path: '/manager/contacts' },
+        { icon: 'mail', label: t('manager.nav.subscribers'), path: '/manager/subscribers' },
+        { icon: 'inbox', label: t('manager.nav.messages'), path: '/manager/messages' },
+        { icon: 'person', label: t('manager.nav.my_profile'), path: '/manager/profile' },
     ];
 
     return (
@@ -78,7 +80,7 @@ export function ManagerLayout() {
                         className="flex items-center gap-2 w-full px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all active:scale-95"
                     >
                         <span className="material-symbols-outlined text-[20px]">logout</span>
-                        Sign Out Portal
+                        {t('manager.nav.sign_out')}
                     </button>
                 </div>
             </aside>
@@ -99,7 +101,7 @@ export function ManagerLayout() {
                                 <div className="h-10 w-10 rounded-full bg-espresso flex items-center justify-center text-white">
                                     <span className="material-symbols-outlined text-lg">campaign</span>
                                 </div>
-                                <span className="font-serif text-lg font-bold text-espresso dark:text-white">Marketing Menu</span>
+                                <span className="font-serif text-lg font-bold text-espresso dark:text-white">{t('manager.nav.marketing_menu')}</span>
                             </div>
                             <button onClick={() => setIsMobileMenuOpen(false)} className="h-12 w-12 flex items-center justify-center rounded-2xl bg-espresso/5 text-espresso dark:text-white hover:bg-espresso/10 transition-colors">
                                 <span className="material-symbols-outlined">close</span>
@@ -127,7 +129,7 @@ export function ManagerLayout() {
                                 className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors mt-2"
                             >
                                 <span className="material-symbols-outlined text-[24px]">logout</span>
-                                Sign Out
+                                {t('manager.nav.sign_out')}
                             </button>
                         </nav>
                     </div>

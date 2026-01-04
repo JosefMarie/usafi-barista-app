@@ -5,6 +5,7 @@ import { db } from '../../lib/firebase';
 import { cn } from '../../lib/utils';
 import { useAuth } from '../../context/AuthContext';
 import { NoteEditor } from '../../components/common/NoteEditor';
+import { useTranslation } from 'react-i18next';
 
 export function StudentCourseView() {
     const { courseId } = useParams();
@@ -12,6 +13,7 @@ export function StudentCourseView() {
     const moduleId = searchParams.get('module');
     const navigate = useNavigate();
     const { user } = useAuth();
+    const { t } = useTranslation();
 
     const [loading, setLoading] = useState(true);
     const [module, setModule] = useState(null);
@@ -44,7 +46,7 @@ export function StudentCourseView() {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     if (!data.assignedStudents?.includes(user.uid)) {
-                        alert("You are not assigned to this module.");
+                        alert(t('student.course_view.not_assigned'));
                         navigate('/student/courses');
                         return;
                     }
@@ -103,7 +105,7 @@ export function StudentCourseView() {
                 e.returnValue = '';
                 // Since we can't reliably wait for Firestore here, we rely on the 
                 // popup deterrent, or simple auto-submit on component unmount
-                return 'Leaving this page will automatically submit your quiz. Are you sure?';
+                return t('student.course_view.anti_cheat.unload_warning');
             };
 
             const handlePopState = () => {
@@ -128,7 +130,7 @@ export function StudentCourseView() {
                 if (document.visibilityState === 'hidden') {
                     console.log("Anti-cheat: Tab switched detected. Submitting quiz.");
                     submitQuiz();
-                    alert("Anti-cheat warning: Quiz submitted automatically due to page switch.");
+                    alert(t('student.course_view.anti_cheat.visibility_warning'));
                 }
             };
             document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -264,7 +266,7 @@ export function StudentCourseView() {
                         await updateDoc(doc(db, 'courses', courseId, 'modules', nextModule.id), {
                             assignedStudents: arrayUnion(user.uid)
                         });
-                        alert(`Congratulations! You've unlocked: ${nextModule.title}`);
+                        alert(t('student.course_view.unlock_success', { title: nextModule.title }));
                     }
                 } catch (unlockError) {
                     console.error("Error unlocking next module:", unlockError);
@@ -318,7 +320,7 @@ export function StudentCourseView() {
                                 />
                             </div>
                             <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.2em]">
-                                {showQuiz ? 'Assessment Phase' : `Extraction: ${progressPercent}%`}
+                                {showQuiz ? t('student.course_view.assessment_phase') : t('student.course_view.extraction', { percent: progressPercent })}
                             </p>
                         </div>
                     </div>
@@ -337,7 +339,7 @@ export function StudentCourseView() {
                         <span className="material-symbols-outlined text-[20px]">
                             {showNotes ? 'book_2' : 'edit_note'}
                         </span>
-                        {showNotes ? 'Stow Ledger' : 'Strategic Notes'}
+                        {showNotes ? t('student.course_view.stow_ledger') : t('student.course_view.strategic_notes')}
                     </button>
                 </div>
             </header>
@@ -357,28 +359,28 @@ export function StudentCourseView() {
                                         <span className="material-symbols-outlined text-5xl">quiz</span>
                                     </div>
                                     <div>
-                                        <h2 className="text-4xl font-serif font-bold text-espresso dark:text-white mb-4">Strategic Evaluation</h2>
-                                        <p className="text-sm font-medium text-espresso/40 dark:text-white/40 uppercase tracking-widest mb-8">Please adhere to the following operational protocols</p>
+                                        <h2 className="text-4xl font-serif font-bold text-espresso dark:text-white mb-4">{t('student.quiz.title')}</h2>
+                                        <p className="text-sm font-medium text-espresso/40 dark:text-white/40 uppercase tracking-widest mb-8">{t('student.quiz.subtitle')}</p>
                                         <div className="space-y-4 text-left">
                                             <div className="flex gap-5 p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm transform transition-all hover:scale-[1.02]">
                                                 <span className="material-symbols-outlined text-espresso shrink-0">timer_10_alt_1</span>
                                                 <div>
-                                                    <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-1">Temporal Constraint</p>
-                                                    <p className="text-sm font-medium text-espresso dark:text-white">Each inquiry is governed by a strict countdown. Inactivity results in automatic submission.</p>
+                                                    <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-1">{t('student.quiz.rules.timer.title')}</p>
+                                                    <p className="text-sm font-medium text-espresso dark:text-white">{t('student.quiz.rules.timer.desc')}</p>
                                                 </div>
                                             </div>
                                             <div className="flex gap-5 p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm transform transition-all hover:scale-[1.02]">
                                                 <span className="material-symbols-outlined text-espresso shrink-0">workspace_premium</span>
                                                 <div>
-                                                    <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-1">Clearance Threshold</p>
-                                                    <p className="text-sm font-medium text-espresso dark:text-white">A mastery score of <strong>{module.quiz?.passMark || 70}%</strong> is essential for strategic advancement.</p>
+                                                    <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-1">{t('student.quiz.rules.pass_mark.title')}</p>
+                                                    <p className="text-sm font-medium text-espresso dark:text-white" dangerouslySetInnerHTML={{ __html: t('student.quiz.rules.pass_mark.desc', { passMark: module.quiz?.passMark || 70 }) }} />
                                                 </div>
                                             </div>
                                             <div className="flex gap-5 p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm transform transition-all hover:scale-[1.02]">
                                                 <span className="material-symbols-outlined text-red-500 shrink-0">lock_reset</span>
                                                 <div>
-                                                    <p className="text-[10px] font-black uppercase tracking-widest text-red-500/40 mb-1">Anti-Bypass Protocol</p>
-                                                    <p className="text-sm font-medium text-espresso dark:text-white">Page navigation, tab switching, or refresh attempts will trigger emergency quiz finalization.</p>
+                                                    <p className="text-[10px] font-black uppercase tracking-widest text-red-500/40 mb-1">{t('student.quiz.rules.anti_cheat.title')}</p>
+                                                    <p className="text-sm font-medium text-espresso dark:text-white">{t('student.quiz.rules.anti_cheat.desc')}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -387,7 +389,7 @@ export function StudentCourseView() {
                                         onClick={startQuiz}
                                         className="w-full py-5 bg-espresso text-white font-black uppercase tracking-[0.2em] text-[10px] rounded-2xl shadow-2xl shadow-espresso/30 hover:shadow-espresso/40 transition-all active:scale-95"
                                     >
-                                        Authorize & Commence Evaluation
+                                        {t('student.quiz.start_btn')}
                                     </button>
                                 </div>
                             ) : (
@@ -397,7 +399,7 @@ export function StudentCourseView() {
                                     <div className="flex items-center justify-between bg-[#F5DEB3]/80 dark:bg-[#2c2825]/80 p-5 rounded-2xl border border-espresso/10 shadow-xl sticky top-28 z-20 backdrop-blur-md relative overflow-hidden group">
                                         <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                                         <div className="flex items-center gap-6">
-                                            <div className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.2em]">Objective</div>
+                                            <div className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.2em]">{t('student.quiz.objective')}</div>
                                             <div className="flex gap-1.5">
                                                 {module.quiz?.questions?.map((_, i) => (
                                                     <div
@@ -492,7 +494,7 @@ export function StudentCourseView() {
                                                 <input
                                                     autoFocus
                                                     className="w-full p-6 bg-gray-50 dark:bg-white/5 border-2 border-transparent focus:border-primary rounded-3xl text-2xl font-bold text-center outline-none transition-all placeholder:text-espresso/10"
-                                                    placeholder="Type your answer here..."
+                                                    placeholder={t('student.quiz.fill_in_placeholder')}
                                                     value={userAnswers[currentQuestionIndex] || ''}
                                                     onChange={(e) => handleAnswer(currentQuestionIndex, e.target.value)}
                                                 />
@@ -501,7 +503,7 @@ export function StudentCourseView() {
                                             {/* 4. Matching */}
                                             {module.quiz?.questions[currentQuestionIndex].type === 'matching' && (
                                                 <div className="space-y-4">
-                                                    <p className="text-xs font-bold text-espresso/40 dark:text-white/40 uppercase tracking-widest mb-4">Rearrange the items on the right to match the left</p>
+                                                    <p className="text-xs font-bold text-espresso/40 dark:text-white/40 uppercase tracking-widest mb-4">{t('student.quiz.matching_instruction')}</p>
                                                     <div className="grid grid-cols-2 gap-8">
                                                         <div className="space-y-3">
                                                             {module.quiz?.questions[currentQuestionIndex].pairs.map((p, i) => (
@@ -552,13 +554,13 @@ export function StudentCourseView() {
 
                                         <div className="mt-16 flex justify-between items-center relative z-10">
                                             <p className="text-[10px] font-black text-espresso/20 dark:text-white/20 uppercase tracking-[0.2em]">
-                                                Precision is paramount.
+                                                {t('student.quiz.footer_note')}
                                             </p>
                                             <button
                                                 onClick={handleNextQuestion}
                                                 className="px-10 py-4 bg-espresso text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-2xl hover:shadow-espresso/40 transition-all flex items-center gap-3 active:scale-95"
                                             >
-                                                {currentQuestionIndex === (module.quiz?.questions?.length || 0) - 1 ? 'Finalize Extraction' : 'Strategic Advance'}
+                                                {currentQuestionIndex === (module.quiz?.questions?.length || 0) - 1 ? t('student.quiz.finalize_btn') : t('student.quiz.next_btn')}
                                                 <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
                                             </button>
                                         </div>
@@ -578,34 +580,34 @@ export function StudentCourseView() {
                                     </span>
                                 </div>
                                 <h1 className="text-4xl font-serif font-bold text-espresso dark:text-white mb-3">
-                                    {quizResult.passed ? 'Mastery Confirmed' : 'Sync Interrupted'}
+                                    {quizResult.passed ? t('student.quiz.results.passed.title') : t('student.quiz.results.failed.title')}
                                 </h1>
                                 <p className="text-xl font-medium text-espresso/40 dark:text-white/40 mb-10">
-                                    Strategic Score: <span className={quizResult.passed ? "text-green-600 font-black" : "text-red-600 font-black"}>{quizResult.score.toFixed(0)}%</span>
+                                    {t('student.quiz.results.score_label')} <span className={quizResult.passed ? "text-green-600 font-black" : "text-red-600 font-black"}>{quizResult.score.toFixed(0)}%</span>
                                 </p>
 
                                 {quizResult.passed ? (
                                     <div className="space-y-6 relative z-10">
                                         <p className="text-sm font-medium text-espresso/60 dark:text-white/60 leading-relaxed">
-                                            Exceptional performance. Your understanding of this module has been successfully encoded. Premium advancement is now authorized.
+                                            {t('student.quiz.results.passed.desc')}
                                         </p>
                                         <button
                                             onClick={() => navigate('/student/courses')}
                                             className="px-10 py-5 bg-green-600 text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-2xl hover:bg-green-700 transition-all flex items-center gap-3 active:scale-95"
                                         >
-                                            Advance to Curriculum Map <span className="material-symbols-outlined text-[20px]">map</span>
+                                            {t('student.quiz.results.passed.btn')} <span className="material-symbols-outlined text-[20px]">map</span>
                                         </button>
                                     </div>
                                 ) : (
                                     <div className="space-y-6 relative z-10">
                                         <p className="text-sm font-medium text-espresso/60 dark:text-white/60 leading-relaxed">
-                                            The evaluation threshold was not met. Strategic recalibration is required before another extraction attempt is authorized.
+                                            {t('student.quiz.results.failed.desc')}
                                         </p>
                                         <button
                                             onClick={retakeModule}
                                             className="px-10 py-5 bg-espresso text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-2xl hover:bg-black transition-all flex items-center gap-3 active:scale-95"
                                         >
-                                            <span className="material-symbols-outlined text-[20px]">refresh</span> Re-initiate Extraction
+                                            <span className="material-symbols-outlined text-[20px]">refresh</span> {t('student.quiz.results.failed.btn')}
                                         </button>
                                     </div>
                                 )}
@@ -642,9 +644,9 @@ export function StudentCourseView() {
                             </div>
                         ) : (
                             <div className="flex flex-col items-center justify-center h-64 text-center">
-                                <p className="text-espresso/50">This module has no content slides yet.</p>
+                                <p className="text-espresso/50">{t('student.course_view.empty_slides')}</p>
                                 <button onClick={() => setShowQuiz(true)} className="mt-4 text-primary font-bold hover:underline">
-                                    Skip to Quiz
+                                    {t('student.course_view.skip_to_quiz')}
                                 </button>
                             </div>
                         )}
@@ -663,7 +665,7 @@ export function StudentCourseView() {
                                 disabled={currentSlide === 0}
                                 className="h-12 px-8 rounded-2xl border border-espresso/10 bg-white/40 hover:bg-white text-espresso font-black uppercase tracking-widest text-[10px] disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm active:scale-95"
                             >
-                                Re-examine Previous
+                                {t('student.course_view.prev_btn')}
                             </button>
 
                             <div className="flex gap-2">
@@ -682,7 +684,7 @@ export function StudentCourseView() {
                                 onClick={handleNext}
                                 className="h-12 px-8 rounded-2xl bg-espresso text-white font-black uppercase tracking-widest text-[10px] hover:shadow-2xl transition-all shadow-xl flex items-center gap-3 active:scale-95"
                             >
-                                {currentSlide === (module.content?.length || 0) - 1 ? 'Begin Evaluation' : 'Strategic Advance'}
+                                {currentSlide === (module.content?.length || 0) - 1 ? t('student.course_view.begin_eval_btn') : t('student.course_view.next_btn')}
                                 <span className="material-symbols-outlined text-[20px]">
                                     {currentSlide === (module.content?.length || 0) - 1 ? 'school' : 'arrow_forward'}
                                 </span>
@@ -703,8 +705,8 @@ export function StudentCourseView() {
                             <span className="material-symbols-outlined text-[24px]">description</span>
                         </div>
                         <div>
-                            <h2 className="font-serif font-bold text-2xl text-espresso dark:text-white">Cognitive Ledger</h2>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40">Strategic Module Insights</p>
+                            <h2 className="font-serif font-bold text-2xl text-espresso dark:text-white">{t('student.course_view.notes.title')}</h2>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40">{t('student.course_view.notes.subtitle')}</p>
                         </div>
                     </div>
                     <button

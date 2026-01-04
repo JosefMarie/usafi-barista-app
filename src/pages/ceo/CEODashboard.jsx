@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { collection, query, where, getDocs, orderBy, limit, getCountFromServer } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export function CEODashboard() {
+    const { t, i18n } = useTranslation();
     const [loading, setLoading] = useState(true);
     const [stats, setStats] = useState({
         totalRevenue: 24500000,
@@ -40,7 +42,7 @@ export function CEODashboard() {
                 const last6Months = [];
                 for (let i = 5; i >= 0; i--) {
                     const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
-                    const monthName = d.toLocaleString('default', { month: 'short' });
+                    const monthName = d.toLocaleString(i18n.language === 'rw' ? 'rw-RW' : (i18n.language === 'en' ? 'en-US' : (i18n.language === 'fr' ? 'fr-FR' : 'sw-TZ')), { month: 'short' });
                     last6Months.push({
                         month: monthName,
                         monthIndex: d.getMonth(),
@@ -99,17 +101,17 @@ export function CEODashboard() {
                     <div className="relative">
                         <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-[#D4Af37] -ml-6"></div>
                         <p className="text-[#D4Af37] font-black text-[10px] uppercase tracking-[0.4em] mb-2">
-                            Full Spectrum Overview
+                            {t('ceo.dashboard.full_spectrum_overview')}
                         </p>
                         <h1 className="text-4xl md:text-5xl font-serif font-black text-[#4B3832] dark:text-[#F5DEB3] uppercase tracking-tight leading-none">
-                            Executive <span className="text-[#D4Af37]">Board</span>
+                            {t('ceo.dashboard.executive_board').split(' ')[0]} <span className="text-[#D4Af37]">{t('ceo.dashboard.executive_board').split(' ')[1]}</span>
                         </h1>
                     </div>
                     <div className="hidden md:block text-right">
-                        <p className="text-[#4B3832]/60 dark:text-[#F5DEB3]/60 text-[10px] font-black uppercase tracking-widest">System Status</p>
+                        <p className="text-[#4B3832]/60 dark:text-[#F5DEB3]/60 text-[10px] font-black uppercase tracking-widest">{t('ceo.dashboard.system_status')}</p>
                         <div className="flex items-center gap-2 mt-1">
                             <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
-                            <span className="text-lg font-bold text-[#4B3832] dark:text-[#F5DEB3]">OPERATIONAL</span>
+                            <span className="text-lg font-bold text-[#4B3832] dark:text-[#F5DEB3]">{t('ceo.dashboard.operational')}</span>
                         </div>
                     </div>
                 </div>
@@ -121,15 +123,15 @@ export function CEODashboard() {
                         <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-110 duration-700">
                             <span className="material-symbols-outlined text-9xl">account_balance</span>
                         </div>
-                        <p className="text-[#4B3832]/60 font-black text-[10px] uppercase tracking-[0.2em] mb-4">Total Revenue (YTD)</p>
+                        <p className="text-[#4B3832]/60 font-black text-[10px] uppercase tracking-[0.2em] mb-4">{t('ceo.dashboard.total_revenue_ytd')}</p>
                         <h3 className="text-4xl font-serif font-black leading-none mb-2">
-                            {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'RWF', notation: "compact" }).format(stats.totalRevenue)}
+                            {new Intl.NumberFormat(i18n.language === 'rw' ? 'rw-RW' : (i18n.language === 'en' ? 'en-US' : (i18n.language === 'fr' ? 'fr-FR' : 'sw-TZ')), { style: 'currency', currency: 'RWF', notation: "compact" }).format(stats.totalRevenue)}
                         </h3>
                         <div className="flex items-center gap-2 mt-4 text-[#4B3832]/80 text-xs font-bold">
                             <span className="bg-[#4B3832]/10 px-2 py-1 rounded-lg flex items-center gap-1">
                                 <span className="material-symbols-outlined text-sm">trending_up</span>+12%
                             </span>
-                            <span>vs last month</span>
+                            <span>{t('ceo.dashboard.vs_last_month')}</span>
                         </div>
                     </div>
 
@@ -138,7 +140,7 @@ export function CEODashboard() {
                         <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-700">
                             <span className="material-symbols-outlined text-9xl">groups</span>
                         </div>
-                        <p className="text-[#F5DEB3]/40 font-black text-[10px] uppercase tracking-[0.2em] mb-4">Active Userbase</p>
+                        <p className="text-[#F5DEB3]/40 font-black text-[10px] uppercase tracking-[0.2em] mb-4">{t('ceo.dashboard.active_userbase')}</p>
                         <h3 className="text-4xl font-serif font-black leading-none mb-2">
                             {stats.totalUsers.toLocaleString()}
                         </h3>
@@ -146,7 +148,7 @@ export function CEODashboard() {
                             <span className="bg-[#F5DEB3]/10 px-2 py-1 rounded-lg flex items-center gap-1">
                                 <span className="material-symbols-outlined text-sm">person_add</span>+54
                             </span>
-                            <span>new this week</span>
+                            <span>{t('ceo.dashboard.new_this_week')}</span>
                         </div>
                     </div>
 
@@ -155,23 +157,23 @@ export function CEODashboard() {
                         <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 duration-700">
                             <span className="material-symbols-outlined text-9xl">badge</span>
                         </div>
-                        <p className="text-[#4B3832]/40 font-black text-[10px] uppercase tracking-[0.2em] mb-4">Total Staff</p>
+                        <p className="text-[#4B3832]/40 font-black text-[10px] uppercase tracking-[0.2em] mb-4">{t('ceo.dashboard.total_staff')}</p>
                         <h3 className="text-4xl font-serif font-black leading-none mb-2">
                             {stats.staffCount}
                         </h3>
                         <Link to="/ceo/staff" className="mt-4 inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#D4Af37] hover:underline">
-                            Manage Access <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                            {t('ceo.dashboard.manage_access')} <span className="material-symbols-outlined text-sm">arrow_forward</span>
                         </Link>
                     </div>
 
                     {/* Health - White/Glass */}
                     <div className="bg-white/50 dark:bg-black/20 text-[#4B3832] dark:text-[#F5DEB3] p-8 rounded-[2rem] shadow-xl border border-[#4B3832]/5 relative overflow-hidden group backdrop-blur-sm">
                         <div className="absolute left-0 top-0 bottom-0 w-2 bg-green-500"></div>
-                        <p className="text-[#4B3832]/40 dark:text-[#F5DEB3]/40 font-black text-[10px] uppercase tracking-[0.2em] mb-4">System Health</p>
+                        <p className="text-[#4B3832]/40 dark:text-[#F5DEB3]/40 font-black text-[10px] uppercase tracking-[0.2em] mb-4">{t('ceo.dashboard.system_health')}</p>
                         <h3 className="text-4xl font-serif font-black leading-none mb-2">
                             {stats.systemHealth}%
                         </h3>
-                        <p className="text-xs font-bold text-green-600 mt-2">All systems nominal</p>
+                        <p className="text-xs font-bold text-green-600 mt-2">{t('ceo.dashboard.all_systems_nominal')}</p>
                     </div>
                 </div>
 
@@ -180,8 +182,8 @@ export function CEODashboard() {
                     <div className="lg:col-span-2 bg-white/40 dark:bg-black/20 p-10 rounded-[2.5rem] border border-[#D4Af37]/20 shadow-2xl relative overflow-hidden">
                         <div className="flex justify-between items-center mb-10">
                             <div>
-                                <h3 className="text-2xl font-serif font-black text-[#4B3832] dark:text-[#F5DEB3]">Revenue Trajectory</h3>
-                                <p className="text-[#4B3832]/40 text-[10px] font-black uppercase tracking-widest">First Half 2026 Projection</p>
+                                <h3 className="text-2xl font-serif font-black text-[#4B3832] dark:text-[#F5DEB3]">{t('ceo.dashboard.revenue_trajectory')}</h3>
+                                <p className="text-[#4B3832]/40 text-[10px] font-black uppercase tracking-widest">{t('ceo.dashboard.h1_projection')}</p>
                             </div>
                             <span className="material-symbols-outlined text-[#D4Af37] text-3xl">show_chart</span>
                         </div>
@@ -214,15 +216,15 @@ export function CEODashboard() {
                     {/* Quick Actions / Alerts */}
                     <div className="bg-[#4B3832] text-[#F5DEB3] p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden flex flex-col justify-between">
                         <div>
-                            <h3 className="text-xl font-serif font-black text-[#D4Af37] mb-6">Executive Actions</h3>
+                            <h3 className="text-xl font-serif font-black text-[#D4Af37] mb-6">{t('ceo.dashboard.executive_actions')}</h3>
                             <ul className="space-y-4">
                                 <li className="flex items-center gap-4 group cursor-pointer">
                                     <div className="h-10 w-10 rounded-full bg-[#F5DEB3]/10 flex items-center justify-center text-[#D4Af37] group-hover:bg-[#D4Af37] group-hover:text-[#4B3832] transition-colors">
                                         <span className="material-symbols-outlined">add_moderator</span>
                                     </div>
                                     <div>
-                                        <p className="font-bold text-sm">Appoint Administrator</p>
-                                        <p className="text-[10px] opacity-50">Grant highest level privileges</p>
+                                        <p className="font-bold text-sm">{t('ceo.dashboard.appoint_admin')}</p>
+                                        <p className="text-[10px] opacity-50">{t('ceo.dashboard.grant_privileges')}</p>
                                     </div>
                                 </li>
                                 <li className="flex items-center gap-4 group cursor-pointer">
@@ -230,8 +232,8 @@ export function CEODashboard() {
                                         <span className="material-symbols-outlined">campaign</span>
                                     </div>
                                     <div>
-                                        <p className="font-bold text-sm">Global Announcement</p>
-                                        <p className="text-[10px] opacity-50">Broadcast to all users</p>
+                                        <p className="font-bold text-sm">{t('ceo.dashboard.global_announcement')}</p>
+                                        <p className="text-[10px] opacity-50">{t('ceo.dashboard.broadcast_users')}</p>
                                     </div>
                                 </li>
                                 <li className="flex items-center gap-4 group cursor-pointer">
@@ -239,14 +241,14 @@ export function CEODashboard() {
                                         <span className="material-symbols-outlined">lock_reset</span>
                                     </div>
                                     <div>
-                                        <p className="font-bold text-sm">Emergency Lockdown</p>
-                                        <p className="text-[10px] opacity-50">Restrict platform access</p>
+                                        <p className="font-bold text-sm">{t('ceo.dashboard.emergency_lockdown')}</p>
+                                        <p className="text-[10px] opacity-50">{t('ceo.dashboard.restrict_access')}</p>
                                     </div>
                                 </li>
                             </ul>
                         </div>
                         <div className="pt-8 border-t border-[#F5DEB3]/10 mt-8">
-                            <p className="text-[10px] font-black uppercase tracking-widest opacity-40 mb-2">Platform Version</p>
+                            <p className="text-[10px] font-black uppercase tracking-widest opacity-40 mb-2">{t('ceo.dashboard.platform_version')}</p>
                             <p className="font-mono text-[#D4Af37]">v2.4.0-EXEC</p>
                         </div>
                     </div>

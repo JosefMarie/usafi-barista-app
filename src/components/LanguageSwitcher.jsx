@@ -6,6 +6,7 @@ const languages = [
     { code: 'en', name: 'English' },
     { code: 'fr', name: 'Francais' },
     { code: 'rw', name: 'Kinyarwanda' },
+    { code: 'sw', name: 'Kiswahili' },
 ];
 
 export function LanguageSwitcher({ className, isScrolled, isLightHero }) {

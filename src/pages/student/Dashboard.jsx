@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { cn } from '../../lib/utils';
@@ -8,6 +9,7 @@ import { db } from '../../lib/firebase';
 const BEAN_TO_BREW_ID = 'bean-to-brew';
 
 export function Dashboard() {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
@@ -15,9 +17,9 @@ export function Dashboard() {
     // State for real data
     const [course, setCourse] = useState(null);
     const [stats, setStats] = useState([
-        { label: 'Courses Available', value: 0, icon: 'school', color: 'bg-blue-500' },
-        { label: 'Completed Modules', value: '0/0', icon: 'check_circle', color: 'bg-green-500' },
-        { label: 'Certificates Earned', value: 0, icon: 'workspace_premium', color: 'bg-yellow-500' },
+        { label: t('student.dashboard.stats.courses'), value: 0, icon: 'school', color: 'bg-blue-500' },
+        { label: t('student.dashboard.stats.completed'), value: '0/0', icon: 'check_circle', color: 'bg-green-500' },
+        { label: t('student.dashboard.stats.certificates'), value: 0, icon: 'workspace_premium', color: 'bg-yellow-500' },
     ]);
     const [nextModule, setNextModule] = useState(null);
 
@@ -75,9 +77,9 @@ export function Dashboard() {
 
                 // Update State
                 setStats([
-                    { label: 'Courses Available', value: courseData ? 1 : 0, icon: 'school', color: 'bg-blue-500' },
-                    { label: 'Completed Modules', value: `${completedCount}/${totalModules}`, icon: 'check_circle', color: 'bg-green-500' },
-                    { label: 'Certificates Earned', value: completedCount, icon: 'workspace_premium', color: 'bg-yellow-500' },
+                    { label: t('student.dashboard.stats.courses'), value: courseData ? 1 : 0, icon: 'school', color: 'bg-blue-500' },
+                    { label: t('student.dashboard.stats.completed'), value: `${completedCount}/${totalModules}`, icon: 'check_circle', color: 'bg-green-500' },
+                    { label: t('student.dashboard.stats.certificates'), value: completedCount, icon: 'workspace_premium', color: 'bg-yellow-500' },
                 ]);
 
                 setNextModule(upcoming);
@@ -100,17 +102,17 @@ export function Dashboard() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-serif font-bold text-espresso dark:text-white">
-                        Welcome back, {(user?.name || user?.fullName || user?.email || 'Student').split(' ')[0]}!
+                        {t('student.dashboard.welcome', { name: (user?.name || user?.fullName || user?.email || 'Student').split(' ')[0] })}
                     </h1>
                     <p className="text-espresso/60 dark:text-white/60 font-medium mt-1">
-                        Ready to brew some excellence today?
+                        {t('student.dashboard.subtitle')}
                     </p>
                 </div>
                 <div className="bg-[#F5DEB3] dark:bg-white/5 px-6 py-3 rounded-2xl shadow-xl border border-espresso/10 relative overflow-hidden group">
                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">Current Expedition</p>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">{t('student.dashboard.current_expedition')}</p>
                     <p className="text-sm font-serif font-bold text-espresso dark:text-white">
-                        {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+                        {new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}
                     </p>
                 </div>
             </div>
@@ -139,9 +141,11 @@ export function Dashboard() {
                     <div className="flex items-center justify-between">
                         <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 uppercase tracking-[0.2em] flex items-center gap-3">
                             <span className="h-2 w-2 rounded-full bg-espresso"></span>
-                            Primary Curriculum
+                            {t('student.dashboard.curriculum.title')}
                         </h2>
-                        <Link to="/student/courses" className="text-[10px] font-black uppercase tracking-widest text-espresso/40 hover:text-espresso transition-colors">View Learning Map</Link>
+                        <Link to="/student/courses" className="text-[10px] font-black uppercase tracking-widest text-espresso/40 hover:text-espresso transition-colors">
+                            {t('student.dashboard.curriculum.view_map')}
+                        </Link>
                     </div>
 
                     {course ? (
@@ -157,9 +161,11 @@ export function Dashboard() {
                             <div className="p-8 md:w-3/5 flex flex-col justify-between relative z-10">
                                 <div>
                                     <div className="flex items-center justify-between mb-4">
-                                        <span className="text-[10px] font-black text-white bg-espresso px-3 py-1 rounded-full uppercase tracking-widest shadow-lg">In Extraction</span>
+                                        <span className="text-[10px] font-black text-white bg-espresso px-3 py-1 rounded-full uppercase tracking-widest shadow-lg">
+                                            {t('student.dashboard.curriculum.status_active')}
+                                        </span>
                                         <span className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">
-                                            Sync: {course.updatedAt?.toDate ? new Date(course.updatedAt.toDate()).toLocaleDateString() : 'Active'}
+                                            {t('student.dashboard.curriculum.sync')}: {course.updatedAt?.toDate ? new Date(course.updatedAt.toDate()).toLocaleDateString() : 'Active'}
                                         </span>
                                     </div>
                                     <h3 className="text-2xl font-serif font-bold text-espresso dark:text-white mb-3 group-hover:translate-x-1 transition-transform">
@@ -174,14 +180,16 @@ export function Dashboard() {
                                     onClick={() => navigate('/student/courses')}
                                     className="w-full py-4 bg-espresso text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:shadow-2xl transition-all shadow-xl active:scale-95"
                                 >
-                                    Resume Professional Journey
+                                    {t('student.dashboard.curriculum.resume_btn')}
                                 </button>
                             </div>
                         </div>
                     ) : (
                         <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/10 p-12 text-center relative overflow-hidden group">
                             <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                            <p className="text-espresso/40 dark:text-white/40 font-black uppercase tracking-widest text-sm">No active curriculum detected.</p>
+                            <p className="text-espresso/40 dark:text-white/40 font-black uppercase tracking-widest text-sm">
+                                {t('student.dashboard.curriculum.empty')}
+                            </p>
                         </div>
                     )}
                 </div>
@@ -190,7 +198,7 @@ export function Dashboard() {
                 <div className="space-y-6">
                     <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 uppercase tracking-[0.2em] flex items-center gap-3">
                         <span className="h-2 w-2 rounded-full bg-espresso"></span>
-                        Strategic Next Step
+                        {t('student.dashboard.next_step.title')}
                     </h2>
 
                     {nextModule ? (
@@ -204,7 +212,9 @@ export function Dashboard() {
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-espresso via-espresso/20 to-transparent flex items-end p-6">
                                     <div className="text-white">
-                                        <p className="text-[10px] font-black uppercase tracking-widest opacity-80 mb-1">Upcoming Module</p>
+                                        <p className="text-[10px] font-black uppercase tracking-widest opacity-80 mb-1">
+                                            {t('student.dashboard.next_step.upcoming')}
+                                        </p>
                                         <h3 className="font-serif font-bold text-xl leading-tight line-clamp-1">{nextModule.title}</h3>
                                     </div>
                                 </div>
@@ -216,8 +226,10 @@ export function Dashboard() {
                                             <span className="material-symbols-outlined text-xl">timer</span>
                                         </div>
                                         <div>
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">Duration</p>
-                                            <p className="text-sm font-black text-espresso dark:text-white">{nextModule.duration || '30'} mins</p>
+                                            <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">
+                                                {t('student.dashboard.next_step.duration')}
+                                            </p>
+                                            <p className="text-sm font-black text-espresso dark:text-white">{nextModule.duration || '30'} {t('student.dashboard.stats.mins', 'mins')}</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-3">
@@ -225,8 +237,12 @@ export function Dashboard() {
                                             <span className="material-symbols-outlined text-xl">layers</span>
                                         </div>
                                         <div>
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">Units</p>
-                                            <p className="text-sm font-black text-espresso dark:text-white">{nextModule.content?.length || 0} Slides</p>
+                                            <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">
+                                                {t('student.dashboard.next_step.units')}
+                                            </p>
+                                            <p className="text-sm font-black text-espresso dark:text-white">
+                                                {nextModule.content?.length || 0} {t('student.dashboard.next_step.slides')}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -235,7 +251,7 @@ export function Dashboard() {
                                     onClick={() => navigate(`/student/courses/${BEAN_TO_BREW_ID}?module=${nextModule.id}`)}
                                     className="w-full py-4 bg-white/40 hover:bg-white text-espresso font-black uppercase tracking-widest text-[10px] rounded-2xl transition-all shadow-sm flex items-center justify-center gap-2 border border-espresso/5 active:scale-95"
                                 >
-                                    Initiate Module <span className="material-symbols-outlined text-lg">arrow_forward</span>
+                                    {t('student.dashboard.next_step.initiate_btn')} <span className="material-symbols-outlined text-lg">arrow_forward</span>
                                 </button>
                             </div>
                         </div>
@@ -243,9 +259,11 @@ export function Dashboard() {
                         <div className="bg-espresso/5 dark:bg-white/5 p-8 rounded-3xl border border-espresso/10 dark:border-white/10 text-center relative overflow-hidden group">
                             <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                             <span className="material-symbols-outlined text-5xl text-espresso/20 dark:text-white/20 mb-4 block group-hover:scale-110 transition-transform">auto_awesome</span>
-                            <h3 className="font-serif font-bold text-espresso dark:text-white text-lg">Peak Excellence Achieved</h3>
+                            <h3 className="font-serif font-bold text-espresso dark:text-white text-lg">
+                                {t('student.dashboard.next_step.completed_title')}
+                            </h3>
                             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-espresso/40 dark:text-white/40 mt-2">
-                                All objectives successfully extracted.
+                                {t('student.dashboard.next_step.completed_subtitle')}
                             </p>
                         </div>
                     )}

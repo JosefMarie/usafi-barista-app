@@ -13,7 +13,9 @@
     "certificates": "Certificates",
     "contact": "Contact",
     "login": "Login",
-    "enroll": "Apply Now"
+    "enroll": "Apply Now",
+    "logout": "Log Out",
+    "user_default": "User"
   },
   "home": {
     "hero": {
@@ -22,9 +24,10 @@
       "cta_enroll": "Apply Today",
       "cta_courses": "Explore Our Courses",
       "cta_apply": "Apply Now",
-      "cta_opportunities": "Opportunities",
+      "cta_opportunities": "Job Opportunities",
       "cta_testimonials": "Testimonials",
-      "cta_business": "Business Classes"
+      "cta_business": "Business Classes",
+      "cta_equipment": "Tools and Equipment"
     },
     "benefits": {
       "title": "Why Choose Usafi Barista Training Center?",
@@ -238,26 +241,6 @@
         "description": "Learn research techniques, proper attire, and non-verbal communication. Access sample interview videos to visualize success."
       }
     },
-    "business": {
-      "title": "Coffee Shop Business",
-      "description": "For students aspiring to own their business, this module provides the foundational knowledge to turn your vision into a reality.",
-      "plan": {
-        "title": "Business Plan Preparation",
-        "description": "Developing a comprehensive plan."
-      },
-      "location": {
-        "title": "Location Selection",
-        "description": "Selecting the perfect location."
-      },
-      "pricing": {
-        "title": "Pricing & Menu",
-        "description": "Strategic pricing and design."
-      },
-      "marketing": {
-        "title": "Marketing & Launch",
-        "description": "Effective startup strategies."
-      }
-    },
     "cta": {
       "title": "Ready to start your journey?",
       "button": "Apply Now"
@@ -266,6 +249,12 @@
   "certificates": {
     "title": "My Certificates",
     "subtitle": "View and download your earned credentials.",
+    "title_alt": "Elite Credentials",
+    "subtitle_alt": "Manage and export your verified professional certifications",
+    "distinction_diploma": "Distinction Diploma",
+    "module_validation": "Module Validation",
+    "authenticated": "Authenticated",
+    "export_btn": "Export Credential",
     "filters": {
       "all": "All",
       "skills": "Barista Skills",
@@ -277,7 +266,9 @@
     "download": "Download Certificate",
     "empty": {
       "title": "No certificates found",
-      "description": "Keep brewing to earn your next badge from Usafi!"
+      "description": "Keep brewing to earn your next badge from Usafi!",
+      "title_alt": "Credential Repository Empty",
+      "description_alt": "Complete your strategic modules and excel in evaluations to unlock verified professional credentials."
     },
     "items": {
       "milk": "Level 1: Milk Texturing",
@@ -573,7 +564,6 @@
       "all": "All",
       "tips": "Coffee Tips",
       "life": "Barista Life",
-      "business": "Business Advice",
       "news": "Community News"
     },
     "posts": {
@@ -657,8 +647,511 @@
     "placeholder": "Search everything...",
     "type_to_begin": "Type at least 2 characters to search",
     "no_results": "No results found for \"{{term}}\"",
-    "forum": "Community Forum",
     "opportunities": "Jobs & Opportunities",
     "courses": "Courses"
+  },
+  "student": {
+    "dashboard": {
+      "welcome": "Welcome back, {{name}}!",
+      "subtitle": "Ready to brew some excellence today?",
+      "current_expedition": "Current Expedition",
+      "stats": {
+        "courses": "Courses Available",
+        "completed": "Completed Modules",
+        "certificates": "Certificates Earned",
+        "mins": "mins"
+      },
+      "curriculum": {
+        "title": "Primary Curriculum",
+        "view_map": "View Learning Map",
+        "status_active": "In Extraction",
+        "sync": "Sync",
+        "resume_btn": "Resume Professional Journey",
+        "empty": "No active curriculum detected."
+      },
+      "next_step": {
+        "title": "Strategic Next Step",
+        "upcoming": "Upcoming Module",
+        "duration": "Duration",
+        "units": "Units",
+        "slides": "Slides",
+        "initiate_btn": "Initiate Module",
+        "completed_title": "Peak Excellence Achieved",
+        "completed_subtitle": "All objectives successfully extracted."
+      }
+    },
+    "courses": {
+      "not_found": "Course not found.",
+      "academic_standard": "Academic Standard",
+      "units_count": "{{count}} Strategic Units",
+      "curriculum_map": "Curriculum Map",
+      "unit_label": "Strategic Unit",
+      "auth_required": "Authorization Required",
+      "locked_note": "Contact instructor for strategic clearance",
+      "reexamine": "Re-examine",
+      "commence": "Commence",
+      "locked_btn": "Locked"
+    },
+    "course_view": {
+      "extraction": "Extraction: {{percent}}%",
+      "assessment_phase": "Assessment Phase",
+      "stow_ledger": "Stow Ledger",
+      "strategic_notes": "Strategic Notes",
+      "not_assigned": "You are not assigned to this module.",
+      "empty_slides": "This module has no content slides yet.",
+      "skip_to_quiz": "Skip to Quiz",
+      "prev_btn": "Re-examine Previous",
+      "begin_eval_btn": "Begin Evaluation",
+      "next_btn": "Strategic Advance",
+      "unlock_success": "Congratulations! You've unlocked: {{title}}",
+      "anti_cheat": {
+        "unload_warning": "Leaving this page will automatically submit your quiz. Are you sure?",
+        "visibility_warning": "Anti-cheat warning: Quiz submitted automatically due to page switch."
+      },
+      "notes": {
+        "title": "Cognitive Ledger",
+        "subtitle": "Strategic Module Insights"
+      }
+    },
+    "quiz": {
+      "title": "Strategic Evaluation",
+      "subtitle": "Please adhere to the following operational protocols",
+      "objective": "Objective",
+      "footer_note": "Precision is paramount.",
+      "finalize_btn": "Finalize Extraction",
+      "next_btn": "Strategic Advance",
+      "start_btn": "Authorize & Commence Evaluation",
+      "fill_in_placeholder": "Type your answer here...",
+      "matching_instruction": "Rearrange the items on the right to match the left",
+      "rules": {
+        "timer": {
+          "title": "Temporal Constraint",
+          "desc": "Each inquiry is governed by a strict countdown. Inactivity results in automatic submission."
+        },
+        "pass_mark": {
+          "title": "Clearance Threshold",
+          "desc": "A mastery score of <strong>{{passMark}}%</strong> is essential for strategic advancement."
+        },
+        "anti_cheat": {
+          "title": "Anti-Bypass Protocol",
+          "desc": "Page navigation, tab switching, or refresh attempts will trigger emergency quiz finalization."
+        }
+      },
+      "results": {
+        "passed": {
+          "title": "Mastery Confirmed",
+          "desc": "Exceptional performance. Your understanding of this module has been successfully encoded. Premium advancement is now authorized.",
+          "btn": "Advance to Curriculum Map"
+        },
+        "failed": {
+          "title": "Sync Interrupted",
+          "desc": "The evaluation threshold was not met. Strategic recalibration is required before another extraction attempt is authorized.",
+          "btn": "Re-initiate Extraction"
+        },
+        "score_label": "Strategic Score:"
+      },
+      "certificate_design": {
+        "title": "Certificate",
+        "achievement": "of Professional Achievement",
+        "certify_text": "This is to certify that",
+        "completed_course": "Has successfully completed the course",
+        "completed_module": "Has successfully completed the module",
+        "date_label": "Date of Completion",
+        "id_label": "Certificate ID",
+        "verified": "Verified",
+        "disclaimer": "This certificate verifies that the student has met all the requirements established by the Usafi Barista Training Center."
+      }
+    },
+    "cv_builder": {
+      "title": "Career Architect",
+      "saved": "Saved",
+      "save_draft": "Save Draft",
+      "storing": "Storing",
+      "profile_integrity": "Profile Integrity Status",
+      "personal": "Strategic Identity",
+      "summary": "Professional Narrative",
+      "certs": "Verified Intelligence",
+      "skills": "Operational Capabilities",
+      "education": "Academic Foundation",
+      "experience": "Professional History",
+      "footer": {
+        "synced": "State Synchronized",
+        "sync_state": "Synchronize State",
+        "synchronizing": "Synchronizing...",
+        "execute_print": "Execute Print Protocol",
+        "compiling": "Compiling Assets..."
+      },
+      "print": {
+        "narrative": "Strategic Narrative",
+        "history": "Professional Milestone History",
+        "active": "Active",
+        "credentials": "Verified Credentials",
+        "strategist": "Usafi Strategist",
+        "authenticated": "Authenticated",
+        "capabilities": "Core Capabilities",
+        "footer_text": "Usafi Barista Training Center • Career Division",
+        "digital_doc": "Authenticated Digital Document"
+      },
+      "sections": {
+        "personal": "Strategic Identity",
+        "summary": "Professional Narrative",
+        "certs": "Verified Intelligence",
+        "skills": "Operational Capabilities",
+        "education": "Academic Foundation",
+        "experience": "Professional History"
+      }
+    },
+    "certificates": {
+      "title": "Certificates",
+      "title_alt": "My Certificates",
+      "subtitle_alt": "Your earned credentials",
+      "module_validation": "Module Validation",
+      "authenticated": "Authenticated",
+      "download": "Download Certificate"
+    }
+  },
+  "admin": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "courses": "Courses",
+      "forum": "Forum",
+      "instructors": "Instructors",
+      "students": "Students",
+      "quizzes": "Quizzes",
+      "announcements": "Announcements",
+      "testimonials": "Testimonials",
+      "notifications": "Notifications",
+      "manage_jobs": "Manage Jobs",
+      "job_seekers": "Job Seekers",
+      "business_students": "Business Students",
+      "business_courses": "Business Courses",
+      "my_profile": "My Profile",
+      "sign_out": "Sign Out",
+      "admin_menu": "Admin Menu",
+      "admin_default": "Administrator"
+    },
+    "dashboard": {
+      "title": "Administrative Command",
+      "subtitle": "Global operations oversight and system metrics",
+      "metrics_analytics": "Dashboard & Analytics",
+      "global_students": "Global Students",
+      "active_participants": "Active participants in matrix",
+      "active_architecture": "Active Architecture",
+      "validated_nodes": "Validated course nodes",
+      "queue_status": "Queue Status",
+      "approvals_required": "Approvals required",
+      "monthly_revenue": "Monthly Fluid Revenue",
+      "efficiency_index": "Efficiency Index",
+      "growth_projection": "Growth Projection",
+      "enrollment_cadence": "12-Month Enrollment Cadence",
+      "primary_metrics": "Primary Metrics",
+      "nodes": "NODES",
+      "awaiting_feed": "Awaiting Data Feed",
+      "strategic_assets": "Strategic Assets",
+      "capacity": "Capacity: Unlimited",
+      "active_nodes": "ACTIVE NODES",
+      "historical_data": "Historical data only",
+      "fresh_connections": "Fresh Connections",
+      "full_registry": "Full Registry",
+      "integrated_into": "Integrated into",
+      "zero_intake": "Zero fresh intake detected",
+      "time_ago": {
+        "days": "{{count}}d ago",
+        "hours": "{{count}}h ago",
+        "now": "Just now"
+      },
+      "stats": {
+        "total_students": "Total Students",
+        "total_instructors": "Total Instructors",
+        "total_courses": "Total Courses",
+        "active_sessions": "Active Sessions"
+      },
+      "recent_activity": "Recent Activity",
+      "quick_actions": "Quick Actions"
+    }
+  },
+  "instructor": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "courses": "Courses",
+      "students": "Students",
+      "chat": "Chat",
+      "schedule": "Schedule",
+      "share_video": "Share Video",
+      "my_profile": "My Profile",
+      "sign_out": "Sign Out",
+      "instructor_menu": "Instructor Menu",
+      "instructor_default": "Instructor"
+    },
+    "dashboard": {
+      "welcome_back": "Welcome back, {{name}}!",
+      "student_pulse": "Here's what's happening with your students today.",
+      "assigned_students": "Assigned Students",
+      "active_courses": "Active Courses",
+      "upcoming_sessions": "Upcoming Sessions",
+      "avg_rating": "Avg. Student Rating",
+      "completion_performance": "Course Completion Performance",
+      "live_pulse": "Live Student Pulse",
+      "explore_all": "Explore All Students",
+      "activity": {
+        "quiz": "Completed Quiz: {{name}}",
+        "session": "Joined Session: {{name}}",
+        "assignment": "Uploaded Assignment: {{name}}",
+        "module": "Completed Module: {{name}}"
+      },
+      "status": {
+        "pending": "Pending"
+      },
+      "time_ago": {
+        "hours": "{{count}} hours ago",
+        "day": "1 day ago",
+        "days": "{{count}} days ago"
+      }
+    }
+  },
+  "manager": {
+    "nav": {
+      "dashboard": "Dashboard",
+      "contacts": "Contacts Directory",
+      "subscribers": "Subscribers",
+      "messages": "Inbox Messages",
+      "my_profile": "My Profile",
+      "sign_out": "Sign Out",
+      "marketing_menu": "Marketing Menu",
+      "marketing_default": "Manager"
+    },
+    "dashboard": {
+      "marketing_overview": "Marketing Overview",
+      "track_growth": "Track user growth and engagement",
+      "total_users": "Total Users",
+      "students": "Students",
+      "instructors": "Instructors",
+      "newsletter_subs": "Newsletter Subs",
+      "engagement_chart_soon": "Engagement Chart Coming Soon"
+    }
+  },
+  "business": {
+    "title": "Coffee Shop Business",
+    "description": "For students aspiring to own their business, this module provides the foundational knowledge to turn your vision into a reality.",
+    "plan": {
+      "title": "Business Plan Preparation",
+      "description": "Developing a comprehensive plan."
+    },
+    "location": {
+      "title": "Location Selection",
+      "description": "Selecting the perfect location."
+    },
+    "pricing": {
+      "title": "Pricing & Menu",
+      "description": "Strategic pricing and design."
+    },
+    "marketing": {
+      "title": "Marketing & Launch",
+      "description": "Effective startup strategies."
+    },
+    "approval_pending": "Approval Pending",
+    "approval_pending_desc": "Your account is currently under review by the administrator. You will gain access to the business courses once approved.",
+    "business_class_title": "Business Class",
+    "dashboard": "Dashboard",
+    "my_profile": "My Profile",
+    "sign_out": "Sign Out",
+    "welcome_student": "Welcome, {{name}}",
+    "exclusive_content": "Access your exclusive business content.",
+    "start_learning": "Start Learning",
+    "no_courses": "No courses available at the moment."
+  },
+  "forum": {
+    "list_title": "Community Forum",
+    "new_post": "New Post",
+    "loading": "Loading forum...",
+    "no_posts": "No discussion topics yet. Start one!",
+    "likes": "{{count}} LIKES",
+    "comments": "{{count}} COMMENTS",
+    "create_title": "Create Post",
+    "cancel": "Cancel",
+    "drafts": "Drafts",
+    "title_label": "Title",
+    "title_placeholder": "What's brewing today?",
+    "select_topic": "Select a Topic",
+    "discussion_label": "Discussion",
+    "markdown": "Markdown supported",
+    "discussion_placeholder": "Share your thoughts, recipe, or question here. Be descriptive!",
+    "post_to_forum": "Post to Forum",
+    "posting": "Posting...",
+    "fail_create": "Failed to create post",
+    "details_title": "Student Forum",
+    "loading_details": "Loading discussion...",
+    "post_not_found": "Post not found",
+    "add_comment": "Add a comment... (Enter to send)",
+    "send": "Send",
+    "sending": "Sending...",
+    "no_comments": "No comments yet. Be the first to reply!",
+    "comment_count": "Comments ({{count}})",
+    "share": "Share",
+    "topics": {
+      "coffee_talk": "Coffee Talk",
+      "latte_art": "Latte Art",
+      "brewing": "Brewing",
+      "beans": "Beans",
+      "equipment": "Equipment",
+      "roasting": "Roasting",
+      "barista_life": "Barista Life"
+    }
+  },
+  "ceo": {
+    "nav": {
+      "executive_dashboard": "Executive Dashboard",
+      "staff_management": "Staff Management",
+      "revenue_report": "Revenue Report",
+      "global_settings": "Global Settings",
+      "my_profile": "My Profile",
+      "sign_out": "Sign Out",
+      "executive_menu": "Executive Menu",
+      "chief_executive_officer": "Chief Executive Officer",
+      "chief_executive": "CHIEF EXECUTIVE"
+    },
+    "dashboard": {
+      "full_spectrum_overview": "Full Spectrum Overview",
+      "executive_board": "Executive Board",
+      "system_status": "System Status",
+      "operational": "OPERATIONAL",
+      "total_revenue_ytd": "Total Revenue (YTD)",
+      "vs_last_month": "vs last month",
+      "active_userbase": "Active Userbase",
+      "new_this_week": "new this week",
+      "total_staff": "Total Staff",
+      "manage_access": "Manage Access",
+      "system_health": "System Health",
+      "all_systems_nominal": "All systems nominal",
+      "revenue_trajectory": "Revenue Trajectory",
+      "h1_projection": "First Half 2026 Projection",
+      "executive_actions": "Executive Actions",
+      "appoint_admin": "Appoint Administrator",
+      "grant_privileges": "Grant highest level privileges",
+      "global_announcement": "Global Announcement",
+      "broadcast_users": "Broadcast to all users",
+      "emergency_lockdown": "Emergency Lockdown",
+      "restrict_access": "Restrict platform access",
+      "platform_version": "Platform Version"
+    }
+  },
+  "seeker": {
+    "usafi_opportunities": "Usafi Opportunities",
+    "hello_user": "Hello, {{name}}",
+    "profile": "Profile",
+    "sign_out": "Sign Out",
+    "loading_opportunities": "Loading opportunities...",
+    "available_opportunities": "Available Opportunities",
+    "exclusive_listings": "Exclusive job listings matches for you.",
+    "no_opportunities_found": "No opportunities found",
+    "check_back_later": "Check back later for new updates.",
+    "posted": "Posted",
+    "requirements_details": "Requirements / Details:",
+    "apply_now": "Apply Now",
+    "contact_to_apply": "Contact to Apply",
+    "salary_competitive": "Competitive"
+  },
+  "profile": {
+    "title": "Professional Identity",
+    "subtitle": "Securely manage your personal account and settings",
+    "id_student": "Identifier: {{id}}",
+    "id_staff": "Staff ID: {{id}}",
+    "sign_out": "Terminate Session",
+    "identity": "Strategic Information",
+    "edit_info": "Adjust",
+    "full_name": "Professional Name",
+    "email": "Authorized Communications",
+    "phone": "Contact Protocol",
+    "location": "Deployment Zone",
+    "security": "Access Control & Protocols",
+    "update_password": "Master Password",
+    "update_password_desc": "Re-configure access credentials",
+    "reset_key": "Reset secure access key",
+    "privacy": "Privacy Protocols",
+    "digital_vis": "Govern your data visibility",
+    "alerts": "Intelligence Stream",
+    "comm_flow": "Configure communication alerts",
+    "not_provided": "Undisclosed",
+    "not_set": "Awaiting activation",
+    "edit_title": "Adjustment Protocol",
+    "cancel": "Abort",
+    "save": "Commit Changes",
+    "saving": "Encoding...",
+    "fail_update": "Failed to update profile information.",
+    "fail_avatar": "Failed to update profile picture.",
+    "role_student": "Student",
+    "role_instructor": "Instructor",
+    "role_admin": "Administrator",
+    "role_manager": "Manager",
+    "role_user": "User",
+    "id_label": "{{label}}: {{id}}",
+    "phone_placeholder": "e.g., +250 712 345 678",
+    "location_placeholder": "e.g., Kigali, Rwanda"
+  },
+  "change_password": {
+    "title": "Change Password",
+    "current_label": "Current Password",
+    "current_placeholder": "Enter current password",
+    "new_label": "New Password",
+    "new_placeholder": "Enter new password (min 6 characters)",
+    "confirm_label": "Confirm New Password",
+    "confirm_placeholder": "Confirm new password",
+    "cancel": "Cancel",
+    "submit": "Change Password",
+    "saving": "Changing...",
+    "success": "Password changed successfully!",
+    "err_too_short": "New password must be at least 6 characters long",
+    "err_mismatch": "New passwords do not match",
+    "err_same": "New password must be different from current password",
+    "err_no_user": "No user is currently signed in",
+    "err_wrong_password": "Current password is incorrect",
+    "err_weak_password": "New password is too weak",
+    "err_fail": "Failed to change password"
+  },
+  "privacy_settings": {
+    "back": "Back to Portal",
+    "title": "Privacy & Permissions",
+    "subtitle": "Manage your digital presence and secure your platform interactions",
+    "section_access": "Access & Identification",
+    "visibility_label": "Global Visibility Threshold",
+    "opt_public": "Public - Worldwide Presence",
+    "opt_connections": "Connections Only - Internal Network",
+    "opt_private": "Private - Stealth Mode",
+    "email_label": "Broadcast Email",
+    "email_desc": "Allow network to view your contact path",
+    "phone_label": "Show Mobile Link",
+    "phone_desc": "Enable direct phone communication",
+    "section_comm": "Communication Channels",
+    "messages_label": "Allow Messages",
+    "messages_desc": "Receive messages from other users",
+    "push_label": "Push Notifications",
+    "push_desc": "Receive notifications about updates",
+    "marketing_label": "Marketing Emails",
+    "marketing_desc": "Receive promotional emails and updates",
+    "section_data": "Data Integrity & Trust",
+    "sharing_label": "Data Sharing",
+    "sharing_desc": "Share anonymized data for platform improvement",
+    "info_title": "Your Privacy Matters",
+    "info_desc": "We never sell your personal data. Read our <link>Privacy Policy</link> to learn more about how we protect your information.",
+    "cancel": "Cancel",
+    "save": "Save Permissions",
+    "saving": "Saving...",
+    "success": "Privacy settings saved successfully!",
+    "error": "Failed to save settings. Please try again."
+  },
+  "chat": {
+    "instructor_title": "Mentor Communications",
+    "instructor_subtitle": "Engage in strategic dialogue with your assigned cohort ({{count}} students)",
+    "loading": "Loading chat...",
+    "no_chats": "Silence in the lines. Start a strategic dialogue.",
+    "no_cohort": "No cohort members detected for communication.",
+    "awaiting_input": "Channel established. Awaiting input.",
+    "initiate": "Initiate Connection",
+    "student_list_title": "Classmates Chat",
+    "no_classmates": "No other active students found to chat with.",
+    "new_messages": "{{count}} New",
+    "type_message": "Type a message...",
+    "active_now": "Active now",
+    "start_convo": "Start a conversation with {{name}}!"
   }
 }

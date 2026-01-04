@@ -14,7 +14,7 @@ export function Opportunities() {
             {/* Hero Section */}
             <div className="container mx-auto px-6 text-center mb-16">
                 <h1 className="font-serif text-4xl md:text-5xl font-bold text-espresso dark:text-white mb-6 tracking-tight">
-                    Usafi Opportunities
+                    Usafi Job Opportunities
                 </h1>
                 <p className="text-xl text-espresso/80 dark:text-white/80 leading-relaxed max-w-3xl mx-auto mb-10">
                     Connecting talented professionals with top hospitality businesses. Whether you're hiring or looking for your next career move, we've got you covered.
@@ -33,7 +33,7 @@ export function Opportunities() {
                             Post your job openings and find skilled Baristas, Bartenders, and Service staff trained by Usafi.
                         </p>
                         <GradientButton to="/opportunities/post" className="w-full">
-                            Post an Opportunity
+                            Post a Job Opportunity
                         </GradientButton>
                     </div>
 

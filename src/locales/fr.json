@@ -1,664 +1,1159 @@
 {
-    "nav": {
-        "home": "Accueil",
-        "about": "À propos de nous",
-        "courses": "Cours",
-        "explore": "Explorer",
-        "career": "Soutien à la carrière",
-        "equipment": "Équipement",
-        "testimonials": "Témoignages",
-        "gallery": "Galerie",
-        "blog": "Blog",
-        "inclusion": "Soutien à l'inclusion",
-        "certificates": "Certificats",
-        "contact": "Contact",
-        "login": "Connexion",
-        "enroll": "Postuler maintenant"
+  "nav": {
+    "home": "Accueil",
+    "about": "À propos de nous",
+    "courses": "Cours",
+    "explore": "Explorer",
+    "career": "Soutien à la carrière",
+    "equipment": "Équipement",
+    "testimonials": "Témoignages",
+    "gallery": "Galerie",
+    "blog": "Blog",
+    "inclusion": "Soutien à l'inclusion",
+    "certificates": "Certificats",
+    "contact": "Contact",
+    "login": "Connexion",
+    "enroll": "Postuler maintenant",
+    "logout": "Déconnexion",
+    "user_default": "Utilisateur"
+  },
+  "home": {
+    "hero": {
+      "title": "Préparez votre avenir : Maîtrisez lart du café",
+      "subtitle": "Du grain à la tasse, et de la formation à l'emploi. Rejoignez le premier centre de formation du Rwanda pour acquérir des compétences de barista de classe mondiale et le soutien à la carrière dont vous avez besoin pour réussir.",
+      "cta_enroll": "Postulez aujourd'hui",
+      "cta_courses": "Découvrez nos cours",
+      "cta_apply": "Postuler maintenant",
+      "cta_opportunities": "Opportunités d'Emploi",
+      "cta_testimonials": "Témoignages",
+      "cta_business": "Cours d'Affaires",
+      "cta_equipment": "Outils et Équipements"
     },
-    "home": {
-        "hero": {
-            "title": "Préparez votre avenir : Maîtrisez lart du café",
-            "subtitle": "Du grain à la tasse, et de la formation à l'emploi. Rejoignez le premier centre de formation du Rwanda pour acquérir des compétences de barista de classe mondiale et le soutien à la carrière dont vous avez besoin pour réussir.",
-            "cta_enroll": "Postulez aujourd'hui",
-            "cta_courses": "Découvrez nos cours",
-            "cta_apply": "Postuler maintenant",
-            "cta_opportunities": "Opportunités",
-            "cta_testimonials": "Témoignages",
-            "cta_business": "Cours d'Affaires"
+    "benefits": {
+      "title": "Pourquoi choisir le centre de formation Usafi Barista ?",
+      "subtitle": "Nous offrons plus qu'un simple certificat ; nous offrons une voie vers une carrière.",
+      "item1": {
+        "title": "Programme complet",
+        "description": "Apprenez auprès d'experts de l'industrie comme Sandrine Gasarasi et Ishimwe Ebenezer. Notre programme couvre tout, de l'espresso et des techniques de lait à la gestion d'entreprise de café, garantissant que vous êtes prêt pour le marché."
+      },
+      "item2": {
+        "title": "Options d'apprentissage flexibles",
+        "description": "Étudiez selon vos propres conditions. Choisissez notre programme sur place à Kimironko pour une intensité pratique, ou notre plateforme d'apprentissage en ligne pour étudier la théorie de n'importe où à votre rythme."
+      },
+      "item3": {
+        "title": "Véritable soutien à la carrière",
+        "description": "Nous n'enseignons pas seulement ; nous connectons. Accédez à des opportunités de stage exclusives dans les meilleurs hôtels et cafés locaux, des alertes d'emploi via la communauté Usafi et une préparation aux entretiens professionnels."
+      }
+    }
+  },
+  "about": {
+    "title": "À propos du centre de formation Usafi Barista",
+    "hero": {
+      "title": "Cultiver l'excellence du café au Rwanda.",
+      "description": "Situé au cœur de Kimironko, le centre de formation Usafi Barista est plus qu'une simple école ; c'est un tremplin pour les carrières dans l'industrie de l'hôtellerie. Nous comblons le fossé entre la passion et la profession, en fournissant aux baristas en herbe les compétences techniques, les connaissances commerciales et la confiance nécessaires pour s'épanouir dans le monde du café."
+    },
+    "mission": {
+      "title": "Notre mission",
+      "description": "Donner aux individus des compétences de barista de classe mondiale et des connaissances commerciales pratiques, en les connectant à des opportunités d'emploi durable et d'entrepreneuriat au sein de l'industrie du café en pleine croissance."
+    },
+    "vision": {
+      "title": "Notre vision",
+      "description": "Devenir la première destination pour l'éducation au café au Rwanda, en relevant les normes de service et de qualité du café dans toute la région."
+    },
+    "leadership": {
+      "title": "Rencontrez les experts derrière votre formation",
+      "director": {
+        "name": "Sandrine Gasarasi",
+        "role": "Directrice",
+        "description": "En tant que force motrice derrière Usafi, Sandrine représente un commitment à la qualité et la réussite des étudiants. Sous sa direction, le centre se concentre non seulement sur la fabrication d'une tasse de café parfaite, mais aussi sur le façonnement du caractère et de l'éthique de travail des baristas professionnels."
+      },
+      "mentorship": {
+        "title": "Mentorat d'expert",
+        "lead": "Dirigé par Ishimwe Ebenezer",
+        "description": "Notre équipe de formation, dirigée par des professionnels expérimentés comme Ishimwe Ebenezer, apporte des années d'expérience de l'industrie directement dans la salle de classe. Ils n'enseignent pas seulement la théorie ; ils partagent des connaissances du monde réel, des techniques et les secrets du métier que vous ne trouverez pas dans les manuels."
+      }
+    },
+    "represent": {
+      "title": "Ce que nous représentons",
+      "description": "\"Usafi\" signifie propreté, pureté et excellence. Nous représentons une nouvelle génération de baristas qui comprennent que le café est une forme d'art. De l'hygiène et de la sécurité au latte art avancé, nos étudiants obtiennent leur diplôme prêts à travailler dans des cafés, hôtels et restaurants haut de gamme."
+    },
+    "cta": {
+      "title": "Prêt à rejoindre la famille Usafi ?",
+      "button": "Voir nos cours"
+    }
+  },
+  "courses": {
+    "title": "Cours de barista professionnels",
+    "subtitle": "Choisissez la voie d'apprentissage qui correspond à votre style de vie et à vos objectifs de carrière.",
+    "onsite": {
+      "badge": "Le plus populaire",
+      "title": "Formation sur site",
+      "location": "En personne • Kimironko",
+      "description": "Idéal pour les étudiants qui souhaitent une pratique intensive et pratique avec un équipement professionnel.",
+      "features": [
+        "Accès direct aux machines à espresso et broyeurs commerciaux",
+        "Coaching face à face avec des instructeurs",
+        "Rétroaction immédiate sur le latte art",
+        "Réseautage avec des pairs dans la salle de classe"
+      ],
+      "button": "Choisir sur site"
+    },
+    "online": {
+      "title": "Formation en ligne (E-Learning)",
+      "location": "À distance • Flexible",
+      "description": "Idéal pour les étudiants ayant des horaires chargés ou ceux vivant en dehors de Kigali.",
+      "features": [
+        "Étudiez à votre propre rythme",
+        "Salles de classe virtuelles (Zoom / Google Meet)",
+        "Accès aux leçons vidéo et quiz",
+        "PDF de cours téléchargeables"
+      ],
+      "button": "Choisir en ligne"
+    },
+    "curriculum": {
+      "title": "Répartition complète des modules",
+      "description": "Que vous étudiiez en ligne ou sur site, notre programme couvre les piliers essentiels de l'industrie du café.",
+      "modules": {
+        "m1": {
+          "title": "Introduction au café",
+          "description": "Histoire du café, variétés de grains (Arabica vs Robusta) et méthodes de traitement."
         },
-        "benefits": {
-            "title": "Pourquoi choisir le centre de formation Usafi Barista ?",
-            "subtitle": "Nous offrons plus qu'un simple certificat ; nous offrons une voie vers une carrière.",
-            "item1": {
-                "title": "Programme complet",
-                "description": "Apprenez auprès d'experts de l'industrie comme Sandrine Gasarasi et Ishimwe Ebenezer. Notre programme couvre tout, de l'espresso et des techniques de lait à la gestion d'entreprise de café, garantissant que vous êtes prêt pour le marché."
-            },
-            "item2": {
-                "title": "Options d'apprentissage flexibles",
-                "description": "Étudiez selon vos propres conditions. Choisissez notre programme sur place à Kimironko pour une intensité pratique, ou notre plateforme d'apprentissage en ligne pour étudier la théorie de n'importe où à votre rythme."
-            },
-            "item3": {
-                "title": "Véritable soutien à la carrière",
-                "description": "Nous n'enseignons pas seulement ; nous connectons. Accédez à des opportunités de stage exclusives dans les meilleurs hôtels et cafés locaux, des alertes d'emploi via la communauté Usafi et une préparation aux entretiens professionnels."
-            }
+        "m2": {
+          "title": "Bases du barista et équipement",
+          "description": "Compréhension de la machine à espresso, calibrage du broyeur et techniques de tassage."
+        },
+        "m3": {
+          "title": "Science de l'espresso et du lait",
+          "description": "Perfectionner le shot d'espresso (extraction) et maîtriser le moussage du lait (micro-mousse)."
+        },
+        "m4": {
+          "title": "Latte Art",
+          "description": "Techniques pour verser des cœurs, des rosettes et des tulipes."
+        },
+        "m5": {
+          "title": "Hygiène et maintenance",
+          "description": "Protocoles de nettoyage des machines et normes de sécurité sur le lieu de travail."
+        },
+        "m6": {
+          "title": "Service client",
+          "description": "Bâtir la fidélité client, langage corporel et adaptation du service."
+        },
+        "m7": {
+          "title": "Bonus : Entreprise de café",
+          "description": "Planification d'entreprise, tarification du menu, marketing et conseils de démarrage."
         }
+      }
     },
-    "about": {
-        "title": "À propos du centre de formation Usafi Barista",
-        "hero": {
-            "title": "Cultiver l'excellence du café au Rwanda.",
-            "description": "Situé au cœur de Kimironko, le centre de formation Usafi Barista est plus qu'une simple école ; c'est un tremplin pour les carrières dans l'industrie de l'hôtellerie. Nous comblons le fossé entre la passion et la profession, en fournissant aux baristas en herbe les compétences techniques, les connaissances commerciales et la confiance nécessaires pour s'épanouir dans le monde du café."
-        },
-        "mission": {
-            "title": "Notre mission",
-            "description": "Donner aux individus des compétences de barista de classe mondiale et des connaissances commerciales pratiques, en les connectant à des opportunités d'emploi durable et d'entrepreneuriat au sein de l'industrie du café en pleine croissance."
-        },
-        "vision": {
-            "title": "Notre vision",
-            "description": "Devenir la première destination pour l'éducation au café au Rwanda, en relevant les normes de service et de qualité du café dans toute la région."
-        },
-        "leadership": {
-            "title": "Rencontrez les experts derrière votre formation",
-            "director": {
-                "name": "Sandrine Gasarasi",
-                "role": "Directrice",
-                "description": "En tant que force motrice derrière Usafi, Sandrine représente un commitment à la qualité et la réussite des étudiants. Sous sa direction, le centre se concentre non seulement sur la fabrication d'une tasse de café parfaite, mais aussi sur le façonnement du caractère et de l'éthique de travail des baristas professionnels."
-            },
-            "mentorship": {
-                "title": "Mentorat d'expert",
-                "lead": "Dirigé par Ishimwe Ebenezer",
-                "description": "Notre équipe de formation, dirigée par des professionnels expérimentés comme Ishimwe Ebenezer, apporte des années d'expérience de l'industrie directement dans la salle de classe. Ils n'enseignent pas seulement la théorie ; ils partagent des connaissances du monde réel, des techniques et les secrets du métier que vous ne trouverez pas dans les manuels."
-            }
-        },
-        "represent": {
-            "title": "Ce que nous représentons",
-            "description": "\"Usafi\" signifie propreté, pureté et excellence. Nous représentons une nouvelle génération de baristas qui comprennent que le café est une forme d'art. De l'hygiène et de la sécurité au latte art avancé, nos étudiants obtiennent leur diplôme prêts à travailler dans des cafés, hôtels et restaurants haut de gamme."
-        },
-        "cta": {
-            "title": "Prêt à rejoindre la famille Usafi ?",
-            "button": "Voir nos cours"
+    "tools": {
+      "title": "Outils pour votre succès",
+      "notes": {
+        "title": "Notes de l'étudiant",
+        "description": "Tous les étudiants reçoivent un accès à des notes PDF complètes couvrant les bases du barista, le service client, l'hygiène et la sécurité, et les conseils commerciaux.",
+        "badge": "Disponible pour consultation en ligne ou téléchargement."
+      },
+      "cert": {
+        "title": "Certification officielle",
+        "description": "Après avoir réussi le cours (et réussi les tests pratiques/théoriques finaux), vous recevrez un certificat de réussite du centre de formation Usafi Barista.",
+        "badge": "Un titre reconnu pour booster votre CV."
+      }
+    },
+    "cta": {
+      "title": "Prêt à commencer à préparer ?",
+      "description": "Les places se remplissent rapidement pour nos cours sur site. Réservez votre place aujourd'hui ou commencez à apprendre en ligne immédiatement.",
+      "register": "Postuler maintenant",
+      "contact": "Contactez-nous",
+      "questions": "Vous avez des questions sur les plans de paiement ?"
+    }
+  },
+  "contact": {
+    "title": "Contactez-nous",
+    "subtitle": "Nous aimerions avoir de vos nouvelles",
+    "description": "Que vous ayez des questions sur nos cours, que vous ayez besoin d'aide avec votre candidature ou que vous souhaitiez planifier une visite, notre équipe est là pour vous aider.",
+    "info": {
+      "title": "Infos de contact",
+      "visit": {
+        "title": "Visitez-nous",
+        "address": "Kimironko, Kigali",
+        "near": "Près du marché de Kimironko"
+      },
+      "call": "Appelez-nous",
+      "email": "Envoyez-nous un e-mail"
+    },
+    "form": {
+      "title": "Envoyer un message",
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "email": "Adresse e-mail",
+      "subject": {
+        "label": "Sujet",
+        "placeholder": "Sélectionnez un sujet",
+        "options": {
+          "enrollment": "Candidature au cours",
+          "visit": "Planifier une visite",
+          "consultation": "Consultation sur l'inclusion des personnes handicapées",
+          "partnership": "Demande de partenariat",
+          "other": "Autre"
         }
+      },
+      "message": {
+        "label": "Message",
+        "placeholder": "Comment pouvons-nous vous aider ?"
+      },
+      "button": "Envoyer le message"
+    }
+  },
+  "careerSupport": {
+    "title": "Lancez votre carrière",
+    "subtitle": "Au-delà du certificat : Votre voie vers le succès professionnel",
+    "description": "Au centre de formation Usafi Barista, notre engagement envers vous ne s'arrête pas à la fin de votre cours. Nous fournissons un système de soutien robuste conçu pour vous faire passer directement de la formation à l'emploi ou à l'entrepreneuriat.",
+    "internship": {
+      "title": "Acquérir une expérience de travail essentielle (Stage)",
+      "description": "La formation pratique est complétée par une expérience du monde réel. Notre programme vous place directement dans des environnements de travail où vous pouvez appliquer vos compétences et construire un réseau professionnel.",
+      "requirements": {
+        "title": "Exigences",
+        "list": [
+          "Réussite du programme de base de barista.",
+          "Forte assiduité et performance pendant la formation.",
+          "Présentation et attitude professionnelles."
+        ]
+      },
+      "partnerships": {
+        "title": "Partenariats",
+        "description": "Le centre de formation Usafi Barista s'associe activement avec les principaux cafés, hôtels et groupes hôteliers locaux de Kigali pour obtenir des opportunités de placement de qualité."
+      },
+      "howToApply": {
+        "title": "Comment postuler",
+        "description": "Les places de stage sont compétitives. Les étudiants doivent remplir un formulaire de candidature interne et participer à un entretien fictif pour se qualifier."
+      }
     },
-    "courses": {
-        "title": "Cours de barista professionnels",
-        "subtitle": "Choisissez la voie d'apprentissage qui correspond à votre style de vie et à vos objectifs de carrière.",
-        "onsite": {
-            "badge": "Le plus populaire",
-            "title": "Formation sur site",
-            "location": "En personne • Kimironko",
-            "description": "Idéal pour les étudiants qui souhaitent une pratique intensive et pratique avec un équipement professionnel.",
-            "features": [
-                "Accès direct aux machines à espresso et broyeurs commerciaux",
-                "Coaching face à face avec des instructeurs",
-                "Rétroaction immédiate sur le latte art",
-                "Réseautage avec des pairs dans la salle de classe"
-            ],
-            "button": "Choisir sur site"
-        },
-        "online": {
-            "title": "Formation en ligne (E-Learning)",
-            "location": "À distance • Flexible",
-            "description": "Idéal pour les étudiants ayant des horaires chargés ou ceux vivant en dehors de Kigali.",
-            "features": [
-                "Étudiez à votre propre rythme",
-                "Salles de classe virtuelles (Zoom / Google Meet)",
-                "Accès aux leçons vidéo et quiz",
-                "PDF de cours téléchargeables"
-            ],
-            "button": "Choisir en ligne"
-        },
-        "curriculum": {
-            "title": "Répartition complète des modules",
-            "description": "Que vous étudiiez en ligne ou sur site, notre programme couvre les piliers essentiels de l'industrie du café.",
-            "modules": {
-                "m1": {
-                    "title": "Introduction au café",
-                    "description": "Histoire du café, variétés de grains (Arabica vs Robusta) et méthodes de traitement."
-                },
-                "m2": {
-                    "title": "Bases du barista et équipement",
-                    "description": "Compréhension de la machine à espresso, calibrage du broyeur et techniques de tassage."
-                },
-                "m3": {
-                    "title": "Science de l'espresso et du lait",
-                    "description": "Perfectionner le shot d'espresso (extraction) et maîtriser le moussage du lait (micro-mousse)."
-                },
-                "m4": {
-                    "title": "Latte Art",
-                    "description": "Techniques pour verser des cœurs, des rosettes et des tulipes."
-                },
-                "m5": {
-                    "title": "Hygiène et maintenance",
-                    "description": "Protocoles de nettoyage des machines et normes de sécurité sur le lieu de travail."
-                },
-                "m6": {
-                    "title": "Service client",
-                    "description": "Bâtir la fidélité client, langage corporel et adaptation du service."
-                },
-                "m7": {
-                    "title": "Bonus : Entreprise de café",
-                    "description": "Planification d'entreprise, tarification du menu, marketing et conseils de démarrage."
-                }
-            }
-        },
-        "tools": {
-            "title": "Outils pour votre succès",
-            "notes": {
-                "title": "Notes de l'étudiant",
-                "description": "Tous les étudiants reçoivent un accès à des notes PDF complètes couvrant les bases du barista, le service client, l'hygiène et la sécurité, et les conseils commerciaux.",
-                "badge": "Disponible pour consultation en ligne ou téléchargement."
-            },
-            "cert": {
-                "title": "Certification officielle",
-                "description": "Après avoir réussi le cours (et réussi les tests pratiques/théoriques finaux), vous recevrez un certificat de réussite du centre de formation Usafi Barista.",
-                "badge": "Un titre reconnu pour booster votre CV."
-            }
-        },
-        "cta": {
-            "title": "Prêt à commencer à préparer ?",
-            "description": "Les places se remplissent rapidement pour nos cours sur site. Réservez votre place aujourd'hui ou commencez à apprendre en ligne immédiatement.",
-            "register": "Postuler maintenant",
-            "contact": "Contactez-nous",
-            "questions": "Vous avez des questions sur les plans de paiement ?"
+    "market": {
+      "title": "Maîtriser le marché du travail",
+      "cv": {
+        "title": "Rédaction de CV et recommandations",
+        "description": "Recevez un coaching personnalisé sur la rédaction d'un CV convaincant adapté au secteur de l'hôtellerie. Nous fournissons également des lettres de recommandation pour les meilleurs diplômés."
+      },
+      "alerts": {
+        "title": "Réseaux d'alerte d'emploi",
+        "description": "Accédez aux opportunités via notre réseau exclusif et les groupes WhatsApp de la communauté Usafi. Apprenez à tirer parti de LinkedIn et des emplois hôteliers."
+      },
+      "interview": {
+        "title": "Préparation à l'entretien",
+        "description": "Apprenez les techniques de recherche, la tenue appropriée et la communication non verbale. Accédez à des vidéos d'exemples d'entretien pour visualiser le succès."
+      }
+    },
+    "cta": {
+      "title": "Prêt à commencer votre voyage ?",
+      "button": "Postuler maintenant"
+    }
+  },
+  "certificates": {
+    "title": "Mes certificats",
+    "subtitle": "Consultez et téléchargez vos titres de compétences obtenus.",
+    "title_alt": "Titres de compétences d'élite",
+    "subtitle_alt": "Gérez et exportez vos certifications professionnelles vérifiées",
+    "distinction_diploma": "Diplôme de distinction",
+    "module_validation": "Validation de module",
+    "authenticated": "Authentifié",
+    "export_btn": "Exporter l'attestation",
+    "filters": {
+      "all": "Tout",
+      "skills": "Compétences de barista",
+      "roasting": "Torréfaction",
+      "brewing": "Infusion"
+    },
+    "certified": "Certifié",
+    "completed": "Terminé le :",
+    "download": "Télécharger le certificat",
+    "empty": {
+      "title": "Aucun certificat trouvé",
+      "description": "Continuez à préparer pour obtenir votre prochain badge d'Usafi !",
+      "title_alt": "Dépôt d'attestations vide",
+      "description_alt": "Complétez vos modules stratégiques et excellez dans les évaluations pour débloquer des titres de compétences professionnels vérifiés."
+    },
+    "items": {
+      "milk": "Niveau 1 : Texturation du lait",
+      "intro_roasting": "Introduction à la torréfaction",
+      "green_basics": "Bases du café vert"
+    }
+  },
+  "inclusion": {
+    "title": "Formation accessible, carrières inclusives",
+    "subtitle": "Engagement envers l'inclusion et l'adaptation",
+    "description": "Le centre de formation Usafi Barista croit que la passion pour le café ne connaît pas de limites. Nous nous engageons à favoriser un environnement d'apprentissage inclusif et à adapter notre programme pour assurer l'accessibilité et la réussite de tous les étudiants, y compris ceux en situation de handicap.",
+    "tailoptimized": {
+      "title": "Adapter l'expérience de formation",
+      "hearing": {
+        "title": "Pour les étudiants sourds et muets",
+        "list": [
+          "<strong>Instruction visuelle d'abord :</strong> Forte dépendance aux démonstrations visuelles, aux procédures écrites étape par étape et aux diagrammes clairs pour les modules pratiques.",
+          "<strong>Outils de communication :</strong> Tableaux blancs, tablettes numériques et communication écrite pour les questions-réponses immédiates.",
+          "<strong>Soutien par les pairs :</strong> Partenariat avec des pairs entendants pour un travail d'équipe fluide."
+        ]
+      },
+      "mobility": {
+        "title": "Pour les limitations physiques et de mobilité",
+        "list": [
+          "<strong>Révision d'ergonomie :</strong> Conseils sur les outils adaptés et les modifications de l'espace de travail (ex: comptoirs plus bas).",
+          "<strong>Sécurité d'abord :</strong> Assistance physique lors des tâches lourdes ou de la maintenance."
+        ]
+      }
+    },
+    "service": {
+      "title": "Formation au service inclusif",
+      "description": "Une composante critique de notre formation est de s'assurer que tous les diplômés peuvent servir efficacement chaque client.",
+      "ordering": {
+        "title": "Commande visuelle",
+        "description": "Formation sur l'utilisation d'écrans numériques ou de blocs-notes écrits pour prendre les commandes des clients malentendants ou non verbaux."
+      },
+      "etiquette": {
+        "title": "Étiquette de service",
+        "description": "Éducation sur l'interaction respectueuse et les meilleures pratiques de communication lors du service aux personnes avec divers handicaps."
+      },
+      "awareness": {
+        "title": "Sensibilisation à l'accessibilité",
+        "description": "Compréhension de l'aménagement du café, des sièges et des exigences d'accessibilité des toilettes."
+      }
+    },
+    "consultation": {
+      "title": "Discuter de vos besoins",
+      "description": "Nous encourageons les étudiants potentiels à planifier une consultation privée avec notre directrice, Sandrine Gasarasi, avant de postuler. Cela nous permet de comprendre vos besoins spécifiques et de confirmer comment nous pouvons au mieux adapter l'environnement pour votre réussite.",
+      "cta": "Planifier une consultation"
+    }
+  },
+  "enrollment": {
+    "title": "Postulez maintenant : Réservez votre place",
+    "subtitle": "Rejoignez le centre de formation Usafi Barista",
+    "description": "Créez votre compte étudiant et complétez votre candidature. Après soumission, votre dossier sera examiné pour approbation.",
+    "form": {
+      "fullName": {
+        "label": "Nom complet",
+        "placeholder": "Tel qu'il doit apparaître sur votre certificat"
+      },
+      "phone": {
+        "label": "Numéro de téléphone principal",
+        "placeholder": "+250..."
+      },
+      "email": {
+        "label": "Adresse e-mail",
+        "placeholder": "nom@exemple.com"
+      },
+      "password": {
+        "label": "Créer un mot de passe",
+        "placeholder": "Créez un mot de passe sécurisé (min 6 caractères)",
+        "hint": "Vous utiliserez ce mot de passe pour vous connecter au portail étudiant."
+      },
+      "residence": {
+        "label": "Lieu de résidence",
+        "placeholder": "Ville / District"
+      },
+      "course": {
+        "label": "Cours choisi",
+        "options": {
+          "full-barista": "Certificat complet de barista"
         }
-    },
-    "contact": {
-        "title": "Contactez-nous",
-        "subtitle": "Nous aimerions avoir de vos nouvelles",
-        "description": "Que vous ayez des questions sur nos cours, que vous ayez besoin d'aide avec votre candidature ou que vous souhaitiez planifier une visite, notre équipe est là pour vous aider.",
-        "info": {
-            "title": "Infos de contact",
-            "visit": {
-                "title": "Visitez-nous",
-                "address": "Kimironko, Kigali",
-                "near": "Près du marché de Kimironko"
-            },
-            "call": "Appelez-nous",
-            "email": "Envoyez-nous un e-mail"
-        },
-        "form": {
-            "title": "Envoyer un message",
-            "firstName": "Prénom",
-            "lastName": "Nom",
-            "email": "Adresse e-mail",
-            "subject": {
-                "label": "Sujet",
-                "placeholder": "Sélectionnez un sujet",
-                "options": {
-                    "enrollment": "Candidature au cours",
-                    "visit": "Planifier une visite",
-                    "consultation": "Consultation sur l'inclusion des personnes handicapées",
-                    "partnership": "Demande de partenariat",
-                    "other": "Autre"
-                }
-            },
-            "message": {
-                "label": "Message",
-                "placeholder": "Comment pouvons-nous vous aider ?"
-            },
-            "button": "Envoyer le message"
+      },
+      "studyMethod": {
+        "label": "Méthode d'étude",
+        "placeholder": "Sélectionnez la méthode",
+        "options": {
+          "onsite": "Sur place (En personne)",
+          "online": "Formation en ligne (E-Learning)"
         }
-    },
-    "careerSupport": {
-        "title": "Lancez votre carrière",
-        "subtitle": "Au-delà du certificat : Votre voie vers le succès professionnel",
-        "description": "Au centre de formation Usafi Barista, notre engagement envers vous ne s'arrête pas à la fin de votre cours. Nous fournissons un système de soutien robuste conçu pour vous faire passer directement de la formation à l'emploi ou à l'entrepreneuriat.",
-        "internship": {
-            "title": "Acquérir une expérience de travail essentielle (Stage)",
-            "description": "La formation pratique est complétée par une expérience du monde réel. Notre programme vous place directement dans des environnements de travail où vous pouvez appliquer vos compétences et construire un réseau professionnel.",
-            "requirements": {
-                "title": "Exigences",
-                "list": [
-                    "Réussite du programme de base de barista.",
-                    "Forte assiduité et performance pendant la formation.",
-                    "Présentation et attitude professionnelles."
-                ]
-            },
-            "partnerships": {
-                "title": "Partenariats",
-                "description": "Le centre de formation Usafi Barista s'associe activement avec les principaux cafés, hôtels et groupes hôteliers locaux de Kigali pour obtenir des opportunités de placement de qualité."
-            },
-            "howToApply": {
-                "title": "Comment postuler",
-                "description": "Les places de stage sont compétitives. Les étudiants doivent remplir un formulaire de candidature interne et participer à un entretien fictif pour se qualifier."
-            }
-        },
-        "market": {
-            "title": "Maîtriser le marché du travail",
-            "cv": {
-                "title": "Rédaction de CV et recommandations",
-                "description": "Recevez un coaching personnalisé sur la rédaction d'un CV convaincant adapté au secteur de l'hôtellerie. Nous fournissons également des lettres de recommandation pour les meilleurs diplômés."
-            },
-            "alerts": {
-                "title": "Réseaux d'alerte d'emploi",
-                "description": "Accédez aux opportunités via notre réseau exclusif et les groupes WhatsApp de la communauté Usafi. Apprenez à tirer parti de LinkedIn et des emplois hôteliers."
-            },
-            "interview": {
-                "title": "Préparation à l'entretien",
-                "description": "Apprenez les techniques de recherche, la tenue appropriée et la communication non verbale. Accédez à des vidéos d'exemples d'entretien pour visualiser le succès."
-            }
-        },
-        "business": {
-            "title": "Gestion d'entreprise de café",
-            "description": "Pour les étudiants aspirant à posséder leur propre entreprise, ce module fournit les connaissances fondamentales pour transformer votre vision en réalité.",
-            "plan": {
-                "title": "Préparation du plan d'affaires",
-                "description": "Développer un plan complet."
-            },
-            "location": {
-                "title": "Sélection de l'emplacement",
-                "description": "Choisir l'emplacement idéal."
-            },
-            "pricing": {
-                "title": "Tarification et menu",
-                "description": "Tarification et conception stratégiques."
-            },
-            "marketing": {
-                "title": "Marketing et lancement",
-                "description": "Stratégies de démarrage efficaces."
-            }
-        },
-        "cta": {
-            "title": "Prêt à commencer votre voyage ?",
-            "button": "Postuler maintenant"
+      },
+      "onsite": {
+        "label": "Choisissez l'horaire",
+        "placeholder": "Sélectionnez un horaire",
+        "options": {
+          "1st-shift": "1ère tranche (9h - 11h)",
+          "2nd-shift": "2ème tranche (11h30 - 13h30)",
+          "3rd-shift": "3ème tranche (14h - 16h)",
+          "4th-shift": "4ème tranche (16h30 - 18h30)",
+          "5th-shift": "5ème tranche (19h - 21h)"
         }
-    },
-    "certificates": {
-        "title": "Mes certificats",
-        "subtitle": "Consultez et téléchargez vos titres de compétences obtenus.",
-        "filters": {
-            "all": "Tout",
-            "skills": "Compétences de barista",
-            "roasting": "Torréfaction",
-            "brewing": "Infusion"
-        },
-        "certified": "Certifié",
-        "completed": "Terminé le :",
-        "download": "Télécharger le certificat",
-        "empty": {
-            "title": "Aucun certificat trouvé",
-            "description": "Continuez à préparer pour obtenir votre prochain badge d'Usafi !"
-        },
-        "items": {
-            "milk": "Niveau 1 : Texturation du lait",
-            "intro_roasting": "Introduction à la torréfaction",
-            "green_basics": "Bases du café vert"
+      },
+      "online": {
+        "label": "Date de début souhaitée"
+      },
+      "referral": {
+        "label": "Comment avez-vous entendu parler d'Usafi ?",
+        "placeholder": "Sélectionnez une option",
+        "options": {
+          "social-media": "Réseaux sociaux",
+          "google": "Recherche Google",
+          "referral": "Ami / Recommandation",
+          "other": "Autre"
         }
+      },
+      "submit": "Créer un compte et postuler"
     },
-    "inclusion": {
-        "title": "Formation accessible, carrières inclusives",
-        "subtitle": "Engagement envers l'inclusion et l'adaptation",
-        "description": "Le centre de formation Usafi Barista croit que la passion pour le café ne connaît pas de limites. Nous nous engageons à favoriser un environnement d'apprentissage inclusif et à adapter notre programme pour assurer l'accessibilité et la réussite de tous les étudiants, y compris ceux en situation de handicap.",
-        "tailoptimized": {
-            "title": "Adapter l'expérience de formation",
-            "hearing": {
-                "title": "Pour les étudiants sourds et muets",
-                "list": [
-                    "<strong>Instruction visuelle d'abord :</strong> Forte dépendance aux démonstrations visuelles, aux procédures écrites étape par étape et aux diagrammes clairs pour les modules pratiques.",
-                    "<strong>Outils de communication :</strong> Tableaux blancs, tablettes numériques et communication écrite pour les questions-réponses immédiates.",
-                    "<strong>Soutien par les pairs :</strong> Partenariat avec des pairs entendants pour un travail d'équipe fluide."
-                ]
-            },
-            "mobility": {
-                "title": "Pour les limitations physiques et de mobilité",
-                "list": [
-                    "<strong>Révision d'ergonomie :</strong> Conseils sur les outils adaptés et les modifications de l'espace de travail (ex: comptoirs plus bas).",
-                    "<strong>Sécurité d'abord :</strong> Assistance physique lors des tâches lourdes ou de la maintenance."
-                ]
-            }
-        },
-        "service": {
-            "title": "Formation au service inclusif",
-            "description": "Une composante critique de notre formation est de s'assurer que tous les diplômés peuvent servir efficacement chaque client.",
-            "ordering": {
-                "title": "Commande visuelle",
-                "description": "Formation sur l'utilisation d'écrans numériques ou de blocs-notes écrits pour prendre les commandes des clients malentendants ou non verbaux."
-            },
-            "etiquette": {
-                "title": "Étiquette de service",
-                "description": "Éducation sur l'interaction respectueuse et les meilleures pratiques de communication lors du service aux personnes avec divers handicaps."
-            },
-            "awareness": {
-                "title": "Sensibilisation à l'accessibilité",
-                "description": "Compréhension de l'aménagement du café, des sièges et des exigences d'accessibilité des toilettes."
-            }
-        },
-        "consultation": {
-            "title": "Discuter de vos besoins",
-            "description": "Nous encourageons les étudiants potentiels à planifier une consultation privée avec notre directrice, Sandrine Gasarasi, avant de postuler. Cela nous permet de comprendre vos besoins spécifiques et de confirmer comment nous pouvons au mieux adapter l'environnement pour votre réussite.",
-            "cta": "Planifier une consultation"
+    "loading": {
+      "init": "Initialisation...",
+      "auth": "Création des identifiants de connexion...",
+      "db": "Enregistrement du profil étudiant dans la base de données...",
+      "final": "Finalisation..."
+    },
+    "errors": {
+      "email_in_use": "Cet e-mail est déjà enregistré. Veuillez vous connecter.",
+      "weak_password": "Le mot de passe doit comporter au moins 6 caractères."
+    },
+    "payment": {
+      "title": "Détails de paiement et politique financière",
+      "description": "La candidature est confirmée dès réception du paiement. Nous offrons de la flexibilité via les canaux suivants :",
+      "momo": {
+        "title": "Mobile Money",
+        "description": "Détails fournis lors de la soumission du formulaire."
+      },
+      "bank": {
+        "title": "Virement bancaire",
+        "description": "Coordonnées bancaires fournies lors de la soumission du formulaire."
+      },
+      "flexibility": {
+        "title": "Flexibilité de paiement",
+        "description": "Nous permettons aux étudiants de payer les frais de scolarité par versements, selon notre accord standard. Les détails seront envoyés à votre e-mail après l'inscription."
+      }
+    },
+    "policy": {
+      "title": "Note importante",
+      "highlight": "Les frais de scolarité payés ne sont pas remboursables.",
+      "subtext": "(Tous les frais de scolarité payés sont strictement non remboursables.)",
+      "details": "Veuillez vous assurer d'être pleinement engagé dans le cours et la méthode d'étude choisis avant d'effectuer un paiement."
+    }
+  },
+  "gallery": {
+    "title": "Notre communauté en action",
+    "subtitle": "Photos et vidéos des sessions de formation",
+    "description": "Découvrez l'environnement d'apprentissage pratique du centre de formation Usafi Barista. Cette galerie capture la passion, la concentration et la camaraderie partagées entre nos étudiants et nos instructeurs.",
+    "categories": {
+      "practice": "Pratique pratique",
+      "mastery": "Maîtrise du latte art",
+      "classroom": "Salle de classe et théorie",
+      "graduation": "Remise des diplômes"
+    },
+    "photos": {
+      "grind": "Perfectionner la mouture",
+      "heart": "Verser un cœur",
+      "discussion": "Discussion de groupe",
+      "class2024": "Promotion 2024",
+      "tamping": "Technique de tassage",
+      "testing": "Notes et tests"
+    },
+    "videos": {
+      "title": "Vidéos phares",
+      "clip1": {
+        "title": "Vie quotidienne chez Usafi",
+        "desc": "Un montage rapide du centre de formation."
+      },
+      "clip2": {
+        "title": "Extraction parfaite",
+        "desc": "Instructeur démontrant les techniques d'espresso."
+      },
+      "clip3": {
+        "title": "Entretien avec un étudiant",
+        "desc": "Réflexions sur leur module préféré."
+      }
+    },
+    "cta": {
+      "title": "Voyez l'action par vous-même",
+      "description": "Planifiez une visite à notre centre de Kimironko pour découvrir l'environnement de formation par vous-même.",
+      "button": "Planifier une visite"
+    }
+  },
+  "equipment": {
+    "title": "Les bons outils pour le travail",
+    "subtitle": "Équipement essentiel pour votre installation professionnelle de café",
+    "description": "Démarrer un café nécessite plus que de la passion, cela nécessite le bon équipement. Ce guide couvre les outils fondamentaux nécessaires pour assurer l'efficacité, la qualité et la cohérence, que vous installiez un café à grande échelle ou un petit bar à espresso.",
+    "machinery": {
+      "title": "La machinerie de base",
+      "espresso": {
+        "title": "Machine à espresso",
+        "subtitle": "Le cœur de votre entreprise.",
+        "description": "Choisissez en fonction des besoins en volume (groupe unique vs multi-groupes). Une machine fiable offre une pression et une température constantes pour une extraction parfaite à chaque fois.",
+        "considerations": {
+          "label": "Considérations clés :",
+          "reliability": "Fiabilité",
+          "boiler": "Capacité de la chaudière",
+          "ease": "Facilité de nettoyage"
         }
-    },
-    "enrollment": {
-        "title": "Postulez maintenant : Réservez votre place",
-        "subtitle": "Rejoignez le centre de formation Usafi Barista",
-        "description": "Créez votre compte étudiant et complétez votre candidature. Après soumission, votre dossier sera examiné pour approbation.",
-        "form": {
-            "fullName": {
-                "label": "Nom complet",
-                "placeholder": "Tel qu'il doit apparaître sur votre certificat"
-            },
-            "phone": {
-                "label": "Numéro de téléphone principal",
-                "placeholder": "+250..."
-            },
-            "email": {
-                "label": "Adresse e-mail",
-                "placeholder": "nom@exemple.com"
-            },
-            "password": {
-                "label": "Créer un mot de passe",
-                "placeholder": "Créez un mot de passe sécurisé (min 6 caractères)",
-                "hint": "Vous utiliserez ce mot de passe pour vous connecter au portail étudiant."
-            },
-            "residence": {
-                "label": "Lieu de résidence",
-                "placeholder": "Ville / District"
-            },
-            "course": {
-                "label": "Cours choisi",
-                "options": {
-                    "full-barista": "Certificat complet de barista"
-                }
-            },
-            "studyMethod": {
-                "label": "Méthode d'étude",
-                "placeholder": "Sélectionnez la méthode",
-                "options": {
-                    "onsite": "Sur place (En personne)",
-                    "online": "Formation en ligne (E-Learning)"
-                }
-            },
-            "onsite": {
-                "label": "Choisissez l'horaire",
-                "placeholder": "Sélectionnez un horaire",
-                "options": {
-                    "1st-shift": "1ère tranche (9h - 11h)",
-                    "2nd-shift": "2ème tranche (11h30 - 13h30)",
-                    "3rd-shift": "3ème tranche (14h - 16h)",
-                    "4th-shift": "4ème tranche (16h30 - 18h30)",
-                    "5th-shift": "5ème tranche (19h - 21h)"
-                }
-            },
-            "online": {
-                "label": "Date de début souhaitée"
-            },
-            "referral": {
-                "label": "Comment avez-vous entendu parler d'Usafi ?",
-                "placeholder": "Sélectionnez une option",
-                "options": {
-                    "social-media": "Réseaux sociaux",
-                    "google": "Recherche Google",
-                    "referral": "Ami / Recommandation",
-                    "other": "Autre"
-                }
-            },
-            "submit": "Créer un compte et postuler"
-        },
-        "loading": {
-            "init": "Initialisation...",
-            "auth": "Création des identifiants de connexion...",
-            "db": "Enregistrement du profil étudiant dans la base de données...",
-            "final": "Finalisation..."
-        },
-        "errors": {
-            "email_in_use": "Cet e-mail est déjà enregistré. Veuillez vous connecter.",
-            "weak_password": "Le mot de passe doit comporter au moins 6 caractères."
-        },
-        "payment": {
-            "title": "Détails de paiement et politique financière",
-            "description": "La candidature est confirmée dès réception du paiement. Nous offrons de la flexibilité via les canaux suivants :",
-            "momo": {
-                "title": "Mobile Money",
-                "description": "Détails fournis lors de la soumission du formulaire."
-            },
-            "bank": {
-                "title": "Virement bancaire",
-                "description": "Coordonnées bancaires fournies lors de la soumission du formulaire."
-            },
-            "flexibility": {
-                "title": "Flexibilité de paiement",
-                "description": "Nous permettons aux étudiants de payer les frais de scolarité par versements, selon notre accord standard. Les détails seront envoyés à votre e-mail après l'inscription."
-            }
-        },
-        "policy": {
-            "title": "Note importante",
-            "highlight": "Les frais de scolarité payés ne sont pas remboursables.",
-            "subtext": "(Tous les frais de scolarité payés sont strictement non remboursables.)",
-            "details": "Veuillez vous assurer d'être pleinement engagé dans le cours et la méthode d'étude choisis avant d'effectuer un paiement."
+      },
+      "grinder": {
+        "title": "Broyeur à café",
+        "subtitle": "Aussi important que la machine elle-même.",
+        "description": "Un broyeur de qualité assure une taille de particule uniforme pour une extraction parfaite. Une mouture incohérente entraîne une saveur inégale et un gaspillage de grains.",
+        "considerations": {
+          "label": "Considérations clés :",
+          "consistency": "Cohérence",
+          "burr": "Type de meule (Plate/Conique)",
+          "dosing": "Dosage"
         }
+      }
     },
-    "gallery": {
-        "title": "Notre communauté en action",
-        "subtitle": "Photos et vidéos des sessions de formation",
-        "description": "Découvrez l'environnement d'apprentissage pratique du centre de formation Usafi Barista. Cette galerie capture la passion, la concentration et la camaraderie partagées entre nos étudiants et nos instructeurs.",
-        "categories": {
-            "practice": "Pratique pratique",
-            "mastery": "Maîtrise du latte art",
-            "classroom": "Salle de classe et théorie",
-            "graduation": "Remise des diplômes"
-        },
-        "photos": {
-            "grind": "Perfectionner la mouture",
-            "heart": "Verser un cœur",
-            "discussion": "Discussion de groupe",
-            "class2024": "Promotion 2024",
-            "tamping": "Technique de tassage",
-            "testing": "Notes et tests"
-        },
-        "videos": {
-            "title": "Vidéos phares",
-            "clip1": {
-                "title": "Vie quotidienne chez Usafi",
-                "desc": "Un montage rapide du centre de formation."
-            },
-            "clip2": {
-                "title": "Extraction parfaite",
-                "desc": "Instructeur démontrant les techniques d'espresso."
-            },
-            "clip3": {
-                "title": "Entretien avec un étudiant",
-                "desc": "Réflexions sur leur module préféré."
-            }
-        },
-        "cta": {
-            "title": "Voyez l'action par vous-même",
-            "description": "Planifiez une visite à notre centre de Kimironko pour découvrir l'environnement de formation par vous-même.",
-            "button": "Planifier une visite"
-        }
+    "smallwares": {
+      "title": "Petits matériels essentiels",
+      "tamper": {
+        "title": "Tamper",
+        "description": "Assure un lit de café plat et compacté pour une extraction uniforme. Tamping calibré recommandé pour la cohérence."
+      },
+      "pitcher": {
+        "title": "Pichet à lait",
+        "description": "Acier inoxydable requis pour faire mousser le lait. Prévoyez différentes tailles (350ml, 600ml) for différentes commandes de boissons."
+      },
+      "knock": {
+        "title": "Knock Box",
+        "description": "Utilisé pour éliminer proprement les galets de café usagés. Doit être durable (acier inoxydable/caoutchouc) et facile à laver."
+      },
+      "scales": {
+        "title": "Balances numériques",
+        "description": "La précision est vitale. Utilisé pour doser les moutures avec précision et mesurer le rendement d'extraction par poids."
+      }
     },
-    "equipment": {
-        "title": "Les bons outils pour le travail",
-        "subtitle": "Équipement essentiel pour votre installation professionnelle de café",
-        "description": "Démarrer un café nécessite plus que de la passion, cela nécessite le bon équipement. Ce guide couvre les outils fondamentaux nécessaires pour assurer l'efficacité, la qualité et la cohérence, que vous installiez un café à grande échelle ou un petit bar à espresso.",
-        "machinery": {
-            "title": "La machinerie de base",
-            "espresso": {
-                "title": "Machine à espresso",
-                "subtitle": "Le cœur de votre entreprise.",
-                "description": "Choisissez en fonction des besoins en volume (groupe unique vs multi-groupes). Une machine fiable offre une pression et une température constantes pour une extraction parfaite à chaque fois.",
-                "considerations": {
-                    "label": "Considérations clés :",
-                    "reliability": "Fiabilité",
-                    "boiler": "Capacité de la chaudière",
-                    "ease": "Facilité de nettoyage"
-                }
-            },
-            "grinder": {
-                "title": "Broyeur à café",
-                "subtitle": "Aussi important que la machine elle-même.",
-                "description": "Un broyeur de qualité assure une taille de particule uniforme pour une extraction parfaite. Une mouture incohérente entraîne une saveur inégale et un gaspillage de grains.",
-                "considerations": {
-                    "label": "Considérations clés :",
-                    "consistency": "Cohérence",
-                    "burr": "Type de meule (Plate/Conique)",
-                    "dosing": "Dosage"
-                }
-            }
-        },
-        "smallwares": {
-            "title": "Petits matériels essentiels",
-            "tamper": {
-                "title": "Tamper",
-                "description": "Assure un lit de café plat et compacté pour une extraction uniforme. Tamping calibré recommandé pour la cohérence."
-            },
-            "pitcher": {
-                "title": "Pichet à lait",
-                "description": "Acier inoxydable requis pour faire mousser le lait. Prévoyez différentes tailles (350ml, 600ml) pour différentes commandes de boissons."
-            },
-            "knock": {
-                "title": "Knock Box",
-                "description": "Utilisé pour éliminer proprement les galets de café usagés. Doit être durable (acier inoxydable/caoutchouc) et facile à laver."
-            },
-            "scales": {
-                "title": "Balances numériques",
-                "description": "La précision est vitale. Utilisé pour doser les moutures avec précision et mesurer le rendement d'extraction par poids."
-            }
-        },
-        "serving": {
-            "title": "Service et inventaire",
-            "cups": {
-                "title": "Tasses et verres",
-                "description": "Mugs en céramique pour la consommation sur place. Demitasse pour l'espresso. Tasses isolées et écologiques pour la vente à emporter."
-            },
-            "storage": {
-                "title": "Stockage de l'inventaire",
-                "description": "Récipients hermétiques pour garder les grains torréfiés frais et à l'abri de l'humidité."
-            },
-            "pos": {
-                "title": "Point de vente (POS)",
-                "description": "Logiciel essentiel pour gérer les commandes, suivre les tendances de vente et accepter les paiements."
-            }
-        },
-        "hygiene": {
-            "title": "Hygiène et sécurité",
-            "kit": {
-                "title": "Kit de nettoyage",
-                "description": "Kit dédié pour le rétro-lavage quotidien, le brossage de la tête de groupe et le nettoyage de la buse vapeur."
-            },
-            "agents": {
-                "title": "Agents spécialisés",
-                "description": "Utilisez uniquement des détergents alimentaires approuvés et des produits de détartrage sans danger pour votre machine."
-            },
-            "gear": {
-                "title": "Équipement de sécurité",
-                "description": "Trousse de premiers soins immédiatement accessible. Tapis de sol antidérapants derrière le bar."
-            }
-        },
-        "pricing": {
-            "title": "Gammes de prix et approvisionnement",
-            "description": "Les prix varient considérablement selon la marque, la capacité et l'état. Voici des directives générales pour budgétiser votre démarrage :",
-            "espresso": {
-                "level": "Entrée de gamme commerciale",
-                "price": "2M - 5M Rwf"
-            },
-            "grinder": {
-                "level": "Broyeur à meules de qualité",
-                "price": "300k - 800k Rwf"
-            },
-            "advice": {
-                "title": "Conseils d'approvisionnement :",
-                "description": "Envisagez de commencer avec un équipement rénové de haute qualité pour gérer les coûts initiaux. Nous fournissons aux étudiants une liste de fournisseurs locaux et internationaux de confiance."
-            },
-            "cta_text": "Prêt à budgétiser et à construire ?",
-            "cta_sub": "Apprenez la planification d'entreprise détaillée, l'approvisionnement et l'analyse des coûts dans notre module Entreprise de café.",
-            "cta_button": "Postuler au cours"
-        }
+    "serving": {
+      "title": "Service et inventaire",
+      "cups": {
+        "title": "Tasses et verres",
+        "description": "Mugs en céramique pour la consommation sur place. Demitasse pour l'espresso. Tasses isolées et écologiques pour la vente à emporter."
+      },
+      "storage": {
+        "title": "Stockage de l'inventaire",
+        "description": "Récipients hermétiques pour garder les grains torréfiés frais et à l'abri de l'humidité."
+      },
+      "pos": {
+        "title": "Point de vente (POS)",
+        "description": "Logiciel essentiel pour gérer les commandes, suivre les tendances de vente et accepter les paiements."
+      }
     },
-    "blog": {
-        "title": "Usafi Insights",
-        "subtitle": "Votre source de conseils sur le café, de nouvelles de l'industrie et de conseils aux entreprises",
-        "description": "Le blog Usafi est l'endroit où la passion rencontre l'expertise. Restez au courant des dernières tendances dans le monde du café, obtenez des conseils précieux pour votre carrière et trouvez l'inspiration pour votre parcours entrepreneurial.",
-        "categories": {
-            "all": "Tout",
-            "tips": "Conseils café",
-            "life": "Vie de barista",
-            "business": "Conseils entreprise",
-            "news": "Nouvelles communauté"
-        },
-        "posts": {
-            "read_more": "Lire l'article",
-            "empty": "Aucun article trouvé dans cette catégorie.",
-            "p1": {
-                "title": "Le secret d'une micro-mousse parfaite",
-                "snippet": "Maîtriser le vortex est la clé pour créer cette texture soyeuse nécessaire au latte art."
-            },
-            "p2": {
-                "title": "Conseils de démarrage indispensables pour votre premier café",
-                "snippet": "De la recherche de l'emplacement à la tarification du menu, voici les 5 piliers d'un lancement réussi."
-            },
-            "p3": {
-                "title": "Zoom sur notre dernière promotion",
-                "snippet": "Célébration du travail acharné et du dévouement des diplômés de la promotion 12."
-            },
-            "p4": {
-                "title": "Comment réussir votre premier entretien de barista",
-                "snippet": "Confiance, hygiène et connaissances en café. Voici ce que les employeurs recherchent vraiment."
-            }
-        },
-        "newsletter": {
-            "title": "Ne manquez aucune mise à jour !",
-            "description": "Abonnez-vous à la liste de diffusion Usafi pour recevoir nos dernières informations et alertes d'emploi directement dans votre boîte de réception.",
-            "placeholder": "Entrez votre adresse e-mail",
-            "button": "S'abonner"
-        }
+    "hygiene": {
+      "title": "Hygiène et sécurité",
+      "kit": {
+        "title": "Kit de nettoyage",
+        "description": "Kit dédié pour le rétro-lavage quotidien, le brossage de la tête de groupe et le nettoyage de la buse vapeur."
+      },
+      "agents": {
+        "title": "Agents spécialisés",
+        "description": "Utilisez uniquement des détergents alimentaires approuvés et des produits de détartrage sans danger pour votre machine."
+      },
+      "gear": {
+        "title": "Équipement de sécurité",
+        "description": "Trousse de premiers soins immédiatement accessible. Tapis de sol antidérapants derrière le bar."
+      }
     },
-    "testimonials": {
-        "title": "Histoires de réussite",
-        "subtitle": "Écoutez nos diplômés",
-        "description": "La véritable mesure de notre formation est le succès de nos anciens élèves. Lisez et regardez comment le centre de formation Usafi Barista a aidé à transformer une passion en une profession rentable, permettant aux diplômés de décrocher des emplois dans les meilleurs établissements de restauration ou de lancer leur propre entreprise.",
-        "featured": {
-            "badge": "Histoire à la une",
-            "title": "D'étudiant à propriétaire de boutique : l'histoire d'Alex",
-            "description": "Alex partage comment le module Entreprise de café a fourni le cadre pratique et les contacts de fournisseurs nécessaires pour ouvrir son café seulement six mois après l'obtention de son diplôme.",
-            "class": "Promotion 2024"
-        },
-        "tags": {
-            "placement": "Stage et placement",
-            "technical": "Compétences techniques",
-            "online": "Apprentissage en ligne"
-        },
-        "items": {
-            "grace": {
-                "text": "\"Avant Usafi, je ne savais rien de la science du café. Après le cours sur place, j'étais assez confiante pour postuler au stage. Usafi m'a placée dans un hôtel partenaire, et ils m'ont embauchée à plein temps deux mois plus tard. Le soutien à la carrière a été inestimable.\"",
-                "name": "Grace Mutesi",
-                "role": "Lead Barista"
-            },
-            "kevin": {
-                "text": "\"L'attention portée aux détails sur l'extraction de l'espresso et la texturation du lait était phénoménale. Je peux maintenant produire de manière cohérente des boissons de haute qualité, ce qui est remarqué par mes clients. Mes compétences en Latte Art à elles seules me distinguent des autres candidats.\"",
-                "name": "Kevin Mugisha",
-                "role": "Consultant indépendant"
-            },
-            "patience": {
-                "text": "\"J'ai terminé le cours en ligne tout en travaillant de nuit. Les leçons vidéo et les PDF téléchargeables étaient parfaits pour l'auto-apprentissage. Je recommande vivement Usafi pour tous ceux qui ont besoin de flexibilité mais ne veulent pas faire de compromis sur la qualité.\"",
-                "name": "Patience Uwamahoro",
-                "role": "Barista certifiée"
-            }
-        },
-        "cta": {
-            "title": "Prêt à écrire votre propre histoire de réussite ?",
-            "button": "Commencer votre candidature"
-        }
+    "pricing": {
+      "title": "Gammes de prix et approvisionnement",
+      "description": "Les prix varient considérablement selon la marque, la capacité et l'état. Voici des directives générales pour budgétiser votre démarrage :",
+      "espresso": {
+        "level": "Entrée de gamme commerciale",
+        "price": "2M - 5M Rwf"
+      },
+      "grinder": {
+        "level": "Broyeur à meules de qualité",
+        "price": "300k - 800k Rwf"
+      },
+      "advice": {
+        "title": "Conseils d'approvisionnement :",
+        "description": "Envisagez de commencer avec un équipement rénové de haute qualité pour gérer les coûts initiaux. Nous fournissons aux étudiants une liste de fournisseurs locaux et internationaux de confiance."
+      },
+      "cta_text": "Prêt à budgétiser et à construire ?",
+      "cta_sub": "Apprenez la planification d'entreprise détaillée, l'approvisionnement et l'analyse des coûts dans notre module Entreprise de café.",
+      "cta_button": "Postuler au cours"
+    }
+  },
+  "blog": {
+    "title": "Usafi Insights",
+    "subtitle": "Votre source de conseils sur le café, de nouvelles de l'industrie et de conseils aux entreprises",
+    "description": "Le blog Usafi est l'endroit où la passion rencontre l'expertise. Restez au courant des dernières tendances dans le monde du café, obtenez des conseils précieux pour votre carrière et find l'inspiration pour votre parcours entrepreneurial.",
+    "categories": {
+      "all": "Tout",
+      "tips": "Conseils café",
+      "life": "Vie de barista",
+      "news": "Nouvelles communauté"
     },
-    "thankyou": {
-        "title": "Candidature reçue !",
-        "description": "Merci d'avoir postulé au centre de formation Usafi Barista. Nous avons envoyé un e-mail avec les détails de paiement et vos prochaines étapes.",
-        "button": "Retour à l'accueil"
+    "posts": {
+      "read_more": "Lire l'article",
+      "empty": "Aucun article trouvé dans cette catégorie.",
+      "p1": {
+        "title": "Le secret d'une micro-mousse parfaite",
+        "snippet": "Maîtriser le vortex est la clé pour créer cette texture soyeuse nécessaire au latte art."
+      },
+      "p2": {
+        "title": "Conseils de démarrage indispensables pour votre premier café",
+        "snippet": "De la recherche de l'emplacement à la tarification du menu, voici les 5 piliers d'un lancement réussi."
+      },
+      "p3": {
+        "title": "Zoom sur notre dernière promotion",
+        "snippet": "Célébration du travail acharné et du dévouement des diplômés de la promotion 12."
+      },
+      "p4": {
+        "title": "Comment réussir votre premier entretien de barista",
+        "snippet": "Confiance, hygiène et connaissances en café. Voici ce que les employeurs recherchent vraiment."
+      }
     },
     "newsletter": {
-        "title": "Abonnez-vous à notre Newsletter",
-        "subtitle": "Restez informé des dernières nouvelles, tendances et opportunités.",
-        "placeholder": "Entrez votre adresse email",
-        "button": "S'abonner",
-        "success": "Merci de vous être abonné !",
-        "error": "Échec de l'abonnement. Veuillez réessayer."
-    },
-    "search": {
-        "placeholder": "Rechercher tout...",
-        "type_to_begin": "Tapez au moins 2 caractères pour rechercher",
-        "no_results": "Aucun résultat trouvé pour \"{{term}}\"",
-        "forum": "Forum de la communauté",
-        "opportunities": "Emplois et opportunités",
-        "courses": "Cours"
+      "title": "Ne manquez aucune mise à jour !",
+      "description": "Abonnez-vous à la liste de diffusion Usafi pour recevoir nos dernières informations et alertes d'emploi directement dans votre boîte de réception.",
+      "placeholder": "Entrez votre adresse e-mail",
+      "button": "S'abonner"
     }
+  },
+  "testimonials": {
+    "title": "Histoires de réussite",
+    "subtitle": "Écoutez nos diplômés",
+    "description": "La véritable mesure de notre formation est le succès de nos anciens élèves. Lisez et regardez comment le centre de formation Usafi Barista a aidé à transformer une passion en une profession rentable, permettant aux diplômés de décrocher des emplois dans les meilleurs établissements de restauration ou de lancer leur propre entreprise.",
+    "featured": {
+      "badge": "Histoire à la une",
+      "title": "D'étudiant à propriétaire de boutique : l'histoire d'Alex",
+      "description": "Alex partage comment le module Entreprise de café a fourni le cadre pratique et les contacts de fournisseurs nécessaires pour ouvrir son café seulement six mois après l'obtention de son diplôme.",
+      "class": "Promotion 2024"
+    },
+    "tags": {
+      "placement": "Stage et placement",
+      "technical": "Compétences techniques",
+      "online": "Apprentissage en ligne"
+    },
+    "items": {
+      "grace": {
+        "text": "\"Avant Usafi, je ne savais rien de la science du café. Après le cours sur place, j'étais assez confiante pour postuler au stage. Usafi m'a placée dans un hôtel partenaire, et ils m'ont embauchée à plein temps deux mois plus tard. Le soutien à la carrière a été inestimable.\"",
+        "name": "Grace Mutesi",
+        "role": "Lead Barista"
+      },
+      "kevin": {
+        "text": "\"L'attention portée aux détails sur l'extraction de l'espresso et la texturation du lait était phénoménale. Je peux maintenant produire de manière cohérente des boissons de haute qualité, ce qui est remarqué par mes clients. Mes compétences en Latte Art à elles seules me distinguent des autres candidats.\"",
+        "name": "Kevin Mugisha",
+        "role": "Consultant indépendant"
+      },
+      "patience": {
+        "text": "\"J'ai terminé le cours en ligne tout en travaillant de nuit. Les leçons vidéo et les PDF téléchargeables étaient parfaits pour l'auto-apprentissage. Je recommande vivement Usafi pour tous ceux qui ont besoin de flexibilité mais ne veulent pas faire de compromis sur la qualité.\"",
+        "name": "Patience Uwamahoro",
+        "role": "Barista certifiée"
+      }
+    },
+    "cta": {
+      "title": "Prêt à écrire votre propre histoire de réussite ?",
+      "button": "Commencer votre candidature"
+    }
+  },
+  "thankyou": {
+    "title": "Candidature reçue !",
+    "description": "Merci d'avoir postulé au centre de formation Usafi Barista. Nous avons envoyé un e-mail avec les détails de paiement et vos prochaines étapes.",
+    "button": "Retour à l'accueil"
+  },
+  "newsletter": {
+    "title": "Abonnez-vous à notre Newsletter",
+    "subtitle": "Restez informé des dernières nouvelles, tendances et opportunités.",
+    "placeholder": "Entrez votre adresse email",
+    "button": "S'abonner",
+    "success": "Merci de vous être abonné !",
+    "error": "Échec de l'abonnement. Veuillez réessayer."
+  },
+  "search": {
+    "placeholder": "Rechercher tout...",
+    "type_to_begin": "Tapez au moins 2 caractères pour rechercher",
+    "no_results": "Aucun résultat trouvé pour \"{{term}}\"",
+    "common": {
+      "opportunities": "Emplois et opportunités",
+      "courses": "Cours"
+    }
+  },
+  "student": {
+    "dashboard": {
+      "welcome": "Bon retour, {{name}} !",
+      "subtitle": "Prêt à préparer l'excellence aujourd'hui ?",
+      "current_expedition": "Expédition Actuelle",
+      "stats": {
+        "courses": "Cours Disponibles",
+        "completed": "Modules Terminés",
+        "certificates": "Certificats Obtenus",
+        "mins": "mins"
+      },
+      "curriculum": {
+        "title": "Programme Principal",
+        "view_map": "Voir la Carte d'Apprentissage",
+        "status_active": "En Extraction",
+        "sync": "Sync",
+        "resume_btn": "Reprendre le Parcours Professionnel",
+        "empty": "Aucun programme actif détecté."
+      },
+      "next_step": {
+        "title": "Prochaine Étape Stratégique",
+        "upcoming": "Module à Venir",
+        "duration": "Durée",
+        "units": "Unités",
+        "slides": "Diapositives",
+        "initiate_btn": "Initier le Module",
+        "completed_title": "Excellence Maximale Atteinte",
+        "completed_subtitle": "Tous les objectifs ont été extraits avec succès."
+      }
+    },
+    "courses": {
+      "not_found": "Cours non trouvé.",
+      "academic_standard": "Norme Académique",
+      "units_count": "{{count}} Unités Stratégiques",
+      "curriculum_map": "Carte du Programme",
+      "unit_label": "Unité Stratégique",
+      "auth_required": "Autorisation Requise",
+      "locked_note": "Contactez l'instructeur for une autorisation stratégique",
+      "reexamine": "Réexaminer",
+      "commence": "Commencer",
+      "locked_btn": "Verrouillé"
+    },
+    "course_view": {
+      "extraction": "Extraction : {{percent}}%",
+      "assessment_phase": "Phase d'évaluation",
+      "stow_ledger": "Ranger le registre",
+      "strategic_notes": "Notes stratégiques",
+      "not_assigned": "Vous n'êtes pas assigné à ce module.",
+      "empty_slides": "Ce module n'a pas encore de diapositives de contenu.",
+      "skip_to_quiz": "Passer au quiz",
+      "prev_btn": "Réexaminer le précédent",
+      "begin_eval_btn": "Commencer l'évaluation",
+      "next_btn": "Avancée stratégique",
+      "unlock_success": "Félicitations ! Vous avez débloqué : {{title}}",
+      "anti_cheat": {
+        "unload_warning": "Quitter cette page soumettra automatiquement votre quiz. Êtes-vous sûr ?",
+        "visibility_warning": "Avertissement anti-triche : Quiz soumis automatiquement en raison d'un changement de page."
+      },
+      "notes": {
+        "title": "Registre cognitif",
+        "subtitle": "Informations stratégiques sur le module"
+      }
+    },
+    "quiz": {
+      "title": "Évaluation stratégique",
+      "subtitle": "Veuillez respecter les protocoles opérationnels suivants",
+      "objective": "Objectif",
+      "footer_note": "La précision est primordiale.",
+      "finalize_btn": "Finaliser l'extraction",
+      "next_btn": "Avancée stratégique",
+      "start_btn": "Autoriser et commencer l'évaluation",
+      "fill_in_placeholder": "Tapez votre réponse ici...",
+      "matching_instruction": "Réorganisez les éléments à droite pour qu'ils correspondent à ceux de gauche",
+      "rules": {
+        "timer": {
+          "title": "Contrainte temporelle",
+          "desc": "Chaque question est régie par un compte à rebours strict. L'inactivité entraîne une soumission automatique."
+        },
+        "pass_mark": {
+          "title": "Seuil d'autorisation",
+          "desc": "Un score de maîtrise de <strong>{{passMark}}%</strong> est essentiel for l'avancement stratégique."
+        },
+        "anti_cheat": {
+          "title": "Protocole anti-contournement",
+          "desc": "La navigation sur la page, le changement d'onglet ou les tentatives d'actualisation déclencheront la finalisation d'urgence du quiz."
+        }
+      },
+      "results": {
+        "passed": {
+          "title": "Maîtrise confirmée",
+          "desc": "Performance exceptionnelle. Votre compréhension de ce module a été encodée avec succès. L'avancement premium est désormais autorisé.",
+          "btn": "Passer à la carte du programme"
+        },
+        "failed": {
+          "title": "Synchronisation interrompue",
+          "desc": "Le seuil d'évaluation n'a pas été atteint. Un recalibrage stratégique est nécessaire avant qu'une autre tentative d'extraction ne soit autorisée.",
+          "btn": "Réinitialiser l'extraction"
+        },
+        "score_label": "Score stratégique :"
+      },
+      "certificate_design": {
+        "title": "Certificat",
+        "achievement": "de réussite professionnelle",
+        "certify_text": "Ceci est pour certifier que",
+        "completed_course": "A complété avec succès le cours",
+        "completed_module": "A complété avec succès le module",
+        "date_label": "Date de complétion",
+        "id_label": "ID du certificat",
+        "verified": "Vérifié",
+        "disclaimer": "Ce certificat vérifie que l’étudiant a satisfait à toutes les exigences établies par le centre de formation Usafi Barista."
+      }
+    },
+    "cv_builder": {
+      "title": "Architecte de Carrière",
+      "saved": "Enregistré",
+      "save_draft": "Enregistrer le Brouillon",
+      "storing": "Stockage",
+      "profile_integrity": "Statut d'Intégrité du Profil",
+      "personal": "Identité Stratégique",
+      "summary": "Récit Professionnel",
+      "certs": "Intelligence Vérifiée",
+      "skills": "Capacités Opérationnelles",
+      "education": "Fondation Académique",
+      "experience": "Histoire Professionnelle",
+      "footer": {
+        "synced": "État Synchronisé",
+        "sync_state": "Synchroniser l'État",
+        "synchronizing": "Synchronisation...",
+        "execute_print": "Exécuter le Protocole d'Impression",
+        "compiling": "Compilation des Ressources..."
+      },
+      "print": {
+        "narrative": "Récit Stratégique",
+        "history": "Histoire des Jalons Professionnels",
+        "active": "Actif",
+        "credentials": "Titres Vérifiés",
+        "strategist": "Stratège Usafi",
+        "authenticated": "Authentifié",
+        "capabilities": "Capacités de Base",
+        "footer_text": "Centre de Formation Barista Usafi • Division Carrière",
+        "digital_doc": "Document Numérique Authentifié"
+      },
+      "sections": {
+        "personal": "Identité Stratégique",
+        "summary": "Récit Professionnel",
+        "certs": "Intelligence Vérifiée",
+        "skills": "Capacités Opérationnelles",
+        "education": "Fondation Académique",
+        "experience": "Histoire Professionnelle"
+      }
+    },
+    "certificates": {
+      "title": "Certificats",
+      "title_alt": "Mes Certificats",
+      "subtitle_alt": "Vos diplômes acquis",
+      "module_validation": "Validation du Module",
+      "authenticated": "Authentifié",
+      "download": "Télécharger le Certificat"
+    }
+  },
+  "admin": {
+    "nav": {
+      "dashboard": "Tableau de Bord",
+      "courses": "Cours",
+      "forum": "Forum",
+      "instructors": "Instructeurs",
+      "students": "Étudiants",
+      "quizzes": "Quiz",
+      "announcements": "Annonces",
+      "testimonials": "Témoignages",
+      "notifications": "Notifications",
+      "manage_jobs": "Gérer les emplois",
+      "job_seekers": "Demandeurs d'emploi",
+      "business_students": "Étudiants en entreprise",
+      "business_courses": "Cours en entreprise",
+      "my_profile": "Mon Profil",
+      "sign_out": "Déconnexion",
+      "admin_menu": "Menu Administrateur",
+      "admin_default": "Administrateur"
+    },
+    "dashboard": {
+      "title": "Commandement Administratif",
+      "subtitle": "Supervision des opérations mondiales et mesures système",
+      "metrics_analytics": "Tableau de Bord & Analytique",
+      "global_students": "Étudiants Mondiaux",
+      "active_participants": "Participants actifs dans la matrice",
+      "active_architecture": "Architecture Active",
+      "validated_nodes": "Nœuds de cours validés",
+      "queue_status": "Statut de la File d'Attente",
+      "approvals_required": "Approbations requises",
+      "monthly_revenue": "Revenu Mensuel Fluide",
+      "efficiency_index": "Indice d'Efficacité",
+      "growth_projection": "Projection de Croissance",
+      "enrollment_cadence": "Cadence d'Inscription sur 12 mois",
+      "primary_metrics": "Mesures Primaires",
+      "nodes": "NŒUDS",
+      "awaiting_feed": "En attente du flux de données",
+      "strategic_assets": "Actifs Stratégiques",
+      "capacity": "Capacité : Illimitée",
+      "active_nodes": "NŒUDS ACTIFS",
+      "historical_data": "Données historiques uniquement",
+      "fresh_connections": "Nouvelles Connexions",
+      "full_registry": "Registre Complet",
+      "integrated_into": "Intégré dans",
+      "zero_intake": "Aucune nouvelle admission détectée",
+      "time_ago": {
+        "days": "Il y a {{count}}j",
+        "hours": "Il y a {{count}}h",
+        "now": "À l'instant"
+      },
+      "stats": {
+        "total_students": "Total Étudiants",
+        "total_instructors": "Total Instructeurs",
+        "total_courses": "Total Cours",
+        "active_sessions": "Sessions Actives"
+      },
+      "recent_activity": "Activité Récente",
+      "quick_actions": "Actions Rapides"
+    }
+  },
+  "instructor": {
+    "nav": {
+      "dashboard": "Tableau de Bord",
+      "courses": "Cours",
+      "students": "Étudiants",
+      "chat": "Chat",
+      "schedule": "Emploi du temps",
+      "share_video": "Partager une vidéo",
+      "my_profile": "Mon Profil",
+      "sign_out": "Déconnexion",
+      "instructor_menu": "Menu Instructeur",
+      "instructor_default": "Instructeur"
+    },
+    "dashboard": {
+      "welcome_back": "Bon retour, {{name}} !",
+      "student_pulse": "Voici ce qui se passe avec vos étudiants aujourd'hui.",
+      "assigned_students": "Étudiants Assignés",
+      "active_courses": "Cours Actifs",
+      "upcoming_sessions": "Sessions à venir",
+      "avg_rating": "Note moyenne des Étudiants",
+      "completion_performance": "Performance de complétion des cours",
+      "live_pulse": "Pouls des étudiants en direct",
+      "explore_all": "Explorer tous les étudiants",
+      "activity": {
+        "quiz": "Quiz terminé : {{name}}",
+        "session": "Session rejointe : {{name}}",
+        "assignment": "Devoir téléchargé : {{name}}",
+        "module": "Module terminé : {{name}}"
+      },
+      "status": {
+        "pending": "En attente"
+      },
+      "time_ago": {
+        "hours": "Il y a {{count}} heures",
+        "day": "Il y a 1 jour",
+        "days": "Il y a {{count}} jours"
+      }
+    }
+  },
+  "manager": {
+    "nav": {
+      "dashboard": "Tableau de Bord",
+      "contacts": "Répertoire de Contacts",
+      "subscribers": "Abonnés",
+      "messages": "Messages de la Boîte de Réception",
+      "my_profile": "Mon Profil",
+      "sign_out": "Déconnexion",
+      "marketing_menu": "Menu Marketing",
+      "marketing_default": "Manager"
+    },
+    "dashboard": {
+      "marketing_overview": "Aperçu Marketing",
+      "track_growth": "Suivre la croissance et l'engagement des utilisateurs",
+      "total_users": "Total Utilisateurs",
+      "students": "Étudiants",
+      "instructors": "Instructeurs",
+      "newsletter_subs": "Abonnés à la Newsletter",
+      "engagement_chart_soon": "Graphique d'engagement à venir"
+    }
+  },
+  "ceo": {
+    "nav": {
+      "executive_dashboard": "Tableau de Bord Exécutif",
+      "staff_management": "Gestion du Personnel",
+      "revenue_report": "Rapport de Revenus",
+      "global_settings": "Paramètres Mondiaux",
+      "my_profile": "Mon Profil",
+      "sign_out": "Déconnexion",
+      "executive_menu": "Menu Exécutif",
+      "chief_executive_officer": "Directeur Général",
+      "chief_executive": "DIRECTEUR GÉNÉRAL"
+    },
+    "dashboard": {
+      "full_spectrum_overview": "Aperçu Global Complet",
+      "executive_board": "Conseil d'Administration",
+      "system_status": "État du Système",
+      "operational": "OPÉRATIONNEL",
+      "total_revenue_ytd": "Revenu Total (Cumul Annuel)",
+      "vs_last_month": "par rapport au mois dernier",
+      "active_userbase": "Base d'Utilisateurs Actifs",
+      "new_this_week": "nouveaux cette semaine",
+      "total_staff": "Personnel Total",
+      "manage_access": "Gérer les Accès",
+      "system_health": "Santé du Système",
+      "all_systems_nominal": "Tous les systèmes sont nominaux",
+      "revenue_trajectory": "Trajectoire des Revenus",
+      "h1_projection": "Projection du Premier Semestre 2026",
+      "executive_actions": "Actions Exécutives",
+      "appoint_admin": "Nommer un Administrateur",
+      "grant_privileges": "Accorder les privilèges les plus élevés",
+      "global_announcement": "Annonce Mondiale",
+      "broadcast_users": "Diffuser à tous les utilisateurs",
+      "emergency_lockdown": "Verrouillage d'Urgence",
+      "restrict_access": "Restreindre l'accès à la plateforme",
+      "platform_version": "Version de la Plateforme"
+    }
+  },
+  "business": {
+    "title": "Gestion d'entreprise de café",
+    "description": "Pour les étudiants aspirant à posséder leur propre entreprise, ce module fournit les connaissances fondamentales pour transformer votre vision en réalité.",
+    "plan": {
+      "title": "Préparation du plan d'affaires",
+      "description": "Développer un plan complet."
+    },
+    "location": {
+      "title": "Sélection de l'emplacement",
+      "description": "Choisir l'emplacement idéal."
+    },
+    "pricing": {
+      "title": "Tarification et menu",
+      "description": "Tarification et conception stratégiques."
+    },
+    "marketing": {
+      "title": "Marketing et lancement",
+      "description": "Stratégies de démarrage efficaces."
+    },
+    "approval_pending": "Approbation en Attente",
+    "approval_pending_desc": "Votre compte est actuellement en cours de révision par l'administrateur. Vous aurez accès aux cours de business une fois approuvé.",
+    "business_class_title": "Classe Business",
+    "dashboard": "Tableau de Bord",
+    "my_profile": "Mon Profil",
+    "sign_out": "Déconnexion",
+    "welcome_student": "Bienvenue, {{name}}",
+    "exclusive_content": "Accédez à votre contenu business exclusif.",
+    "start_learning": "Commencer l'Apprentissage",
+    "no_courses": "Aucun cours disponible pour le moment."
+  },
+  "seeker": {
+    "usafi_opportunities": "Opportunités Usafi",
+    "hello_user": "Bonjour, {{name}}",
+    "profile": "Profil",
+    "sign_out": "Déconnexion",
+    "loading_opportunities": "Chargement des opportunités...",
+    "available_opportunities": "Opportunités Disponibles",
+    "exclusive_listings": "Offres d'emploi exclusives adaptées for vous.",
+    "no_opportunities_found": "Aucune opportunité trouvée",
+    "check_back_later": "Revenez plus tard for de nouvelles mises à jour.",
+    "posted": "Publié le",
+    "requirements_details": "Exigences / Détails :",
+    "apply_now": "Postuler Maintenant",
+    "contact_to_apply": "Contact for Postuler",
+    "salary_competitive": "Compétitif"
+  },
+  "forum": {
+    "list_title": "Forum Communautaire",
+    "new_post": "Nouveau Message",
+    "loading": "Chargement du forum...",
+    "no_posts": "Aucun sujet de discussion pour le moment. Lancez-en un !",
+    "likes": "{{count}} J'AIME",
+    "comments": "{{count}} COMMENTAIRES",
+    "create_title": "Créer un Message",
+    "cancel": "Annuler",
+    "drafts": "Brouillons",
+    "title_label": "Titre",
+    "title_placeholder": "Qu'est-ce qui se prépare aujourd'hui ?",
+    "select_topic": "Sélectionner un Sujet",
+    "discussion_label": "Discussion",
+    "markdown": "Markdown supporté",
+    "discussion_placeholder": "Partagez vos pensées, recette ou question ici. Soyez descriptif !",
+    "post_to_forum": "Publier sur le Forum",
+    "posting": "Publication...",
+    "fail_create": "Échec de la création du message",
+    "details_title": "Forum Étudiant",
+    "loading_details": "Chargement de la discussion...",
+    "post_not_found": "Message non trouvé",
+    "add_comment": "Ajouter un commentaire... (Entrée pour envoyer)",
+    "send": "Envoyer",
+    "sending": "Envoi...",
+    "no_comments": "Aucun commentaire pour le moment. Soyez le premier à répondre !",
+    "comment_count": "Commentaires ({{count}})",
+    "share": "Partager",
+    "topics": {
+      "coffee_talk": "Discussions Café",
+      "latte_art": "Art Latte",
+      "brewing": "Infusion",
+      "beans": "Grains",
+      "equipment": "Équipement",
+      "roasting": "Torréfaction",
+      "barista_life": "Vie de Barista"
+    }
+  },
+  "chat": {
+    "instructor_title": "Communications Mentor",
+    "instructor_subtitle": "Engagez un dialogue stratégique avec votre cohorte assignée ({{count}} étudiants)",
+    "loading": "Chargement du chat...",
+    "no_chats": "Silence dans les lignes. Commencez un dialogue stratégique.",
+    "no_cohort": "Aucun membre de cohorte détecté pour la communication.",
+    "awaiting_input": "Canal établi. En attente d'entrée.",
+    "initiate": "Initier la Connexion",
+    "student_list_title": "Chat Camarades",
+    "no_classmates": "Aucun autre étudiant actif trouvé pour discuter.",
+    "new_messages": "{{count}} Nouveau",
+    "type_message": "Tapez un message...",
+    "active_now": "Actif maintenant",
+    "start_convo": "Commencer une conversation avec {{name}} !"
+  },
+  "profile": {
+    "title": "Identité Professionnelle",
+    "subtitle": "Gérez en toute sécurité votre compte personnel et vos paramètres",
+    "id_student": "Identifiant : {{id}}",
+    "id_staff": "ID du personnel : {{id}}",
+    "sign_out": "Terminer la session",
+    "identity": "Informations Stratégiques",
+    "edit_info": "Ajuster",
+    "full_name": "Nom Professionnel",
+    "email": "Communications Autorisées",
+    "phone": "Protocole de Contact",
+    "location": "Zone de Déploiement",
+    "security": "Contrôle d'Accès & Protocoles",
+    "update_password": "Mot de Passe Maître",
+    "update_password_desc": "Re-configurer les identifiants d'accès",
+    "reset_key": "Réinitialiser la clé d'accès sécurisée",
+    "privacy": "Protocoles de Confidentialité",
+    "digital_vis": "Gouverner votre visibilité numérique",
+    "alerts": "Flux d'Intelligence",
+    "comm_flow": "Configurer les alertes de communication",
+    "not_provided": "Non divulgué",
+    "not_set": "En attente d'activation",
+    "edit_title": "Protocole d'Ajustement",
+    "cancel": "Abandonner",
+    "save": "Valider les modifications",
+    "saving": "Encodage...",
+    "fail_update": "Échec de la mise à jour des informations de profil.",
+    "fail_avatar": "Échec de la mise à jour de la photo de profil.",
+    "role_student": "Étudiant",
+    "role_instructor": "Instructeur",
+    "role_admin": "Administrateur",
+    "role_manager": "Gestionnaire",
+    "role_user": "Utilisateur",
+    "id_label": "{{label}}: {{id}}",
+    "phone_placeholder": "ex: +250 712 345 678",
+    "location_placeholder": "ex: Kigali, Rwanda"
+  },
+  "change_password": {
+    "title": "Changer le mot de passe",
+    "current_label": "Mot de passe actuel",
+    "current_placeholder": "Entrez le mot de passe actuel",
+    "new_label": "Nouveau mot de passe",
+    "new_placeholder": "Entrez le nouveau mot de passe (min 6 caractères)",
+    "confirm_label": "Confirmer le nouveau mot de passe",
+    "confirm_placeholder": "Confirmez le nouveau mot de passe",
+    "cancel": "Annuler",
+    "submit": "Changer le mot de passe",
+    "saving": "Changement...",
+    "success": "Mot de passe modifié avec succès !",
+    "err_too_short": "Le nouveau mot de passe doit comporter au moins 6 caractères",
+    "err_mismatch": "Les nouveaux mots de passe ne correspondent pas",
+    "err_same": "Le nouveau mot de passe doit être différent du mot de passe actuel",
+    "err_no_user": "Aucun utilisateur n'est actuellement connecté",
+    "err_wrong_password": "Le mot de passe actuel est incorrect",
+    "err_weak_password": "Le nouveau mot de passe est trop faible",
+    "err_fail": "Échec du changement de mot de passe"
+  },
+  "privacy_settings": {
+    "back": "Retour au Portail",
+    "title": "Confidentialité & Autorisations",
+    "subtitle": "Gerez votre présence numérique et sécurisez vos interactions sur la plateforme",
+    "section_access": "Accès & Identification",
+    "visibility_label": "Seuil de Visibilité Globale",
+    "opt_public": "Public - Présence Mondiale",
+    "opt_connections": "Connexions Uniquement - Réseau Interne",
+    "opt_private": "Privé - Mode Furtif",
+    "email_label": "Email de Diffusion",
+    "email_desc": "Autoriser le réseau à voir votre chemin de contact",
+    "phone_label": "Afficher le Lien Mobile",
+    "phone_desc": "Activer la communication téléphonique directe",
+    "section_comm": "Canaux de Communication",
+    "messages_label": "Autoriser les Messages",
+    "messages_desc": "Recevoir des messages d'autres utilisateurs",
+    "push_label": "Notifications Push",
+    "push_desc": "Recevoir des notifications sur les mises à jour",
+    "marketing_label": "Emails Marketing",
+    "marketing_desc": "Recevoir des emails promotionnels et des mises à jour",
+    "section_data": "Intégrité des Données & Confiance",
+    "sharing_label": "Partage de Données",
+    "sharing_desc": "Partager des données anonymisées pour l'amélioration de la plateforme",
+    "info_title": "Votre Confidentialité Compte",
+    "info_desc": "Nous ne vendons jamais vos données personnelles. Lisez notre <link>Politique de Confidentialité</link> pour en savoir plus sur la protection de vos informations.",
+    "cancel": "Annuler",
+    "save": "Enregistrer les Autorisations",
+    "saving": "Enregistrement...",
+    "success": "Paramètres de confidentialité enregistrés avec succès !",
+    "error": "Échec de l'enregistrement des paramètres. Veuillez réessayer."
+  }
 }

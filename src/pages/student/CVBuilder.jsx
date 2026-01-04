@@ -5,9 +5,11 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { collection, query, where, getDocs, doc, getDoc, setDoc } from 'firebase/firestore';
 import { useAuth } from '../../context/AuthContext';
 import { useReactToPrint } from 'react-to-print';
+import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
 
 export function CVBuilder() {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const fileInputRef = useRef(null);
     const componentRef = useRef();
@@ -290,12 +292,12 @@ export function CVBuilder() {
                         >
                             <span className="material-symbols-outlined text-[24px]">arrow_back_ios_new</span>
                         </button>
-                        <h2 className="text-espresso dark:text-white text-2xl font-black font-serif uppercase tracking-[0.2em] leading-tight">Career Architect</h2>
+                        <h2 className="text-espresso dark:text-white text-2xl font-black font-serif uppercase tracking-[0.2em] leading-tight">{t('student.cv_builder.title')}</h2>
 
                         <div className="flex w-32 items-center justify-end">
                             {saveSuccess ? (
                                 <span className="text-green-600 bg-green-50 dark:bg-green-900/20 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest animate-fade-in flex items-center gap-2 border border-green-200">
-                                    <span className="material-symbols-outlined text-[16px]">verified</span> Encloded
+                                    <span className="material-symbols-outlined text-[16px]">verified</span> {t('student.cv_builder.saved')}
                                 </span>
                             ) : (
                                 <button
@@ -304,7 +306,7 @@ export function CVBuilder() {
                                     className="bg-espresso text-white px-6 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:shadow-xl hover:-translate-y-0.5 active:scale-95 transition-all disabled:opacity-50 flex items-center gap-2"
                                 >
                                     {saving ? <span className="material-symbols-outlined animate-spin text-[16px]">sync</span> : <span className="material-symbols-outlined text-[16px]">save</span>}
-                                    {saving ? "Storing" : "Save Draft"}
+                                    {saving ? t('student.cv_builder.storing') : t('student.cv_builder.save_draft')}
                                 </button>
                             )}
                         </div>
@@ -312,7 +314,7 @@ export function CVBuilder() {
 
                     <div className="flex flex-col gap-2 px-10 pb-6">
                         <div className="flex gap-6 justify-between items-end">
-                            <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest">Profile Integrity Status</p>
+                            <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest">{t('student.cv_builder.profile_integrity')}</p>
                             <p className="text-espresso dark:text-white text-xs font-black">{completeness}%</p>
                         </div>
                         <div className="rounded-full bg-espresso/5 dark:bg-white/5 h-2 w-full overflow-hidden border border-espresso/5">
@@ -326,7 +328,7 @@ export function CVBuilder() {
 
                     {/* Personal Info */}
                     <SectionDetails
-                        title="Strategic Identity"
+                        title={t('student.cv_builder.sections.personal')}
                         icon="person_pin"
                         isOpen={activeSection === 'personal'}
                         onToggle={(open) => setActiveSection(open ? 'personal' : null)}
@@ -349,39 +351,39 @@ export function CVBuilder() {
                                 <input type="file" ref={fileInputRef} onChange={handleImageUpload} className="hidden" accept="image/*" />
                             </div>
                             <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-                                <Input label="Professional Name" name="fullName" value={cvData.personalInfo.fullName} onChange={handleInfoChange} placeholder="e.g. Jane Doe" />
-                                <Input label="Direct Line" name="phone" value={cvData.personalInfo.phone} onChange={handleInfoChange} placeholder="+254..." icon="call" />
-                                <Input label="Digital Correspondence" name="email" value={cvData.personalInfo.email} onChange={handleInfoChange} placeholder="email@example.com" type="email" icon="mail" />
-                                <Input label="Global Connectivity" name="linkedin" value={cvData.personalInfo.linkedin} onChange={handleInfoChange} placeholder="linkedin.com/in/..." icon="link" />
+                                <Input label={t('student.cv_builder.personal.full_name')} name="fullName" value={cvData.personalInfo.fullName} onChange={handleInfoChange} placeholder="e.g. Jane Doe" />
+                                <Input label={t('student.cv_builder.personal.phone')} name="phone" value={cvData.personalInfo.phone} onChange={handleInfoChange} placeholder="+254..." icon="call" />
+                                <Input label={t('student.cv_builder.personal.email')} name="email" value={cvData.personalInfo.email} onChange={handleInfoChange} placeholder="email@example.com" type="email" icon="mail" />
+                                <Input label={t('student.cv_builder.personal.linkedin')} name="linkedin" value={cvData.personalInfo.linkedin} onChange={handleInfoChange} placeholder="linkedin.com/in/..." icon="link" />
                             </div>
                         </div>
                     </SectionDetails>
 
                     {/* Summary */}
                     <SectionDetails
-                        title="Professional Narrative"
+                        title={t('student.cv_builder.sections.summary')}
                         icon="auto_awesome"
                         isOpen={activeSection === 'summary'}
                         onToggle={(open) => setActiveSection(open ? 'summary' : null)}
                     >
                         <div className="w-full pt-4">
-                            <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest pb-3">Strategic Career Objective</p>
+                            <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest pb-3">{t('student.cv_builder.summary.label')}</p>
                             <textarea
                                 value={cvData.summary}
                                 onChange={handleSummaryChange}
                                 className="w-full rounded-2xl text-espresso border border-espresso/10 bg-white/40 dark:bg-black/20 min-h-[160px] p-6 text-sm font-medium leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-espresso transition-all placeholder:text-espresso/20 shadow-inner"
-                                placeholder="Craft a compelling narrative of your professional journey..."
+                                placeholder={t('student.cv_builder.summary.placeholder')}
                             />
                             <div className="flex justify-between items-center mt-3">
-                                <p className="text-[10px] text-espresso/30 italic">Tip: Highlight your most significant impact.</p>
-                                <p className="text-[10px] font-black text-espresso/40 uppercase tracking-widest">{cvData.summary.length} characters encoded</p>
+                                <p className="text-[10px] text-espresso/30 italic">{t('student.cv_builder.summary.tip')}</p>
+                                <p className="text-[10px] font-black text-espresso/40 uppercase tracking-widest">{t('student.cv_builder.summary.chars_count', { count: cvData.summary.length })}</p>
                             </div>
                         </div>
                     </SectionDetails>
 
                     {/* Certifications - Verified */}
                     <SectionDetails
-                        title="Verified Intelligence"
+                        title={t('student.cv_builder.sections.certs')}
                         icon="verified"
                         isOpen={activeSection === 'certs'}
                         onToggle={(open) => setActiveSection(open ? 'certs' : null)}
@@ -390,7 +392,7 @@ export function CVBuilder() {
                             <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/5 group-hover/certs:bg-espresso/20 transition-colors"></div>
                             <div className="flex items-center gap-3 mb-6">
                                 <span className="material-symbols-outlined text-espresso/40 text-[24px]">workspace_premium</span>
-                                <h4 className="text-[10px] font-black text-espresso dark:text-white uppercase tracking-[0.2em]">Usafi Strategic Credentials</h4>
+                                <h4 className="text-[10px] font-black text-espresso dark:text-white uppercase tracking-[0.2em]">{t('student.cv_builder.certs.subtitle')}</h4>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {earnedCertificates.length > 0 ? earnedCertificates.map(cert => (
@@ -407,7 +409,7 @@ export function CVBuilder() {
                                 )) : (
                                     <div className="col-span-full py-10 flex flex-col items-center justify-center text-espresso/30 opacity-60">
                                         <span className="material-symbols-outlined text-5xl mb-2">history_edu</span>
-                                        <p className="text-sm font-serif italic">Awaiting certification milestones...</p>
+                                        <p className="text-sm font-serif italic">{t('student.cv_builder.certs.awaiting')}</p>
                                     </div>
                                 )}
                             </div>
@@ -416,13 +418,13 @@ export function CVBuilder() {
 
                     {/* Skills */}
                     <SectionDetails
-                        title="Operational Capabilities"
+                        title={t('student.cv_builder.sections.skills')}
                         icon="construction"
                         isOpen={activeSection === 'skills'}
                         onToggle={(open) => setActiveSection(open ? 'skills' : null)}
                     >
                         <div className="pt-4">
-                            <p className="text-[10px] font-black uppercase text-espresso/40 dark:text-white/40 tracking-widest mb-4">Tactical Skill Set</p>
+                            <p className="text-[10px] font-black uppercase text-espresso/40 dark:text-white/40 tracking-widest mb-4">{t('student.cv_builder.skills.label')}</p>
                             <div className="flex flex-wrap gap-3 mb-6">
                                 {cvData.skills.other?.map((skill, idx) => (
                                     <span key={idx} className="px-5 py-2.5 rounded-full bg-espresso text-white text-[10px] font-black uppercase tracking-widest flex items-center gap-3 shadow-lg animate-fade-in group/skill hover:-translate-y-1 transition-all">
@@ -433,13 +435,13 @@ export function CVBuilder() {
                                     </span>
                                 ))}
                                 {cvData.skills.other?.length === 0 && (
-                                    <p className="text-xs text-espresso/30 font-medium italic">Define your operational edge...</p>
+                                    <p className="text-xs text-espresso/30 font-medium italic">{t('student.cv_builder.skills.empty')}</p>
                                 )}
                             </div>
                             <div className="flex gap-4 group/input">
                                 <input
                                     className="flex-1 rounded-2xl border border-espresso/10 bg-white/40 dark:bg-black/20 h-14 px-6 text-sm font-bold text-espresso dark:text-white placeholder:text-espresso/20 focus:outline-none focus:ring-2 focus:ring-espresso transition-all shadow-sm"
-                                    placeholder="Add capability (e.g. Precision Extraction)"
+                                    placeholder={t('student.cv_builder.skills.placeholder')}
                                     onKeyDown={(e) => { if (e.key === 'Enter') { addSkill('other', e.target.value); e.target.value = ''; } }}
                                 />
                                 <button
@@ -454,7 +456,7 @@ export function CVBuilder() {
 
                     {/* Education - Dynamic List */}
                     <SectionDetails
-                        title="Academic Foundation"
+                        title={t('student.cv_builder.sections.education')}
                         icon="history_edu"
                         isOpen={activeSection === 'education'}
                         onToggle={(open) => setActiveSection(open ? 'education' : null)}
@@ -469,9 +471,9 @@ export function CVBuilder() {
                                         <span className="material-symbols-outlined text-[20px]">delete_sweep</span>
                                     </button>
                                     <div className="grid gap-6">
-                                        <Input label="Institution" placeholder="e.g. University of Coffee Arts" value={edu.school} onChange={(e) => updateEducation(idx, 'school', e.target.value)} />
-                                        <Input label="Credential" placeholder="e.g. Master in Espresso Theory" value={edu.degree} onChange={(e) => updateEducation(idx, 'degree', e.target.value)} />
-                                        <Input label="Timeline" placeholder="e.g. 2020 - 2024" value={edu.year} onChange={(e) => updateEducation(idx, 'year', e.target.value)} />
+                                        <Input label={t('student.cv_builder.education.institution')} placeholder="e.g. University of Coffee Arts" value={edu.school} onChange={(e) => updateEducation(idx, 'school', e.target.value)} />
+                                        <Input label={t('student.cv_builder.education.credential')} placeholder="e.g. Master in Espresso Theory" value={edu.degree} onChange={(e) => updateEducation(idx, 'degree', e.target.value)} />
+                                        <Input label={t('student.cv_builder.education.timeline')} placeholder="e.g. 2020 - 2024" value={edu.year} onChange={(e) => updateEducation(idx, 'year', e.target.value)} />
                                     </div>
                                 </div>
                             ))}
@@ -480,14 +482,14 @@ export function CVBuilder() {
                                 className="w-full py-10 rounded-3xl border-2 border-dashed border-espresso/10 text-espresso/40 hover:bg-white/40 hover:border-espresso/30 hover:text-espresso transition-all flex flex-col items-center justify-center gap-3 transition-all"
                             >
                                 <span className="material-symbols-outlined text-4xl">add_school</span>
-                                <span className="text-[10px] font-black uppercase tracking-widest">Append Education</span>
+                                <span className="text-[10px] font-black uppercase tracking-widest">{t('student.cv_builder.education.append')}</span>
                             </button>
                         </div>
                     </SectionDetails>
 
                     {/* Experience - Dynamic List */}
                     <SectionDetails
-                        title="Professional History"
+                        title={t('student.cv_builder.sections.experience')}
                         icon="work_history"
                         isOpen={activeSection === 'experience'}
                         onToggle={(open) => setActiveSection(open ? 'experience' : null)}
@@ -503,18 +505,18 @@ export function CVBuilder() {
                                     </button>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                         <div className="space-y-6">
-                                            <Input label="Strategic Role" placeholder="e.g. Senior Barista Operator" value={exp.title} onChange={(e) => updateExperience(idx, 'title', e.target.value)} />
-                                            <Input label="Organization" placeholder="e.g. Global Bean Collective" value={exp.company} onChange={(e) => updateExperience(idx, 'company', e.target.value)} />
+                                            <Input label={t('student.cv_builder.experience.role')} placeholder="e.g. Senior Barista Operator" value={exp.title} onChange={(e) => updateExperience(idx, 'title', e.target.value)} />
+                                            <Input label={t('student.cv_builder.experience.organization')} placeholder="e.g. Global Bean Collective" value={exp.company} onChange={(e) => updateExperience(idx, 'company', e.target.value)} />
                                             <div className="grid grid-cols-2 gap-4">
-                                                <Input type="month" label="Activation" value={exp.startDate} onChange={(e) => updateExperience(idx, 'startDate', e.target.value)} />
-                                                <Input type="month" label="Termination" value={exp.endDate} onChange={(e) => updateExperience(idx, 'endDate', e.target.value)} />
+                                                <Input type="month" label={t('student.cv_builder.experience.activation')} value={exp.startDate} onChange={(e) => updateExperience(idx, 'startDate', e.target.value)} />
+                                                <Input type="month" label={t('student.cv_builder.experience.termination')} value={exp.endDate} onChange={(e) => updateExperience(idx, 'endDate', e.target.value)} />
                                             </div>
                                         </div>
                                         <div className="space-y-2">
-                                            <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest leading-normal pb-1.5">Operational Responsibilities</p>
+                                            <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest leading-normal pb-1.5">{t('student.cv_builder.experience.responsibilities')}</p>
                                             <textarea
                                                 className="w-full rounded-2xl border border-espresso/10 bg-black/5 dark:bg-black/40 p-6 text-sm font-medium h-[180px] resize-none focus:outline-none focus:ring-2 focus:ring-espresso transition-all placeholder:text-espresso/20"
-                                                placeholder="Detail your primary mission objectives..."
+                                                placeholder={t('student.cv_builder.experience.placeholder')}
                                                 value={exp.description}
                                                 onChange={(e) => updateExperience(idx, 'description', e.target.value)}
                                             />
@@ -527,7 +529,7 @@ export function CVBuilder() {
                                 className="w-full py-12 rounded-[2.5rem] border-2 border-dashed border-espresso/10 text-espresso/40 hover:bg-white/40 hover:border-espresso/30 hover:text-espresso transition-all flex flex-col items-center justify-center gap-4"
                             >
                                 <span className="material-symbols-outlined text-5xl">assignment_add</span>
-                                <span className="text-[10px] font-black uppercase tracking-widest">Append Professional Experience</span>
+                                <span className="text-[10px] font-black uppercase tracking-widest">{t('student.cv_builder.experience.append')}</span>
                             </button>
                         </div>
                     </SectionDetails>
@@ -540,7 +542,7 @@ export function CVBuilder() {
                         {saveSuccess ? (
                             <button disabled className="flex-1 h-16 flex items-center justify-center gap-3 rounded-[1.25rem] border-2 border-green-600/50 text-green-600 font-black text-xs uppercase tracking-[0.2em] bg-green-50/50 backdrop-blur-sm shadow-inner transition-all">
                                 <span className="material-symbols-outlined text-[20px] animate-pulse">verified_user</span>
-                                State Synchronized
+                                {t('student.cv_builder.footer.synced')}
                             </button>
                         ) : (
                             <button
@@ -549,7 +551,7 @@ export function CVBuilder() {
                                 className="flex-1 h-16 flex items-center justify-center gap-3 rounded-[1.25rem] border-2 border-espresso/20 text-espresso/60 font-black text-xs uppercase tracking-[0.2em] hover:bg-white/40 hover:border-espresso/40 transition-all active:scale-95 shadow-lg"
                             >
                                 {saving ? <span className="material-symbols-outlined animate-spin text-[20px]">sync</span> : <span className="material-symbols-outlined text-[20px]">save_as</span>}
-                                {saving ? "Synchronizing..." : "Synchronize State"}
+                                {saving ? t('student.cv_builder.footer.synchronizing') : t('student.cv_builder.footer.sync_state')}
                             </button>
                         )}
                         <button
@@ -558,7 +560,7 @@ export function CVBuilder() {
                             className="flex-[1.5] h-16 flex items-center justify-center gap-3 rounded-[1.25rem] bg-espresso text-white font-black text-xs uppercase tracking-[0.2em] shadow-2xl hover:shadow-espresso/40 hover:-translate-y-1 transition-all active:scale-95 group"
                         >
                             {isPrinting ? <span className="material-symbols-outlined animate-spin text-[20px]">sync</span> : <span className="material-symbols-outlined text-[20px] group-hover:translate-y-1 transition-transform">picture_as_pdf</span>}
-                            {isPrinting ? "Compiling Assets..." : "Execute Print Protocol"}
+                            {isPrinting ? t('student.cv_builder.footer.compiling') : t('student.cv_builder.footer.execute_print')}
                         </button>
                     </div>
                 </div>
@@ -636,6 +638,7 @@ function calculateCompleteness(data) {
 
 // --- Print Component ---
 const CVPrintView = React.forwardRef(({ data, certificates }, ref) => {
+    const { t } = useTranslation();
     return (
         <div ref={ref} className="w-[210mm] min-h-[297mm] bg-white text-[#1c1916] font-sans p-16 print:p-0">
             <style>{`
@@ -671,7 +674,7 @@ const CVPrintView = React.forwardRef(({ data, certificates }, ref) => {
                     {/* Summary */}
                     {data.summary && (
                         <div className="relative pl-6 border-l border-espresso/10">
-                            <h3 className="text-espresso font-black uppercase tracking-[0.3em] text-[10px] mb-4">Strategic Narrative</h3>
+                            <h3 className="text-espresso font-black uppercase tracking-[0.3em] text-[10px] mb-4">{t('student.cv_builder.print.narrative')}</h3>
                             <p className="text-[#1c1916]/80 text-sm leading-relaxed font-medium">{data.summary}</p>
                         </div>
                     )}
@@ -681,7 +684,7 @@ const CVPrintView = React.forwardRef(({ data, certificates }, ref) => {
                         <div>
                             <div className="flex items-center gap-3 mb-6">
                                 <span className="w-8 h-px bg-espresso/20"></span>
-                                <h3 className="text-espresso font-black uppercase tracking-[0.3em] text-[10px]">Professional Milestone History</h3>
+                                <h3 className="text-espresso font-black uppercase tracking-[0.3em] text-[10px]">{t('student.cv_builder.print.history')}</h3>
                             </div>
                             <div className="space-y-8">
                                 {data.experience.map((exp) => (
@@ -704,7 +707,7 @@ const CVPrintView = React.forwardRef(({ data, certificates }, ref) => {
                         <div>
                             <div className="flex items-center gap-3 mb-6">
                                 <span className="w-8 h-px bg-espresso/20"></span>
-                                <h3 className="text-espresso font-black uppercase tracking-[0.3em] text-[10px]">Academic Foundation</h3>
+                                <h3 className="text-espresso font-black uppercase tracking-[0.3em] text-[10px]">{t('student.cv_builder.sections.education')}</h3>
                             </div>
                             <div className="grid grid-cols-1 gap-6">
                                 {data.education.map((edu) => (
@@ -728,17 +731,17 @@ const CVPrintView = React.forwardRef(({ data, certificates }, ref) => {
                     {/* Certifications (Usafi) */}
                     {certificates.filter(c => data.selectedCertificates.includes(c.id)).length > 0 && (
                         <div>
-                            <h3 className="text-espresso font-black uppercase tracking-[0.3em] text-[10px] mb-6">Verified Credentials</h3>
+                            <h3 className="text-espresso font-black uppercase tracking-[0.3em] text-[10px] mb-6">{t('student.cv_builder.print.credentials')}</h3>
                             <div className="space-y-4">
                                 {certificates.filter(c => data.selectedCertificates.includes(c.id)).map(cert => (
                                     <div key={cert.id} className="bg-espresso/[0.03] p-6 rounded-2xl border border-espresso/5 relative overflow-hidden group">
                                         <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/20"></div>
                                         <div className="flex items-center gap-2 mb-2">
                                             <span className="material-symbols-outlined text-espresso text-[16px]">verified</span>
-                                            <span className="text-[9px] font-black text-espresso uppercase tracking-[0.2em]">Usafi Strategist</span>
+                                            <span className="text-[9px] font-black text-espresso uppercase tracking-[0.2em]">{t('student.cv_builder.print.strategist')}</span>
                                         </div>
                                         <p className="font-serif font-bold text-sm leading-tight text-espresso">{cert.title}</p>
-                                        <p className="text-[9px] font-bold text-[#1c1916]/40 mt-2 uppercase tracking-widest">Authenticated {cert.date}</p>
+                                        <p className="text-[9px] font-bold text-[#1c1916]/40 mt-2 uppercase tracking-widest">{t('student.cv_builder.print.authenticated')} {cert.date}</p>
                                     </div>
                                 ))}
                             </div>
@@ -748,7 +751,7 @@ const CVPrintView = React.forwardRef(({ data, certificates }, ref) => {
                     {/* Skills */}
                     {(data.skills.other?.length > 0) && (
                         <div>
-                            <h3 className="text-espresso font-black uppercase tracking-[0.3em] text-[10px] mb-6">Core Capabilities</h3>
+                            <h3 className="text-espresso font-black uppercase tracking-[0.3em] text-[10px] mb-6">{t('student.cv_builder.print.capabilities')}</h3>
                             <div className="flex flex-wrap gap-2">
                                 {data.skills.other.map((skill, i) => (
                                     <span key={i} className="px-4 py-2 bg-gray-50 text-espresso text-[10px] font-black uppercase tracking-widest rounded-xl border border-espresso/5">{skill}</span>
@@ -763,8 +766,8 @@ const CVPrintView = React.forwardRef(({ data, certificates }, ref) => {
 
             {/* Footer */}
             <div className="mt-20 pt-10 border-t border-espresso/10 flex justify-between items-center text-[#1c1916]/30">
-                <p className="text-[10px] font-black uppercase tracking-[0.4em]">Usafi Barista Training Center • Career Division</p>
-                <p className="text-[10px] font-bold italic">Authenticated Digital Document</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.4em]">{t('student.cv_builder.print.footer_text')}</p>
+                <p className="text-[10px] font-bold italic">{t('student.cv_builder.print.digital_doc')}</p>
             </div>
         </div>
     );

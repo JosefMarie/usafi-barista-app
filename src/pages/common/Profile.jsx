@@ -5,8 +5,10 @@ import { storage, db } from '../../lib/firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { doc, updateDoc } from 'firebase/firestore';
 import { ChangePasswordModal } from '../../components/auth/ChangePasswordModal';
+import { useTranslation } from 'react-i18next';
 
 export function Profile() {
+    const { t } = useTranslation();
     const { user, logout } = useAuth();
     const navigate = useNavigate();
     const fileInputRef = useRef(null);
@@ -46,7 +48,7 @@ export function Profile() {
             window.location.reload();
         } catch (error) {
             console.error("Error updating profile:", error);
-            alert("Failed to update profile information.");
+            alert(t('profile.fail_update'));
         } finally {
             setSaving(false);
         }
@@ -72,7 +74,7 @@ export function Profile() {
             window.location.reload();
         } catch (error) {
             console.error("Error uploading avatar:", error);
-            alert("Failed to update profile picture.");
+            alert(t('profile.fail_avatar'));
         } finally {
             setUploading(false);
         }
@@ -92,8 +94,8 @@ export function Profile() {
     const userId = user?.uid?.substring(0, 8).toUpperCase() || 'UNKNOWN';
 
     // Role based labels
-    const roleLabel = user?.role?.charAt(0).toUpperCase() + user?.role?.slice(1) || 'User';
-    const idLabel = user?.role === 'student' ? 'Student ID' : 'Staff ID';
+    const roleKey = user?.role || 'user';
+    const idLabel = user?.role === 'student' ? t('profile.id_student') : t('profile.id_staff');
 
     return (
         <div className="flex-1 flex flex-col h-full overflow-y-auto w-full max-w-5xl mx-auto pb-12 animate-fade-in px-4 custom-scrollbar">
@@ -101,10 +103,10 @@ export function Profile() {
             <div className="flex items-center justify-between mb-10">
                 <div>
                     <h2 className="text-3xl font-serif font-bold text-espresso dark:text-white leading-tight">
-                        {roleLabel} Profile
+                        {t('profile.title')}
                     </h2>
                     <p className="text-espresso/60 dark:text-white/60 text-sm font-medium uppercase tracking-wide mt-1">
-                        Securely manage your personal account & settings
+                        {t('profile.subtitle')}
                     </p>
                 </div>
             </div>
@@ -143,7 +145,7 @@ export function Profile() {
                             {displayName}
                         </h1>
                         <p className="text-espresso/60 font-black text-[10px] tracking-[0.2em] uppercase mb-6 bg-white/30 px-4 py-1.5 rounded-full border border-white/20">
-                            {idLabel}: {userId}
+                            {idLabel.replace('{{id}}', userId)}
                         </p>
 
                         <div className="flex flex-col gap-3 w-full">
@@ -152,7 +154,7 @@ export function Profile() {
                                 className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-white/40 text-red-600 border border-red-200/50 hover:bg-red-50 hover:border-red-300 transition-all font-bold text-xs uppercase tracking-widest shadow-sm active:scale-95"
                             >
                                 <span className="material-symbols-outlined text-[18px]">logout</span>
-                                Sign Out Account
+                                {t('profile.sign_out')}
                             </button>
                         </div>
                     </div>
@@ -166,31 +168,31 @@ export function Profile() {
                         <div className="px-8 py-5 border-b border-espresso/10 flex items-center justify-between bg-white/20">
                             <div className="flex items-center gap-3">
                                 <span className="material-symbols-outlined text-espresso/60">badge</span>
-                                <h3 className="font-bold text-espresso dark:text-white uppercase tracking-widest text-xs">Identity Profile</h3>
+                                <h3 className="font-bold text-espresso dark:text-white uppercase tracking-widest text-xs">{t('profile.identity')}</h3>
                             </div>
                             <button
                                 onClick={handleEditClick}
                                 className="h-10 px-6 rounded-xl bg-espresso text-white text-[10px] font-black uppercase tracking-widest hover:shadow-lg hover:-translate-y-0.5 transition-all active:scale-95"
                             >
-                                Edit Info
+                                {t('profile.edit_info')}
                             </button>
                         </div>
                         <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
                             <div className="space-y-1.5">
-                                <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">Full Name</p>
+                                <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">{t('profile.full_name')}</p>
                                 <p className="text-espresso dark:text-white font-bold text-lg">{displayName}</p>
                             </div>
                             <div className="space-y-1.5">
-                                <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">Email Address</p>
+                                <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">{t('profile.email')}</p>
                                 <p className="text-espresso dark:text-white font-bold text-lg">{user?.email}</p>
                             </div>
                             <div className="space-y-1.5">
-                                <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">Phone Number</p>
-                                <p className="text-espresso dark:text-white font-bold text-lg">{user?.phone || 'Not provided'}</p>
+                                <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">{t('profile.phone')}</p>
+                                <p className="text-espresso dark:text-white font-bold text-lg">{user?.phone || t('profile.not_provided')}</p>
                             </div>
                             <div className="space-y-1.5">
-                                <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">Live Location</p>
-                                <p className="text-espresso dark:text-white font-bold text-lg">{user?.location || 'Not set'}</p>
+                                <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">{t('profile.location')}</p>
+                                <p className="text-espresso dark:text-white font-bold text-lg">{user?.location || t('profile.not_set')}</p>
                             </div>
                         </div>
                     </div>
@@ -201,7 +203,7 @@ export function Profile() {
                         <div className="px-8 py-5 border-b border-espresso/10 bg-white/20">
                             <div className="flex items-center gap-3">
                                 <span className="material-symbols-outlined text-espresso/60">settings</span>
-                                <h3 className="font-bold text-espresso dark:text-white uppercase tracking-widest text-xs">Security & Utility</h3>
+                                <h3 className="font-bold text-espresso dark:text-white uppercase tracking-widest text-xs">{t('profile.security')}</h3>
                             </div>
                         </div>
                         <div className="divide-y divide-espresso/10 relative z-10">
@@ -214,8 +216,8 @@ export function Profile() {
                                         <span className="material-symbols-outlined">lock</span>
                                     </div>
                                     <div>
-                                        <p className="font-black text-espresso dark:text-white text-[11px] uppercase tracking-widest leading-none mb-1">Update Password</p>
-                                        <p className="text-espresso/50 dark:text-white/50 text-xs font-medium">Reset your secure access key</p>
+                                        <p className="font-black text-espresso dark:text-white text-[11px] uppercase tracking-widest leading-none mb-1">{t('profile.update_password')}</p>
+                                        <p className="text-espresso/50 dark:text-white/50 text-xs font-medium">{t('profile.update_password_desc')}</p>
                                     </div>
                                 </div>
                                 <span className="material-symbols-outlined text-espresso/30 group-hover/item:translate-x-2 transition-transform">arrow_forward</span>
@@ -230,8 +232,8 @@ export function Profile() {
                                         <span className="material-symbols-outlined font-bold">shield_person</span>
                                     </div>
                                     <div>
-                                        <p className="font-black text-espresso dark:text-white text-[11px] uppercase tracking-widest leading-none mb-1">Privacy Permissions</p>
-                                        <p className="text-espresso/50 dark:text-white/50 text-xs font-medium">Control your digital visibility</p>
+                                        <p className="font-black text-espresso dark:text-white text-[11px] uppercase tracking-widest leading-none mb-1">{t('profile.privacy')}</p>
+                                        <p className="text-espresso/50 dark:text-white/50 text-xs font-medium">{t('profile.digital_vis')}</p>
                                     </div>
                                 </div>
                                 <span className="material-symbols-outlined text-espresso/30 group-hover/item:translate-x-2 transition-transform">arrow_forward</span>
@@ -243,8 +245,8 @@ export function Profile() {
                                         <span className="material-symbols-outlined font-bold">notifications_active</span>
                                     </div>
                                     <div>
-                                        <p className="font-black text-espresso dark:text-white text-[11px] uppercase tracking-widest leading-none mb-1">Global Alerts</p>
-                                        <p className="text-espresso/50 dark:text-white/50 text-xs font-medium">Set your communication flow</p>
+                                        <p className="font-black text-espresso dark:text-white text-[11px] uppercase tracking-widest leading-none mb-1">{t('profile.alerts')}</p>
+                                        <p className="text-espresso/50 dark:text-white/50 text-xs font-medium">{t('profile.comm_flow')}</p>
                                     </div>
                                 </div>
                                 <span className="material-symbols-outlined text-espresso/30 group-hover/item:translate-x-2 transition-transform">arrow_forward</span>
@@ -259,32 +261,32 @@ export function Profile() {
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setShowEditModal(false)}>
                     <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl p-6 w-full max-w-md shadow-xl" onClick={e => e.stopPropagation()}>
                         <h3 className="text-xl font-bold text-espresso dark:text-white mb-6">
-                            Edit Personal Information
+                            {t('profile.edit_title')}
                         </h3>
 
                         <div className="space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-espresso dark:text-white mb-2">
-                                    Phone Number
+                                    {t('profile.phone')}
                                 </label>
                                 <input
                                     type="tel"
                                     value={editData.phone}
                                     onChange={e => setEditData({ ...editData, phone: e.target.value })}
-                                    placeholder="e.g., +250 712 345 678"
+                                    placeholder="+250 712 345 678"
                                     className="w-full px-4 py-3 rounded-lg border border-black/10 dark:border-white/10 bg-transparent text-espresso dark:text-white placeholder:text-espresso/40 dark:placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary"
                                 />
                             </div>
 
                             <div>
                                 <label className="block text-sm font-medium text-espresso dark:text-white mb-2">
-                                    Location
+                                    {t('profile.location')}
                                 </label>
                                 <input
                                     type="text"
                                     value={editData.location}
                                     onChange={e => setEditData({ ...editData, location: e.target.value })}
-                                    placeholder="e.g., Kigali, Rwanda"
+                                    placeholder="Kigali, Rwanda"
                                     className="w-full px-4 py-3 rounded-lg border border-black/10 dark:border-white/10 bg-transparent text-espresso dark:text-white placeholder:text-espresso/40 dark:placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary"
                                 />
                             </div>
@@ -296,14 +298,14 @@ export function Profile() {
                                 onClick={() => setShowEditModal(false)}
                                 className="flex-1 py-3 rounded-full border border-black/10 dark:border-white/10 text-espresso dark:text-white font-medium hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
                             >
-                                Cancel
+                                {t('profile.cancel')}
                             </button>
                             <button
                                 onClick={handleSaveInfo}
                                 disabled={saving}
                                 className="flex-1 py-3 rounded-full bg-primary text-white font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
                             >
-                                {saving ? 'Saving...' : 'Save Changes'}
+                                {saving ? t('profile.saving') : t('profile.save')}
                             </button>
                         </div>
                     </div>

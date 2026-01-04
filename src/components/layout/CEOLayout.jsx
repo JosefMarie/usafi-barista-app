@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate, Navigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { cn } from '../../lib/utils';
@@ -7,6 +8,7 @@ import { PortalTopBar } from './PortalTopBar';
 import { useAuth } from '../../context/AuthContext';
 
 export function CEOLayout() {
+    const { t } = useTranslation();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [unreadCount, setUnreadCount] = useState(0);
     const location = useLocation();
@@ -48,11 +50,11 @@ export function CEOLayout() {
     }
 
     const navItems = [
-        { icon: 'monitoring', label: 'Executive Dashboard', path: '/ceo/dashboard' },
-        { icon: 'badge', label: 'Staff Management', path: '/ceo/staff' },
-        { icon: 'analytics', label: 'Revenue Report', path: '/ceo/revenue' },
-        { icon: 'settings', label: 'Global Settings', path: '/ceo/settings' },
-        { icon: 'person', label: 'My Profile', path: '/ceo/profile' },
+        { icon: 'monitoring', label: t('ceo.nav.executive_dashboard'), path: '/ceo/dashboard' },
+        { icon: 'badge', label: t('ceo.nav.staff_management'), path: '/ceo/staff' },
+        { icon: 'analytics', label: t('ceo.nav.revenue_report'), path: '/ceo/revenue' },
+        { icon: 'settings', label: t('ceo.nav.global_settings'), path: '/ceo/settings' },
+        { icon: 'person', label: t('ceo.nav.my_profile'), path: '/ceo/profile' },
     ];
 
     return (
@@ -118,7 +120,7 @@ export function CEOLayout() {
                         className="flex items-center gap-4 w-full px-4 py-3.5 rounded-xl text-[11px] font-black uppercase tracking-widest text-[#F5DEB3] hover:bg-red-900/40 hover:text-red-400 transition-all relative overflow-hidden shadow-sm border border-transparent hover:border-red-500/20"
                     >
                         <span className="material-symbols-outlined text-[20px]">logout</span>
-                        Sign Out
+                        {t('ceo.nav.sign_out')}
                     </button>
                 </div>
             </aside>
@@ -129,7 +131,7 @@ export function CEOLayout() {
                     user={user}
                     unreadNotifications={unreadCount}
                     onLogout={handleLogout}
-                    roleLabel="CHIEF EXECUTIVE"
+                    roleLabel={t('ceo.nav.chief_executive')}
                     themeColor="text-[#D4Af37]"
                     onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 />
@@ -142,7 +144,7 @@ export function CEOLayout() {
                                 <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#D4Af37] to-[#B8860B] flex items-center justify-center text-[#4B3832]">
                                     <span className="material-symbols-outlined text-2xl">diamond</span>
                                 </div>
-                                <span className="font-serif text-lg font-bold text-[#F5DEB3]">Executive Menu</span>
+                                <span className="font-serif text-lg font-bold text-[#F5DEB3]">{t('ceo.nav.executive_menu')}</span>
                             </div>
                             <button onClick={() => setIsMobileMenuOpen(false)} className="h-12 w-12 flex items-center justify-center rounded-2xl bg-white/5 text-[#D4Af37] hover:bg-white/10 transition-colors">
                                 <span className="material-symbols-outlined">close</span>
@@ -159,7 +161,7 @@ export function CEOLayout() {
                                             {user?.name || 'CEO'}
                                         </p>
                                         <p className="text-sm text-[#D4Af37]">
-                                            Chief Executive Officer
+                                            {t('ceo.nav.chief_executive_officer')}
                                         </p>
                                     </div>
                                 </div>
@@ -186,7 +188,7 @@ export function CEOLayout() {
                                 className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-red-400 hover:bg-red-900/20 transition-colors mt-2"
                             >
                                 <span className="material-symbols-outlined text-[24px]">logout</span>
-                                Sign Out
+                                {t('ceo.nav.sign_out')}
                             </button>
                         </nav>
                     </div>

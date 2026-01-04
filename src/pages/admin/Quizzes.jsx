@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, getDocs, collectionGroup, where, orderBy } from 'firebase/firestore';
+import { collection, query, getDocs, collectionGroup, where, orderBy, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { cn } from '../../lib/utils';
 
@@ -20,6 +20,25 @@ export function Quizzes() {
     const [selectedModule, setSelectedModule] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
 
+    // Quiz Schema State
+    const [allQuizzes, setAllQuizzes] = useState([]);
+    const [selectedQuizId, setSelectedQuizId] = useState(null);
+    const [quizSearch, setQuizSearch] = useState('');
+
+    // Logic Node Modal State
+    const [isNodeModalOpen, setIsNodeModalOpen] = useState(false);
+    const [editingNode, setEditingNode] = useState(null);
+    const [nodeForm, setNodeForm] = useState({
+        type: 'multiple_choice',
+        question: '',
+        options: ['', '', '', ''],
+        correctOption: 0,
+        correctAnswer: true, // for true_false
+        correctAnswerText: '', // for fill_in
+        pairs: [{ key: '', value: '' }, { key: '', value: '' }], // for matching
+        duration: 30
+    });
+
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
@@ -31,25 +50,62 @@ export function Quizzes() {
                     userMap[doc.id] = doc.data().fullName || 'Unknown Student';
                 });
 
-                // 2. Fetch All Modules across all courses
+                // 2. Fetch All Regular Modules across all courses
                 const coursesSnap = await getDocs(collection(db, 'courses'));
                 const modulesList = [];
+                const extractedQuizzes = [];
+
                 for (const courseDoc of coursesSnap.docs) {
                     const modsSnap = await getDocs(collection(db, 'courses', courseDoc.id, 'modules'));
                     modsSnap.docs.forEach(modDoc => {
+                        const data = modDoc.data();
                         modulesList.push({
                             id: modDoc.id,
-                            title: modDoc.data().title,
+                            title: data.title,
                             courseId: courseDoc.id
                         });
+
+                        if (data.quiz && data.quiz.questions && data.quiz.questions.length > 0) {
+                            extractedQuizzes.push({
+                                id: `reg-${modDoc.id}`,
+                                type: 'regular',
+                                title: data.title,
+                                courseId: courseDoc.id,
+                                moduleId: modDoc.id,
+                                questions: data.quiz.questions,
+                                passMark: data.quiz.passMark
+                            });
+                        }
                     });
                 }
                 setModules(modulesList);
 
-                // 3. Fetch All Progress (Quiz Results)
-                // Note: This requires a collectionGroup index for 'progress' in Firebase if using where filters,
-                // but since we want to show all and then filter locally (or via query), 
-                // we'll fetch all progress docs that have a score.
+                // 3. Fetch All Business Chapters
+                const businessCoursesSnap = await getDocs(collection(db, 'business_courses'));
+                for (const courseDoc of businessCoursesSnap.docs) {
+                    const chaptersSnap = await getDocs(collection(db, 'business_courses', courseDoc.id, 'chapters'));
+                    chaptersSnap.docs.forEach(chapDoc => {
+                        const data = chapDoc.data();
+                        if (data.quiz && data.quiz.enabled && data.quiz.questions && data.quiz.questions.length > 0) {
+                            extractedQuizzes.push({
+                                id: `bus-${chapDoc.id}`,
+                                type: 'business',
+                                title: data.title,
+                                courseId: courseDoc.id,
+                                chapterId: chapDoc.id,
+                                questions: data.quiz.questions,
+                                passMark: data.quiz.passMark
+                            });
+                        }
+                    });
+                }
+
+                setAllQuizzes(extractedQuizzes);
+                if (extractedQuizzes.length > 0) {
+                    setSelectedQuizId(extractedQuizzes[0].id);
+                }
+
+                // 4. Fetch All Progress (Quiz Results)
                 const progressSnap = await getDocs(collectionGroup(db, 'progress'));
                 const quizResults = progressSnap.docs
                     .map(doc => {
@@ -91,6 +147,102 @@ export function Quizzes() {
             r.moduleName.toLowerCase().includes(searchQuery.toLowerCase());
         return matchesModule && matchesSearch;
     });
+
+    const activeQuiz = allQuizzes.find(q => q.id === selectedQuizId);
+    const filteredQuizzes = allQuizzes.filter(q =>
+        q.title.toLowerCase().includes(quizSearch.toLowerCase())
+    );
+
+    const getCorrectResponse = (q) => {
+        if (q.type === 'multiple_choice') return q.options[q.correctOption];
+        if (q.type === 'true_false') return q.correctAnswer ? 'True' : 'False';
+        if (q.type === 'fill_in') return q.correctAnswer;
+        if (q.type === 'matching') return q.pairs.map(p => `${p.key} → ${p.value}`).join(', ');
+        return 'N/A';
+    };
+
+    const handleOpenNodeModal = (node = null, idx = null) => {
+        if (node) {
+            setEditingNode({ ...node, index: idx });
+            setNodeForm({
+                type: node.type || 'multiple_choice',
+                question: node.question || node.text || '',
+                options: node.options || ['', '', '', ''],
+                correctOption: node.correctOption || 0,
+                correctAnswer: node.correctAnswer ?? true,
+                correctAnswerText: node.type === 'fill_in' ? node.correctAnswer : '',
+                pairs: node.pairs || [{ key: '', value: '' }, { key: '', value: '' }],
+                duration: node.duration || 30
+            });
+        } else {
+            setEditingNode(null);
+            setNodeForm({
+                type: 'multiple_choice',
+                question: '',
+                options: ['', '', '', ''],
+                correctOption: 0,
+                correctAnswer: true,
+                correctAnswerText: '',
+                pairs: [{ key: '', value: '' }, { key: '', value: '' }],
+                duration: 30
+            });
+        }
+        setIsNodeModalOpen(true);
+    };
+
+    const handleSaveNode = async () => {
+        if (!activeQuiz) return;
+
+        try {
+            setLoading(true);
+            const newNode = {
+                type: nodeForm.type,
+                question: nodeForm.question,
+                duration: nodeForm.duration
+            };
+
+            if (nodeForm.type === 'multiple_choice') {
+                newNode.options = nodeForm.options;
+                newNode.correctOption = nodeForm.correctOption;
+            } else if (nodeForm.type === 'true_false') {
+                newNode.correctAnswer = nodeForm.correctAnswer;
+            } else if (nodeForm.type === 'fill_in') {
+                newNode.correctAnswer = nodeForm.correctAnswerText;
+            } else if (nodeForm.type === 'matching') {
+                newNode.pairs = nodeForm.pairs;
+            }
+
+            let updatedQuestions = [...activeQuiz.questions];
+            if (editingNode) {
+                updatedQuestions[editingNode.index] = newNode;
+            } else {
+                updatedQuestions.push(newNode);
+            }
+
+            // Update Firestore
+            const { type, courseId, moduleId, chapterId } = activeQuiz;
+            if (type === 'regular') {
+                const docRef = doc(db, 'courses', courseId, 'modules', moduleId);
+                await updateDoc(docRef, { 'quiz.questions': updatedQuestions });
+            } else {
+                const docRef = doc(db, 'business_courses', courseId, 'chapters', chapterId);
+                await updateDoc(docRef, { 'quiz.questions': updatedQuestions });
+            }
+
+            // Local state update
+            setAllQuizzes(prev => prev.map(q =>
+                q.id === selectedQuizId ? { ...q, questions: updatedQuestions } : q
+            ));
+
+            setIsNodeModalOpen(false);
+            alert('Logic Node synchronized successfully!');
+        } catch (err) {
+            console.error("Error saving logic node:", err);
+            alert('Failed to synchronize logic node.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     if (loading) return <div className="h-screen flex items-center justify-center"><span className="material-symbols-outlined animate-spin text-4xl text-primary">progress_activity</span></div>;
 
@@ -136,23 +288,44 @@ export function Quizzes() {
                             <div className="flex items-start justify-between relative z-10">
                                 <div className="space-y-4">
                                     <span className="inline-flex items-center bg-white/10 px-4 py-1.5 rounded-full text-[9px] font-black text-white uppercase tracking-[0.3em] backdrop-blur-md border border-white/10">
-                                        Core Certification Schema
+                                        {activeQuiz?.type === 'business' ? 'Business Intelligence Schema' : 'Core Certification Schema'}
                                     </span>
-                                    <h2 className="text-white text-4xl font-serif font-black leading-tight tracking-tight uppercase">Espresso Extraction Logic</h2>
-                                    <p className="text-white/60 text-xs font-medium max-w-md leading-relaxed">Modify universal knowledge nodes. Changes propagate across all curriculum instances utilizing this assessment array.</p>
+                                    <h2 className="text-white text-4xl font-serif font-black leading-tight tracking-tight uppercase">
+                                        {activeQuiz?.title || 'System Initializing...'}
+                                    </h2>
+                                    <p className="text-white/60 text-xs font-medium max-w-md leading-relaxed">
+                                        Modify universal knowledge nodes for this curriculum component. Changes propagate across all active instances.
+                                    </p>
                                 </div>
                                 <div className="w-24 h-24 rounded-[2rem] bg-white/10 border-2 border-white/20 overflow-hidden shadow-2xl backdrop-blur-md flex items-center justify-center">
-                                    <span className="material-symbols-outlined text-white text-4xl opacity-40">psychology</span>
+                                    <span className="material-symbols-outlined text-white text-4xl opacity-40">
+                                        {activeQuiz?.type === 'business' ? 'corporate_fare' : 'psychology'}
+                                    </span>
                                 </div>
                             </div>
                             <div className="mt-10 pt-6 border-t border-white/10 flex items-center gap-6">
                                 <div className="flex items-center gap-2 text-[9px] font-black text-white/40 uppercase tracking-widest">
                                     <span className="material-symbols-outlined text-[18px]">verified</span>
-                                    Protocol Alpha Active
+                                    {activeQuiz?.type?.toUpperCase()} PROTOCOL ACTIVE
                                 </div>
                                 <div className="flex items-center gap-2 text-[9px] font-black text-white/40 uppercase tracking-widest">
                                     <span className="material-symbols-outlined text-[18px]">account_tree</span>
-                                    {questions.length} Logic Nodes
+                                    {activeQuiz?.questions?.length || 0} Logic Nodes
+                                </div>
+                                <div className="flex-1"></div>
+                                <div className="relative">
+                                    <select
+                                        value={selectedQuizId}
+                                        onChange={(e) => setSelectedQuizId(e.target.value)}
+                                        className="bg-white/10 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl border border-white/20 outline-none appearance-none pr-10 cursor-pointer"
+                                    >
+                                        {allQuizzes.map(q => (
+                                            <option key={q.id} value={q.id} className="bg-espresso text-white">
+                                                {q.title.toUpperCase()}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none">expand_more</span>
                                 </div>
                             </div>
                         </div>
@@ -167,6 +340,8 @@ export function Quizzes() {
                                     className="w-full h-16 pl-16 pr-8 bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-[1.5rem] text-espresso dark:text-white font-serif text-lg focus:outline-none focus:ring-2 focus:ring-espresso transition-all placeholder:text-espresso/20 placeholder:font-black placeholder:uppercase placeholder:tracking-[0.4em] placeholder:text-[10px]"
                                     placeholder="Locate logic nodes..."
                                     type="text"
+                                    value={quizSearch}
+                                    onChange={(e) => setQuizSearch(e.target.value)}
                                 />
                             </div>
 
@@ -177,26 +352,43 @@ export function Quizzes() {
                                         Logic Array Preview
                                     </h3>
                                 </div>
-                                {questions.map((q, idx) => (
-                                    <div key={q.id} className="group bg-white/40 dark:bg-black/20 rounded-[2rem] p-8 border border-espresso/10 hover:shadow-xl hover:-translate-y-1 transition-all relative overflow-hidden">
+                                {activeQuiz?.questions?.map((q, idx) => (
+                                    <div key={idx} className="group bg-white/40 dark:bg-black/20 rounded-[2rem] p-8 border border-espresso/10 hover:shadow-xl hover:-translate-y-1 transition-all relative overflow-hidden">
                                         <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover:bg-espresso transition-colors"></div>
                                         <div className="flex gap-8">
                                             <div className="w-12 h-12 shrink-0 rounded-2xl bg-espresso/5 flex items-center justify-center text-espresso font-black font-serif text-xl border border-espresso/5 group-hover:bg-espresso group-hover:text-white transition-all shadow-inner">
                                                 {String(idx + 1).padStart(2, '0')}
                                             </div>
                                             <div className="flex-1 space-y-4">
-                                                <p className="text-xl font-serif font-black text-espresso dark:text-white leading-tight tracking-tight uppercase group-hover:text-espresso/80 transition-colors">{q.text}</p>
+                                                <div className="flex justify-between items-start">
+                                                    <p className="text-xl font-serif font-black text-espresso dark:text-white leading-tight tracking-tight uppercase group-hover:text-espresso/80 transition-colors">
+                                                        {q.question || q.text}
+                                                    </p>
+                                                    <div className="flex gap-2">
+                                                        <button
+                                                            onClick={() => handleOpenNodeModal(q, idx)}
+                                                            className="p-2 text-espresso/40 hover:text-espresso transition-colors"
+                                                        >
+                                                            <span className="material-symbols-outlined text-[20px]">edit</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
                                                 <div className="flex items-center gap-3">
                                                     <span className="px-3 py-1 bg-green-50 text-green-700 text-[9px] font-black uppercase tracking-widest rounded-lg border border-green-100 flex items-center gap-2">
                                                         <span className="material-symbols-outlined text-[14px]">task_alt</span>
-                                                        Correct Response: {q.answer}
+                                                        Correct Response: {getCorrectResponse(q)}
                                                     </span>
-                                                    <span className="text-[9px] font-black text-espresso/20 uppercase tracking-widest italic font-medium">Node ID: {q.id}</span>
+                                                    <span className="text-[9px] font-black text-espresso/20 uppercase tracking-widest italic font-medium">Type: {q.type?.replace('_', ' ')}</span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 ))}
+                                {(!activeQuiz || activeQuiz.questions.length === 0) && (
+                                    <div className="text-center py-20 bg-white/20 rounded-[2rem] border-2 border-dashed border-espresso/10">
+                                        <p className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.4em]">No logic nodes available for this schema</p>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -299,7 +491,10 @@ export function Quizzes() {
             {/* Matrix Expansion Trigger */}
             {activeTab === 'editor' && (
                 <div className="fixed bottom-12 right-12 z-50">
-                    <button className="group flex items-center gap-4 bg-espresso hover:bg-espresso/90 text-white rounded-[2rem] shadow-2xl hover:shadow-espresso/40 transition-all p-2 pr-10 hover:scale-105 active:scale-95">
+                    <button
+                        onClick={() => handleOpenNodeModal()}
+                        className="group flex items-center gap-4 bg-espresso hover:bg-espresso/90 text-white rounded-[2rem] shadow-2xl hover:shadow-espresso/40 transition-all p-2 pr-10 hover:scale-105 active:scale-95"
+                    >
                         <div className="h-16 w-16 rounded-[1.75rem] border-2 border-white/20 flex items-center justify-center bg-white/10 group-hover:rotate-90 transition-transform duration-500">
                             <span className="material-symbols-outlined text-[32px]">add</span>
                         </div>
@@ -308,6 +503,186 @@ export function Quizzes() {
                             <span className="font-serif font-black text-xl uppercase tracking-tight">Logic Node</span>
                         </div>
                     </button>
+                </div>
+            )}
+
+            {/* Logic Node Modal */}
+            {isNodeModalOpen && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-espresso/40 backdrop-blur-md animate-in fade-in duration-300">
+                    <div className="bg-[#F5DEB3] dark:bg-[#1c1916] rounded-[3rem] w-full max-w-2xl border border-espresso/10 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+                        <div className="p-10 border-b border-espresso/10 bg-white/20 dark:bg-black/20">
+                            <h2 className="text-3xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight">
+                                {editingNode ? 'Modify Logic Node' : 'Assemble Logic Node'}
+                            </h2>
+                            <p className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em] mt-2">Relational Knowledge Synthesis Protocol</p>
+                        </div>
+
+                        <div className="flex-1 overflow-y-auto p-10 space-y-8">
+                            <div className="space-y-4">
+                                <label className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em]">Query Designation</label>
+                                <textarea
+                                    className="w-full bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-2xl p-6 text-espresso dark:text-white font-serif text-lg outline-none focus:ring-2 focus:ring-espresso transition-all shadow-inner"
+                                    placeholder="SYNTHESIZE QUERY..."
+                                    rows={3}
+                                    value={nodeForm.question}
+                                    onChange={(e) => setNodeForm({ ...nodeForm, question: e.target.value })}
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-6">
+                                <div className="space-y-4">
+                                    <label className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em]">Query Type</label>
+                                    <select
+                                        className="w-full h-14 bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-2xl px-6 text-[10px] font-black uppercase tracking-widest outline-none focus:ring-2 focus:ring-espresso transition-all"
+                                        value={nodeForm.type}
+                                        onChange={(e) => setNodeForm({ ...nodeForm, type: e.target.value })}
+                                    >
+                                        <option value="multiple_choice">Multiple Choice</option>
+                                        <option value="true_false">True / False</option>
+                                        <option value="fill_in">Fill in Blank</option>
+                                        <option value="matching">Relational Matching</option>
+                                    </select>
+                                </div>
+                                <div className="space-y-4">
+                                    <label className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em]">Time Delta (SEC)</label>
+                                    <input
+                                        type="number"
+                                        className="w-full h-14 bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-2xl px-6 text-center text-espresso dark:text-white font-black outline-none focus:ring-2 focus:ring-espresso transition-all"
+                                        value={nodeForm.duration}
+                                        onChange={(e) => setNodeForm({ ...nodeForm, duration: parseInt(e.target.value) })}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Type Specific Fields */}
+                            {nodeForm.type === 'multiple_choice' && (
+                                <div className="space-y-4">
+                                    <label className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em]">Result Options</label>
+                                    <div className="space-y-3">
+                                        {nodeForm.options.map((opt, idx) => (
+                                            <div key={idx} className="flex gap-4">
+                                                <input
+                                                    type="radio"
+                                                    name="correct"
+                                                    checked={nodeForm.correctOption === idx}
+                                                    onChange={() => setNodeForm({ ...nodeForm, correctOption: idx })}
+                                                    className="w-6 h-6 accent-espresso mt-4"
+                                                />
+                                                <input
+                                                    className="flex-1 bg-white/20 border border-espresso/10 rounded-xl px-4 py-3 text-sm font-medium outline-none focus:border-espresso transition-all"
+                                                    placeholder={`OPTION ${idx + 1}`}
+                                                    value={opt}
+                                                    onChange={(e) => {
+                                                        const newOpts = [...nodeForm.options];
+                                                        newOpts[idx] = e.target.value;
+                                                        setNodeForm({ ...nodeForm, options: newOpts });
+                                                    }}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {nodeForm.type === 'true_false' && (
+                                <div className="grid grid-cols-2 gap-4">
+                                    <button
+                                        onClick={() => setNodeForm({ ...nodeForm, correctAnswer: true })}
+                                        className={cn(
+                                            "h-16 rounded-2xl border-2 text-[10px] font-black uppercase tracking-widest transition-all",
+                                            nodeForm.correctAnswer ? "bg-espresso text-white border-espresso" : "bg-white/20 border-espresso/10 text-espresso/40"
+                                        )}
+                                    >
+                                        True Path
+                                    </button>
+                                    <button
+                                        onClick={() => setNodeForm({ ...nodeForm, correctAnswer: false })}
+                                        className={cn(
+                                            "h-16 rounded-2xl border-2 text-[10px] font-black uppercase tracking-widest transition-all",
+                                            !nodeForm.correctAnswer ? "bg-espresso text-white border-espresso" : "bg-white/20 border-espresso/10 text-espresso/40"
+                                        )}
+                                    >
+                                        False Path
+                                    </button>
+                                </div>
+                            )}
+
+                            {nodeForm.type === 'fill_in' && (
+                                <div className="space-y-4">
+                                    <label className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em]">Validation String</label>
+                                    <input
+                                        className="w-full h-14 bg-white/40 border border-espresso/10 rounded-2xl px-6 text-espresso font-black outline-none"
+                                        placeholder="SPECIFY CORRECT TERMINOLOGY..."
+                                        value={nodeForm.correctAnswerText}
+                                        onChange={(e) => setNodeForm({ ...nodeForm, correctAnswerText: e.target.value })}
+                                    />
+                                </div>
+                            )}
+
+                            {nodeForm.type === 'matching' && (
+                                <div className="space-y-4">
+                                    <label className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em]">Relational Pairs</label>
+                                    <div className="space-y-3">
+                                        {nodeForm.pairs.map((pair, idx) => (
+                                            <div key={idx} className="flex items-center gap-3">
+                                                <input
+                                                    className="flex-1 bg-white/20 border border-espresso/10 rounded-xl px-4 py-3 text-xs font-bold outline-none"
+                                                    placeholder="SIGNAL A"
+                                                    value={pair.key}
+                                                    onChange={(e) => {
+                                                        const newPairs = [...nodeForm.pairs];
+                                                        newPairs[idx].key = e.target.value;
+                                                        setNodeForm({ ...nodeForm, pairs: newPairs });
+                                                    }}
+                                                />
+                                                <span className="material-symbols-outlined text-espresso/20">sync_alt</span>
+                                                <input
+                                                    className="flex-1 bg-white/20 border border-espresso/10 rounded-xl px-4 py-3 text-xs font-bold outline-none"
+                                                    placeholder="SIGNAL B"
+                                                    value={pair.value}
+                                                    onChange={(e) => {
+                                                        const newPairs = [...nodeForm.pairs];
+                                                        newPairs[idx].value = e.target.value;
+                                                        setNodeForm({ ...nodeForm, pairs: newPairs });
+                                                    }}
+                                                />
+                                                <button
+                                                    onClick={() => {
+                                                        const newPairs = nodeForm.pairs.filter((_, i) => i !== idx);
+                                                        setNodeForm({ ...nodeForm, pairs: newPairs });
+                                                    }}
+                                                    className="text-red-400 p-1"
+                                                >
+                                                    <span className="material-symbols-outlined text-sm">cancel</span>
+                                                </button>
+                                            </div>
+                                        ))}
+                                        <button
+                                            onClick={() => setNodeForm({ ...nodeForm, pairs: [...nodeForm.pairs, { key: '', value: '' }] })}
+                                            className="text-[10px] font-black text-espresso uppercase tracking-widest hover:underline"
+                                        >
+                                            + Insert Relational Pair
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="p-10 bg-white/40 dark:bg-black/20 flex justify-end gap-6">
+                            <button
+                                onClick={() => setIsNodeModalOpen(false)}
+                                className="px-8 py-4 text-[10px] font-black text-espresso/40 uppercase tracking-widest hover:text-espresso transition-colors"
+                            >
+                                Abort Protocol
+                            </button>
+                            <button
+                                onClick={handleSaveNode}
+                                className="px-10 py-4 bg-espresso text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-xl hover:shadow-espresso/40 transition-all active:scale-95"
+                            >
+                                Synchronize Logic
+                            </button>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>
