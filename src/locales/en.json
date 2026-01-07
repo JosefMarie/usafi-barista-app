@@ -38,7 +38,7 @@
       },
       "item2": {
         "title": "Flexible Learning Options",
-        "description": "Study on your own terms. Choose our Onsite program in Kimironko for hands-on intensity, or our E-Learning platform to study theory from anywhere at your own pace."
+        "description": "Study on your own terms. Choose our Onsite program in Rubangura Plaza for hands-on intensity, or our E-Learning platform to study theory from anywhere at your own pace."
       },
       "item3": {
         "title": "Real Career Support",
@@ -50,7 +50,7 @@
     "title": "About Usafi Barista Training Center",
     "hero": {
       "title": "Cultivating Coffee Excellence in Rwanda.",
-      "description": "Located in the heart of Kimironko, Usafi Barista Training Center is more than just a school; it is a launchpad for careers in the hospitality industry. We bridge the gap between passion and profession, providing aspiring baristas with the technical skills, business knowledge, and confidence needed to thrive in the world of coffee."
+      "description": "Located in the heart of Rubangura Plaza, Usafi Barista Training Center is more than just a school; it is a launchpad for careers in the hospitality industry. We bridge the gap between passion and profession, providing aspiring baristas with the technical skills, business knowledge, and confidence needed to thrive in the world of coffee."
     },
     "mission": {
       "title": "Our Mission",
@@ -88,7 +88,7 @@
     "onsite": {
       "badge": "Most Popular",
       "title": "Onsite Training",
-      "location": "In-Person • Kimironko",
+      "location": "In-Person • Rubangura Plaza",
       "description": "Best for students who want intensive, hands-on practice with professional equipment.",
       "features": [
         "Direct access to commercial Espresso Machines & Grinders",
@@ -173,8 +173,8 @@
       "title": "Contact Info",
       "visit": {
         "title": "Visit Us",
-        "address": "Kimironko, Kigali",
-        "near": "Near Kimironko Market"
+        "address": "Rubangura Plaza, KN 2 St, Kigali",
+        "near": "Near City Tower"
       },
       "call": "Call Us",
       "email": "Email Us"
@@ -454,7 +454,7 @@
     },
     "cta": {
       "title": "See the Action for Yourself",
-      "description": "Schedule a visit to our Kimironko center to experience the training environment firsthand.",
+      "description": "Schedule a visit to our Rubangura Plaza center to experience the training environment firsthand.",
       "button": "Schedule a Visit"
     }
   },
@@ -611,17 +611,17 @@
     "items": {
       "grace": {
         "text": "\"Before Usafi, I knew nothing about coffee science. After the Onsite course, I was confident enough to apply for the internship. Usafi placed me at a partner hotel, and they hired me full-time two months later. The career support was invaluable.\"",
-        "name": "Grace Mutesi",
+        "name": "Nyamwiza Aidah",
         "role": "Lead Barista"
       },
       "kevin": {
         "text": "\"The attention to detail on espresso extraction and milk texturing was phenomenal. I can now consistently produce high-quality drinks, which is noticed by my customers. My Latte Art skills alone set me apart from other candidates.\"",
-        "name": "Kevin Mugisha",
+        "name": "Umwali Ratifa",
         "role": "Freelance Consultant"
       },
       "patience": {
         "text": "\"I completed the E-Learning course while working my night shift. The video lessons and downloadable PDFs were perfect for self-study. I highly recommend Usafi for anyone who needs flexibility but doesn't want to compromise on quality.\"",
-        "name": "Patience Uwamahoro",
+        "name": "Munyaneza Eric",
         "role": "Certified Barista"
       }
     },
@@ -703,6 +703,14 @@
       "prev_btn": "Re-examine Previous",
       "begin_eval_btn": "Begin Evaluation",
       "next_btn": "Strategic Advance",
+      "curriculum_selection": "Curriculum Selection",
+      "choose_path": "Choose Your Study Path",
+      "study_path_desc": "Select how you would like to consume this module's instructional material.",
+      "full_notes": "Full Course Notes",
+      "full_notes_desc": "Complete instructional narrative with all supporting media assets and deep-dive technical details.",
+      "summary_notes": "Summary Notes",
+      "summary_notes_desc": "High-level synopsis focusing on core concepts and key takeaways for rapid knowledge ingestion.",
+      "refining_summary": "REFINING SUMMARY",
       "unlock_success": "Congratulations! You've unlocked: {{title}}",
       "anti_cheat": {
         "unload_warning": "Leaving this page will automatically submit your quiz. Are you sure?",

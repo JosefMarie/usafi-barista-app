@@ -1,3 +1,4 @@
+import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { GradientButton } from '../../components/ui/GradientButton';
@@ -5,6 +6,20 @@ import { Newsletter } from '../../components/ui/Newsletter';
 
 export function Testimonials() {
     const { t } = useTranslation();
+    const [isPlaying, setIsPlaying] = useState(false);
+    const videoRef = useRef(null);
+
+    const togglePlay = () => {
+        if (videoRef.current) {
+            if (isPlaying) {
+                videoRef.current.pause();
+            } else {
+                videoRef.current.play();
+            }
+            setIsPlaying(!isPlaying);
+        }
+    };
+
     return (
         <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark font-display text-espresso dark:text-white pb-20 pt-24">
 
@@ -25,13 +40,31 @@ export function Testimonials() {
             <section className="container mx-auto px-6 mb-20">
                 <div className="bg-espresso text-[#FAF5E8] rounded-3xl overflow-hidden shadow-2xl">
                     <div className="grid grid-cols-1 lg:grid-cols-2">
-                        {/* Video Player Placeholder */}
-                        <div className="aspect-video lg:aspect-auto bg-black relative flex items-center justify-center group cursor-pointer">
-                            {/* This would be an iframe in production */}
-                            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=2670&auto=format&fit=crop')] bg-cover bg-center opacity-70"></div>
-                            <div className="relative z-10 w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-white group-hover:scale-110 transition-transform">
-                                <span className="material-symbols-outlined text-4xl text-white ml-2">play_arrow</span>
-                            </div>
+                        {/* Video Player */}
+                        <div
+                            className="aspect-video lg:aspect-auto bg-black relative flex items-center justify-center group cursor-pointer overflow-hidden"
+                            onClick={togglePlay}
+                        >
+                            <video
+                                ref={videoRef}
+                                className="w-full h-full object-cover"
+                                poster="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=2670&auto=format&fit=crop"
+                                playsInline
+                                onPlay={() => setIsPlaying(true)}
+                                onPause={() => setIsPlaying(false)}
+                            >
+                                <source src="/Video/8.mp4" type="video/mp4" />
+                                Your browser does not support the video tag.
+                            </video>
+
+                            {/* Play Overlay */}
+                            {!isPlaying && (
+                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity hover:bg-black/30">
+                                    <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-white group-hover:scale-110 transition-transform">
+                                        <span className="material-symbols-outlined text-4xl text-white ml-2">play_arrow</span>
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         {/* Video Description */}
@@ -57,25 +90,23 @@ export function Testimonials() {
             {/* 3. Section 2: Written Testimonials */}
             <section className="container mx-auto px-6 mb-20">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-
                     {/* Testimonial 1 */}
                     <div className="bg-[#F5DEB3] dark:bg-white/5 p-8 rounded-3xl shadow-xl border border-espresso/10 relative overflow-hidden group hover:-translate-y-2 transition-all duration-300">
                         <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                         <span className="material-symbols-outlined text-6xl text-espresso/10 absolute top-4 right-4">format_quote</span>
-
-                        {/* Tag */}
                         <div className="mb-6">
                             <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs font-bold uppercase tracking-wider rounded-full">
                                 {t('testimonials.tags.placement')}
                             </span>
                         </div>
-
                         <p className="text-espresso/80 dark:text-white/80 italic mb-8 relative z-10">
                             {t('testimonials.items.grace.text')}
                         </p>
-
                         <div className="flex items-center gap-4">
-                            <div className="h-12 w-12 rounded-full bg-gray-300 bg-[url('https://randomuser.me/api/portraits/women/44.jpg')] bg-cover"></div>
+                            <div
+                                className="h-12 w-12 rounded-full bg-gray-300 bg-cover bg-center"
+                                style={{ backgroundImage: "url('/image/Nyamwiza Aidah.jpeg')" }}
+                            ></div>
                             <div>
                                 <h4 className="font-bold text-espresso dark:text-white">{t('testimonials.items.grace.name')}</h4>
                                 <p className="text-xs text-espresso/60 dark:text-white/60 uppercase tracking-wide">{t('testimonials.items.grace.role')}</p>
@@ -87,20 +118,19 @@ export function Testimonials() {
                     <div className="bg-[#F5DEB3] dark:bg-white/5 p-8 rounded-3xl shadow-xl border border-espresso/10 relative overflow-hidden group hover:-translate-y-2 transition-all duration-300">
                         <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                         <span className="material-symbols-outlined text-6xl text-espresso/10 absolute top-4 right-4">format_quote</span>
-
-                        {/* Tag */}
                         <div className="mb-6">
                             <span className="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs font-bold uppercase tracking-wider rounded-full">
                                 {t('testimonials.tags.technical')}
                             </span>
                         </div>
-
                         <p className="text-espresso/80 dark:text-white/80 italic mb-8 relative z-10">
                             {t('testimonials.items.kevin.text')}
                         </p>
-
                         <div className="flex items-center gap-4">
-                            <div className="h-12 w-12 rounded-full bg-gray-300 bg-[url('https://randomuser.me/api/portraits/men/32.jpg')] bg-cover"></div>
+                            <div
+                                className="h-12 w-12 rounded-full bg-gray-300 bg-cover bg-center"
+                                style={{ backgroundImage: "url('/image/Umwali Ratifa.jpeg')" }}
+                            ></div>
                             <div>
                                 <h4 className="font-bold text-espresso dark:text-white">{t('testimonials.items.kevin.name')}</h4>
                                 <p className="text-xs text-espresso/60 dark:text-white/60 uppercase tracking-wide">{t('testimonials.items.kevin.role')}</p>
@@ -112,27 +142,25 @@ export function Testimonials() {
                     <div className="bg-[#F5DEB3] dark:bg-white/5 p-8 rounded-3xl shadow-xl border border-espresso/10 relative overflow-hidden group hover:-translate-y-2 transition-all duration-300">
                         <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                         <span className="material-symbols-outlined text-6xl text-espresso/10 absolute top-4 right-4">format_quote</span>
-
-                        {/* Tag */}
                         <div className="mb-6">
                             <span className="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 text-xs font-bold uppercase tracking-wider rounded-full">
                                 {t('testimonials.tags.online')}
                             </span>
                         </div>
-
                         <p className="text-espresso/80 dark:text-white/80 italic mb-8 relative z-10">
                             {t('testimonials.items.patience.text')}
                         </p>
-
                         <div className="flex items-center gap-4">
-                            <div className="h-12 w-12 rounded-full bg-gray-300 bg-[url('https://randomuser.me/api/portraits/women/65.jpg')] bg-cover"></div>
+                            <div
+                                className="h-12 w-12 rounded-full bg-gray-300 bg-cover bg-center"
+                                style={{ backgroundImage: "url('/image/Munyaneza Eric.jpeg')" }}
+                            ></div>
                             <div>
                                 <h4 className="font-bold text-espresso dark:text-white">{t('testimonials.items.patience.name')}</h4>
                                 <p className="text-xs text-espresso/60 dark:text-white/60 uppercase tracking-wide">{t('testimonials.items.patience.role')}</p>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </section>
 

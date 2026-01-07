@@ -38,7 +38,7 @@
       },
       "item2": {
         "title": "Uburyo bwo kwiga bworoshye",
-        "description": "Iga mu buryo bukwaniye. Hitamo gahunda yacu ibera Kimironko kugira ngo wige mu buryo bw'ibikorwa, cyangwa ukoreshe urubuga rwacu rwa E-learning wige aho ariho hose kandi igihe cyose ubitangiye."
+        "description": "Iga mu buryo bukwaniye. Hitamo gahunda yacu ibera Rubangura Plaza kugira ngo wige mu buryo bw'ibikorwa, cyangwa ukoreshe urubuga rwacu rwa E-learning wige aho ariho hose kandi igihe cyose ubitangiye."
       },
       "item3": {
         "title": "Ubufasha nyabwo mu mwuga",
@@ -50,7 +50,7 @@
     "title": "Ibyerekeye Usafi Barista Training Center",
     "hero": {
       "title": "Gushyigikira ubuziranenge bwa kawa mu Rwanda.",
-      "description": "Iherereye mu mutima wa Kimironko, Usafi Barista Training Center ntabwo ari ishuri gusa; ni irembo ry'iterambere mu mwuga w'amahoteli. Duhuza ibyifuzo n'umwuga, tugaha abifuza kuba aba barista ubumenyi, ubumenyi bw'ubucuruzi, n'icyizere gikenewe kugira ngo batsinde mu isi ya kawa."
+      "description": "Iherereye mu mutima wa Rubangura Plaza, Usafi Barista Training Center ntabwo ari ishuri gusa; ni irembo ry'iterambere mu mwuga w'amahoteli. Duhuza ibyifuzo n'umwuga, tugaha abifuza kuba aba barista ubumenyi, ubumenyi bw'ubucuruzi, n'icyizere gikenewe kugira ngo batsinde mu isi ya kawa."
     },
     "mission": {
       "title": "Inshingano yacu",
@@ -88,7 +88,7 @@
     "onsite": {
       "badge": "Ikunzwe cyane",
       "title": "Kwiga mu kigo (On-site)",
-      "location": "Kimironko • Imbonankubone",
+      "location": "Rubangura Plaza • Imbonankubone",
       "description": "Byiza ku banyeshuri bashaka kwimenyereza cyane ibikorwa bakoresha ibikoresho by'abanyamwuga.",
       "features": [
         "Gukoresha imashini za espresso n'imashini zisya kawa",
@@ -173,8 +173,8 @@
       "title": "Amakuru yo kutuvugisha",
       "visit": {
         "title": "Gusura",
-        "address": "Kimironko, Kigali",
-        "near": "Hafi y-isoko rya Kimironko"
+        "address": "Rubangura Plaza, KN 2 St, Kigali",
+        "near": "Hafi ya City Tower"
       },
       "call": "Duhamagare",
       "email": "Twandikire kuri Imeyili"
@@ -356,7 +356,7 @@
         "label": "Uburyo bwo kwiga",
         "placeholder": "Hitamo uburyo",
         "options": {
-          "onsite": "Mu kigo (Kimironko)",
+          "onsite": "Mu kigo (Rubangura Plaza)",
           "online": "Kuri interineti (E-Learning)"
         }
       },
@@ -454,7 +454,7 @@
     },
     "cta": {
       "title": "Iyo mbonano n-iy'amaso",
-      "description": "Sura ishuri ryacu Kimironko kugira ngo wibonere uko twigisha.",
+      "description": "Sura ishuri ryacu Rubangura Plaza kugira ngo wibonere uko twigisha.",
       "button": "Gusura ishuri"
     }
   },
@@ -611,17 +611,17 @@
     "items": {
       "grace": {
         "text": "\"Mbere yo kuza muri Usafi ntabwo nari nzi ubumenyi bwa kawa. Nyuma yo kwigira mu kigo (on-site), nagize icyizere cyo gusaba kwimenyereza akazi. Usafi yanyohereje muri hoteli imwe bakorana, bahita banyandika mu kazi nyuma y'amezi abiri. Ubufasha mu mwuga bwanyongereye icyizere.\"",
-        "name": "Grace Mutesi",
+        "name": "Nyamwiza Aidah",
         "role": "Lead Barista"
       },
       "kevin": {
         "text": "\"Uburyo banyigishije gukora espresso no gutegura amata byari bitangaje. Ubu nshobora gukora ikawa nziza buri gihe, kandi n'abakiriya barabishima. Ubumenyi bwanjye muri Latte Art butuma mberwa n'abandi benshi bahatanira akazi.\"",
-        "name": "Kevin Mugisha",
+        "name": "Umwali Ratifa",
         "role": "Consultant wigenga"
       },
       "patience": {
         "text": "\"Nasoje amasomo kuri interineti mu gihe nari mfite akazi k'ijoro. Video n'inyandiko muri PDF banyeretse byatumye nshobora kwitangira inyigisho mu gihe cyanjye. Ndasaba buri wese ushaka kwiga ariko akaba afite akazi kenshi kugana Usafi.\"",
-        "name": "Patience Uwamahoro",
+        "name": "Munyaneza Eric",
         "role": "Barista wemejwe"
       }
     },
@@ -705,6 +705,14 @@
       "prev_btn": "Subira ku rureba",
       "begin_eval_btn": "Tangira Ikizamini",
       "next_btn": "Komeza imbere",
+      "curriculum_selection": "Guhitamo Gahunda",
+      "choose_path": "Hitamo Uburyo bwo Kwiga",
+      "study_path_desc": "Hitamo uburyo wifuza kwigamo ibikubiyemo muri iri somo.",
+      "full_notes": "Inyandiko Zuzuye z'Isomo",
+      "full_notes_desc": "Ibikubiyemo byose birambuye hamwe n'amafoto n'ubumenyi bwimbitse mu bya tekiniki.",
+      "summary_notes": "Incamake y'Isomo",
+      "summary_notes_desc": "Incacake yibanda ku bumenyi bw'ibanze n'ingenzi ugomba kugumana mu mutwe mu gihe gito.",
+      "refining_summary": "INCAMAKE",
       "unlock_success": "Byagenze neza! Wafunguye: {{title}}",
       "anti_cheat": {
         "unload_warning": "Kuva kuri iyi mbuga biratuma ikizamini cyohera. Umeze neza ?",

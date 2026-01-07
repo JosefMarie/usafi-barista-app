@@ -1,0 +1,84 @@
+# Query: Kimironko
+# ContextLines: 1
+
+21 results - 5 files
+
+Usaffi_files\Welcome_&_enroll.html:
+  92  <p class="text-[#837363] dark:text-white/50 text-xs font-bold uppercase tracking-wider mb-0.5">Address</p>
+  93: <p class="text-espresso dark:text-white text-sm font-medium leading-normal">Rubangura Plaza, KN 2 St, Kigali</p>
+  94  </div>
+
+usafi-barista-app\src\locales\en.json:
+   40          "title": "Flexible Learning Options",
+   41:         "description": "Study on your own terms. Choose our Onsite program in Rubangura Plaza for hands-on intensity, or our E-Learning platform to study theory from anywhere at your own pace."
+   42        },
+
+   52        "title": "Cultivating Coffee Excellence in Rwanda.",
+   53:       "description": "Located in the heart of Rubangura Plaza, Usafi Barista Training Center is more than just a school; it is a launchpad for careers in the hospitality industry. We bridge the gap between passion and profession, providing aspiring baristas with the technical skills, business knowledge, and confidence needed to thrive in the world of coffee."
+   54      },
+
+   90        "title": "Onsite Training",
+   91:       "location": "In-Person • Rubangura Plaza",
+   92        "description": "Best for students who want intensive, hands-on practice with professional equipment.",
+
+  175          "title": "Visit Us",
+  176:         "address": "Rubangura Plaza, KN 2 St, Kigali",
+  177:         "near": "Near City Tower"
+  178        },
+
+  456        "title": "See the Action for Yourself",
+  457:       "description": "Schedule a visit to our Rubangura Plaza center to experience the training environment firsthand.",
+  458        "button": "Schedule a Visit"
+
+usafi-barista-app\src\locales\fr.json:
+   40          "title": "Options d'apprentissage flexibles",
+   41:         "description": "Étudiez selon vos propres conditions. Choisissez notre programme sur place à Kimironko pour une intensité pratique, ou notre plateforme d'apprentissage en ligne pour étudier la théorie de n'importe où à votre rythme."
+   42        },
+
+   52        "title": "Cultiver l'excellence du café au Rwanda.",
+   53:       "description": "Situé au cœur de Rubangura Plaza, le centre de formation Usafi Barista est plus qu'une simple école ; c'est un tremplin pour les carrières dans l'industrie de l'hôtellerie. Nous comblons le fossé entre la passion et la profession, en fournissant aux baristas en herbe les compétences techniques, les connaissances commerciales et la confiance nécessaires pour s'épanouir dans le monde du café."
+   54      },
+
+   90        "title": "Formation sur site",
+   91:       "location": "En personne • Rubangura Plaza",
+   92        "description": "Idéal pour les étudiants qui souhaitent une pratique intensive et pratique avec un équipement professionnel.",
+
+  175          "title": "Visitez-nous",
+  176:         "address": "Rubangura Plaza, KN 2 St, Kigali",
+  177:         "near": "Près du City Tower"
+  178        },
+
+  456        "title": "Voyez l'action par vous-même",
+  457:       "description": "Planifiez une visite à notre centre de Rubangura Plaza pour découvrir l'environnement de formation par vous-même.",
+  458        "button": "Planifier une visite"
+
+usafi-barista-app\src\locales\rw.json:
+   40          "title": "Uburyo bwo kwiga bworoshye",
+   41:         "description": "Iga mu buryo bukwaniye. Hitamo gahunda yacu ibera Rubangura Plaza kugira ngo wige mu buryo bw'ibikorwa, cyangwa ukoreshe urubuga rwacu rwa E-learning wige aho ariho hose kandi igihe cyose ubitangiye."
+   42        },
+
+   52        "title": "Gushyigikira ubuziranenge bwa kawa mu Rwanda.",
+   53:       "description": "Iherereye mu mutima wa Rubangura Plaza, Usafi Barista Training Center ntabwo ari ishuri gusa; ni irembo ry'iterambere mu mwuga w'amahoteli. Duhuza ibyifuzo n'umwuga, tugaha abifuza kuba aba barista ubumenyi, ubumenyi bw'ubucuruzi, n'icyizere gikenewe kugira ngo batsinde mu isi ya kawa."
+   54      },
+
+   90        "title": "Kwiga mu kigo (On-site)",
+   91:       "location": "Rubangura Plaza • Imbonankubone",
+   92        "description": "Byiza ku banyeshuri bashaka kwimenyereza cyane ibikorwa bakoresha ibikoresho by'abanyamwuga.",
+
+  175          "title": "Gusura",
+  176:         "address": "Rubangura Plaza, KN 2 St, Kigali",
+  177:         "near": "Hafi ya City Tower"
+  178        },
+
+  358          "options": {
+  359:           "onsite": "Mu kigo (Rubangura Plaza)",
+  360            "online": "Kuri interineti (E-Learning)"
+
+  456        "title": "Iyo mbonano n-iy'amaso",
+  457:       "description": "Sura ishuri ryacu Rubangura Plaza, KN 2 St, Kigali kugira ngo wibonere uko twigisha.",
+  458        "button": "Gusura ishuri"
+
+usafi-barista-app\src\pages\public\Contact.jsx:
+  119                          <iframe
+  120:                             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3987.5327096677!2d30.1039!3d-1.9567!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19dca655d9d95f85%3A0x49f5747444747!2sRubangura%20Plaza!5e0!3m2!1sen!2srw!4v1620000000000!5m2!1sen!2srw"
+  121                              width="100%"

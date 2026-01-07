@@ -38,7 +38,7 @@
       },
       "item2": {
         "title": "Options d'apprentissage flexibles",
-        "description": "Étudiez selon vos propres conditions. Choisissez notre programme sur place à Kimironko pour une intensité pratique, ou notre plateforme d'apprentissage en ligne pour étudier la théorie de n'importe où à votre rythme."
+        "description": "Étudiez selon vos propres conditions. Choisissez notre programme sur place à Rubangura Plaza pour une intensité pratique, ou notre plateforme d'apprentissage en ligne pour étudier la théorie de n'importe où à votre rythme."
       },
       "item3": {
         "title": "Véritable soutien à la carrière",
@@ -50,7 +50,7 @@
     "title": "À propos du centre de formation Usafi Barista",
     "hero": {
       "title": "Cultiver l'excellence du café au Rwanda.",
-      "description": "Situé au cœur de Kimironko, le centre de formation Usafi Barista est plus qu'une simple école ; c'est un tremplin pour les carrières dans l'industrie de l'hôtellerie. Nous comblons le fossé entre la passion et la profession, en fournissant aux baristas en herbe les compétences techniques, les connaissances commerciales et la confiance nécessaires pour s'épanouir dans le monde du café."
+      "description": "Situé au cœur de Rubangura Plaza, le centre de formation Usafi Barista est plus qu'une simple école ; c'est un tremplin pour les carrières dans l'industrie de l'hôtellerie. Nous comblons le fossé entre la passion et la profession, en fournissant aux baristas en herbe les compétences techniques, les connaissances commerciales et la confiance nécessaires pour s'épanouir dans le monde du café."
     },
     "mission": {
       "title": "Notre mission",
@@ -88,7 +88,7 @@
     "onsite": {
       "badge": "Le plus populaire",
       "title": "Formation sur site",
-      "location": "En personne • Kimironko",
+      "location": "En personne • Rubangura Plaza",
       "description": "Idéal pour les étudiants qui souhaitent une pratique intensive et pratique avec un équipement professionnel.",
       "features": [
         "Accès direct aux machines à espresso et broyeurs commerciaux",
@@ -173,8 +173,8 @@
       "title": "Infos de contact",
       "visit": {
         "title": "Visitez-nous",
-        "address": "Kimironko, Kigali",
-        "near": "Près du marché de Kimironko"
+        "address": "Rubangura Plaza, KN 2 St, Kigali",
+        "near": "Près du City Tower"
       },
       "call": "Appelez-nous",
       "email": "Envoyez-nous un e-mail"
@@ -454,7 +454,7 @@
     },
     "cta": {
       "title": "Voyez l'action par vous-même",
-      "description": "Planifiez une visite à notre centre de Kimironko pour découvrir l'environnement de formation par vous-même.",
+      "description": "Planifiez une visite à notre centre de Rubangura Plaza pour découvrir l'environnement de formation par vous-même.",
       "button": "Planifier une visite"
     }
   },
@@ -611,17 +611,17 @@
     "items": {
       "grace": {
         "text": "\"Avant Usafi, je ne savais rien de la science du café. Après le cours sur place, j'étais assez confiante pour postuler au stage. Usafi m'a placée dans un hôtel partenaire, et ils m'ont embauchée à plein temps deux mois plus tard. Le soutien à la carrière a été inestimable.\"",
-        "name": "Grace Mutesi",
+        "name": "Nyamwiza Aidah",
         "role": "Lead Barista"
       },
       "kevin": {
         "text": "\"L'attention portée aux détails sur l'extraction de l'espresso et la texturation du lait était phénoménale. Je peux maintenant produire de manière cohérente des boissons de haute qualité, ce qui est remarqué par mes clients. Mes compétences en Latte Art à elles seules me distinguent des autres candidats.\"",
-        "name": "Kevin Mugisha",
+        "name": "Umwali Ratifa",
         "role": "Consultant indépendant"
       },
       "patience": {
         "text": "\"J'ai terminé le cours en ligne tout en travaillant de nuit. Les leçons vidéo et les PDF téléchargeables étaient parfaits pour l'auto-apprentissage. Je recommande vivement Usafi pour tous ceux qui ont besoin de flexibilité mais ne veulent pas faire de compromis sur la qualité.\"",
-        "name": "Patience Uwamahoro",
+        "name": "Munyaneza Eric",
         "role": "Barista certifiée"
       }
     },
@@ -705,6 +705,14 @@
       "prev_btn": "Réexaminer le précédent",
       "begin_eval_btn": "Commencer l'évaluation",
       "next_btn": "Avancée stratégique",
+      "curriculum_selection": "Sélection du Programme",
+      "choose_path": "Choisissez Votre Parcours d'Étude",
+      "study_path_desc": "Sélectionnez la manière dont vous souhaitez consommer le matériel pédagogique de ce module.",
+      "full_notes": "Notes Complètes du Cours",
+      "full_notes_desc": "Récit pédagogique complet avec tous les supports multimédias et les détails techniques approfondis.",
+      "summary_notes": "Notes de Synthèse",
+      "summary_notes_desc": "Synopsis de haut niveau axé sur les concepts de base et les points clés à retenir pour une ingestion rapide des connaissances.",
+      "refining_summary": "RAFFINAGE DE LA SYNTHÈSE",
       "unlock_success": "Félicitations ! Vous avez débloqué : {{title}}",
       "anti_cheat": {
         "unload_warning": "Quitter cette page soumettra automatiquement votre quiz. Êtes-vous sûr ?",

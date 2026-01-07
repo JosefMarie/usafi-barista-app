@@ -95,7 +95,7 @@ export function Contact() {
                                 <div>
                                     <h4 className="font-bold text-lg text-espresso dark:text-white mb-1">{t('contact.info.call')}</h4>
                                     <p className="text-espresso/70 dark:text-white/70">
-                                        <a href="tel:+250788123456" className="hover:text-primary transition-colors">+250 788 123 456</a>
+                                        <a href="tel:+250788123456" className="hover:text-primary transition-colors">+250787 709 171</a>
                                     </p>
                                 </div>
                             </div>
@@ -117,7 +117,7 @@ export function Contact() {
                     {/* Map Placeholder */}
                     <div className="aspect-video w-full rounded-2xl overflow-hidden shadow-sm border border-[#e0dbd6] dark:border-white/10 relative bg-gray-200">
                         <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3987.5327096677!2d30.1039!3d-1.9567!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19dca655d9d95f85%3A0x49f5747444747!2sKimironko%20Market!5e0!3m2!1sen!2srw!4v1620000000000!5m2!1sen!2srw"
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3987.5327096677!2d30.1039!3d-1.9567!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19dca655d9d95f85%3A0x49f5747444747!2sRubangura%20Plaza!5e0!3m2!1sen!2srw!4v1620000000000!5m2!1sen!2srw"
                             width="100%"
                             height="100%"
                             style={{ border: 0 }}

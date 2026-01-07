@@ -25,6 +25,8 @@ export function ManageModule() {
 
     // Content State
     const [slides, setSlides] = useState([]);
+    const [summarySlides, setSummarySlides] = useState([]);
+    const [contentType, setContentType] = useState('full'); // full, summary
 
     // Quiz State
     const [quiz, setQuiz] = useState({ questions: [], passMark: 70 });
@@ -47,6 +49,7 @@ export function ManageModule() {
                     const data = modSnap.data();
                     setModule({ id: modSnap.id, ...data });
                     setSlides(data.content || []);
+                    setSummarySlides(data.summaryContent || []);
                     setQuiz(data.quiz || { questions: [], passMark: 70 });
                     setAssignedStudents(data.assignedStudents || []);
                     setDuration(data.duration || 0);
@@ -94,17 +97,31 @@ export function ManageModule() {
 
     // --- Content Handlers ---
     const addSlide = () => {
-        setSlides([...slides, { title: '', text: '', image: '' }]);
+        if (contentType === 'full') {
+            setSlides([...slides, { title: '', text: '', image: '' }]);
+        } else {
+            setSummarySlides([...summarySlides, { title: '', text: '', image: '' }]);
+        }
     };
 
     const updateSlide = (index, field, value) => {
-        const newSlides = [...slides];
-        newSlides[index][field] = value;
-        setSlides(newSlides);
+        if (contentType === 'full') {
+            const newSlides = [...slides];
+            newSlides[index][field] = value;
+            setSlides(newSlides);
+        } else {
+            const newSlides = [...summarySlides];
+            newSlides[index][field] = value;
+            setSummarySlides(newSlides);
+        }
     };
 
     const removeSlide = (index) => {
-        setSlides(slides.filter((_, i) => i !== index));
+        if (contentType === 'full') {
+            setSlides(slides.filter((_, i) => i !== index));
+        } else {
+            setSummarySlides(summarySlides.filter((_, i) => i !== index));
+        }
     };
 
     // --- Image Upload Handler ---
@@ -215,6 +232,7 @@ export function ManageModule() {
             const modRef = doc(db, 'courses', courseId, 'modules', moduleId);
             await updateDoc(modRef, {
                 content: slides,
+                summaryContent: summarySlides,
                 quiz: quiz,
                 assignedStudents: assignedStudents,
                 duration: parseInt(duration),
@@ -309,12 +327,38 @@ export function ManageModule() {
                     <div className="space-y-10">
                         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-white/40 dark:bg-black/20 p-8 rounded-[2rem] border border-espresso/10 shadow-xl relative overflow-hidden group/meta">
                             <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/10 group-hover/meta:bg-espresso transition-colors"></div>
-                            <div>
-                                <h2 className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] flex items-center gap-3 mb-2">
-                                    <span className="w-6 h-px bg-espresso/20"></span>
-                                    Node Attributes
-                                </h2>
-                                <p className="text-xl font-serif font-black text-espresso dark:text-white">Instructional Narrative & Media Assets</p>
+                            <div className="flex flex-col gap-4">
+                                <div>
+                                    <h2 className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] flex items-center gap-3 mb-2">
+                                        <span className="w-6 h-px bg-espresso/20"></span>
+                                        Node Attributes
+                                    </h2>
+                                    <p className="text-xl font-serif font-black text-espresso dark:text-white">Instructional Narrative & Media Assets</p>
+                                </div>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={() => setContentType('full')}
+                                        className={cn(
+                                            "px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all border",
+                                            contentType === 'full'
+                                                ? "bg-espresso text-white border-espresso shadow-lg"
+                                                : "bg-white/40 text-espresso/60 border-espresso/10 hover:bg-white"
+                                        )}
+                                    >
+                                        Full Course Notes
+                                    </button>
+                                    <button
+                                        onClick={() => setContentType('summary')}
+                                        className={cn(
+                                            "px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all border",
+                                            contentType === 'summary'
+                                                ? "bg-espresso text-white border-espresso shadow-lg"
+                                                : "bg-white/40 text-espresso/60 border-espresso/10 hover:bg-white"
+                                        )}
+                                    >
+                                        Summary Notes
+                                    </button>
+                                </div>
                             </div>
                             <div className="flex items-center gap-6">
                                 <div className="flex items-center gap-4 bg-white/40 dark:bg-black/20 px-6 py-3 rounded-2xl border border-espresso/5 shadow-inner">
@@ -332,12 +376,12 @@ export function ManageModule() {
                                 </div>
                                 <button onClick={addSlide} className="flex items-center gap-3 bg-espresso text-white px-6 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl hover:shadow-espresso/40 active:scale-95 transition-all group/add">
                                     <span className="material-symbols-outlined text-[18px] group-hover:rotate-90 transition-transform">add_circle</span>
-                                    Insert Slide
+                                    Insert {contentType === 'full' ? 'Slide' : 'Summary'}
                                 </button>
                             </div>
                         </div>
 
-                        {slides.map((slide, index) => (
+                        {(contentType === 'full' ? slides : summarySlides).map((slide, index) => (
                             <div key={index} className="bg-white/40 dark:bg-black/20 p-10 rounded-[2.5rem] border border-espresso/10 relative overflow-hidden group/slide shadow-2xl animate-in fade-in slide-in-from-bottom-4">
                                 <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/10 group-hover/slide:bg-espresso transition-colors"></div>
                                 <button onClick={() => removeSlide(index)} className="absolute top-8 right-8 text-espresso/20 hover:text-red-500 transition-colors p-2 rounded-xl hover:bg-red-50">
@@ -396,12 +440,12 @@ export function ManageModule() {
                                 </div>
                             </div>
                         ))}
-                        {slides.length === 0 && (
+                        {(contentType === 'full' ? slides : summarySlides).length === 0 && (
                             <div className="text-center py-32 bg-white/20 dark:bg-black/10 border-2 border-dashed border-espresso/10 rounded-[3rem] flex flex-col items-center justify-center gap-6">
                                 <div className="w-20 h-20 rounded-[2rem] bg-espresso/5 flex items-center justify-center text-espresso/20">
                                     <span className="material-symbols-outlined text-5xl">auto_stories</span>
                                 </div>
-                                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-espresso/30 italic">No slide patterns detected. Initialize narrative sequence.</p>
+                                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-espresso/30 italic">No {contentType === 'full' ? 'slide' : 'summary'} patterns detected. Initialize narrative sequence.</p>
                             </div>
                         )}
                     </div>

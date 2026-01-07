@@ -34,6 +34,10 @@ export function StudentCourseView() {
     const [timeLeft, setTimeLeft] = useState(0);
     const [matchingOrder, setMatchingOrder] = useState([]); // For matching questions
 
+    // Study Mode State
+    const [studyType, setStudyType] = useState(null); // full, summary
+    const [showTypeSelection, setShowTypeSelection] = useState(false);
+
     useEffect(() => {
         const fetchModule = async () => {
             if (!courseId || !moduleId || !user) return;
@@ -60,6 +64,13 @@ export function StudentCourseView() {
                         if (progressData.lastSlideIndex !== undefined) {
                             setCurrentSlide(progressData.lastSlideIndex);
                         }
+                        if (progressData.studyType) {
+                            setStudyType(progressData.studyType);
+                        } else {
+                            setShowTypeSelection(true);
+                        }
+                    } else {
+                        setShowTypeSelection(true);
                     }
                     setIsProgressLoaded(true);
                 } else {
@@ -84,6 +95,7 @@ export function StudentCourseView() {
                     courseId,
                     moduleId,
                     lastSlideIndex: currentSlide,
+                    studyType: studyType,
                     updatedAt: serverTimestamp(),
                     status: 'in-progress'
                 }, { merge: true });
@@ -242,6 +254,7 @@ export function StudentCourseView() {
                 moduleId,
                 score,
                 passed,
+                studyType: studyType,
                 completedAt: serverTimestamp(),
                 status: passed ? 'completed' : 'failed'
             }, { merge: true });
@@ -285,11 +298,15 @@ export function StudentCourseView() {
         setCurrentSlide(0);
         setUserAnswers({});
         setQuizResult(null);
+        setStudyType(null);
+        setShowTypeSelection(true);
         window.scrollTo(0, 0);
     };
 
-    const progressPercent = module?.content?.length
-        ? Math.round(((currentSlide + 1) / module.content.length) * 100)
+    const content = studyType === 'summary' ? (module?.summaryContent || []) : (module?.content || []);
+
+    const progressPercent = content.length
+        ? Math.round(((currentSlide + 1) / content.length) * 100)
         : 0;
 
     if (loading) return <div className="h-screen flex items-center justify-center"><span className="material-symbols-outlined animate-spin text-4xl text-primary">progress_activity</span></div>;
@@ -320,7 +337,7 @@ export function StudentCourseView() {
                                 />
                             </div>
                             <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.2em]">
-                                {showQuiz ? t('student.course_view.assessment_phase') : t('student.course_view.extraction', { percent: progressPercent })}
+                                {showQuiz ? t('student.course_view.assessment_phase') : (studyType === 'summary' ? t('student.course_view.refining_summary') : t('student.course_view.extraction', { percent: progressPercent }))}
                             </p>
                         </div>
                     </div>
@@ -617,13 +634,13 @@ export function StudentCourseView() {
                 ) : (
                     // SLIDE CONTENT MODE
                     <div className="animate-fade-in">
-                        {module.content && module.content[currentSlide] ? (
+                        {content && content[currentSlide] ? (
                             <div className="space-y-6">
                                 {/* Slide Image */}
-                                {module.content[currentSlide].image && (
+                                {content[currentSlide].image && (
                                     <div className="w-full aspect-video bg-gray-100 dark:bg-white/5 rounded-2xl overflow-hidden shadow-lg">
                                         <img
-                                            src={module.content[currentSlide].image}
+                                            src={content[currentSlide].image}
                                             alt="Slide visual"
                                             className="w-full h-full object-cover"
                                         />
@@ -634,11 +651,11 @@ export function StudentCourseView() {
                                 <div className="bg-[#F5DEB3] dark:bg-[#2c2825] p-12 rounded-3xl border border-espresso/10 shadow-2xl min-h-[400px] flex flex-col justify-center text-center relative overflow-hidden group">
                                     <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                                     <h2 className="text-4xl font-serif font-bold text-espresso dark:text-white mb-8 group-hover:translate-y-[-4px] transition-transform">
-                                        {module.content[currentSlide].title}
+                                        {content[currentSlide].title}
                                     </h2>
                                     <div
                                         className="text-lg leading-relaxed text-espresso/70 dark:text-white/70 prose prose-espresso dark:prose-invert max-w-none text-left font-medium"
-                                        dangerouslySetInnerHTML={{ __html: module.content[currentSlide].text }}
+                                        dangerouslySetInnerHTML={{ __html: content[currentSlide].text }}
                                     />
                                 </div>
                             </div>
@@ -684,9 +701,9 @@ export function StudentCourseView() {
                                 onClick={handleNext}
                                 className="h-12 px-8 rounded-2xl bg-espresso text-white font-black uppercase tracking-widest text-[10px] hover:shadow-2xl transition-all shadow-xl flex items-center gap-3 active:scale-95"
                             >
-                                {currentSlide === (module.content?.length || 0) - 1 ? t('student.course_view.begin_eval_btn') : t('student.course_view.next_btn')}
+                                {currentSlide === (content.length || 0) - 1 ? t('student.course_view.begin_eval_btn') : t('student.course_view.next_btn')}
                                 <span className="material-symbols-outlined text-[20px]">
-                                    {currentSlide === (module.content?.length || 0) - 1 ? 'school' : 'arrow_forward'}
+                                    {currentSlide === (content.length || 0) - 1 ? 'school' : 'arrow_forward'}
                                 </span>
                             </button>
                         </div>
@@ -735,6 +752,43 @@ export function StudentCourseView() {
                     className="fixed inset-0 bg-black/20 backdrop-blur-[2px] z-[90] transition-opacity"
                     onClick={() => setShowNotes(false)}
                 />
+            )}
+
+            {/* Selection Modal */}
+            {showTypeSelection && (
+                <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-espresso/40 backdrop-blur-xl animate-fade-in">
+                    <div className="w-full max-w-2xl bg-[#F5DEB3] dark:bg-[#1c1916] rounded-[3rem] border border-white/20 shadow-2xl overflow-hidden relative group/modal">
+                        <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/10 group-hover/modal:bg-espresso transition-colors"></div>
+                        <div className="p-12 text-center space-y-10">
+                            <div className="space-y-4">
+                                <h3 className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.4em]">{t('student.course_view.curriculum_selection')}</h3>
+                                <h2 className="text-4xl font-serif font-black text-espresso dark:text-white">{t('student.course_view.choose_path')}</h2>
+                                <p className="text-sm font-medium text-espresso/60 dark:text-white/60 max-w-md mx-auto">
+                                    {t('student.course_view.study_path_desc')}
+                                </p>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <button
+                                    onClick={() => { setStudyType('full'); setShowTypeSelection(false); }}
+                                    className="p-8 bg-white/40 dark:bg-black/20 rounded-[2rem] border border-espresso/10 hover:border-espresso hover:shadow-2xl hover:-translate-y-1 transition-all group/opt text-left"
+                                >
+                                    <span className="material-symbols-outlined text-4xl text-espresso mb-4 group-hover/opt:scale-110 transition-transform">menu_book</span>
+                                    <h4 className="text-lg font-serif font-black text-espresso dark:text-white mb-2">{t('student.course_view.full_notes')}</h4>
+                                    <p className="text-[10px] font-medium text-espresso/40 dark:text-white/40 leading-relaxed">{t('student.course_view.full_notes_desc')}</p>
+                                </button>
+                                <button
+                                    onClick={() => { setStudyType('summary'); setShowTypeSelection(false); }}
+                                    className="p-8 bg-white/40 dark:bg-black/20 rounded-[2rem] border border-espresso/10 hover:border-espresso hover:shadow-2xl hover:-translate-y-1 transition-all group/opt text-left"
+                                >
+                                    <span className="material-symbols-outlined text-4xl text-espresso mb-4 group-hover/opt:scale-110 transition-transform">summarize</span>
+                                    <h4 className="text-lg font-serif font-black text-espresso dark:text-white mb-2">{t('student.course_view.summary_notes')}</h4>
+                                    <p className="text-[10px] font-medium text-espresso/40 dark:text-white/40 leading-relaxed">{t('student.course_view.summary_notes_desc')}</p>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );

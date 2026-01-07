@@ -1,3 +1,4 @@
+import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Newsletter } from '../../components/ui/Newsletter';
@@ -45,7 +46,6 @@ export function Gallery() {
         },
     ];
 
-    // Add local images to the photos array
     const localPhotos = [
         { url: hero1, category: t('gallery.categories.practice'), desc: "Hero 1" },
         { url: hero2, category: t('gallery.categories.mastery'), desc: "Hero 2" },
@@ -92,49 +92,15 @@ export function Gallery() {
                 </div>
             </section>
 
+            {/* 3. Section 2: Video Highlights */}
             <section className="bg-espresso text-[#FAF5E8] py-20 px-6">
                 <div className="container mx-auto px-6">
                     <h2 className="font-serif text-3xl font-bold mb-12 text-center">{t('gallery.videos.title')}</h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {/* Clip 1 */}
-                        <div className="flex flex-col gap-4 group cursor-pointer">
-                            <div className="aspect-video bg-black/50 rounded-xl relative overflow-hidden ring-2 ring-white/10 group-hover:ring-primary transition-all">
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <span className="material-symbols-outlined text-4xl text-white/80 bg-black/20 rounded-full p-2 backdrop-blur-sm group-hover:scale-110 transition-transform">play_arrow</span>
-                                </div>
-                            </div>
-                            <div>
-                                <h4 className="font-bold text-lg mb-1 group-hover:text-primary transition-colors">{t('gallery.videos.clip1.title')}</h4>
-                                <p className="text-sm text-white/60">{t('gallery.videos.clip1.desc')}</p>
-                            </div>
-                        </div>
-
-                        {/* Clip 2 */}
-                        <div className="flex flex-col gap-4 group cursor-pointer">
-                            <div className="aspect-video bg-black/50 rounded-xl relative overflow-hidden ring-2 ring-white/10 group-hover:ring-primary transition-all">
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <span className="material-symbols-outlined text-4xl text-white/80 bg-black/20 rounded-full p-2 backdrop-blur-sm group-hover:scale-110 transition-transform">play_arrow</span>
-                                </div>
-                            </div>
-                            <div>
-                                <h4 className="font-bold text-lg mb-1 group-hover:text-primary transition-colors">{t('gallery.videos.clip2.title')}</h4>
-                                <p className="text-sm text-white/60">{t('gallery.videos.clip2.desc')}</p>
-                            </div>
-                        </div>
-
-                        {/* Clip 3 */}
-                        <div className="flex flex-col gap-4 group cursor-pointer">
-                            <div className="aspect-video bg-black/50 rounded-xl relative overflow-hidden ring-2 ring-white/10 group-hover:ring-primary transition-all">
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <span className="material-symbols-outlined text-4xl text-white/80 bg-black/20 rounded-full p-2 backdrop-blur-sm group-hover:scale-110 transition-transform">play_arrow</span>
-                                </div>
-                            </div>
-                            <div>
-                                <h4 className="font-bold text-lg mb-1 group-hover:text-primary transition-colors">{t('gallery.videos.clip3.title')}</h4>
-                                <p className="text-sm text-white/60">{t('gallery.videos.clip3.desc')}</p>
-                            </div>
-                        </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {[1, 2, 3, 4, 5, 6, 7, 8].map((id) => (
+                            <VideoCard key={id} id={id} />
+                        ))}
                     </div>
                 </div>
             </section>
@@ -153,6 +119,57 @@ export function Gallery() {
                 </Link>
             </section>
 
+            <Newsletter />
+        </div>
+    );
+}
+
+function VideoCard({ id }) {
+    const [isPlaying, setIsPlaying] = useState(false);
+    const videoRef = useRef(null);
+
+    const togglePlay = () => {
+        if (videoRef.current) {
+            if (isPlaying) {
+                videoRef.current.pause();
+            } else {
+                videoRef.current.play();
+            }
+            setIsPlaying(!isPlaying);
+        }
+    };
+
+    return (
+        <div
+            className="bg-white/5 rounded-2xl overflow-hidden shadow-lg border border-white/10 group cursor-pointer relative aspect-video"
+            onClick={togglePlay}
+        >
+            <video
+                ref={videoRef}
+                className="w-full h-full object-cover"
+                playsInline
+                onPlay={() => setIsPlaying(true)}
+                onPause={() => setIsPlaying(false)}
+            >
+                <source src={`/Video/${id}.mp4`} type="video/mp4" />
+                Your browser does not support the video tag.
+            </video>
+
+            {/* Play Overlay */}
+            {!isPlaying && (
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity hover:bg-black/30">
+                    <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-white group-hover:scale-110 transition-transform">
+                        <span className="material-symbols-outlined text-3xl text-white ml-1">play_arrow</span>
+                    </div>
+                </div>
+            )}
+
+            {/* ID Tag */}
+            <div className="absolute top-4 left-4 z-10">
+                <span className="px-2 py-1 bg-espresso/60 backdrop-blur-md text-white/90 text-[10px] font-bold uppercase tracking-wider rounded-lg">
+                    Story #{id}
+                </span>
+            </div>
         </div>
     );
 }
