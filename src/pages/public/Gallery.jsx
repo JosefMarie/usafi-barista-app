@@ -13,40 +13,27 @@ import hero8 from '../../assets/images/about/hero-image-8.webp';
 
 export function Gallery() {
     const { t } = useTranslation();
-    const photos = [
-        {
-            url: "https://images.unsplash.com/photo-1574914540608-f1c2b53b7549?q=80&w=2670&auto=format&fit=crop",
-            category: t('gallery.categories.practice'),
-            desc: t('gallery.photos.grind')
-        },
-        {
-            url: "https://images.unsplash.com/photo-1559526323-cb2f2fe2591b?q=80&w=2670&auto=format&fit=crop",
-            category: t('gallery.categories.mastery'),
-            desc: t('gallery.photos.heart')
-        },
-        {
-            url: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2670&auto=format&fit=crop",
-            category: t('gallery.categories.classroom'),
-            desc: t('gallery.photos.discussion')
-        },
-        {
-            url: "https://images.unsplash.com/photo-1607619662634-3acce2e03cc1?q=80&w=2670&auto=format&fit=crop",
-            category: t('gallery.categories.graduation'),
-            desc: t('gallery.photos.class2024')
-        },
-        {
-            url: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=2670&auto=format&fit=crop",
-            category: t('gallery.categories.practice'),
-            desc: t('gallery.photos.tamping')
-        },
-        {
-            url: "https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=2837&auto=format&fit=crop",
-            category: t('gallery.categories.classroom'),
-            desc: t('gallery.photos.testing')
-        },
+
+    // 15 New local images from /public/image/
+    const newPhotos = [
+        { url: "/image/image1.jpeg", category: t('gallery.categories.practice'), desc: t('gallery.photos.grind') },
+        { url: "/image/image2.jpeg", category: t('gallery.categories.mastery'), desc: t('gallery.photos.heart') },
+        { url: "/image/image3.jpeg", category: t('gallery.categories.classroom'), desc: t('gallery.photos.discussion') },
+        { url: "/image/image4.jpeg", category: t('gallery.categories.practice'), desc: t('gallery.photos.tamping') },
+        { url: "/image/image5.jpeg", category: t('gallery.categories.graduation'), desc: t('gallery.photos.class2024') },
+        { url: "/image/image6.jpeg", category: t('gallery.categories.practice'), desc: "Learning the machine" },
+        { url: "/image/image7.jpeg", category: t('gallery.categories.classroom'), desc: "Theoretical foundations" },
+        { url: "/image/image8.jpeg", category: t('gallery.categories.mastery'), desc: "Steam wand control" },
+        { url: "/image/image9.jpeg", category: t('gallery.categories.practice'), desc: "Precision tamping" },
+        { url: "/image/image10.jpeg", category: t('gallery.categories.classroom'), desc: "Tasting session" },
+        { url: "/image/image11.jpeg", category: t('gallery.categories.mastery'), desc: "Latte art practice" },
+        { url: "/image/image12.jpeg", category: t('gallery.categories.practice'), desc: "Workflow optimization" },
+        { url: "/image/image13.jpeg", category: t('gallery.categories.graduation'), desc: "Celebrating success" },
+        { url: "/image/image14.jpeg", category: t('gallery.categories.classroom'), desc: "Bean selection science" },
+        { url: "/image/image15.jpeg", category: t('gallery.categories.practice'), desc: "Center operations" },
     ];
 
-    const localPhotos = [
+    const localHeroPhotos = [
         { url: hero1, category: t('gallery.categories.practice'), desc: "Hero 1" },
         { url: hero2, category: t('gallery.categories.mastery'), desc: "Hero 2" },
         { url: hero3, category: t('gallery.categories.classroom'), desc: "Hero 3" },
@@ -56,7 +43,7 @@ export function Gallery() {
         { url: hero8, category: t('gallery.categories.practice'), desc: "Hero 8" },
     ];
 
-    const allPhotos = [...photos, ...localPhotos];
+    const allPhotos = [...newPhotos, ...localHeroPhotos];
 
     return (
         <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark font-display text-espresso dark:text-white pb-20 pt-24">
@@ -76,9 +63,9 @@ export function Gallery() {
 
             {/* 2. Section 1: Image Gallery (Grid) */}
             <section className="container mx-auto px-6 mb-20">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {allPhotos.map((photo, index) => (
-                        <div key={index} className="group relative break-inside-avoid overflow-hidden rounded-2xl shadow-xl border border-espresso/10 aspect-[4/3] bg-[#F5DEB3] dark:bg-white/5">
+                        <div key={index} className="group relative break-inside-avoid overflow-hidden rounded-2xl shadow-xl border border-espresso/10 aspect-square bg-[#F5DEB3] dark:bg-white/5">
                             <div
                                 className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
                                 style={{ backgroundImage: `url("${photo.url}")` }}
