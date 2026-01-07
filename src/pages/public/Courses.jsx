@@ -3,11 +3,16 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { GradientButton } from '../../components/ui/GradientButton';
 import { Newsletter } from '../../components/ui/Newsletter';
+import { SEO } from '../../components/common/SEO';
 
 export function Courses() {
     const { t } = useTranslation();
     return (
         <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark font-display text-espresso dark:text-white pb-10">
+            <SEO
+                title={t('courses.title')}
+                description={t('courses.subtitle')}
+            />
 
             {/* 1. Page Title */}
             <div className="pt-24 pb-12 px-6 text-center bg-espresso text-wedding-white relative overflow-hidden">

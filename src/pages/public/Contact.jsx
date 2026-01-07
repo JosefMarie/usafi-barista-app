@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Newsletter } from '../../components/ui/Newsletter';
+import { SEO } from '../../components/common/SEO';
 
 export function Contact() {
     const { t } = useTranslation();
@@ -52,6 +53,10 @@ export function Contact() {
 
     return (
         <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark font-display text-espresso dark:text-white pb-20 pt-24">
+            <SEO
+                title={t('contact.title')}
+                description={t('contact.description')}
+            />
 
             {/* Page Header */}
             <div className="container mx-auto px-6 text-center mb-16">

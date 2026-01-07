@@ -3,12 +3,17 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { GradientButton } from '../../components/ui/GradientButton';
 import { Newsletter } from '../../components/ui/Newsletter';
+import { SEO } from '../../components/common/SEO';
 
 export function Home() {
     const { t } = useTranslation();
 
     return (
         <div className="flex min-h-screen w-full flex-col bg-background-light dark:bg-background-dark font-display text-espresso dark:text-white">
+            <SEO
+                title={t('home.hero.title')}
+                description={t('home.hero.subtitle')}
+            />
 
             {/* 1. Hero Section */}
             <section className="relative h-[85vh] w-full shrink-0 overflow-hidden flex items-center justify-center">

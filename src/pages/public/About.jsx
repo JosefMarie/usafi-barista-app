@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Newsletter } from '../../components/ui/Newsletter';
+import { SEO } from '../../components/common/SEO';
 
 import hero1 from '../../assets/images/about/hero-image-1.webp';
 import hero2 from '../../assets/images/about/hero-image-2.webp';
@@ -25,6 +26,10 @@ export function About() {
     }, []);
     return (
         <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark font-display text-espresso dark:text-white pb-10">
+            <SEO
+                title={t('about.title')}
+                description={t('about.hero.description')}
+            />
 
             {/* 1. Page Title */}
             <div className="pt-24 pb-8 px-6 text-center">

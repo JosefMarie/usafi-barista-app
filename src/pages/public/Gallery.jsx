@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Newsletter } from '../../components/ui/Newsletter';
+import { SEO } from '../../components/common/SEO';
 
 import hero1 from '../../assets/images/about/hero-image-1.webp';
 import hero2 from '../../assets/images/about/hero-image-2.webp';
@@ -47,6 +48,10 @@ export function Gallery() {
 
     return (
         <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark font-display text-espresso dark:text-white pb-20 pt-24">
+            <SEO
+                title={t('gallery.title')}
+                description={t('gallery.description')}
+            />
 
             {/* 1. Page Title */}
             <div className="container mx-auto px-6 text-center mb-16">
