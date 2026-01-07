@@ -48,7 +48,7 @@ export function Testimonials() {
                             <video
                                 ref={videoRef}
                                 className="w-full h-full object-cover"
-                                poster="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=2670&auto=format&fit=crop"
+                                poster="/image/hero-image-8.webp"
                                 playsInline
                                 onPlay={() => setIsPlaying(true)}
                                 onPause={() => setIsPlaying(false)}
