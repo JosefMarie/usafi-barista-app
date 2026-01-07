@@ -1,0 +1,5 @@
+kind: "AppStack"
+schemaVersion: "v1"
+
+buildConfig:
+  outputDirectory: "dist"
