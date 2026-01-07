@@ -44,8 +44,8 @@ export function ManagerLayout() {
             <aside className="hidden md:flex w-64 flex-col fixed inset-y-0 left-0 bg-[#F5DEB3] dark:bg-[#1c1916] border-r border-espresso/10 z-20 shadow-xl">
                 <div className="p-6 border-b border-espresso/10 flex items-center justify-between">
                     <Link to="/" className="flex items-center gap-2 group">
-                        <div className="h-8 w-8 rounded-full bg-espresso flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform">
-                            <span className="material-symbols-outlined text-lg">campaign</span>
+                        <div className="h-8 w-8 rounded-full bg-white/10 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform overflow-hidden">
+                            <img src="/logo.jpg" alt="Usafi Logo" className="w-full h-full object-cover" />
                         </div>
                         <span className="font-serif text-lg font-bold text-espresso dark:text-white">
                             Usafi Marketing
@@ -98,8 +98,8 @@ export function ManagerLayout() {
                     <div className="fixed inset-0 z-50 bg-[#F5DEB3] dark:bg-[#1c1916] md:hidden flex flex-col">
                         <div className="p-6 flex items-center justify-between border-b border-espresso/10">
                             <div className="flex items-center gap-3">
-                                <div className="h-10 w-10 rounded-full bg-espresso flex items-center justify-center text-white">
-                                    <span className="material-symbols-outlined text-lg">campaign</span>
+                                <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center shadow-xl overflow-hidden">
+                                    <img src="/logo.jpg" alt="Usafi Logo" className="w-full h-full object-cover" />
                                 </div>
                                 <span className="font-serif text-lg font-bold text-espresso dark:text-white">{t('manager.nav.marketing_menu')}</span>
                             </div>

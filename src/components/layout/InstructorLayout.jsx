@@ -54,6 +54,7 @@ export function InstructorLayout() {
         { icon: 'chat', label: t('instructor.nav.chat'), path: '/instructor/chat' },
         { icon: 'schedule', label: t('instructor.nav.schedule'), path: '/instructor/schedule' },
         { icon: 'video_library', label: t('instructor.nav.share_video'), path: '/instructor/share-video' },
+        { icon: 'forum', label: 'Forum', path: '/instructor/forum' },
         { icon: 'person', label: t('instructor.nav.my_profile'), path: '/instructor/profile' },
     ];
 
@@ -63,8 +64,8 @@ export function InstructorLayout() {
             <aside className="hidden md:flex w-64 flex-col fixed inset-y-0 left-0 bg-[#F5DEB3] dark:bg-[#1c1916] border-r border-espresso/10 z-20 shadow-xl">
                 <div className="p-6 border-b border-espresso/10 flex items-center justify-between">
                     <Link to="/" className="flex items-center gap-2 group">
-                        <div className="h-8 w-8 rounded-full bg-espresso flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform">
-                            <span className="material-symbols-outlined text-lg">coffee</span>
+                        <div className="h-8 w-8 rounded-full bg-white/10 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform overflow-hidden">
+                            <img src="/logo.jpg" alt="Usafi Logo" className="w-full h-full object-cover type" />
                         </div>
                         <span className="font-serif text-lg font-bold text-espresso dark:text-white">Usafi {t('instructor.nav.instructor_default')}</span>
                     </Link>
@@ -117,8 +118,8 @@ export function InstructorLayout() {
                     <div className="fixed inset-0 z-50 bg-[#F5DEB3] dark:bg-[#1c1916] md:hidden flex flex-col">
                         <div className="p-6 flex items-center justify-between border-b border-espresso/10">
                             <div className="flex items-center gap-3">
-                                <div className="h-10 w-10 rounded-full bg-espresso flex items-center justify-center text-white shadow-lg">
-                                    <span className="material-symbols-outlined text-lg">coffee</span>
+                                <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center shadow-lg overflow-hidden">
+                                    <img src="/logo.jpg" alt="Usafi Logo" className="w-full h-full object-cover type" />
                                 </div>
                                 <span className="font-serif text-lg font-bold text-espresso dark:text-white">{t('instructor.nav.instructor_menu')}</span>
                             </div>

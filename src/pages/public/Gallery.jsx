@@ -2,6 +2,14 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Newsletter } from '../../components/ui/Newsletter';
 
+import hero1 from '../../assets/images/about/hero-image-1.webp';
+import hero2 from '../../assets/images/about/hero-image-2.webp';
+import hero3 from '../../assets/images/about/hero-image-3.webp';
+import hero5 from '../../assets/images/about/hero-image-5.webp';
+import hero6 from '../../assets/images/about/hero-image-6.webp';
+import hero7 from '../../assets/images/about/hero-image-7.webp';
+import hero8 from '../../assets/images/about/hero-image-8.webp';
+
 export function Gallery() {
     const { t } = useTranslation();
     const photos = [
@@ -37,6 +45,19 @@ export function Gallery() {
         },
     ];
 
+    // Add local images to the photos array
+    const localPhotos = [
+        { url: hero1, category: t('gallery.categories.practice'), desc: "Hero 1" },
+        { url: hero2, category: t('gallery.categories.mastery'), desc: "Hero 2" },
+        { url: hero3, category: t('gallery.categories.classroom'), desc: "Hero 3" },
+        { url: hero5, category: t('gallery.categories.graduation'), desc: "Hero 5" },
+        { url: hero6, category: t('gallery.categories.practice'), desc: "Hero 6" },
+        { url: hero7, category: t('gallery.categories.classroom'), desc: "Hero 7" },
+        { url: hero8, category: t('gallery.categories.practice'), desc: "Hero 8" },
+    ];
+
+    const allPhotos = [...photos, ...localPhotos];
+
     return (
         <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark font-display text-espresso dark:text-white pb-20 pt-24">
 
@@ -56,7 +77,7 @@ export function Gallery() {
             {/* 2. Section 1: Image Gallery (Grid) */}
             <section className="container mx-auto px-6 mb-20">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    {photos.map((photo, index) => (
+                    {allPhotos.map((photo, index) => (
                         <div key={index} className="group relative break-inside-avoid overflow-hidden rounded-2xl shadow-xl border border-espresso/10 aspect-[4/3] bg-[#F5DEB3] dark:bg-white/5">
                             <div
                                 className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"

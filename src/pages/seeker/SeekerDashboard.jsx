@@ -4,7 +4,7 @@ import { db } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
 import { Navigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { GradientButton } from '../../components/ui/GradientButton';
+import { cn } from '../../lib/utils';
 
 export function SeekerDashboard() {
     const { t } = useTranslation();
@@ -15,9 +15,6 @@ export function SeekerDashboard() {
     useEffect(() => {
         if (!user) return;
 
-        // Query approved opportunities visible to 'public'
-        // NOTE: We also include jobs with NO targetAudience defined, assuming they are public by default once approved.
-        // But Firestore queries are restrictive. We'll rely on the Admin ensuring 'public' tag is present.
         const q = query(
             collection(db, 'opportunities'),
             where('status', '==', 'approved'),
@@ -42,50 +39,56 @@ export function SeekerDashboard() {
 
     const handleLogout = async () => {
         await logout();
-        // Force redirect to seeker login or public opportunities
         window.location.href = '/seeker/login';
     };
 
-    if (authLoading) return <div className="p-8 text-center">{t('common.loading')}</div>;
+    if (authLoading) return (
+        <div className="min-h-screen bg-[#F5DEB3] dark:bg-[#1c1916] flex items-center justify-center">
+            <div className="animate-pulse flex flex-col items-center gap-4">
+                <div className="h-12 w-12 rounded-full border-4 border-espresso border-t-transparent animate-spin"></div>
+                <p className="text-espresso/60 font-serif tracking-widest uppercase text-xs">Authenticating...</p>
+            </div>
+        </div>
+    );
 
     if (!user) return <Navigate to="/seeker/login" replace />;
 
     if (user.role !== 'job_seeker' && user.role !== 'admin') {
-        // If a student tries to access this, redirect to their dashboard
         return <Navigate to="/student/dashboard" replace />;
     }
     if (user.role === 'job_seeker' && user.paymentStatus !== 'paid') {
         return <Navigate to="/seeker/payment-pending" replace />;
     }
 
-    /* Simple Header for Seeker */
+    /* Premium Header for Seeker */
     const SeekerHeader = () => (
-        <header className="bg-[#F5DEB3] dark:bg-[#1c1916] border-b border-espresso/10 sticky top-0 z-20 px-6 py-4 shadow-sm">
+        <header className="fixed top-0 left-0 right-0 z-50 bg-[#F5DEB3]/90 dark:bg-[#1c1916]/90 backdrop-blur-md border-b border-espresso/10 px-6 py-4 shadow-sm transition-all">
             <div className="container mx-auto flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-xl bg-espresso flex items-center justify-center text-white shadow-lg shadow-espresso/20">
-                        <span className="material-symbols-outlined text-xl">coffee</span>
+                <div className="flex items-center gap-3 group">
+                    <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform overflow-hidden">
+                        <img src="/logo.jpg" alt="Usafi Logo" className="w-full h-full object-cover" />
                     </div>
-                    <span className="font-serif text-xl font-bold text-espresso dark:text-white tracking-tight">
+                    <span className="font-serif text-xl font-bold text-espresso dark:text-white tracking-tight group-hover:text-espresso/80 transition-colors">
                         {t('seeker.usafi_opportunities')}
                     </span>
                 </div>
                 <div className="flex items-center gap-4">
-                    <span className="text-sm font-bold text-espresso dark:text-white hidden md:block bg-white/40 dark:bg-white/5 px-4 py-2 rounded-xl border border-white/20">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-espresso/60 dark:text-white/60 hidden md:block px-4 py-2 rounded-xl border border-espresso/5">
                         {t('seeker.hello_user', { name: user.name })}
                     </span>
                     <Link
                         to="/seeker/profile"
-                        className="text-sm font-black text-white bg-espresso hover:bg-espresso/90 px-5 py-2.5 rounded-xl transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-2 uppercase tracking-wide"
+                        className="h-10 px-6 bg-espresso text-white rounded-xl flex items-center gap-2 text-[10px] font-black uppercase tracking-widest hover:bg-espresso/90 hover:-translate-y-0.5 transition-all shadow-lg shadow-espresso/20"
                     >
-                        <span className="material-symbols-outlined text-lg">person</span>
+                        <span className="material-symbols-outlined text-[16px]">person</span>
                         <span className="hidden sm:inline">{t('seeker.profile')}</span>
                     </Link>
                     <button
                         onClick={handleLogout}
-                        className="text-sm font-bold text-espresso hover:bg-white/40 px-4 py-2 rounded-xl transition-colors flex items-center gap-1"
+                        className="h-10 w-10 flex items-center justify-center rounded-xl hover:bg-red-50 text-espresso hover:text-red-600 transition-colors"
+                        title={t('seeker.sign_out')}
                     >
-                        {t('seeker.sign_out')}
+                        <span className="material-symbols-outlined">logout</span>
                     </button>
                 </div>
             </div>
@@ -93,101 +96,143 @@ export function SeekerDashboard() {
     );
 
     if (dataLoading) return (
-        <div className="min-h-screen bg-background-light dark:bg-background-dark">
+        <div className="min-h-screen bg-[#F5DEB3] dark:bg-[#1c1916]">
             <SeekerHeader />
-            <div className="container mx-auto px-6 py-12 text-center">
-                {t('seeker.loading_opportunities')}
+            <div className="flex items-center justify-center h-screen pt-20">
+                <div className="animate-pulse flex flex-col items-center gap-4">
+                    <div className="h-12 w-12 rounded-full border-4 border-espresso border-t-transparent animate-spin"></div>
+                    <p className="text-espresso/60 font-serif tracking-widest uppercase text-xs">{t('seeker.loading_opportunities')}</p>
+                </div>
             </div>
         </div>
     );
 
     return (
-        <div className="min-h-screen bg-background-light dark:bg-background-dark font-display">
+        <div className="min-h-screen bg-[#F5DEB3] dark:bg-[#1c1916] font-display selection:bg-espresso/20">
             <SeekerHeader />
 
-            <div className="container mx-auto px-6 py-12">
-                <div className="max-w-4xl mx-auto">
-                    <h1 className="font-serif text-3xl font-bold text-espresso dark:text-white mb-2">{t('seeker.available_opportunities')}</h1>
-                    <p className="text-espresso/70 dark:text-white/70 mb-8">
-                        {t('seeker.exclusive_listings')}
-                    </p>
+            <div className="container mx-auto px-6 pt-32 pb-20">
+                <div className="max-w-6xl mx-auto space-y-12">
+                    <div className="relative">
+                        <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 -ml-6 rounded-full hidden md:block"></div>
+                        <h1 className="text-4xl md:text-5xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none">
+                            {t('seeker.available_opportunities')}
+                        </h1>
+                        <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] mt-3">
+                            {t('seeker.exclusive_listings')}
+                        </p>
+                    </div>
 
-                    <div className="grid gap-6">
+                    <div className="grid gap-8">
                         {jobs.length === 0 ? (
-                            <div className="text-center py-16 bg-white dark:bg-white/5 rounded-3xl border border-dashed border-espresso/10">
-                                <span className="material-symbols-outlined text-4xl text-espresso/30 mb-4">work_off</span>
-                                <h3 className="text-lg font-bold text-espresso/70 dark:text-white/70">{t('seeker.no_opportunities_found')}</h3>
-                                <p className="text-espresso/50 dark:text-white/50">{t('seeker.check_back_later')}</p>
+                            <div className="flex flex-col items-center justify-center py-32 gap-6 bg-white/20 rounded-[3rem] border-2 border-dashed border-espresso/10 opacity-60">
+                                <span className="material-symbols-outlined text-8xl text-espresso/20">work_off</span>
+                                <div className="text-center">
+                                    <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-espresso">{t('seeker.no_opportunities_found')}</h3>
+                                    <p className="text-[8px] font-black uppercase tracking-[0.3em] mt-2 text-espresso/50">{t('seeker.check_back_later')}</p>
+                                </div>
                             </div>
                         ) : (
                             jobs.map(job => (
-                                <div key={job.id} className="bg-[#F5DEB3] dark:bg-[#1c1916] p-8 md:p-10 rounded-[2.5rem] shadow-xl border border-espresso/10 hover:border-espresso/20 hover:shadow-2xl transition-all group relative overflow-hidden">
-                                    <div className="absolute top-0 right-0 w-32 h-32 bg-espresso/5 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110"></div>
-                                    <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
-                                        <div className="flex-1">
-                                            <div className="flex flex-wrap items-center gap-3 mb-3">
-                                                <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${job.type === 'Barista' ? 'bg-orange-100 text-orange-700' :
-                                                    job.type === 'Bartender' ? 'bg-purple-100 text-purple-700' :
-                                                        'bg-blue-100 text-blue-700'
-                                                    }`}>
-                                                    {job.type}
-                                                </span>
-                                                <span className="flex items-center gap-1 text-xs font-bold text-espresso/60 uppercase tracking-wide">
-                                                    <span className="material-symbols-outlined text-sm">schedule</span> {job.jobType}
-                                                </span>
-                                                <span className="text-xs text-espresso/40">
-                                                    {t('seeker.posted')} {job.createdAt?.toDate().toLocaleDateString()}
-                                                </span>
-                                            </div>
+                                <div key={job.id} className="group relative bg-white/40 dark:bg-black/20 rounded-[3rem] p-8 md:p-10 border border-espresso/10 shadow-xl transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-espresso/10 overflow-hidden flex flex-col md:flex-row gap-8">
+                                    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/5 group-hover:bg-espresso transition-colors"></div>
 
-                                            <h3 className="font-serif text-3xl font-bold text-espresso dark:text-white mb-3 group-hover:text-primary transition-colors leading-tight">
-                                                {job.type} Role at {job.orgName}
-                                            </h3>
+                                    {/* Main Content */}
+                                    <div className="flex-1 space-y-6">
+                                        <div className="flex items-center gap-4 flex-wrap">
+                                            <span className={cn(
+                                                "px-4 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-[0.3em] shadow-sm border border-white/20",
+                                                job.type === 'Barista' ? 'bg-amber-600 text-white' :
+                                                    job.type === 'Bartender' ? 'bg-purple-600 text-white' :
+                                                        'bg-blue-600 text-white'
+                                            )}>
+                                                {job.type} ROLE
+                                            </span>
+                                            <span className="text-[9px] font-black text-espresso/30 uppercase tracking-[0.2em] flex items-center gap-2">
+                                                <span className="material-symbols-outlined text-[16px]">schedule</span>
+                                                {job.jobType}
+                                            </span>
+                                            <span className="text-[9px] font-black text-espresso/30 uppercase tracking-[0.2em] flex items-center gap-2">
+                                                <span className="material-symbols-outlined text-[16px]">calendar_today</span>
+                                                POSTED: {job.createdAt?.toDate ? job.createdAt.toDate().toLocaleDateString().toUpperCase() : 'RECENTLY'}
+                                            </span>
+                                        </div>
 
-                                            <div className="flex flex-wrap gap-y-2 gap-x-6 text-sm text-espresso/70 dark:text-white/70 mb-6">
-                                                <span className="flex items-center gap-1">
-                                                    <span className="material-symbols-outlined text-lg">location_on</span>
+                                        <div className="space-y-4">
+                                            <div>
+                                                <h3 className="text-3xl md:text-4xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none group-hover:text-espresso/80 transition-colors">
+                                                    {job.orgName}
+                                                </h3>
+                                                <p className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em] mt-2 flex items-center gap-2">
+                                                    <span className="material-symbols-outlined text-sm">location_on</span>
                                                     {job.location}
-                                                </span>
-                                                <span className="flex items-center gap-1">
-                                                    <span className="material-symbols-outlined text-lg">payments</span>
-                                                    {job.salaryRange || t('seeker.salary_competitive')}
-                                                </span>
-                                            </div>
-
-                                            <div className="bg-white/40 dark:bg-white/5 p-6 rounded-2xl mb-8 border border-white/20">
-                                                <h4 className="font-bold text-sm text-espresso dark:text-white mb-2">{t('seeker.requirements_details')}</h4>
-                                                <p className="text-sm text-espresso/80 dark:text-white/80 leading-relaxed whitespace-pre-line">
-                                                    {job.experience}
                                                 </p>
                                             </div>
 
-                                            <div className="flex flex-wrap items-center gap-4">
-                                                {job.applicationLink ? (
-                                                    <a
-                                                        href={job.applicationLink}
-                                                        target="_blank"
-                                                        rel="noreferrer"
-                                                        className="inline-flex items-center justify-center h-12 px-8 rounded-xl bg-primary text-white font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
-                                                    >
-                                                        {t('seeker.apply_now')}
-                                                        <span className="material-symbols-outlined ml-2 text-lg">open_in_new</span>
-                                                    </a>
-                                                ) : (
-                                                    <div className="flex items-center gap-4 bg-primary/5 px-6 py-3 rounded-xl border border-primary/10">
-                                                        <span className="text-sm font-bold text-primary">{t('seeker.contact_to_apply')}:</span>
-                                                        <div className="flex flex-col md:flex-row gap-4">
-                                                            <a href={`tel:${job.contactPhone}`} className="flex items-center gap-1 text-sm font-bold text-espresso hover:text-primary">
-                                                                <span className="material-symbols-outlined">call</span> {job.contactPhone}
-                                                            </a>
-                                                            <a href={`mailto:${job.contactEmail}`} className="flex items-center gap-1 text-sm font-bold text-espresso hover:text-primary">
-                                                                <span className="material-symbols-outlined">mail</span> {job.contactEmail}
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                )}
+                                            <div className="bg-white/60 dark:bg-black/40 p-6 rounded-[2rem] border border-espresso/5 shadow-inner relative overflow-hidden">
+                                                <div className="absolute top-0 right-0 p-4 opacity-5">
+                                                    <span className="material-symbols-outlined text-6xl text-espresso">format_quote</span>
+                                                </div>
+                                                <div className="relative z-10">
+                                                    <p className="text-[8px] font-black text-espresso/30 uppercase tracking-[0.4em] mb-3">{t('seeker.requirements_details')}</p>
+                                                    <p className="text-espresso/80 dark:text-white/80 text-sm font-medium leading-relaxed italic whitespace-pre-line">
+                                                        "{job.experience}"
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
+                                    </div>
+
+                                    {/* Action Side */}
+                                    <div className="md:w-[280px] shrink-0 flex flex-col justify-between space-y-6 md:pt-2 md:pl-8 md:border-l border-espresso/10">
+                                        <div className="space-y-3">
+                                            <div className="flex items-center gap-3 p-3 rounded-2xl bg-white/30 dark:bg-white/5 border border-espresso/5">
+                                                <div className="h-8 w-8 rounded-lg bg-espresso/10 flex items-center justify-center text-espresso dark:text-white">
+                                                    <span className="material-symbols-outlined text-lg">payments</span>
+                                                </div>
+                                                <div>
+                                                    <p className="text-[8px] font-black text-espresso/40 uppercase tracking-widest">Compensation</p>
+                                                    <p className="text-sm font-bold text-espresso dark:text-white">{job.salaryRange || t('seeker.salary_competitive')}</p>
+                                                </div>
+                                            </div>
+
+                                            {(job.contactPhone || job.contactEmail) && !job.applicationLink && (
+                                                <div className="p-4 rounded-3xl bg-espresso/5 border border-espresso/5 space-y-3">
+                                                    <p className="text-[8px] font-black text-espresso/40 uppercase tracking-widest text-center">{t('seeker.contact_to_apply')}</p>
+                                                    <div className="flex flex-col gap-2">
+                                                        {job.contactPhone && (
+                                                            <a href={`tel:${job.contactPhone}`} className="flex items-center gap-3 hover:bg-white/50 p-2 rounded-xl transition-colors">
+                                                                <span className="material-symbols-outlined text-espresso text-sm">call</span>
+                                                                <span className="text-xs font-bold text-espresso">{job.contactPhone}</span>
+                                                            </a>
+                                                        )}
+                                                        {job.contactEmail && (
+                                                            <a href={`mailto:${job.contactEmail}`} className="flex items-center gap-3 hover:bg-white/50 p-2 rounded-xl transition-colors">
+                                                                <span className="material-symbols-outlined text-espresso text-sm">mail</span>
+                                                                <span className="text-xs font-bold text-espresso truncate">{job.contactEmail}</span>
+                                                            </a>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {job.applicationLink ? (
+                                            <a
+                                                href={job.applicationLink}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                className="w-full group/btn relative flex items-center justify-center gap-3 bg-espresso text-white py-4 rounded-2xl shadow-xl hover:shadow-espresso/30 hover:-translate-y-1 transition-all overflow-hidden"
+                                            >
+                                                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-[100%] group-hover/btn:translate-x-[100%] transition-transform duration-700"></span>
+                                                <span className="font-serif font-black text-lg tracking-wide uppercase z-10">{t('seeker.apply_now')}</span>
+                                                <span className="material-symbols-outlined z-10 group-hover/btn:translate-x-1 transition-transform">open_in_new</span>
+                                            </a>
+                                        ) : (
+                                            <div className="text-center p-3">
+                                                <span className="text-[10px] font-black text-espresso/40 uppercase tracking-widest">Use details above to apply</span>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             ))
@@ -198,3 +243,4 @@ export function SeekerDashboard() {
         </div>
     );
 }
+

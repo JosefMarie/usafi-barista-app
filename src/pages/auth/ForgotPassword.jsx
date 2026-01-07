@@ -38,8 +38,8 @@ export function ForgotPassword() {
             <div className="w-full max-w-md">
                 {/* Logo */}
                 <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary shadow-lg mb-4">
-                        <span className="material-symbols-outlined text-white text-3xl">coffee</span>
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white shadow-lg mb-4 overflow-hidden">
+                        <img src="/logo.jpg" alt="Usafi Logo" className="w-full h-full object-cover" />
                     </div>
                     <h1 className="font-serif text-3xl font-bold text-espresso dark:text-white mb-2">
                         Reset Password

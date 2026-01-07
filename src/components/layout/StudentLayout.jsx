@@ -142,8 +142,8 @@ export function StudentLayout() {
                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/10"></div>
 
                 <div className="p-6 flex items-center gap-3 border-b border-espresso/5 dark:border-white/5 relative z-10 shrink-0">
-                    <div className="h-10 w-10 rounded-2xl bg-espresso flex items-center justify-center text-white shadow-xl rotate-3 group-hover:rotate-0 transition-transform">
-                        <span className="material-symbols-outlined text-2xl">coffee</span>
+                    <div className="h-10 w-10 rounded-2xl bg-white/10 flex items-center justify-center shadow-xl overflow-hidden group-hover:scale-105 transition-transform">
+                        <img src="/logo.jpg" alt="Usafi Logo" className="w-full h-full object-cover" />
                     </div>
                     <span className="font-serif text-lg font-bold text-espresso dark:text-white tracking-tight">
                         Usafi Student

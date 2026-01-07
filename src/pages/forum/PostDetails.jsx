@@ -75,112 +75,125 @@ export function PostDetails() {
         }
     };
 
-    if (loading) return <div className="p-8 text-center">{t('forum.loading_details')}</div>;
+    if (loading) return (
+        <div className="flex items-center justify-center min-h-[50vh] bg-[#F5DEB3] dark:bg-[#1c1916]">
+            <div className="flex flex-col items-center gap-4">
+                <span className="h-10 w-10 border-4 border-espresso/20 border-t-espresso rounded-full animate-spin"></span>
+                <p className="text-sm font-black text-espresso/60 uppercase tracking-widest">{t('forum.loading_details')}</p>
+            </div>
+        </div>
+    );
     if (!post) return null;
 
     return (
-        <div className="bg-background-light dark:bg-[#1c1916] min-h-screen flex flex-col font-sans text-espresso dark:text-[#FAF5E8] pb-24">
+        <div className="bg-[#F5DEB3] dark:bg-[#1c1916] min-h-screen flex flex-col font-display text-espresso dark:text-[#FAF5E8] pb-24 relative overflow-hidden">
+            {/* Background Elements */}
+            <div className="absolute top-[-10%] right-[-5%] w-[40%] h-[40%] bg-espresso/5 rounded-full blur-[100px] pointer-events-none"></div>
+            <div className="absolute bottom-[-10%] left-[-5%] w-[30%] h-[30%] bg-espresso/5 rounded-full blur-[80px] pointer-events-none"></div>
 
             {/* Header */}
-            <header className="sticky top-0 z-50 bg-background-light/95 dark:bg-[#1c1916]/95 backdrop-blur-md border-b border-primary/10 dark:border-primary/20">
-                <div className="flex items-center justify-between px-4 py-3 h-14">
+            <header className="sticky top-0 z-50 bg-white/40 dark:bg-black/40 backdrop-blur-xl border-b border-white/20 dark:border-white/5">
+                <div className="flex items-center justify-between px-6 py-4 h-18">
                     <button
                         onClick={() => navigate(-1)}
-                        className="text-espresso dark:text-[#FAF5E8] hover:bg-black/5 dark:hover:bg-white/10 rounded-full p-2 transition-colors active:scale-95"
+                        className="text-espresso dark:text-[#FAF5E8] hover:bg-white/20 dark:hover:bg-white/10 rounded-full p-2 transition-colors active:scale-95"
                     >
-                        <span className="material-symbols-outlined block">arrow_back</span>
+                        <span className="material-symbols-outlined block text-[24px]">arrow_back</span>
                     </button>
-                    <h1 className="text-espresso dark:text-white text-lg font-serif font-bold tracking-tight">{t('forum.details_title')}</h1>
-                    <button className="text-espresso dark:text-[#FAF5E8] hover:bg-black/5 dark:hover:bg-white/10 rounded-full p-2 transition-colors active:scale-95">
-                        <span className="material-symbols-outlined block">more_horiz</span>
+                    <h1 className="text-espresso dark:text-white text-lg font-serif font-black uppercase tracking-widest">{t('forum.details_title')}</h1>
+                    <button className="text-espresso dark:text-[#FAF5E8] hover:bg-white/20 dark:hover:bg-white/10 rounded-full p-2 transition-colors active:scale-95">
+                        <span className="material-symbols-outlined block text-[24px]">more_horiz</span>
                     </button>
                 </div>
             </header>
 
-            <main className="flex-1 w-full">
-                <article className="px-5 pt-6 pb-4">
-                    {/* Author Info */}
-                    <div className="flex items-center gap-3 mb-4">
-                        <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-sm overflow-hidden">
-                            {post.authorAvatar ? <img src={post.authorAvatar} alt="" className="w-full h-full object-cover" /> : (post.authorName?.[0] || 'U')}
-                        </div>
-                        <div className="flex flex-col">
-                            <span className="text-sm font-bold text-espresso dark:text-white">{post.authorName}</span>
-                            <span className="text-xs text-espresso/60 dark:text-[#FAF5E8]/60">
-                                {post.createdAt?.seconds ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Just now'}
-                            </span>
-                        </div>
-                    </div>
+            <main className="flex-1 w-full max-w-4xl mx-auto relative z-10 p-4 md:p-8 space-y-6">
 
-                    {/* Chips */}
-                    <div className="flex gap-2 mb-3">
-                        <span className="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-semibold border border-primary/20">
+                {/* Main Post Card */}
+                <article className="bg-white/60 dark:bg-black/40 backdrop-blur-xl p-8 rounded-[2.5rem] shadow-xl border border-white/20 dark:border-white/5">
+                    {/* Author Info */}
+                    <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-4">
+                            <div className="h-14 w-14 rounded-2xl bg-white dark:bg-white/5 shadow-inner flex items-center justify-center text-espresso dark:text-white font-black text-lg overflow-hidden border border-white/40">
+                                {post.authorAvatar ? <img src={post.authorAvatar} alt="" className="w-full h-full object-cover" /> : (post.authorName?.[0] || 'U')}
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-base font-bold text-espresso dark:text-white">{post.authorName}</span>
+                                <span className="text-xs font-bold text-espresso/40 dark:text-[#FAF5E8]/40 uppercase tracking-wider">
+                                    {post.createdAt?.seconds ? formatDistanceToNow(post.createdAt.toDate(), { addSuffix: true }) : 'Just now'}
+                                </span>
+                            </div>
+                        </div>
+                        <span className="px-3 py-1 rounded-full bg-white/50 dark:bg-white/5 text-[10px] font-black text-espresso/60 dark:text-white/60 uppercase tracking-widest border border-white/20">
                             {t(`forum.topics.${post.topic}`, { defaultValue: post.topic })}
                         </span>
                     </div>
 
                     {/* Content */}
-                    <h2 className="text-2xl font-serif font-bold text-espresso dark:text-white mb-3 leading-tight">
+                    <h2 className="text-3xl font-serif font-black text-espresso dark:text-white mb-6 leading-tight">
                         {post.title}
                     </h2>
-                    <div className="text-base text-espresso/90 dark:text-[#FAF5E8]/90 leading-relaxed space-y-4 whitespace-pre-wrap">
+                    <div className="text-lg text-espresso/80 dark:text-[#FAF5E8]/80 leading-relaxed space-y-4 whitespace-pre-wrap font-medium">
                         {post.content}
                     </div>
 
                     {/* Stats Bar */}
-                    <div className="flex items-center justify-between mt-6 pt-4 border-t border-primary/10 dark:border-primary/20">
-                        <div className="flex gap-6">
-                            <button className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors group">
-                                <span className="material-symbols-outlined group-active:scale-110 transition-transform">thumb_up</span>
-                                <span className="font-bold text-sm">{post.likes || 0}</span>
+                    <div className="flex items-center justify-between mt-8 pt-6 border-t border-espresso/5 dark:border-white/5">
+                        <div className="flex gap-8">
+                            <button className="flex items-center gap-2 text-espresso/40 hover:text-espresso transition-colors group">
+                                <span className="material-symbols-outlined group-active:scale-110 transition-transform text-[22px]">thumb_up</span>
+                                <span className="font-black text-sm uppercase tracking-wide">{post.likes || 0} Likes</span>
                             </button>
-                            <div className="flex items-center gap-2 text-espresso/60 dark:text-[#FAF5E8]/60">
-                                <span className="material-symbols-outlined">chat_bubble</span>
-                                <span className="font-bold text-sm">{comments.length}</span>
+                            <div className="flex items-center gap-2 text-espresso/40 dark:text-[#FAF5E8]/40">
+                                <span className="material-symbols-outlined text-[22px]">chat_bubble</span>
+                                <span className="font-black text-sm uppercase tracking-wide">{comments.length} Comments</span>
                             </div>
                         </div>
-                        <button className="text-espresso/60 dark:text-[#FAF5E8]/60 hover:text-primary transition-colors" title={t('forum.share')}>
-                            <span className="material-symbols-outlined">share</span>
+                        <button className="text-espresso/40 hover:text-espresso transition-colors" title={t('forum.share')}>
+                            <span className="material-symbols-outlined text-[22px]">share</span>
                         </button>
                     </div>
                 </article>
 
                 {/* Comments Section */}
-                <section className="mt-2 bg-white/50 dark:bg-white/5 rounded-t-3xl border-t border-primary/5 shadow-[0_-1px_3px_rgba(0,0,0,0.02)] min-h-[300px]">
-                    <div className="px-5 py-6">
-                        <h3 className="font-serif font-bold text-lg text-espresso dark:text-white mb-6">{t('forum.comment_count', { count: comments.length })}</h3>
-                        <div className="space-y-6">
-                            {comments.map(comment => (
-                                <div key={comment.id} className="flex gap-3 animate-fade-in">
-                                    <div className="shrink-0 h-8 w-8 rounded-full bg-espresso/10 dark:bg-[#FAF5E8]/10 flex items-center justify-center text-espresso dark:text-[#FAF5E8] text-xs font-bold overflow-hidden">
-                                        {comment.authorAvatar ? <img src={comment.authorAvatar} alt="" className="w-full h-full object-cover" /> : (comment.authorName?.[0] || 'U')}
-                                    </div>
-                                    <div className="flex-1">
-                                        <div className="bg-white dark:bg-white/5 p-3 rounded-2xl rounded-tl-none border border-primary/5 shadow-sm">
-                                            <div className="flex justify-between items-baseline mb-1">
-                                                <span className="text-sm font-bold text-espresso dark:text-white">{comment.authorName}</span>
-                                                <span className="text-[10px] text-espresso/50 dark:text-[#FAF5E8]/50">
-                                                    {comment.createdAt?.seconds ? formatDistanceToNow(comment.createdAt.toDate(), { addSuffix: true }) : 'Just now'}
-                                                </span>
-                                            </div>
-                                            <p className="text-sm text-espresso/80 dark:text-[#FAF5E8]/80 leading-relaxed whitespace-pre-wrap">
-                                                {comment.content}
-                                            </p>
+                <section className="bg-white/40 dark:bg-black/20 backdrop-blur-lg rounded-[2.5rem] p-8 border border-white/10 dark:border-white/5">
+                    <h3 className="font-serif font-black text-lg text-espresso dark:text-white mb-6 uppercase tracking-widest border-b border-espresso/5 dark:border-white/5 pb-4">
+                        Discussion ({comments.length})
+                    </h3>
+
+                    <div className="space-y-6">
+                        {comments.map(comment => (
+                            <div key={comment.id} className="flex gap-4 animate-fade-in group">
+                                <div className="shrink-0 h-10 w-10 rounded-xl bg-white/50 dark:bg-[#FAF5E8]/10 flex items-center justify-center text-espresso dark:text-[#FAF5E8] text-xs font-black overflow-hidden shadow-sm">
+                                    {comment.authorAvatar ? <img src={comment.authorAvatar} alt="" className="w-full h-full object-cover" /> : (comment.authorName?.[0] || 'U')}
+                                </div>
+                                <div className="flex-1">
+                                    <div className="bg-white/60 dark:bg-white/5 p-5 rounded-2xl rounded-tl-none border border-white/20 dark:border-white/5 shadow-sm group-hover:bg-white/80 dark:group-hover:bg-white/10 transition-colors">
+                                        <div className="flex justify-between items-baseline mb-2">
+                                            <span className="text-sm font-bold text-espresso dark:text-white">{comment.authorName}</span>
+                                            <span className="text-[10px] font-bold text-espresso/40 dark:text-[#FAF5E8]/40 uppercase tracking-wider">
+                                                {comment.createdAt?.seconds ? formatDistanceToNow(comment.createdAt.toDate(), { addSuffix: true }) : 'Just now'}
+                                            </span>
                                         </div>
+                                        <p className="text-sm text-espresso/80 dark:text-[#FAF5E8]/80 leading-relaxed whitespace-pre-wrap font-medium">
+                                            {comment.content}
+                                        </p>
                                     </div>
                                 </div>
-                            ))}
-                            {comments.length === 0 && (
-                                <p className="text-center text-sm text-espresso/40 dark:text-white/40 italic py-4">{t('forum.no_comments')}</p>
-                            )}
-                        </div>
+                            </div>
+                        ))}
+                        {comments.length === 0 && (
+                            <div className="text-center py-8">
+                                <p className="text-sm text-espresso/40 dark:text-white/40 font-bold uppercase tracking-widest">{t('forum.no_comments')}</p>
+                            </div>
+                        )}
                     </div>
                 </section>
             </main>
 
             {/* Input Footer */}
-            <div className="fixed bottom-0 w-full z-50 bg-background-light dark:bg-[#1c1916] border-t border-primary/10 dark:border-primary/20 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
-                <div className="flex items-end gap-3 px-4 py-3 w-full">
+            <div className="fixed bottom-0 w-full z-50 bg-white/60 dark:bg-black/90 backdrop-blur-xl border-t border-white/20 dark:border-white/10 shadow-[0_-4px_30px_rgba(0,0,0,0.1)]">
+                <div className="max-w-4xl mx-auto flex items-end gap-3 px-6 py-4 w-full">
                     <div className="relative flex-1">
                         <textarea
                             value={newComment}
@@ -191,21 +204,21 @@ export function PostDetails() {
                                     handleSendComment();
                                 }
                             }}
-                            className="w-full bg-white dark:bg-white/5 border border-primary/30 focus:border-primary text-espresso dark:text-[#FAF5E8] placeholder:text-espresso/40 dark:placeholder:text-[#FAF5E8]/40 rounded-2xl py-3 pl-4 pr-10 text-sm focus:ring-1 focus:ring-primary/50 resize-none overflow-hidden outline-none"
+                            className="w-full bg-white/50 dark:bg-white/10 border border-espresso/10 dark:border-white/10 focus:border-espresso/30 text-espresso dark:text-[#FAF5E8] placeholder:text-espresso/40 dark:placeholder:text-[#FAF5E8]/40 rounded-2xl py-3 pl-5 pr-4 text-sm font-medium focus:ring-2 focus:ring-espresso/5 resize-none overflow-hidden outline-none transition-all"
                             placeholder={t('forum.add_comment')}
                             rows="1"
-                            style={{ minHeight: '46px' }}
+                            style={{ minHeight: '48px' }}
                         ></textarea>
                     </div>
                     <button
                         onClick={handleSendComment}
                         disabled={sending || !newComment.trim()}
-                        className="shrink-0 h-[46px] w-[46px] rounded-full bg-primary hover:bg-[#8e6a46] disabled:opacity-50 text-white flex items-center justify-center shadow-lg shadow-primary/25 active:scale-95 transition-all"
+                        className="shrink-0 h-[48px] w-[48px] rounded-xl bg-espresso hover:bg-espresso/90 disabled:opacity-50 text-white flex items-center justify-center shadow-lg shadow-espresso/20 active:scale-95 transition-all"
                     >
                         {sending ? (
-                            <span className="material-symbols-outlined animate-spin text-[20px]">{t('forum.sending')}</span>
+                            <span className="material-symbols-outlined animate-spin text-[24px]">{t('forum.sending')}</span>
                         ) : (
-                            <span className="material-symbols-outlined text-[20px] ml-0.5">send</span>
+                            <span className="material-symbols-outlined text-[24px]">send</span>
                         )}
                     </button>
                 </div>

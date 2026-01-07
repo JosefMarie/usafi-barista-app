@@ -65,8 +65,8 @@ export function CEOLayout() {
                 <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-[#D4Af37] via-[#F5DEB3] to-[#D4Af37]"></div>
 
                 <div className="p-6 flex items-center gap-3 border-b border-[#D4Af37]/10 relative z-10 shrink-0">
-                    <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-[#D4Af37] to-[#B8860B] flex items-center justify-center text-[#4B3832] shadow-xl shadow-[#D4Af37]/20">
-                        <span className="material-symbols-outlined text-3xl">diamond</span>
+                    <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-[#D4Af37] to-[#B8860B] flex items-center justify-center shadow-xl shadow-[#D4Af37]/20 p-0.5 overflow-hidden">
+                        <img src="/logo.jpg" alt="Usafi Logo" className="w-full h-full object-cover rounded-xl" />
                     </div>
                     <div>
                         <span className="font-serif text-xl font-bold text-[#F5DEB3] tracking-tight block leading-none">
@@ -141,8 +141,8 @@ export function CEOLayout() {
                     <div className="fixed inset-0 z-50 bg-[#4B3832] md:hidden flex flex-col">
                         <div className="p-6 flex items-center justify-between border-b border-[#D4Af37]/10">
                             <div className="flex items-center gap-3">
-                                <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#D4Af37] to-[#B8860B] flex items-center justify-center text-[#4B3832]">
-                                    <span className="material-symbols-outlined text-2xl">diamond</span>
+                                <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#D4Af37] to-[#B8860B] flex items-center justify-center shadow-md p-0.5 overflow-hidden">
+                                    <img src="/logo.jpg" alt="Usafi Logo" className="w-full h-full object-cover rounded-lg" />
                                 </div>
                                 <span className="font-serif text-lg font-bold text-[#F5DEB3]">{t('ceo.nav.executive_menu')}</span>
                             </div>

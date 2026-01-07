@@ -145,7 +145,7 @@ export function ChatWindow() {
                         </div>
                     );
                 })}
-                <div ref={bottomRef} />
+                <div ref={messagesEndRef} />
             </main>
 
             {/* Input Area */}
@@ -156,7 +156,7 @@ export function ChatWindow() {
                             value={newMessage}
                             onChange={(e) => setNewMessage(e.target.value)}
                             onKeyDown={(e) => {
-                                if (e.key === 'Enter') handleSend();
+                                if (e.key === 'Enter') handleSendMessage(e);
                             }}
                             className="w-full bg-transparent border-none p-0 text-espresso dark:text-white placeholder:text-[#837363]/60 focus:ring-0 text-[15px] font-medium font-display leading-normal outline-none"
                             placeholder="Type a message..."
@@ -164,7 +164,7 @@ export function ChatWindow() {
                         />
                     </div>
                     <button
-                        onClick={handleSend}
+                        onClick={handleSendMessage}
                         className="flex items-center justify-center size-10 rounded-full bg-primary hover:bg-primary/90 text-white transition-colors shrink-0 shadow-md shadow-primary/30"
                     >
                         <span className="material-symbols-outlined text-[20px] ml-0.5">send</span>

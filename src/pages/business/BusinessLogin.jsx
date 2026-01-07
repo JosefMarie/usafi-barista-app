@@ -72,79 +72,96 @@ export function BusinessLogin() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-background-light dark:bg-background-dark py-12 px-4 sm:px-6 lg:px-8 font-display">
-            <div className="max-w-md w-full space-y-8 bg-[#F5DEB3] dark:bg-white/5 p-10 rounded-3xl shadow-2xl border border-espresso/10 relative overflow-hidden group">
-                <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+        <div className="min-h-screen flex items-center justify-center bg-[#F5DEB3] dark:bg-[#1c1916] py-12 px-4 sm:px-6 lg:px-8 font-display relative overflow-hidden">
+            {/* Background Elements */}
+            <div className="absolute top-[-10%] left-[-5%] w-[40%] h-[40%] bg-espresso/5 rounded-full blur-[100px] pointer-events-none"></div>
+            <div className="absolute bottom-[-10%] right-[-5%] w-[30%] h-[30%] bg-espresso/5 rounded-full blur-[80px] pointer-events-none"></div>
+
+            <div className="max-w-md w-full space-y-8 bg-white/40 dark:bg-black/40 backdrop-blur-xl p-10 rounded-[2.5rem] shadow-2xl border border-white/20 dark:border-white/5 relative z-10 transition-all hover:shadow-espresso/20 hover:-translate-y-1">
                 <div className="text-center">
-                    <span className="material-symbols-outlined text-5xl text-primary mb-2">business_center</span>
-                    <h2 className="mt-2 text-3xl font-bold text-espresso dark:text-white font-serif">
-                        Business Class Login
+                    <div className="h-24 w-24 mx-auto mb-6 rounded-full bg-white flex items-center justify-center shadow-xl p-1">
+                        <img src="/logo.jpg" alt="Usafi Logo" className="w-full h-full object-cover rounded-full" />
+                    </div>
+                    <h2 className="text-3xl font-black text-espresso dark:text-white font-serif uppercase tracking-tight leading-none mb-2">
+                        Business Class
                     </h2>
-                    <p className="mt-2 text-sm text-espresso/70 dark:text-white/70">
-                        Access your premium business courses and materials.
+                    <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em]">
+                        Executive Portal Access
                     </p>
                 </div>
 
                 {successMessage && (
-                    <div className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 p-3 rounded-lg text-sm text-center border border-green-200 dark:border-green-800">
+                    <div className="bg-green-50/80 dark:bg-green-900/40 text-green-800 dark:text-green-300 p-4 rounded-2xl text-xs font-bold uppercase tracking-wide text-center border border-green-200 dark:border-green-800 backdrop-blur-sm shadow-sm flex items-center justify-center gap-2">
+                        <span className="material-symbols-outlined text-lg">check_circle</span>
                         {successMessage}
                     </div>
                 )}
 
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-                    <div className="rounded-md shadow-sm space-y-4">
+                    <div className="space-y-4">
                         <div>
                             <label htmlFor="email" className="sr-only">Email address</label>
-                            <input
-                                id="email"
-                                name="email"
-                                type="email"
-                                autoComplete="email"
-                                required
-                                className="appearance-none relative block w-full px-4 py-3 border border-espresso/10 placeholder-espresso/40 text-espresso dark:text-white rounded-xl focus:outline-none focus:ring-espresso focus:border-espresso focus:z-10 sm:text-sm bg-white/50 dark:bg-white/5"
-                                placeholder="Email address"
-                                value={formData.email}
-                                onChange={handleChange}
-                            />
+                            <div className="relative group/input">
+                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-espresso/40 group-focus-within/input:text-espresso transition-colors">
+                                    <span className="material-symbols-outlined text-[20px]">mail</span>
+                                </div>
+                                <input
+                                    id="email"
+                                    name="email"
+                                    type="email"
+                                    autoComplete="email"
+                                    required
+                                    className="block w-full pl-12 pr-4 py-4 border border-espresso/10 rounded-2xl bg-white/50 dark:bg-white/5 text-espresso dark:text-white placeholder-espresso/30 focus:outline-none focus:ring-2 focus:ring-espresso/20 focus:border-espresso/30 transition-all font-medium"
+                                    placeholder="Enter business email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                />
+                            </div>
                         </div>
                         <div>
                             <label htmlFor="password" className="sr-only">Password</label>
-                            <input
-                                id="password"
-                                name="password"
-                                type="password"
-                                autoComplete="current-password"
-                                required
-                                className="appearance-none relative block w-full px-4 py-3 border border-espresso/10 placeholder-espresso/40 text-espresso dark:text-white rounded-xl focus:outline-none focus:ring-espresso focus:border-espresso focus:z-10 sm:text-sm bg-white/50 dark:bg-white/5"
-                                placeholder="Password"
-                                value={formData.password}
-                                onChange={handleChange}
-                            />
+                            <div className="relative group/input">
+                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-espresso/40 group-focus-within/input:text-espresso transition-colors">
+                                    <span className="material-symbols-outlined text-[20px]">lock</span>
+                                </div>
+                                <input
+                                    id="password"
+                                    name="password"
+                                    type="password"
+                                    autoComplete="current-password"
+                                    required
+                                    className="block w-full pl-12 pr-4 py-4 border border-espresso/10 rounded-2xl bg-white/50 dark:bg-white/5 text-espresso dark:text-white placeholder-espresso/30 focus:outline-none focus:ring-2 focus:ring-espresso/20 focus:border-espresso/30 transition-all font-medium"
+                                    placeholder="Enter access code"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                />
+                            </div>
                         </div>
                     </div>
 
-                    <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center justify-between text-sm pt-2">
                         <div className="flex items-center">
                             <input
                                 id="remember-me"
                                 name="remember-me"
                                 type="checkbox"
-                                className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+                                className="h-4 w-4 text-espresso focus:ring-espresso border-espresso/20 rounded cursor-pointer bg-white/50"
                             />
-                            <label htmlFor="remember-me" className="ml-2 block text-espresso/70 dark:text-white/70">
-                                Remember me
+                            <label htmlFor="remember-me" className="ml-2 block text-[10px] font-black uppercase tracking-widest text-espresso/60 dark:text-white/60">
+                                Remember Session
                             </label>
                         </div>
 
                         <div className="text-sm">
-                            <Link to="/forgot-password" className="font-medium text-primary hover:text-primary/80 hover:underline">
-                                Forgot your password?
+                            <Link to="/forgot-password" className="text-[10px] font-black text-espresso/60 hover:text-espresso uppercase tracking-widest transition-colors border-b border-transparent hover:border-espresso/20 pb-0.5">
+                                Forgot Credentials?
                             </Link>
                         </div>
                     </div>
 
                     {error && (
-                        <div className="text-red-500 text-sm text-center bg-red-50 dark:bg-red-900/20 p-2 rounded-lg border border-red-200 dark:border-red-900/50">
+                        <div className="flex items-center gap-2 text-red-600 text-[11px] font-black uppercase tracking-wider bg-red-50 dark:bg-red-900/20 px-4 py-3 rounded-xl border border-red-100 dark:border-red-900/30">
+                            <span className="material-symbols-outlined text-base">error</span>
                             {error}
                         </div>
                     )}
@@ -153,24 +170,25 @@ export function BusinessLogin() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-primary/30"
+                            className="group relative w-full flex justify-center py-4 px-4 border border-transparent text-sm font-black uppercase tracking-widest rounded-2xl text-white bg-espresso hover:bg-espresso/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-espresso transition-all shadow-xl shadow-espresso/20 hover:shadow-2xl hover:shadow-espresso/30 hover:-translate-y-0.5 overflow-hidden disabled:opacity-70 disabled:cursor-not-allowed"
                         >
+                            <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                             {loading ? (
                                 <span className="flex items-center gap-2">
                                     <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
-                                    Signing in...
+                                    AUTHENTICATING...
                                 </span>
                             ) : (
-                                "Sign in"
+                                "ACCESS DASHBOARD"
                             )}
                         </button>
                     </div>
 
-                    <div className="text-center">
-                        <p className="text-sm text-espresso/70 dark:text-white/70">
-                            Don't have an account?{' '}
-                            <Link to="/business/register" className="font-medium text-primary hover:text-primary/80 hover:underline">
-                                Apply for Access
+                    <div className="text-center pt-4 border-t border-espresso/5 mt-6">
+                        <p className="text-xs text-espresso/60 dark:text-white/60 font-medium">
+                            New Applicant?{' '}
+                            <Link to="/business/register" className="font-bold text-espresso hover:text-black dark:text-white dark:hover:text-white/80 transition-colors uppercase tracking-wide ml-1">
+                                Apply for Business Class
                             </Link>
                         </p>
                     </div>

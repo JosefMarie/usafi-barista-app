@@ -5,6 +5,7 @@ import {
     onAuthStateChanged
 } from 'firebase/auth';
 import { auth } from '../lib/firebase';
+import LoadingScreen from '../components/common/LoadingScreen';
 
 const AuthContext = createContext();
 
@@ -107,12 +108,7 @@ export const AuthProvider = ({ children }) => {
     return (
         <AuthContext.Provider value={value}>
             {loading ? (
-                <div className="h-screen w-screen flex items-center justify-center bg-background-light dark:bg-background-dark text-espresso dark:text-white">
-                    <div className="flex flex-col items-center gap-4">
-                        <span className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></span>
-                        <p>Initializing App...</p>
-                    </div>
-                </div>
+                <LoadingScreen />
             ) : (
                 children
             )}

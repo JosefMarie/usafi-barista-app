@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, updateDoc, setDoc, arrayUnion, arrayRemove, collection, query, where, getDocs, serverTimestamp } from 'firebase/firestore';
-import { db } from '../../lib/firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { db, storage } from '../../lib/firebase';
+import imageCompression from 'browser-image-compression';
 import { cn } from '../../lib/utils';
 import { useAuth } from '../../context/AuthContext';
 import { RichTextEditor } from '../../components/common/RichTextEditor';
@@ -103,6 +105,36 @@ export function ManageModule() {
 
     const removeSlide = (index) => {
         setSlides(slides.filter((_, i) => i !== index));
+    };
+
+    // --- Image Upload Handler ---
+    const handleImageUpload = async (index, event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        try {
+            // 1. Compress the image
+            const options = {
+                maxSizeMB: 1,
+                maxWidthOrHeight: 1920,
+                useWebWorker: true,
+            };
+            const compressedFile = await imageCompression(file, options);
+
+            // 2. Upload to Firebase Storage
+            const storageRef = ref(storage, `module-content/${courseId}/${moduleId}/${Date.now()}_${file.name}`);
+            const snapshot = await uploadBytes(storageRef, compressedFile);
+
+            // 3. Get Download URL
+            const downloadURL = await getDownloadURL(snapshot.ref);
+
+            // 4. Update Slide State
+            updateSlide(index, 'image', downloadURL);
+
+        } catch (error) {
+            console.error("Error uploading image:", error);
+            alert(`Failed to upload image: ${error.message}`);
+        }
     };
 
     // --- Quiz Handlers ---
@@ -341,12 +373,19 @@ export function ManageModule() {
                                     <div className="space-y-3">
                                         <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-espresso/40 ml-1">Visual Asset Synchronization</label>
                                         <div className="flex gap-4">
-                                            <input
-                                                className="flex-1 px-6 py-4 rounded-2xl bg-white/20 dark:bg-black/20 border border-espresso/10 text-sm font-medium text-espresso dark:text-white outline-none focus:ring-2 focus:ring-espresso shadow-inner transition-all"
-                                                placeholder="Endpoint URL (Optional)"
-                                                value={slide.image}
-                                                onChange={(e) => updateSlide(index, 'image', e.target.value)}
-                                            />
+                                            <div className="flex-1 relative group/upload">
+                                                <div className="absolute inset-0 bg-white/20 dark:bg-black/20 border border-espresso/10 rounded-2xl flex items-center px-4 pointer-events-none">
+                                                    <span className="text-sm font-medium text-espresso/60 dark:text-white/60 truncate">
+                                                        {slide.image ? "Image Asset Uploaded" : "Upload Visual Asset..."}
+                                                    </span>
+                                                </div>
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    onChange={(e) => handleImageUpload(index, e)}
+                                                    className="w-full h-full opacity-0 py-4 cursor-pointer"
+                                                />
+                                            </div>
                                             {slide.image && (
                                                 <div className="h-14 w-14 rounded-2xl overflow-hidden border-2 border-espresso/20 shadow-xl group/preview relative">
                                                     <img src={slide.image} alt="Preview" className="h-full w-full object-cover" />

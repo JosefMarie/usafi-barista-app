@@ -1,10 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Newsletter } from '../../components/ui/Newsletter';
 
+import hero1 from '../../assets/images/about/hero-image-1.webp';
+import hero2 from '../../assets/images/about/hero-image-2.webp';
+import hero3 from '../../assets/images/about/hero-image-3.webp';
+import hero5 from '../../assets/images/about/hero-image-5.webp';
+import hero6 from '../../assets/images/about/hero-image-6.webp';
+import hero7 from '../../assets/images/about/hero-image-7.webp';
+import hero8 from '../../assets/images/about/hero-image-8.webp';
+
+const heroImages = [hero1, hero2, hero3, hero5, hero6, hero7, hero8];
+
 export function About() {
     const { t } = useTranslation();
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
+        }, 5000);
+        return () => clearInterval(interval);
+    }, []);
     return (
         <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark font-display text-espresso dark:text-white pb-10">
 
@@ -17,14 +35,22 @@ export function About() {
 
             {/* 2. Introduction Section */}
             <section className="container mx-auto px-6 mb-20">
-                <div className="relative w-full h-[60vh] rounded-3xl overflow-hidden shadow-xl mb-10">
-                    {/* Image placeholder: School interior/exterior */}
-                    <div
-                        className="w-full h-full bg-cover bg-center"
-                        style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuDtNLCBME4CThl5fKEEVW5bHFXBXpMLQ7mgs42CaXljuX3Nr5GsMCDaRUfa7uyJtdXCey_giXghk4qvxRXT37O3ZZhQWZNop-oJWtAxcgpvjiuNu9tjXoU5UTNMrdxgQ6sNohg1R6ZLXfFH3zs0mpgkZe0P0Ol5yIQ75hm2zgZsClouHMn56_zs5-9ELI1JN9Qxf7553_SJH9sUcI8WoAz1qfoFUc22GUG1oL_XjzkETm5NOyPbqszR0NkefOWubHhiLOnj0G_a5hm3")' }} // Using a placeholder from the ref file for now, ideally user replaces this.
-                    >
-                        <div className="absolute inset-0 bg-black/20"></div>
-                    </div>
+                <div className="relative w-full h-[80vh] rounded-3xl overflow-hidden shadow-xl mb-10">
+                    {/* Image Slider */}
+                    {heroImages.map((image, index) => (
+                        <div
+                            key={index}
+                            className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out ${index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+                                }`}
+                        >
+                            <img
+                                src={image}
+                                alt={`About Hero ${index + 1}`}
+                                className="w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-black/20"></div>
+                        </div>
+                    ))}
                 </div>
 
                 <div className="max-w-4xl mx-auto text-center">
@@ -87,7 +113,7 @@ export function About() {
                         {/* Image 1: Circular Headshot */}
                         <div className="shrink-0 w-64 h-64 rounded-full overflow-hidden border-4 border-primary shadow-lg">
                             <img
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtNLCBME4CThl5fKEEVW5bHFXBXpMLQ7mgs42CaXljuX3Nr5GsMCDaRUfa7uyJtdXCey_giXghk4qvxRXT37O3ZZhQWZNop-oJWtAxcgpvjiuNu9tjXoU5UTNMrdxgQ6sNohg1R6ZLXfFH3zs0mpgkZe0P0Ol5yIQ75hm2zgZsClouHMn56_zs5-9ELI1JN9Qxf7553_SJH9sUcI8WoAz1qfoFUc22GUG1oL_XjzkETm5NOyPbqszR0NkefOWubHhiLOnj0G_a5hm3"
+                                src="./Ebene.png"
                                 alt="Sandrine Gasarasi"
                                 className="w-full h-full object-cover"
                             />
@@ -106,7 +132,7 @@ export function About() {
                         {/* Image 2: Circular Headshot/Action shot */}
                         <div className="shrink-0 w-64 h-64 rounded-full overflow-hidden border-4 border-primary shadow-lg">
                             <img
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbkS6b0MP8hct7Qap1lLv5An_0Edh4JLRPfOj7LCx6HjFH_-QTjuwJIDBMuux5BLnDZpDiIbEJ5hJflRG3y3W3IYN_qn-Cn9F8_NyZADF-d9h5BliZ8KiMSgrysIS30826crRF_5Ei7KbNfwRAR944v-3Qg4GfUGZXZD64iNZH53h_lrQm09fgGobO8CSfVivEabO5dTGcmOG_J1r7X-8CXQsdsw9-1HRnKwJrnst30S_6iSkPhBcyTt3rD4iXes0OhVnMVtsimpv8" // Placeholder using the Latte Art Specialist image
+                                src="./Ebene.png" // Placeholder using the Latte Art Specialist image
                                 alt="Ishimwe Ebenezer"
                                 className="w-full h-full object-cover"
                             />

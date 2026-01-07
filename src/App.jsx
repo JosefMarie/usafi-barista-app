@@ -204,8 +204,12 @@ function App() {
               <Route path="courses" element={<InstructorCourses />} />
               <Route path="students" element={<InstructorStudents />} />
               <Route path="chat" element={<InstructorChat />} />
+              <Route path="chat/:recipientId" element={<ChatWindow />} />
               <Route path="schedule" element={<InstructorSchedule />} />
               <Route path="share-video" element={<InstructorShareVideo />} />
+              <Route path="forum" element={<ForumList />} />
+              <Route path="forum/create" element={<CreatePost />} />
+              <Route path="forum/:id" element={<PostDetails />} />
               <Route path="profile" element={<CommonProfile />} />
               <Route path="privacy-settings" element={<PrivacySettings />} />
             </Route>

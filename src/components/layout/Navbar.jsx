@@ -78,8 +78,8 @@ export function Navbar() {
 
                 {/* Logo */}
                 <Link to="/" className="flex items-center gap-2 group">
-                    <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-white shadow-lg group-hover:scale-105 transition-transform">
-                        <span className="material-symbols-outlined text-2xl">coffee</span>
+                    <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform overflow-hidden">
+                        <img src="/logo.jpg" alt="Usafi Logo" className="w-full h-full object-cover" />
                     </div>
                     <span className={cn(
                         "font-serif text-xl font-bold tracking-tight transition-colors",
@@ -87,6 +87,7 @@ export function Navbar() {
                     )}>
                         Usafi Barista
                     </span>
+
                 </Link>
 
                 {/* Desktop Nav */}
