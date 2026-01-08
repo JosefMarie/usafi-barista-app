@@ -27,41 +27,76 @@ export function Enrollment() {
 
         try {
             // Import Firebase services dynamically
-            const { createUserWithEmailAndPassword } = await import('firebase/auth');
-            const { doc, setDoc, serverTimestamp } = await import('firebase/firestore');
+            const { createUserWithEmailAndPassword, signInWithEmailAndPassword } = await import('firebase/auth');
+            const { doc, setDoc, getDoc, updateDoc, collection, query, where, getDocs, serverTimestamp } = await import('firebase/firestore');
             const { auth, db } = await import('../../lib/firebase');
 
-            // 1. Create Authentication User
-            setLoadingMessage(t('enrollment.loading.auth'));
-            const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
-            const user = userCredential.user;
+            // Check if account exists and is deleted
+            const usersQuery = query(collection(db, 'users'), where('email', '==', formData.email));
+            const userSnapshot = await getDocs(usersQuery);
 
-            // 2. Create User Document in Firestore
-            setLoadingMessage(t('enrollment.loading.db'));
-            console.log("Attempting to write to Firestore users collection...");
+            let userId;
+            let isReactivation = false;
 
-            // Prepare user data
-            const userData = {
-                fullName: formData.fullName,
-                phone: formData.phone,
-                email: formData.email,
-                residence: formData.residence,
-                course: formData.course,
-                studyMethod: formData.studyMethod,
-                startDate: formData.startDate,
-                shift: formData.shift || '', // Include shift
-                referral: formData.referral,
-                role: 'student',
-                status: 'pending', // Pending approval
-                createdAt: serverTimestamp(),
-                // Initialize default student data
-                progress: 0,
-                enrolledCourses: []
-            };
+            if (!userSnapshot.empty) {
+                const existingUser = userSnapshot.docs[0];
+                const userData = existingUser.data();
 
-            await setDoc(doc(db, 'users', user.uid), userData);
+                // If account is deleted, reactivate it
+                if (userData.status === 'deleted') {
+                    setLoadingMessage('Reactivating your account...');
+                    userId = existingUser.id;
+                    isReactivation = true;
 
-            // 3. Redirect to Thank You / Pending Page
+                    // Update the existing document with new enrollment data
+                    const updatedUserData = {
+                        fullName: formData.fullName,
+                        phone: formData.phone,
+                        residence: formData.residence,
+                        course: formData.course,
+                        studyMethod: formData.studyMethod,
+                        startDate: formData.startDate,
+                        shift: formData.shift || '',
+                        referral: formData.referral,
+                        status: 'pending', // Set back to pending for admin approval
+                        reactivatedAt: serverTimestamp(),
+                        deletedAt: null
+                    };
+
+                    await updateDoc(doc(db, 'users', userId), updatedUserData);
+                } else {
+                    // Account exists and is not deleted - throw error
+                    throw { code: 'auth/email-already-in-use' };
+                }
+            } else {
+                // No existing account - create new one
+                setLoadingMessage(t('enrollment.loading.auth'));
+                const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+                userId = userCredential.user.uid;
+
+                // Create User Document in Firestore
+                setLoadingMessage(t('enrollment.loading.db'));
+                const userData = {
+                    fullName: formData.fullName,
+                    phone: formData.phone,
+                    email: formData.email,
+                    residence: formData.residence,
+                    course: formData.course,
+                    studyMethod: formData.studyMethod,
+                    startDate: formData.startDate,
+                    shift: formData.shift || '',
+                    referral: formData.referral,
+                    role: 'student',
+                    status: 'pending',
+                    createdAt: serverTimestamp(),
+                    progress: 0,
+                    enrolledCourses: []
+                };
+
+                await setDoc(doc(db, 'users', userId), userData);
+            }
+
+            // Redirect to Thank You page
             setLoadingMessage(t('enrollment.loading.final'));
             navigate('/thank-you');
 
@@ -72,7 +107,6 @@ export function Enrollment() {
             } else if (err.code === 'auth/weak-password') {
                 setError(t('enrollment.errors.weak_password'));
             } else {
-                // Show the specific error message for debugging
                 setError(`Error: ${err.message}`);
             }
         } finally {

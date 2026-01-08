@@ -78,11 +78,15 @@ export function StudentDetails() {
 
     // Delete Handler
     const handleDelete = async () => {
-        if (!window.confirm("Are you sure you want to delete this student? This action cannot be undone.")) return;
+        if (!window.confirm("Are you sure you want to delete this student? They can re-enroll with the same email later.")) return;
 
         try {
             setLoading(true);
-            await deleteDoc(doc(db, 'users', id));
+            // Soft delete: Set status to 'deleted' instead of removing the document
+            await updateDoc(doc(db, 'users', id), {
+                status: 'deleted',
+                deletedAt: serverTimestamp()
+            });
             navigate('/admin/students');
         } catch (err) {
             console.error("Error deleting student:", err);
