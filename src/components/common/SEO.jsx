@@ -35,6 +35,48 @@ export const SEO = ({ title, description, type = 'website' }) => {
 
             {/* Canonical URL */}
             <link rel="canonical" href={window.location.href} />
+
+            {/* Structured Data (JSON-LD) */}
+            <script type="application/ld+json">
+                {JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "LocalBusiness",
+                    "name": siteTitle,
+                    "image": [
+                        `${startUrl}/logo.jpg`,
+                        `${startUrl}/Ebene.png`
+                    ],
+                    "description": metaDescription,
+                    "url": startUrl,
+                    "telephone": "+250791433608",
+                    "address": {
+                        "@type": "PostalAddress",
+                        "streetAddress": "KK 15 Rd",
+                        "addressLocality": "Kigali",
+                        "addressCountry": "RW"
+                    },
+                    "geo": {
+                        "@type": "GeoCoordinates",
+                        "latitude": "-1.9706",
+                        "longitude": "30.1044"
+                    },
+                    "priceRange": "$$",
+                    "openingHoursSpecification": [
+                        {
+                            "@type": "OpeningHoursSpecification",
+                            "dayOfWeek": [
+                                "Monday",
+                                "Tuesday",
+                                "Wednesday",
+                                "Thursday",
+                                "Friday"
+                            ],
+                            "opens": "08:00",
+                            "closes": "17:00"
+                        }
+                    ]
+                })}
+            </script>
         </Helmet>
     );
 };
