@@ -51,20 +51,19 @@ export function CEOStaff() {
 
     return (
         <div className="flex-1 flex flex-col h-full bg-[#FAF5E8] dark:bg-[#1c1916] overflow-y-auto animate-fade-in pb-20">
-            <div className="w-full max-w-7xl mx-auto px-6 py-10 space-y-10">
+            <div className="w-full max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-10 space-y-6 md:space-y-10">
                 {/* Header */}
-                <div className="flex items-center justify-between relative">
-                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-[#D4Af37] -ml-6"></div>
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between relative gap-4 pl-4 md:pl-0">
+                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-[#D4Af37] -ml-4 md:hidden"></div>
                     <div>
-                        <h1 className="text-4xl font-serif font-black text-[#4B3832] dark:text-[#F5DEB3] uppercase tracking-tight leading-none">Command Structure</h1>
-                        <p className="text-[10px] font-black text-[#D4Af37] uppercase tracking-[0.3em] mt-2">Executive Personnel Management</p>
+                        <h1 className="text-2xl md:text-4xl font-serif font-black text-[#4B3832] dark:text-[#F5DEB3] uppercase tracking-tight leading-none">Command Structure</h1>
+                        <p className="text-[10px] font-black text-[#D4Af37] uppercase tracking-[0.3em] mt-2 leading-none">Executive Personnel Management</p>
                     </div>
-                    {/* Add Staff Button could go here, for now simpler just list */}
                 </div>
 
-                <div className="grid gap-6">
+                <div className="grid gap-4 md:gap-6">
                     {staff.map(user => (
-                        <div key={user.id} className="bg-white/40 dark:bg-black/20 p-8 rounded-[2rem] border border-[#D4Af37]/20 shadow-xl flex items-center justify-between hover:shadow-2xl hover:bg-white/60 dark:hover:bg-black/30 transition-all group relative overflow-hidden">
+                        <div key={user.id} className="bg-white/40 dark:bg-black/20 p-5 md:p-8 rounded-3xl md:rounded-[2rem] border border-[#D4Af37]/20 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between hover:shadow-2xl hover:bg-white/60 dark:hover:bg-black/30 transition-all group relative overflow-hidden gap-6">
                             <div className={cn(
                                 "absolute left-0 top-0 bottom-0 w-2 transition-colors",
                                 user.role === 'ceo' ? "bg-[#D4Af37]" :
@@ -72,11 +71,11 @@ export function CEOStaff() {
                                         "bg-[#4B3832]/40"
                             )}></div>
 
-                            <div className="flex items-center gap-8">
+                            <div className="flex items-center gap-4 md:gap-8 w-full">
                                 <div className="relative shrink-0">
                                     <div className={cn(
-                                        "w-20 h-20 rounded-[1.5rem] overflow-hidden border-2 shadow-lg group-hover:scale-105 transition-transform flex items-center justify-center",
-                                        user.role === 'ceo' ? "border-[#D4Af37] bg-[#D4Af37]" : "border-[#4B3832]/20"
+                                        "size-16 md:size-20 rounded-2xl md:rounded-[1.5rem] overflow-hidden border-2 shadow-lg group-hover:scale-105 transition-transform flex items-center justify-center",
+                                        user.role === 'ceo' ? "border-[#D4Af37] bg-[#D4Af37]" : "border-[#4B3832]/20 bg-espresso/5"
                                     )}>
                                         {user.photoURL ? (
                                             <img
@@ -85,28 +84,28 @@ export function CEOStaff() {
                                                 className="w-full h-full object-cover"
                                             />
                                         ) : (
-                                            <span className="material-symbols-outlined text-4xl opacity-50">person</span>
+                                            <span className="material-symbols-outlined text-3xl md:text-4xl opacity-30">person</span>
                                         )}
                                     </div>
                                     {user.role === 'ceo' && (
                                         <div className="absolute -top-2 -right-2 bg-[#D4Af37] text-[#4B3832] p-1 rounded-full shadow-md z-10 border border-white">
-                                            <span className="material-symbols-outlined text-sm font-bold">diamond</span>
+                                            <span className="material-symbols-outlined text-[10px] md:text-sm font-bold">diamond</span>
                                         </div>
                                     )}
                                 </div>
-                                <div>
-                                    <h3 className="font-serif font-black text-2xl text-[#4B3832] dark:text-[#F5DEB3] tracking-tight">
-                                        {user.fullName || user.name || 'Unnamed Staff'} <span className="text-sm font-sans font-normal opacity-50 ml-2">({user.role})</span>
+                                <div className="min-w-0 flex-1">
+                                    <h3 className="font-serif font-black text-lg md:text-2xl text-[#4B3832] dark:text-[#F5DEB3] tracking-tight truncate leading-tight">
+                                        {user.fullName || user.name || 'Unnamed Staff'}
                                     </h3>
-                                    <p className="text-[10px] font-black text-[#4B3832]/60 dark:text-[#F5DEB3]/40 uppercase tracking-widest mt-1">
+                                    <p className="text-[9px] font-black text-[#4B3832]/50 dark:text-[#F5DEB3]/40 uppercase tracking-widest mt-1 truncate">
                                         {user.email}
                                     </p>
-                                    <div className="flex items-center gap-2 mt-3">
+                                    <div className="flex items-center gap-2 mt-2">
                                         <span className={cn(
-                                            "px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-[0.2em] shadow-sm border",
+                                            "px-2.5 py-1 rounded-lg text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] shadow-sm border",
                                             user.role === 'ceo' ? "bg-[#D4Af37]/20 border-[#D4Af37] text-[#D4Af37]" :
-                                                user.role === 'admin' ? "bg-[#4B3832]/10 border-[#4B3832] text-[#4B3832]" :
-                                                    "bg-gray-100 border-gray-200 text-gray-500"
+                                                user.role === 'admin' ? "bg-[#4B3832]/10 border-[#4B3832] text-[#4B3832] dark:text-[#F5DEB3] dark:border-[#F5DEB3]/20" :
+                                                    "bg-gray-100 border-gray-200 text-gray-500 dark:bg-white/5 dark:border-white/10 dark:text-white/40"
                                         )}>
                                             {user.role}
                                         </span>
@@ -114,15 +113,15 @@ export function CEOStaff() {
                                 </div>
                             </div>
 
-                            <div className="flex flex-col items-end gap-3">
+                            <div className="flex flex-col sm:flex-row md:flex-col items-stretch sm:items-center md:items-end gap-3 w-full md:w-auto mt-4 md:mt-0 pt-4 md:pt-0 border-t md:border-t-0 border-espresso/5">
                                 {user.role !== 'ceo' ? (
                                     <>
-                                        <p className="text-[9px] font-black uppercase tracking-widest text-[#4B3832]/40 mb-1">Modify Access</p>
-                                        <div className="flex items-center gap-2">
+                                        <p className="text-[9px] font-black uppercase tracking-widest text-[#4B3832]/40 mb-1 hidden lg:block">Modify Access</p>
+                                        <div className="flex flex-wrap items-center gap-2 justify-start sm:justify-end md:justify-end">
                                             {user.role !== 'admin' && (
                                                 <button
                                                     onClick={() => handleRoleUpdate(user.id, 'admin')}
-                                                    className="px-4 py-2 bg-[#4B3832] text-[#F5DEB3] text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-[#D4Af37] hover:text-[#4B3832] transition-colors shadow-lg"
+                                                    className="flex-1 sm:flex-none px-4 py-2 bg-[#4B3832] text-[#F5DEB3] text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-[#D4Af37] hover:text-[#4B3832] transition-colors shadow-lg shadow-espresso/10 active:scale-95 whitespace-nowrap"
                                                 >
                                                     Promote to Admin
                                                 </button>
@@ -130,7 +129,7 @@ export function CEOStaff() {
                                             {user.role !== 'manager' && (
                                                 <button
                                                     onClick={() => handleRoleUpdate(user.id, 'manager')}
-                                                    className="px-4 py-2 bg-white/40 hover:bg-white text-[#4B3832] text-[9px] font-black uppercase tracking-widest rounded-xl border border-[#4B3832]/10 transition-colors"
+                                                    className="flex-1 sm:flex-none px-4 py-2 bg-white dark:bg-white/5 hover:bg-[#4B3832] hover:text-[#F5DEB3] text-[#4B3832] dark:text-[#F5DEB3]/60 text-[9px] font-black uppercase tracking-widest rounded-xl border border-[#4B3832]/10 transition-colors active:scale-95 whitespace-nowrap"
                                                 >
                                                     Set as Manager
                                                 </button>
@@ -138,7 +137,7 @@ export function CEOStaff() {
                                             {user.role === 'admin' && (
                                                 <button
                                                     onClick={() => handleRoleUpdate(user.id, 'instructor')}
-                                                    className="px-4 py-2 bg-red-50 text-red-600 border border-red-100 text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-red-100 transition-colors"
+                                                    className="flex-1 sm:flex-none px-4 py-2 bg-red-50 text-red-600 border border-red-100 text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-red-600 hover:text-white transition-colors active:scale-95"
                                                 >
                                                     Demote
                                                 </button>
@@ -146,7 +145,10 @@ export function CEOStaff() {
                                         </div>
                                     </>
                                 ) : (
-                                    <span className="material-symbols-outlined text-4xl text-[#D4Af37]/20">lock</span>
+                                    <div className="flex items-center justify-center md:justify-end opacity-20">
+                                        <span className="material-symbols-outlined text-3xl">verified_user</span>
+                                        <span className="text-[9px] font-black uppercase tracking-widest ml-2">Executive Access</span>
+                                    </div>
                                 )}
                             </div>
                         </div>

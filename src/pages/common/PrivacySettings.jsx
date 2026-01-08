@@ -73,29 +73,29 @@ export function PrivacySettings() {
     }
 
     return (
-        <div className="min-h-screen bg-background-light dark:bg-background-dark p-6">
+        <div className="min-h-screen bg-background-light dark:bg-background-dark p-4 md:p-6">
             <div className="max-w-4xl mx-auto">
                 {/* Header */}
-                <div className="mb-8">
+                <div className="mb-6 md:mb-8">
                     <button
                         onClick={() => navigate(-1)}
-                        className="flex items-center gap-2 text-espresso/70 dark:text-white/70 hover:text-espresso font-black uppercase tracking-widest text-[10px] mb-6 group transition-all"
+                        className="flex items-center gap-2 text-espresso/70 dark:text-white/70 hover:text-espresso font-black uppercase tracking-widest text-[10px] mb-4 md:mb-6 group transition-all"
                     >
-                        <span className="material-symbols-outlined text-[18px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                        <span className="material-symbols-outlined text-[16px] md:text-[18px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
                         {t('privacy_settings.back')}
                     </button>
-                    <h1 className="text-4xl font-serif font-bold text-espresso dark:text-white mb-2">
+                    <h1 className="text-3xl md:text-4xl font-serif font-bold text-espresso dark:text-white mb-2">
                         {t('privacy_settings.title')}
                     </h1>
-                    <p className="text-espresso/60 dark:text-white/60 font-medium">
+                    <p className="text-sm md:text-base text-espresso/60 dark:text-white/60 font-medium">
                         {t('privacy_settings.subtitle')}
                     </p>
                 </div>
 
                 {/* Profile Visibility */}
-                <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/10 p-8 mb-8 relative overflow-hidden group">
+                <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-2xl md:rounded-3xl shadow-xl border border-espresso/10 p-5 md:p-8 mb-6 md:mb-8 relative overflow-hidden group">
                     <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                    <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 mb-6 uppercase tracking-[0.2em] relative z-10">{t('privacy_settings.section_access')}</h2>
+                    <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 mb-5 md:mb-6 uppercase tracking-[0.2em] relative z-10">{t('privacy_settings.section_access')}</h2>
 
                     <div className="space-y-4">
                         <div className="relative z-10">
@@ -105,7 +105,7 @@ export function PrivacySettings() {
                             <select
                                 value={settings.profileVisibility}
                                 onChange={e => setSettings({ ...settings, profileVisibility: e.target.value })}
-                                className="w-full px-4 py-3.5 rounded-xl border border-espresso/10 bg-white/40 dark:bg-white/5 text-espresso dark:text-white focus:outline-none focus:ring-2 focus:ring-espresso transition-all font-bold text-sm"
+                                className="w-full px-3 md:px-4 py-3 md:py-3.5 rounded-xl border border-espresso/10 bg-white/40 dark:bg-white/5 text-espresso dark:text-white focus:outline-none focus:ring-2 focus:ring-espresso transition-all font-bold text-sm"
                             >
                                 <option value="public">{t('privacy_settings.opt_public')}</option>
                                 <option value="connections">{t('privacy_settings.opt_connections')}</option>
@@ -113,12 +113,12 @@ export function PrivacySettings() {
                             </select>
                         </div>
 
-                        <div className="flex items-center justify-between p-5 bg-white/30 dark:bg-white/5 rounded-2xl border border-espresso/5 relative z-10">
-                            <div>
+                        <div className="flex items-center justify-between p-4 md:p-5 bg-white/30 dark:bg-white/5 rounded-xl md:rounded-2xl border border-espresso/5 relative z-10">
+                            <div className="flex-1 pr-3">
                                 <p className="font-bold text-espresso dark:text-white text-sm">{t('privacy_settings.email_label')}</p>
                                 <p className="text-xs text-espresso/50 dark:text-white/50">{t('privacy_settings.email_desc')}</p>
                             </div>
-                            <label className="relative inline-flex items-center cursor-pointer">
+                            <label className="relative inline-flex items-center cursor-pointer shrink-0">
                                 <input
                                     type="checkbox"
                                     checked={settings.showEmail}
@@ -129,12 +129,12 @@ export function PrivacySettings() {
                             </label>
                         </div>
 
-                        <div className="flex items-center justify-between p-5 bg-white/30 dark:bg-white/5 rounded-2xl border border-espresso/5 relative z-10">
-                            <div>
+                        <div className="flex items-center justify-between p-4 md:p-5 bg-white/30 dark:bg-white/5 rounded-xl md:rounded-2xl border border-espresso/5 relative z-10">
+                            <div className="flex-1 pr-3">
                                 <p className="font-bold text-espresso dark:text-white text-sm">{t('privacy_settings.phone_label')}</p>
                                 <p className="text-xs text-espresso/50 dark:text-white/50">{t('privacy_settings.phone_desc')}</p>
                             </div>
-                            <label className="relative inline-flex items-center cursor-pointer">
+                            <label className="relative inline-flex items-center cursor-pointer shrink-0">
                                 <input
                                     type="checkbox"
                                     checked={settings.showPhone}
@@ -148,7 +148,7 @@ export function PrivacySettings() {
                 </div>
 
                 {/* Communication Preferences */}
-                <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/10 p-8 mb-8 relative overflow-hidden group">
+                <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-2xl md:rounded-3xl shadow-xl border border-espresso/10 p-5 md:p-8 mb-6 md:mb-8 relative overflow-hidden group">
                     <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                     <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 mb-6 uppercase tracking-[0.2em] relative z-10">{t('privacy_settings.section_comm')}</h2>
 
@@ -204,7 +204,7 @@ export function PrivacySettings() {
                 </div>
 
                 {/* Data & Privacy */}
-                <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/10 p-8 mb-8 relative overflow-hidden group">
+                <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-2xl md:rounded-3xl shadow-xl border border-espresso/10 p-5 md:p-8 mb-6 md:mb-8 relative overflow-hidden group">
                     <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                     <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 mb-6 uppercase tracking-[0.2em] relative z-10">{t('privacy_settings.section_data')}</h2>
 
@@ -244,17 +244,17 @@ export function PrivacySettings() {
                 </div>
 
                 {/* Save Button */}
-                <div className="flex gap-4">
+                <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
                     <button
                         onClick={() => navigate(-1)}
-                        className="flex-1 py-4 rounded-2xl border border-espresso/10 text-espresso dark:text-white font-black uppercase tracking-widest text-xs hover:bg-white/40 dark:hover:bg-white/5 transition-all active:scale-95"
+                        className="flex-1 py-3 md:py-4 rounded-xl md:rounded-2xl border border-espresso/10 text-espresso dark:text-white font-black uppercase tracking-widest text-xs hover:bg-white/40 dark:hover:bg-white/5 transition-all active:scale-95"
                     >
                         {t('privacy_settings.cancel')}
                     </button>
                     <button
                         onClick={handleSave}
                         disabled={saving}
-                        className="flex-1 py-4 rounded-2xl bg-espresso text-white font-black uppercase tracking-widest text-xs hover:shadow-2xl transition-all disabled:opacity-50 flex items-center justify-center gap-2 active:scale-95"
+                        className="flex-1 py-3 md:py-4 rounded-xl md:rounded-2xl bg-espresso text-white font-black uppercase tracking-widest text-xs hover:shadow-2xl transition-all disabled:opacity-50 flex items-center justify-center gap-2 active:scale-95"
                     >
                         {saving ? (
                             <>

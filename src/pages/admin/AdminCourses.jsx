@@ -91,33 +91,33 @@ export function AdminCourses() {
     return (
         <div className="flex-1 flex flex-col h-full bg-[#F5DEB3] dark:bg-[#1c1916] overflow-y-auto animate-fade-in">
             {/* Header */}
-            <div className="px-4 py-10 border-b border-espresso/10 bg-[#F5DEB3]/90 dark:bg-[#1c1916]/90 backdrop-blur-md sticky top-0 z-50">
+            <div className="px-4 py-8 md:py-10 border-b border-espresso/10 bg-[#F5DEB3]/90 dark:bg-[#1c1916]/90 backdrop-blur-md sticky top-0 z-50">
                 <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20"></div>
-                <div className=" flex justify-between items-start">
+                <div className="flex flex-col md:flex-row justify-between items-start gap-6">
                     <div>
-                        <h1 className="text-4xl font-serif font-black text-espresso dark:text-white mb-3 uppercase tracking-tight">
+                        <h1 className="text-3xl md:text-4xl font-serif font-black text-espresso dark:text-white mb-2 md:mb-3 uppercase tracking-tight">
                             Curriculum Director
                         </h1>
-                        <p className="text-espresso/60 dark:text-white/60 max-w-2xl text-xs font-black uppercase tracking-widest leading-relaxed">
+                        <p className="text-espresso/60 dark:text-white/60 max-w-2xl text-[10px] md:text-xs font-black uppercase tracking-widest leading-relaxed">
                             Oversee the core "Bean to Brew" certification architecture. Ensure sequential integrity of all modules.
                         </p>
                     </div>
-                    <div className="flex flex-col items-end gap-3">
+                    <div className="flex flex-col items-start md:items-end gap-3 w-full md:w-auto">
                         <button
                             onClick={togglePublish}
                             className={cn(
-                                "flex items-center gap-3 px-8 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] transition-all shadow-xl active:scale-95 group",
+                                "w-full md:w-auto flex items-center justify-center md:justify-start gap-3 px-6 md:px-8 py-3 md:py-3.5 rounded-xl md:rounded-2xl font-black text-[9px] md:text-[10px] uppercase tracking-[0.2em] transition-all shadow-xl active:scale-95 group",
                                 courseStatus === 'published'
                                     ? "bg-green-600 text-white hover:bg-green-700"
                                     : "bg-espresso text-white hover:shadow-espresso/40"
                             )}
                         >
-                            <span className="material-symbols-outlined text-[18px] group-hover:rotate-12 transition-transform">
+                            <span className="material-symbols-outlined text-[16px] md:text-[18px] group-hover:rotate-12 transition-transform">
                                 {courseStatus === 'published' ? 'verified' : 'domain_verification'}
                             </span>
                             {courseStatus === 'published' ? 'LIVE ARCHITECTURE' : 'DRAFT STATE'}
                         </button>
-                        <span className="text-[10px] text-espresso/30 dark:text-white/30 font-bold italic">
+                        <span className="text-[9px] md:text-[10px] text-espresso/30 dark:text-white/30 font-bold italic ml-1 md:ml-0">
                             Protocol 1.0 Updated
                         </span>
                     </div>
@@ -134,36 +134,36 @@ export function AdminCourses() {
                     <p className="text-[10px] font-black text-espresso/20 uppercase tracking-widest">{modules.length} Nodes Online</p>
                 </div>
 
-                <div className="grid gap-6">
+                <div className="grid gap-4 md:gap-6">
                     {modules.map((module) => (
                         <div
                             key={module.id}
                             onClick={() => navigate(`/admin/courses/${BEAN_TO_BREW_ID}/modules/${module.id}`)}
-                            className="bg-white/40 dark:bg-black/20 p-8 rounded-[2rem] border border-espresso/10 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all cursor-pointer group relative overflow-hidden"
+                            className="bg-white/40 dark:bg-black/20 p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-espresso/10 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all cursor-pointer group relative overflow-hidden"
                         >
                             <div className="absolute top-0 left-0 bottom-0 w-2 bg-espresso/10 group-hover:bg-espresso transition-colors"></div>
 
-                            <div className="flex items-center justify-between pl-6">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pl-2 md:pl-6">
                                 <div className="flex-1">
-                                    <h3 className="font-serif text-2xl font-black text-espresso dark:text-white mb-3 tracking-tight group-hover:text-espresso/80 transition-colors">
+                                    <h3 className="font-serif text-xl md:text-2xl font-black text-espresso dark:text-white mb-3 tracking-tight group-hover:text-espresso/80 transition-colors">
                                         {module.title}
                                     </h3>
-                                    <div className="flex items-center gap-4">
-                                        <div className="flex items-center gap-2 text-[10px] text-espresso/60 dark:text-white/60 font-black uppercase tracking-widest bg-white/40 dark:bg-black/20 px-4 py-2 rounded-xl border border-espresso/5 shadow-inner">
-                                            <span className="material-symbols-outlined text-[16px]">layers</span>
+                                    <div className="flex flex-wrap items-center gap-2 md:gap-4">
+                                        <div className="flex items-center gap-2 text-[8px] md:text-[10px] text-espresso/60 dark:text-white/60 font-black uppercase tracking-widest bg-white/40 dark:bg-black/20 px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl border border-espresso/5 shadow-inner">
+                                            <span className="material-symbols-outlined text-[14px] md:text-[16px]">layers</span>
                                             {module.content?.length || 0} Assets
                                         </div>
-                                        <div className="flex items-center gap-2 text-[10px] text-espresso/60 dark:text-white/60 font-black uppercase tracking-widest bg-white/40 dark:bg-black/20 px-4 py-2 rounded-xl border border-espresso/5 shadow-inner">
-                                            <span className="material-symbols-outlined text-[16px]">groups_2</span>
+                                        <div className="flex items-center gap-2 text-[8px] md:text-[10px] text-espresso/60 dark:text-white/60 font-black uppercase tracking-widest bg-white/40 dark:bg-black/20 px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl border border-espresso/5 shadow-inner">
+                                            <span className="material-symbols-outlined text-[14px] md:text-[16px]">groups_2</span>
                                             {module.assignedStudents?.length || 0} Participants
                                         </div>
                                         <div className={cn(
-                                            "flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border shadow-sm",
+                                            "flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[8px] md:text-[10px] font-black uppercase tracking-widest border shadow-sm",
                                             module.status === 'published'
                                                 ? "text-green-600 bg-green-50/50 border-green-200"
                                                 : "text-amber-600 bg-amber-50/50 border-amber-200"
                                         )}>
-                                            <span className="material-symbols-outlined text-[14px]">
+                                            <span className="material-symbols-outlined text-[12px] md:text-[14px]">
                                                 {module.status === 'published' ? 'verified' : 'pending'}
                                             </span>
                                             {module.status}
@@ -171,12 +171,12 @@ export function AdminCourses() {
                                     </div>
                                 </div>
 
-                                <div className="flex items-center gap-6">
-                                    <span className="text-[10px] font-black text-espresso uppercase tracking-[0.3em] opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0">
+                                <div className="flex items-center justify-between sm:justify-end gap-6">
+                                    <span className="text-[8px] md:text-[10px] font-black text-espresso uppercase tracking-[0.3em] group-hover:opacity-100 transition-all sm:translate-x-4 sm:group-hover:translate-x-0">
                                         CONFIGURE NODE
                                     </span>
-                                    <div className="h-14 w-14 rounded-2xl bg-espresso text-white flex items-center justify-center transition-all shadow-xl hover:scale-110 active:scale-95 group-hover:shadow-espresso/40">
-                                        <span className="material-symbols-outlined text-[24px]">settings_input_component</span>
+                                    <div className="h-12 w-12 md:h-14 md:w-14 rounded-xl md:rounded-2xl bg-espresso text-white flex items-center justify-center transition-all shadow-xl hover:scale-110 active:scale-95 group-hover:shadow-espresso/40">
+                                        <span className="material-symbols-outlined text-[20px] md:text-[24px]">settings_input_component</span>
                                     </div>
                                 </div>
                             </div>

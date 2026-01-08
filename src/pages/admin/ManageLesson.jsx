@@ -116,20 +116,20 @@ export function ManageLesson() {
         <div className="flex flex-col h-screen bg-background-light dark:bg-background-dark font-display text-espresso dark:text-gray-100 overflow-hidden">
 
             {/* Top App Bar */}
-            <div className="sticky top-0 z-10 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm border-b border-primary/10">
-                <div className="flex items-center p-4 justify-between h-16">
+            <div className="sticky top-0 z-10 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm border-b border-primary/10 transition-all">
+                <div className="flex items-center px-4 py-2 justify-between h-14 md:h-16">
                     <button
                         onClick={() => navigate('/admin/courses')}
-                        className="flex size-10 shrink-0 items-center justify-center rounded-full active:bg-primary/10 cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                        className="flex size-9 md:size-10 shrink-0 items-center justify-center rounded-xl active:bg-primary/10 cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 transition-all"
                     >
-                        <span className="material-symbols-outlined text-espresso dark:text-white">arrow_back</span>
+                        <span className="material-symbols-outlined text-espresso dark:text-white text-[20px] md:text-[24px]">arrow_back</span>
                     </button>
-                    <h2 className="text-espresso dark:text-white text-lg font-bold leading-tight flex-1 text-center truncate px-2">
-                        {isNew ? 'Create Lesson' : 'Manage Lesson'}
+                    <h2 className="text-espresso dark:text-white text-base md:text-lg font-serif font-black uppercase tracking-widest leading-none flex-1 text-center truncate px-2">
+                        {isNew ? 'Create Lesson' : 'Modify Lesson'}
                     </h2>
-                    <div className="flex size-10 items-center justify-center">
-                        <button className="flex items-center justify-center rounded-full size-10 active:bg-primary/10 text-primary hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-                            <span className="material-symbols-outlined">more_vert</span>
+                    <div className="flex size-9 md:size-10 items-center justify-center">
+                        <button className="flex items-center justify-center rounded-xl size-9 md:size-10 active:bg-primary/10 text-primary hover:bg-black/5 dark:hover:bg-white/5 transition-all">
+                            <span className="material-symbols-outlined text-[20px] md:text-[24px]">more_vert</span>
                         </button>
                     </div>
                 </div>
@@ -139,23 +139,23 @@ export function ManageLesson() {
             <main className="flex-1 w-full  flex flex-col pb-24 px-2 pt-2 gap-6 overflow-y-auto">
 
                 {/* Lesson Title Section */}
-                <div>
-                    <label className="sr-only" htmlFor="lesson-title">Lesson Title</label>
+                <div className="bg-white/40 dark:bg-white/5 p-5 md:p-8 rounded-[2rem] border border-espresso/10 shadow-sm">
+                    <label className="block text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-2 ml-1" htmlFor="lesson-title">Lesson Title</label>
                     <input
-                        className="w-full bg-transparent border-0 border-b-2 border-primary/20 focus:border-primary focus:ring-0 text-2xl font-bold text-espresso dark:text-white px-0 py-2 placeholder-espresso/50 transition-colors"
+                        className="w-full bg-transparent border-0 border-b-2 border-primary/20 focus:border-primary focus:ring-0 text-xl md:text-2xl font-serif font-black text-espresso dark:text-white px-0 py-2 placeholder-espresso/20 transition-all"
                         id="lesson-title"
-                        placeholder="Enter Lesson Title"
+                        placeholder="e.g., The Perfect Grind"
                         type="text"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                     />
-                    <div className="flex items-center gap-2 mt-2">
-                        <span className="text-sm text-espresso/60 dark:text-gray-400">Module:</span>
+                    <div className="flex items-center gap-3 mt-4">
+                        <span className="text-[10px] font-black text-espresso/40 uppercase tracking-widest">Module Phase:</span>
                         <input
-                            className="bg-transparent border-b border-primary/20 focus:border-primary text-sm font-medium text-espresso dark:text-white px-0 py-1"
+                            className="bg-transparent border-b border-primary/10 focus:border-primary text-xs md:text-sm font-bold text-espresso dark:text-white px-0 py-1"
                             value={moduleName}
                             onChange={(e) => setModuleName(e.target.value)}
-                            placeholder="Module Name"
+                            placeholder="Current Phase"
                         />
                     </div>
                 </div>
@@ -268,22 +268,22 @@ export function ManageLesson() {
             </main>
 
             {/* Sticky Footer Actions */}
-            <div className="fixed bottom-0 w-full  left-0 right-0 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-t border-primary/10 p-4 safe-area-pb z-20">
-                <div className="flex gap-3">
+            <div className="fixed bottom-0 w-full left-0 right-0 bg-white/80 dark:bg-black/80 backdrop-blur-md border-t border-espresso/10 p-4 md:p-6 shadow-2xl z-20">
+                <div className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
                     <button
                         onClick={() => handleSave('draft')}
                         disabled={saving}
-                        className="flex-1 h-12 rounded-lg border border-primary text-primary font-bold text-base hover:bg-primary/5 active:bg-primary/10 transition-colors disabled:opacity-50"
+                        className="flex-1 h-12 md:h-14 rounded-xl border border-espresso/20 text-espresso font-black uppercase tracking-widest text-[10px] md:text-[11px] hover:bg-espresso/5 transition-all disabled:opacity-50"
                     >
-                        Save Draft
+                        Save Version
                     </button>
                     <button
                         onClick={() => handleSave('published')}
                         disabled={saving}
-                        className="flex-1 h-12 rounded-lg bg-green-600 text-white font-bold text-base shadow-lg shadow-green-600/20 hover:bg-green-700 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                        className="flex-1 h-12 md:h-14 rounded-xl bg-green-600 text-white font-black uppercase tracking-widest text-[10px] md:text-[11px] shadow-lg shadow-green-600/20 hover:bg-green-700 active:scale-[0.98] transition-all flex items-center justify-center gap-3 disabled:opacity-50"
                     >
-                        <span className="material-symbols-outlined">publish</span>
-                        Publish
+                        <span className="material-symbols-outlined text-[18px] md:text-[20px]">publish</span>
+                        Deploy Content
                     </button>
                 </div>
             </div>

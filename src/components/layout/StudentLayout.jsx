@@ -97,28 +97,9 @@ export function StudentLayout() {
         return <Navigate to="/seeker/dashboard" replace />;
     }
 
-    // Filter Navigation for Onsite Students
-    // Onsite students cannot access the online course portal
-    const isOnsite = user.studyMethod === 'onsite';
-
-    // Dynamic Nav Items
-    const finalNavItems = navItems.filter(item => {
-        if (isOnsite) {
-            // Onsite students only see Profile, Forum, Chat (maybe), but definitely not Courses/Dashboard (if dashboard is course-centric)
-            // User request: "Onsite students can not use the Online portal"
-            // We'll leave them with Profile and basic communication if applicable, or maybe just Profile.
-            // Let's assume they might want Forum/Chat, but definitely not "My Courses".
-            return ['Profile', 'Forum', 'Class Chat', 'CV Builder'].includes(item.name);
-        }
-        return true;
-    });
-
-    // Route Guard for Onsite Students trying to access restricted pages
-    const restrictedPaths = ['/student/dashboard', '/student/courses'];
-    if (isOnsite && restrictedPaths.some(path => location.pathname.startsWith(path))) {
-        // Redirect onsite students to Profile if they try to go to Dashboard or Courses
-        return <Navigate to="/student/profile" replace />;
-    }
+    // Both Online and Onsite students have full access to all features
+    // They are differentiated by user.studyMethod property only
+    const finalNavItems = navItems;
 
     // BLOCK PENDING STUDENTS
     // If role is student and status is not 'active', show pending screen

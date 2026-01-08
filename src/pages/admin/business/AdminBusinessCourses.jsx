@@ -50,14 +50,14 @@ export function AdminBusinessCourses() {
     if (loading) return <div className="p-8">Loading...</div>;
 
     return (
-        <div className="w-full px-4">
-            <div className="flex justify-between items-center mb-8">
+        <div className="w-full px-2 md:px-4">
+            <div className="flex flex-col md:flex-row justify-between md:items-center mb-8 gap-6">
                 <div>
-                    <h1 className="font-serif text-3xl font-bold text-espresso dark:text-white">Manage Business Courses</h1>
-                    <p className="text-espresso/60 dark:text-white/60 mt-1">Create and manage your exclusive business content</p>
+                    <h1 className="font-serif text-2xl md:text-3xl font-bold text-espresso dark:text-white">Manage Business Courses</h1>
+                    <p className="text-espresso/60 dark:text-white/60 mt-1 text-sm md:text-base">Create and manage your exclusive business content</p>
                 </div>
-                <GradientButton onClick={() => setIsModalOpen(true)}>
-                    <span className="material-symbols-outlined mr-2">add</span>
+                <GradientButton onClick={() => setIsModalOpen(true)} className="w-full md:w-auto h-12 md:h-14 rounded-xl md:rounded-2xl text-[10px] md:text-[11px] font-black uppercase tracking-widest shadow-xl">
+                    <span className="material-symbols-outlined mr-2 text-[20px] md:text-[24px]">add</span>
                     Create Course
                 </GradientButton>
             </div>
@@ -89,20 +89,20 @@ export function AdminBusinessCourses() {
                                 </span>
                             </div>
                         </div>
-                        <div className="p-7">
-                            <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-3 group-hover:text-primary transition-colors leading-tight">
+                        <div className="p-5 md:p-7">
+                            <h3 className="font-serif text-xl md:text-2xl font-bold text-espresso dark:text-white mb-2 md:mb-3 group-hover:text-primary transition-colors leading-tight">
                                 {course.title}
                             </h3>
-                            <p className="text-espresso/70 dark:text-white/70 text-sm line-clamp-2 font-medium leading-relaxed">
+                            <p className="text-espresso/70 dark:text-white/70 text-xs md:text-sm line-clamp-2 font-medium leading-relaxed">
                                 {course.description}
                             </p>
-                            <div className="mt-6 flex items-center justify-between">
-                                <div className="flex items-center text-[10px] font-black text-espresso uppercase tracking-widest bg-white/40 px-3 py-2 rounded-xl border border-white/20">
+                            <div className="mt-4 md:mt-6 flex items-center justify-between">
+                                <div className="flex items-center text-[9px] md:text-[10px] font-black text-espresso uppercase tracking-widest bg-white/40 px-2.5 md:px-3 py-1.5 md:py-2 rounded-lg md:rounded-xl border border-white/20">
                                     MANAGE CONTENT
-                                    <span className="material-symbols-outlined ml-2 text-base group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                                    <span className="material-symbols-outlined ml-2 text-sm md:text-base group-hover:translate-x-1 transition-transform">arrow_forward</span>
                                 </div>
-                                <div className="p-2 rounded-full bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <span className="material-symbols-outlined text-espresso">edit_note</span>
+                                <div className="p-1.5 md:p-2 rounded-full bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <span className="material-symbols-outlined text-espresso text-[20px] md:text-[24px]">edit_note</span>
                                 </div>
                             </div>
                         </div>
@@ -110,15 +110,15 @@ export function AdminBusinessCourses() {
                 ))}
 
                 {courses.length === 0 && (
-                    <div className="col-span-full py-24 text-center bg-[#F5DEB3]/50 dark:bg-white/5 rounded-[2rem] border-2 border-dashed border-espresso/10 dark:border-white/10">
-                        <div className="w-20 h-20 bg-espresso/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <span className="material-symbols-outlined text-5xl text-espresso/40">library_books</span>
+                    <div className="col-span-full py-16 md:py-24 text-center bg-[#F5DEB3]/50 dark:bg-white/5 rounded-[2rem] border-2 border-dashed border-espresso/10 dark:border-white/10 px-6">
+                        <div className="w-16 h-16 md:w-20 md:h-20 bg-espresso/10 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6">
+                            <span className="material-symbols-outlined text-4xl md:text-5xl text-espresso/40">library_books</span>
                         </div>
-                        <h3 className="text-2xl font-serif font-bold text-espresso dark:text-white mb-2">No Courses Yet</h3>
-                        <p className="text-espresso/60 dark:text-white/60 mb-8 max-w-sm mx-auto font-medium">Start building your exclusive business curriculum and empower your students today.</p>
+                        <h3 className="text-xl md:text-2xl font-serif font-bold text-espresso dark:text-white mb-2">No Courses Yet</h3>
+                        <p className="text-xs md:text-base text-espresso/60 dark:text-white/60 mb-6 md:mb-8 max-w-sm mx-auto font-medium">Start building your exclusive business curriculum and empower your students today.</p>
                         <button
                             onClick={() => setIsModalOpen(true)}
-                            className="inline-flex items-center gap-2 bg-espresso text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all"
+                            className="inline-flex items-center gap-2 bg-espresso text-white px-6 md:px-8 py-2.5 md:py-3 rounded-xl font-bold shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all text-sm"
                         >
                             <span className="material-symbols-outlined">add</span>
                             Create First Course
@@ -130,25 +130,25 @@ export function AdminBusinessCourses() {
             {/* Create Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-                    <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl w-full max-w-md p-6 shadow-2xl">
-                        <h2 className="text-2xl font-serif font-bold text-espresso dark:text-white mb-6">Create New Course</h2>
+                    <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl md:rounded-3xl w-full max-w-md p-6 md:p-8 shadow-2xl relative">
+                        <h2 className="text-xl md:text-2xl font-serif font-bold text-espresso dark:text-white mb-6">Create New Course</h2>
                         <form onSubmit={handleCreateCourse} className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-espresso/70 dark:text-white/70 mb-1">Course Title</label>
+                                <label className="block text-xs md:text-sm font-medium text-espresso/70 dark:text-white/70 mb-1">Course Title</label>
                                 <input
                                     type="text"
                                     required
-                                    className="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-white/10 bg-transparent dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 bg-transparent dark:text-white focus:outline-none focus:ring-2 focus:ring-primary text-sm"
                                     value={newCourse.title}
                                     onChange={e => setNewCourse({ ...newCourse, title: e.target.value })}
                                     placeholder="e.g., Business Planning 101"
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-espresso/70 dark:text-white/70 mb-1">Description</label>
+                                <label className="block text-xs md:text-sm font-medium text-espresso/70 dark:text-white/70 mb-1">Description</label>
                                 <textarea
                                     required
-                                    className="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-white/10 bg-transparent dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 bg-transparent dark:text-white focus:outline-none focus:ring-2 focus:ring-primary text-sm"
                                     rows="3"
                                     value={newCourse.description}
                                     onChange={e => setNewCourse({ ...newCourse, description: e.target.value })}
@@ -156,26 +156,26 @@ export function AdminBusinessCourses() {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-espresso/70 dark:text-white/70 mb-1">Thumbnail URL</label>
+                                <label className="block text-xs md:text-sm font-medium text-espresso/70 dark:text-white/70 mb-1">Thumbnail URL</label>
                                 <input
                                     type="url"
-                                    className="w-full px-4 py-2 rounded-lg border border-gray-200 dark:border-white/10 bg-transparent dark:text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 bg-transparent dark:text-white focus:outline-none focus:ring-2 focus:ring-primary text-sm"
                                     value={newCourse.thumbnail}
                                     onChange={e => setNewCourse({ ...newCourse, thumbnail: e.target.value })}
                                     placeholder="https://..."
                                 />
                             </div>
-                            <div className="flex justify-end gap-3 result pt-4">
+                            <div className="flex justify-end gap-3 pt-4 md:pt-6">
                                 <button
                                     type="button"
                                     onClick={() => setIsModalOpen(false)}
-                                    className="px-4 py-2 text-sm font-medium text-espresso/70 dark:text-white/70 hover:bg-gray-100 dark:hover:bg-white/5 rounded-lg transition-colors"
+                                    className="px-4 md:px-6 py-2 md:py-2.5 text-xs md:text-sm font-bold text-espresso/70 dark:text-white/70 hover:bg-gray-100 dark:hover:bg-white/5 rounded-xl transition-colors"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="px-6 py-2 text-sm font-bold text-white bg-primary hover:bg-primary/90 rounded-lg shadow-lg hover:shadow-primary/30 transition-all"
+                                    className="px-6 md:px-8 py-2 md:py-2.5 text-xs md:text-sm font-bold text-white bg-primary hover:bg-primary/90 rounded-xl shadow-lg hover:shadow-primary/30 transition-all"
                                 >
                                     Create Course
                                 </button>

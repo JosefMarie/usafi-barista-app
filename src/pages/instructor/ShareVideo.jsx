@@ -112,11 +112,12 @@ export function InstructorShareVideo() {
     };
 
     return (
-        <div className="max-w-6xl mx-auto space-y-6">
-            <div className="flex items-center justify-between">
+        <div className="max-w-6xl mx-auto space-y-6 px-4 md:px-0 py-4 md:py-0">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative pl-4 md:pl-0">
+                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 -ml-4 md:hidden"></div>
                 <div>
-                    <h1 className="text-3xl font-serif font-bold text-espresso dark:text-white">Instructional Media</h1>
-                    <p className="text-espresso/60 dark:text-white/60 font-medium mt-1">Distribute high-fidelity video tutorials and strategic resources</p>
+                    <h1 className="text-2xl md:text-3xl font-serif font-black text-espresso dark:text-white leading-none">Instructional Media</h1>
+                    <p className="text-espresso/60 dark:text-white/60 font-medium mt-2 text-xs md:text-sm leading-relaxed">Distribute high-fidelity video tutorials and resources</p>
                 </div>
                 <button
                     onClick={() => {
@@ -124,7 +125,7 @@ export function InstructorShareVideo() {
                         setFormData({ title: '', url: '', description: '', thumbnailUrl: '' });
                         setShowAddModal(true);
                     }}
-                    className="flex items-center gap-3 px-6 py-3 bg-espresso text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:shadow-2xl transition-all shadow-xl active:scale-95"
+                    className="flex items-center justify-center gap-3 px-6 py-3.5 bg-espresso text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:shadow-2xl transition-all shadow-xl active:scale-95 w-full sm:w-auto"
                 >
                     <span className="material-symbols-outlined text-[20px]">add_circle</span>
                     Broadcast Media
@@ -142,9 +143,9 @@ export function InstructorShareVideo() {
                     <p className="text-espresso/40 dark:text-white/40 font-black uppercase tracking-widest text-sm">Media library is empty. Start broadcasting tutorials.</p>
                 </div>
             ) : (
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {videos.map(video => (
-                        <div key={video.id} className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl overflow-hidden shadow-xl border border-espresso/10 group transition-all hover:-translate-y-1 relative">
+                        <div key={video.id} className="bg-[#F5DEB3] dark:bg-white/5 rounded-[2rem] overflow-hidden shadow-xl border border-espresso/10 group transition-all hover:-translate-y-1 relative">
                             <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                             <div className="relative z-10">
                                 <div className="relative aspect-video bg-espresso/5 dark:bg-gray-800 overflow-hidden">
@@ -166,35 +167,35 @@ export function InstructorShareVideo() {
                                         </a>
                                     </div>
                                 </div>
-                                <div className="p-6">
-                                    <h3 className="font-serif font-bold text-lg text-espresso dark:text-white line-clamp-2 mb-2 min-h-[3.5rem] leading-snug">{video.title}</h3>
+                                <div className="p-5 md:p-6">
+                                    <h3 className="font-serif font-black text-base md:text-lg text-espresso dark:text-white line-clamp-2 mb-2 min-h-[3rem] md:min-h-[3.5rem] leading-snug">{video.title}</h3>
                                     {video.description && (
-                                        <p className="text-sm font-medium text-espresso/60 dark:text-white/60 line-clamp-2 mb-4 leading-relaxed">{video.description}</p>
+                                        <p className="text-xs md:text-sm font-medium text-espresso/60 dark:text-white/60 line-clamp-2 mb-4 leading-relaxed">{video.description}</p>
                                     )}
                                     <div className="flex items-center justify-between pt-4 border-t border-espresso/5">
                                         <a
                                             href={video.url}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-espresso/40 hover:text-espresso transition-colors group/link"
+                                            className="inline-flex items-center gap-1.5 text-[8px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 hover:text-espresso transition-colors group/link"
                                         >
-                                            <span className="material-symbols-outlined text-[16px] group-hover/link:rotate-12 transition-transform">open_in_new</span>
-                                            Strategic Link
+                                            <span className="material-symbols-outlined text-[14px] md:text-[16px] group-hover/link:rotate-12 transition-transform">open_in_new</span>
+                                            Link
                                         </a>
                                         <div className="flex gap-2">
                                             <button
                                                 onClick={() => handleEdit(video)}
-                                                className="p-2.5 bg-white/40 dark:bg-white/5 hover:bg-white dark:hover:bg-white/10 rounded-xl text-espresso/40 hover:text-espresso transition-all shadow-sm active:scale-95"
+                                                className="p-2 md:p-2.5 bg-white/40 dark:bg-white/5 hover:bg-white dark:hover:bg-white/10 rounded-xl text-espresso/40 hover:text-espresso transition-all shadow-sm active:scale-95"
                                                 title="Edit Insights"
                                             >
-                                                <span className="material-symbols-outlined text-[18px]">edit_note</span>
+                                                <span className="material-symbols-outlined text-base md:text-[18px]">edit_note</span>
                                             </button>
                                             <button
                                                 onClick={() => handleDelete(video.id)}
-                                                className="p-2.5 bg-red-500/5 hover:bg-red-500 hover:text-white rounded-xl text-red-500 transition-all shadow-sm active:scale-95"
+                                                className="p-2 md:p-2.5 bg-red-500/5 hover:bg-red-500 hover:text-white rounded-xl text-red-500 transition-all shadow-sm active:scale-95"
                                                 title="Archive Media"
                                             >
-                                                <span className="material-symbols-outlined text-[18px]">delete_sweep</span>
+                                                <span className="material-symbols-outlined text-base md:text-[18px]">delete_sweep</span>
                                             </button>
                                         </div>
                                     </div>
@@ -207,10 +208,10 @@ export function InstructorShareVideo() {
 
             {/* Add/Edit Modal */}
             {showAddModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setShowAddModal(false)}>
-                    <div className="bg-white dark:bg-[#2c2825] rounded-2xl p-6 w-full max-w-lg shadow-xl" onClick={e => e.stopPropagation()}>
-                        <h3 className="text-xl font-bold text-espresso dark:text-white mb-4">
-                            {editingId ? 'Edit Video' : 'Add New Video'}
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 overflow-y-auto" onClick={() => setShowAddModal(false)}>
+                    <div className="bg-white dark:bg-[#2c2825] rounded-[2rem] p-6 w-full max-w-lg shadow-xl my-auto" onClick={e => e.stopPropagation()}>
+                        <h3 className="text-xl font-black font-serif text-espresso dark:text-white mb-6">
+                            {editingId ? 'Edit Media Insights' : 'Broadcast New Media'}
                         </h3>
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div>
@@ -256,20 +257,20 @@ export function InstructorShareVideo() {
                                     className="w-full px-4 py-3 rounded-lg border border-black/10 dark:border-white/10 bg-transparent text-espresso dark:text-white placeholder:text-espresso/40 dark:placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary resize-none"
                                 />
                             </div>
-                            <div className="flex gap-3 pt-2">
+                            <div className="flex gap-3 pt-4">
                                 <button
                                     type="button"
                                     onClick={() => setShowAddModal(false)}
-                                    className="flex-1 py-3 rounded-full border border-black/10 dark:border-white/10 text-espresso dark:text-white font-medium hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                                    className="flex-1 py-4 rounded-xl border border-black/10 dark:border-white/10 text-espresso dark:text-white font-black uppercase tracking-widest text-[10px] hover:bg-black/5 dark:hover:bg-white/5 transition-all active:scale-95"
                                 >
-                                    Cancel
+                                    Relinquish
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={formLoading}
-                                    className="flex-1 py-3 rounded-full bg-primary text-white font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+                                    className="flex-1 py-4 rounded-xl bg-espresso text-white font-black uppercase tracking-widest text-[10px] hover:shadow-2xl transition-all disabled:opacity-50 active:scale-95"
                                 >
-                                    {formLoading ? 'Saving...' : editingId ? 'Update Video' : 'Add Video'}
+                                    {formLoading ? 'Submitting...' : editingId ? 'Update' : 'Launch'}
                                 </button>
                             </div>
                         </form>

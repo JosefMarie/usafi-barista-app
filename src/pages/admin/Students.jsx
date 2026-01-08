@@ -48,18 +48,18 @@ export function Students() {
         <div className="flex-1 flex flex-col h-full bg-[#F5DEB3] dark:bg-[#1c1916] overflow-y-auto animate-fade-in pb-20">
             <div className=" w-full px-2 py-10 space-y-10">
                 {/* Header */}
-                <div className="flex items-center justify-between relative">
-                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 -ml-10"></div>
+                <div className="flex flex-col md:flex-row md:items-center justify-between relative gap-6">
+                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 -ml-4 md:-ml-10"></div>
                     <div>
-                        <h1 className="text-4xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none">Global Registry</h1>
-                        <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] mt-2">Participant Verification & Management</p>
+                        <h1 className="text-3xl md:text-4xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none">Global Registry</h1>
+                        <p className="text-[9px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] mt-2">Participant Verification & Management</p>
                     </div>
-                    <div className="flex gap-4">
-                        <button className="w-12 h-12 rounded-2xl bg-white/40 hover:bg-espresso hover:text-white transition-all flex items-center justify-center active:scale-95 shadow-sm group">
-                            <span className="material-symbols-outlined text-[24px]">filter_list</span>
+                    <div className="flex gap-3 md:gap-4">
+                        <button className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-white/40 hover:bg-espresso hover:text-white transition-all flex items-center justify-center active:scale-95 shadow-sm group">
+                            <span className="material-symbols-outlined text-[20px] md:text-[24px]">filter_list</span>
                         </button>
-                        <button className="px-8 py-3.5 bg-espresso text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl shadow-xl hover:shadow-espresso/40 active:scale-95 transition-all flex items-center gap-2">
-                            <span className="material-symbols-outlined text-[18px]">person_add</span>
+                        <button className="flex-1 md:flex-none px-6 md:px-8 py-3 md:py-3.5 bg-espresso text-white text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] rounded-xl md:rounded-2xl shadow-xl hover:shadow-espresso/40 active:scale-95 transition-all flex items-center justify-center md:justify-start gap-2">
+                            <span className="material-symbols-outlined text-[16px] md:text-[18px]">person_add</span>
                             Admit Node
                         </button>
                     </div>
@@ -67,45 +67,45 @@ export function Students() {
 
                 {/* Search Bar */}
                 <div className="relative group">
-                    <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none text-espresso/30 group-focus-within:text-espresso transition-colors">
+                    <div className="absolute inset-y-0 left-4 md:left-6 flex items-center pointer-events-none text-espresso/30 group-focus-within:text-espresso transition-colors">
                         <span className="material-symbols-outlined">search</span>
                     </div>
                     <input
-                        className="w-full h-16 pl-16 pr-8 bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-2xl text-espresso dark:text-white font-serif text-lg focus:outline-none focus:ring-2 focus:ring-espresso transition-all placeholder:text-espresso/20 placeholder:font-black placeholder:uppercase placeholder:tracking-[0.4em] placeholder:text-[10px] shadow-inner"
+                        className="w-full h-14 md:h-16 pl-12 md:pl-16 pr-6 md:pr-8 bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-xl md:rounded-2xl text-espresso dark:text-white font-serif text-base md:text-lg focus:outline-none focus:ring-2 focus:ring-espresso transition-all placeholder:text-espresso/20 placeholder:font-black placeholder:uppercase placeholder:tracking-[0.4em] placeholder:text-[9px] md:text-[10px] shadow-inner"
                         placeholder="Search Registry..."
                     />
                 </div>
 
                 {/* Pending Approvals Notification */}
                 {students.filter(s => s.status === 'pending').length > 0 && (
-                    <div className="bg-amber-500 rounded-[2.5rem] p-10 shadow-2xl relative overflow-hidden group/pending">
+                    <div className="bg-amber-500 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 shadow-2xl relative overflow-hidden group/pending">
                         <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 group-hover/pending:bg-espresso transition-colors"></div>
-                        <div className="flex items-center justify-between mb-8">
-                            <div className="flex items-center gap-4 text-espresso font-black">
-                                <span className="material-symbols-outlined text-3xl">emergency_home</span>
+                        <div className="flex items-center justify-between mb-6 md:mb-8">
+                            <div className="flex items-center gap-3 md:gap-4 text-espresso font-black">
+                                <span className="material-symbols-outlined text-2xl md:text-3xl">emergency_home</span>
                                 <div>
-                                    <h3 className="font-serif text-2xl uppercase tracking-tight leading-none">Queue Alert</h3>
-                                    <p className="text-[9px] font-black uppercase tracking-[0.3em] mt-1 opacity-60">{students.filter(s => s.status === 'pending').length} Participants Awaiting Protocol Verification</p>
+                                    <h3 className="font-serif text-xl md:text-2xl uppercase tracking-tight leading-none">Queue Alert</h3>
+                                    <p className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.3em] mt-1 opacity-60">{students.filter(s => s.status === 'pending').length} Participants Awaiting Protocol Verification</p>
                                 </div>
                             </div>
                         </div>
-                        <div className="grid gap-4">
+                        <div className="grid gap-3 md:gap-4">
                             {students.filter(s => s.status === 'pending').map(student => (
-                                <div key={student.id} className="bg-white/20 backdrop-blur-sm p-6 rounded-3xl flex items-center justify-between border border-white/20 hover:bg-white/30 transition-all group/card">
-                                    <Link to={`/admin/students/${student.id}`} className="flex items-center gap-6">
-                                        <div className="h-14 w-14 rounded-2xl border-2 border-espresso/10 overflow-hidden shadow-lg group-hover/card:scale-105 transition-transform">
+                                <div key={student.id} className="bg-white/20 backdrop-blur-sm p-4 md:p-6 rounded-2xl md:rounded-3xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-white/20 hover:bg-white/30 transition-all group/card">
+                                    <Link to={`/admin/students/${student.id}`} className="flex items-center gap-4 md:gap-6">
+                                        <div className="h-12 w-12 md:h-14 md:w-14 rounded-xl md:rounded-2xl border-2 border-espresso/10 overflow-hidden shadow-lg group-hover/card:scale-105 transition-transform shrink-0">
                                             <img src={student.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(student.fullName || 'Student')}&background=random`} alt="" className="h-full w-full object-cover" />
                                         </div>
                                         <div>
-                                            <p className="font-serif text-xl font-black text-espresso">{student.fullName}</p>
-                                            <p className="text-[9px] font-black uppercase tracking-widest text-espresso/60 mt-1">
+                                            <p className="font-serif text-lg md:text-xl font-black text-espresso">{student.fullName}</p>
+                                            <p className="text-[8px] md:text-[9px] font-black uppercase tracking-widest text-espresso/60 mt-1">
                                                 {student.studyMethod === 'online' ? 'METHOD: DIGITAL VENTURE' : 'METHOD: ONSITE OPERATIONAL'} • {student.shift || student.startDate}
                                             </p>
                                         </div>
                                     </Link>
                                     <button
                                         onClick={(e) => handleApprove(e, student.id)}
-                                        className="px-8 py-3 bg-espresso text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl hover:shadow-xl active:scale-95 transition-all shadow-lg"
+                                        className="w-full sm:w-auto px-6 md:px-8 py-2.5 md:py-3 bg-espresso text-white text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] rounded-xl md:rounded-2xl hover:shadow-xl active:scale-95 transition-all shadow-lg"
                                     >
                                         Execute Approval
                                     </button>
@@ -126,17 +126,17 @@ export function Students() {
 
                     <div className="grid gap-6">
                         {students.length === 0 ? (
-                            <div className="text-center py-24 bg-white/20 rounded-[3rem] border-2 border-dashed border-espresso/10 flex flex-col items-center gap-6 opacity-40">
-                                <span className="material-symbols-outlined text-5xl">person_off</span>
-                                <p className="text-[10px] font-black uppercase tracking-[0.5em]">The registry is currently vacant</p>
+                            <div className="text-center py-20 md:py-24 bg-white/20 rounded-[2rem] md:rounded-[3rem] border-2 border-dashed border-espresso/10 flex flex-col items-center gap-4 md:gap-6 opacity-40">
+                                <span className="material-symbols-outlined text-4xl md:text-5xl">person_off</span>
+                                <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.5em] px-4">The registry is vacant</p>
                             </div>
                         ) : (
                             students.map(student => (
-                                <Link to={`/admin/students/${student.id}`} key={student.id} className="bg-white/40 dark:bg-black/20 p-8 rounded-[2.5rem] border border-espresso/10 shadow-xl flex items-center justify-between hover:shadow-2xl hover:-translate-y-1 transition-all group relative overflow-hidden">
+                                <Link to={`/admin/students/${student.id}`} key={student.id} className="bg-white/40 dark:bg-black/20 p-5 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-espresso/10 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-6 hover:shadow-2xl hover:-translate-y-1 transition-all group relative overflow-hidden">
                                     <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover:bg-espresso transition-colors"></div>
-                                    <div className="flex items-center gap-8">
+                                    <div className="flex items-center gap-4 md:gap-8">
                                         <div className="relative shrink-0">
-                                            <div className="w-16 h-16 rounded-[1.5rem] overflow-hidden border-2 border-espresso/10 shadow-lg group-hover:scale-105 transition-transform">
+                                            <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-[1.5rem] overflow-hidden border-2 border-espresso/10 shadow-lg group-hover:scale-105 transition-transform">
                                                 <img
                                                     src={student.avatar || `https://ui-avatars.com/api/?name=${student.fullName}&background=random`}
                                                     alt={student.fullName}
@@ -144,27 +144,27 @@ export function Students() {
                                                 />
                                             </div>
                                             <div className={cn(
-                                                "absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-4 border-[#F5DEB3] dark:border-[#1c1916] shadow-sm",
+                                                "absolute -bottom-1 -right-1 w-4 h-4 md:w-5 md:h-5 rounded-full border-2 md:border-4 border-[#F5DEB3] dark:border-[#1c1916] shadow-sm",
                                                 student.status === 'active' ? "bg-green-500" : "bg-amber-400"
                                             )}></div>
                                         </div>
-                                        <div className="space-y-1">
-                                            <h3 className="font-serif font-black text-2xl text-espresso dark:text-white tracking-tight">
+                                        <div className="space-y-0.5 md:space-y-1">
+                                            <h3 className="font-serif font-black text-xl md:text-2xl text-espresso dark:text-white tracking-tight">
                                                 {student.fullName}
                                             </h3>
-                                            <p className="text-[10px] font-black text-espresso/60 dark:text-white/40 uppercase tracking-widest">
-                                                {student.email} // {student.phone}
+                                            <p className="text-[8px] md:text-[10px] font-black text-espresso/60 dark:text-white/40 uppercase tracking-widest break-all">
+                                                {student.email} <span className="hidden sm:inline">//</span> <br className="sm:hidden" /> {student.phone}
                                             </p>
                                         </div>
                                     </div>
-                                    <div className="flex flex-col items-end gap-4">
-                                        <div className="flex items-center gap-4">
-                                            <div className="flex items-center gap-2 bg-white/60 dark:bg-black/30 px-4 py-2 rounded-xl border border-espresso/5 shadow-inner">
-                                                <span className="material-symbols-outlined text-[16px] text-espresso/60">hub</span>
-                                                <span className="text-[9px] font-black text-espresso/60 uppercase tracking-widest">{student.course}</span>
+                                    <div className="flex flex-col items-end gap-3 md:gap-4 pl-16 sm:pl-0">
+                                        <div className="flex flex-wrap items-center justify-end gap-2 md:gap-4">
+                                            <div className="flex items-center gap-2 bg-white/60 dark:bg-black/30 px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl border border-espresso/5 shadow-inner">
+                                                <span className="material-symbols-outlined text-[14px] md:text-[16px] text-espresso/60">hub</span>
+                                                <span className="text-[8px] md:text-[9px] font-black text-espresso/60 uppercase tracking-widest">{student.course}</span>
                                             </div>
                                             <span className={cn(
-                                                "px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-[0.2em] shadow-sm border",
+                                                "px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] shadow-sm border",
                                                 student.status === 'active'
                                                     ? 'bg-green-50/50 border-green-200 text-green-600'
                                                     : 'bg-amber-50/50 border-amber-200 text-amber-600'
@@ -180,7 +180,7 @@ export function Students() {
                                                     e.preventDefault();
                                                     handleApprove(e, student.id);
                                                 }}
-                                                className="px-6 py-2 bg-espresso text-white text-[9px] font-black uppercase tracking-[0.2em] rounded-xl hover:shadow-lg active:scale-95 transition-all z-10"
+                                                className="w-full sm:w-auto px-4 md:px-6 py-2 bg-espresso text-white text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] rounded-lg md:rounded-xl hover:shadow-lg active:scale-95 transition-all z-10"
                                             >
                                                 Protocol Execute
                                             </button>

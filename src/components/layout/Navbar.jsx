@@ -74,7 +74,7 @@ export function Navbar() {
                     : "bg-transparent py-5"
             )}
         >
-            <div className="container mx-auto px-6 flex items-center justify-between">
+            <div className="w-full px-4 md:px-8 lg:px-12 flex items-center justify-between">
 
                 {/* Logo */}
                 <Link to="/" className="flex items-center gap-2 group">
@@ -91,13 +91,13 @@ export function Navbar() {
                 </Link>
 
                 {/* Desktop Nav */}
-                <nav className="hidden md:flex items-center gap-8">
+                <nav className="hidden lg:flex items-center gap-5">
                     {navLinks.map((link) => (
                         <div key={link.name} className="relative group/dropdown">
                             {link.dropdown ? (
                                 <button
                                     className={cn(
-                                        "flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary focus:outline-none cursor-pointer",
+                                        "flex items-center gap-0.5 text-sm font-medium transition-colors hover:text-primary focus:outline-none cursor-pointer",
                                         !isScrolled && isDarkHeader ? "text-white/90 hover:text-white" : "text-espresso dark:text-white"
                                     )}
                                 >
@@ -150,7 +150,7 @@ export function Navbar() {
                     </Link>
                     <GradientButton to="/enroll" className="!p-[1px] !rounded-full !bg-none hover:!scale-105 hover:!shadow-lg">
                         <div className="relative flex h-10 w-full items-center justify-center rounded-full bg-gradient-to-r from-orange-500 to-red-600 px-6 transition-all duration-300">
-                            <span className="text-sm font-bold tracking-wide text-white">
+                            <span className="text-sm font-bold tracking-wide text-white whitespace-nowrap">
                                 {t('nav.enroll')}
                             </span>
                         </div>
@@ -165,7 +165,7 @@ export function Navbar() {
                         )}
                         title="Search (Cmd+K)"
                     >
-                        <span className="material-symbols-outlined text-[22px]">search</span>
+                        <span className="material-symbols-outlined text-[20px]">search</span>
                     </button>
 
                     {/* Theme Toggle */}
@@ -175,7 +175,7 @@ export function Navbar() {
                     )} />
 
                     {/* Language Switcher */}
-                    <div className="h-6 w-[1px] bg-espresso/10 dark:bg-white/10 mx-2"></div>
+                    <div className="h-6 w-[1px] bg-espresso/10 dark:bg-white/10 mx-1"></div>
                     <LanguageSwitcher
                         isScrolled={isScrolled}
                         isLightHero={isDarkHeader}
@@ -186,7 +186,7 @@ export function Navbar() {
                 <button
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                     className={cn(
-                        "md:hidden p-2 rounded-lg transition-colors",
+                        "lg:hidden p-2 rounded-lg transition-colors",
                         isScrolled ? "text-espresso dark:text-white hover:bg-black/5" : "text-white hover:bg-white/10"
                     )}
                 >
@@ -198,7 +198,7 @@ export function Navbar() {
 
             {/* Mobile Menu */}
             <div className={cn(
-                "absolute top-full left-0 right-0 bg-background-light dark:bg-background-dark shadow-xl border-t border-black/5 transition-all duration-300 origin-top md:hidden max-h-[85vh] overflow-y-auto",
+                "absolute top-full left-0 right-0 bg-background-light dark:bg-background-dark shadow-xl border-t border-black/5 transition-all duration-300 origin-top lg:hidden max-h-[85vh] overflow-y-auto",
                 isMobileMenuOpen ? "opacity-100 scale-y-100 visible" : "opacity-0 scale-y-95 invisible"
             )}>
                 <nav className="flex flex-col p-6 gap-2">

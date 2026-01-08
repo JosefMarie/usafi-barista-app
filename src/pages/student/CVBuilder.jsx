@@ -281,50 +281,51 @@ export function CVBuilder() {
                 details summary::-webkit-details-marker { display: none; }
             `}</style>
 
-            <div className="relative flex min-h-screen w-full flex-col shadow-2xl overflow-hidden bg-[#F5DEB3] dark:bg-[#1c1916] rounded-[2.5rem] border border-espresso/10 my-8">
+            <div className="relative flex min-h-screen w-full flex-col shadow-2xl overflow-hidden bg-[#F5DEB3] dark:bg-[#1c1916] rounded-none md:rounded-[2.5rem] border-x-0 md:border-x border-y-0 md:border-y border-espresso/10 md:my-8 max-w-5xl mx-auto">
 
                 {/* Header */}
                 <div className="sticky top-0 z-50 bg-[#F5DEB3]/90 dark:bg-[#1c1916]/90 backdrop-blur-md border-b border-espresso/10 text-espresso dark:text-white">
-                    <div className="flex items-center px-8 py-6 justify-between">
+                    <div className="flex items-center px-4 md:px-8 py-4 md:py-6 justify-between gap-3">
                         <button
                             onClick={() => window.history.back()}
-                            className="text-espresso dark:text-white hover:bg-white/40 rounded-2xl w-12 h-12 transition-all flex items-center justify-center active:scale-95 shadow-sm"
+                            className="text-espresso dark:text-white hover:bg-white/40 rounded-xl md:rounded-2xl size-10 md:size-12 transition-all flex items-center justify-center active:scale-95 shadow-sm shrink-0"
                         >
-                            <span className="material-symbols-outlined text-[24px]">arrow_back_ios_new</span>
+                            <span className="material-symbols-outlined text-[20px] md:text-[24px]">arrow_back_ios_new</span>
                         </button>
-                        <h2 className="text-espresso dark:text-white text-2xl font-black font-serif uppercase tracking-[0.2em] leading-tight">{t('student.cv_builder.title')}</h2>
+                        <h2 className="text-espresso dark:text-white text-base md:text-2xl font-black font-serif uppercase tracking-[0.15em] md:tracking-[0.2em] leading-tight truncate">{t('student.cv_builder.title')}</h2>
 
-                        <div className="flex w-32 items-center justify-end">
+                        <div className="flex items-center justify-end shrink-0">
                             {saveSuccess ? (
-                                <span className="text-green-600 bg-green-50 dark:bg-green-900/20 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest animate-fade-in flex items-center gap-2 border border-green-200">
-                                    <span className="material-symbols-outlined text-[16px]">verified</span> {t('student.cv_builder.saved')}
+                                <span className="text-green-600 bg-green-50 dark:bg-green-900/20 px-3 md:px-4 py-1.5 md:py-2 rounded-full text-[8px] md:text-[10px] font-black uppercase tracking-widest animate-fade-in flex items-center gap-1.5 md:gap-2 border border-green-200">
+                                    <span className="material-symbols-outlined text-[14px] md:text-[16px]">verified</span> <span className="hidden sm:inline">{t('student.cv_builder.saved')}</span><span className="sm:hidden">SAVED</span>
                                 </span>
                             ) : (
                                 <button
                                     onClick={handleSave}
                                     disabled={saving}
-                                    className="bg-espresso text-white px-6 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:shadow-xl hover:-translate-y-0.5 active:scale-95 transition-all disabled:opacity-50 flex items-center gap-2"
+                                    className="bg-espresso text-white px-3 md:px-6 py-2 md:py-2.5 rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-black uppercase tracking-widest hover:shadow-xl hover:-translate-y-0.5 active:scale-95 transition-all disabled:opacity-50 flex items-center gap-1.5 md:gap-2"
                                 >
-                                    {saving ? <span className="material-symbols-outlined animate-spin text-[16px]">sync</span> : <span className="material-symbols-outlined text-[16px]">save</span>}
-                                    {saving ? t('student.cv_builder.storing') : t('student.cv_builder.save_draft')}
+                                    {saving ? <span className="material-symbols-outlined animate-spin text-[14px] md:text-[16px]">sync</span> : <span className="material-symbols-outlined text-[14px] md:text-[16px]">save</span>}
+                                    <span className="hidden sm:inline">{saving ? t('student.cv_builder.storing') : t('student.cv_builder.save_draft')}</span>
+                                    <span className="sm:hidden">{saving ? '...' : 'SAVE'}</span>
                                 </button>
                             )}
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-2 px-10 pb-6">
-                        <div className="flex gap-6 justify-between items-end">
-                            <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest">{t('student.cv_builder.profile_integrity')}</p>
-                            <p className="text-espresso dark:text-white text-xs font-black">{completeness}%</p>
+                    <div className="flex flex-col gap-2 px-6 md:px-10 pb-4 md:pb-6">
+                        <div className="flex gap-4 md:gap-6 justify-between items-end">
+                            <p className="text-espresso/40 dark:text-white/40 text-[8px] md:text-[10px] font-black uppercase tracking-widest">{t('student.cv_builder.profile_integrity')}</p>
+                            <p className="text-espresso dark:text-white text-[10px] md:text-xs font-black">{completeness}%</p>
                         </div>
-                        <div className="rounded-full bg-espresso/5 dark:bg-white/5 h-2 w-full overflow-hidden border border-espresso/5">
+                        <div className="rounded-full bg-espresso/5 dark:bg-white/5 h-1.5 md:h-2 w-full overflow-hidden border border-espresso/5">
                             <div className="h-full rounded-full bg-espresso transition-all duration-700 ease-out shadow-sm" style={{ width: `${completeness}%` }}></div>
                         </div>
                     </div>
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 overflow-y-auto pb-48 scrollbar-hide px-10 pt-6 flex flex-col gap-6">
+                <div className="flex-1 overflow-y-auto pb-48 scrollbar-hide px-4 md:px-10 pt-4 md:pt-6 flex flex-col gap-4 md:gap-6">
 
                     {/* Personal Info */}
                     <SectionDetails
@@ -333,24 +334,24 @@ export function CVBuilder() {
                         isOpen={activeSection === 'personal'}
                         onToggle={(open) => setActiveSection(open ? 'personal' : null)}
                     >
-                        <div className="flex flex-col md:flex-row items-center gap-10 mb-8 pt-4">
+                        <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10 mb-6 md:mb-8 pt-2 md:pt-4">
                             <div
                                 onClick={() => fileInputRef.current?.click()}
-                                className="w-32 h-32 rounded-[2rem] bg-white/40 dark:bg-black/20 flex items-center justify-center border-2 border-espresso/20 border-dashed relative overflow-hidden cursor-pointer shrink-0 group/photo hover:border-espresso transition-all active:scale-95 shadow-lg"
+                                className="size-24 md:size-32 rounded-2xl md:rounded-[2rem] bg-white/40 dark:bg-black/20 flex items-center justify-center border-2 border-espresso/20 border-dashed relative overflow-hidden cursor-pointer shrink-0 group/photo hover:border-espresso transition-all active:scale-95 shadow-lg"
                             >
-                                {uploading ? <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-espresso"></div> : (
+                                {uploading ? <div className="animate-spin rounded-full size-6 md:size-8 border-b-2 border-espresso"></div> : (
                                     <>
                                         {cvData.personalInfo.photoURL ? (
                                             <img src={cvData.personalInfo.photoURL} alt="Profile" className="w-full h-full object-cover transition-transform duration-700 group-hover/photo:scale-110" />
-                                        ) : <span className="material-symbols-outlined text-espresso/40 group-hover/photo:scale-110 transition-transform text-3xl">add_a_photo</span>}
+                                        ) : <span className="material-symbols-outlined text-espresso/40 group-hover/photo:scale-110 transition-transform text-2xl md:text-3xl">add_a_photo</span>}
                                     </>
                                 )}
                                 <div className="absolute inset-0 bg-espresso/20 opacity-0 group-hover/photo:opacity-100 transition-opacity flex items-center justify-center">
-                                    <span className="material-symbols-outlined text-white text-2xl">sync</span>
+                                    <span className="material-symbols-outlined text-white text-xl md:text-2xl">sync</span>
                                 </div>
                                 <input type="file" ref={fileInputRef} onChange={handleImageUpload} className="hidden" accept="image/*" />
                             </div>
-                            <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                            <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 w-full">
                                 <Input label={t('student.cv_builder.personal.full_name')} name="fullName" value={cvData.personalInfo.fullName} onChange={handleInfoChange} placeholder="e.g. Jane Doe" />
                                 <Input label={t('student.cv_builder.personal.phone')} name="phone" value={cvData.personalInfo.phone} onChange={handleInfoChange} placeholder="+254..." icon="call" />
                                 <Input label={t('student.cv_builder.personal.email')} name="email" value={cvData.personalInfo.email} onChange={handleInfoChange} placeholder="email@example.com" type="email" icon="mail" />
@@ -366,17 +367,17 @@ export function CVBuilder() {
                         isOpen={activeSection === 'summary'}
                         onToggle={(open) => setActiveSection(open ? 'summary' : null)}
                     >
-                        <div className="w-full pt-4">
-                            <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest pb-3">{t('student.cv_builder.summary.label')}</p>
+                        <div className="w-full pt-2 md:pt-4">
+                            <p className="text-espresso/40 dark:text-white/40 text-[8px] md:text-[10px] font-black uppercase tracking-widest pb-2 md:pb-3">{t('student.cv_builder.summary.label')}</p>
                             <textarea
                                 value={cvData.summary}
                                 onChange={handleSummaryChange}
-                                className="w-full rounded-2xl text-espresso border border-espresso/10 bg-white/40 dark:bg-black/20 min-h-[160px] p-6 text-sm font-medium leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-espresso transition-all placeholder:text-espresso/20 shadow-inner"
+                                className="w-full rounded-xl md:rounded-2xl text-espresso border border-espresso/10 bg-white/40 dark:bg-black/20 min-h-[120px] md:min-h-[160px] p-4 md:p-6 text-xs md:text-sm font-medium leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-espresso transition-all placeholder:text-espresso/20 shadow-inner"
                                 placeholder={t('student.cv_builder.summary.placeholder')}
                             />
-                            <div className="flex justify-between items-center mt-3">
-                                <p className="text-[10px] text-espresso/30 italic">{t('student.cv_builder.summary.tip')}</p>
-                                <p className="text-[10px] font-black text-espresso/40 uppercase tracking-widest">{t('student.cv_builder.summary.chars_count', { count: cvData.summary.length })}</p>
+                            <div className="flex justify-between items-center mt-2 md:mt-3">
+                                <p className="text-[9px] md:text-[10px] text-espresso/30 italic">{t('student.cv_builder.summary.tip')}</p>
+                                <p className="text-[9px] md:text-[10px] font-black text-espresso/40 uppercase tracking-widest">{t('student.cv_builder.summary.chars_count', { count: cvData.summary.length })}</p>
                             </div>
                         </div>
                     </SectionDetails>
@@ -388,28 +389,28 @@ export function CVBuilder() {
                         isOpen={activeSection === 'certs'}
                         onToggle={(open) => setActiveSection(open ? 'certs' : null)}
                     >
-                        <div className="bg-white/40 dark:bg-black/20 rounded-2xl p-8 border border-espresso/10 mb-2 relative overflow-hidden group/certs pt-6 mt-4">
+                        <div className="bg-white/40 dark:bg-black/20 rounded-[1.5rem] md:rounded-2xl p-6 md:p-8 border border-espresso/10 mb-2 relative overflow-hidden group/certs pt-4 md:pt-6 mt-2 md:mt-4">
                             <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/5 group-hover/certs:bg-espresso/20 transition-colors"></div>
-                            <div className="flex items-center gap-3 mb-6">
-                                <span className="material-symbols-outlined text-espresso/40 text-[24px]">workspace_premium</span>
-                                <h4 className="text-[10px] font-black text-espresso dark:text-white uppercase tracking-[0.2em]">{t('student.cv_builder.certs.subtitle')}</h4>
+                            <div className="flex items-center gap-3 mb-4 md:mb-6">
+                                <span className="material-symbols-outlined text-espresso/40 text-[20px] md:text-[24px]">workspace_premium</span>
+                                <h4 className="text-[8px] md:text-[10px] font-black text-espresso dark:text-white uppercase tracking-[0.2em]">{t('student.cv_builder.certs.subtitle')}</h4>
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                                 {earnedCertificates.length > 0 ? earnedCertificates.map(cert => (
-                                    <label key={cert.id} className={`flex items-start gap-4 p-5 rounded-2xl border transition-all cursor-pointer group/item ${cvData.selectedCertificates.includes(cert.id) ? "bg-espresso text-white border-espresso shadow-xl -translate-y-1" : "bg-white/40 border-espresso/5 hover:border-espresso/20 hover:bg-white/60"}`}>
+                                    <label key={cert.id} className={`flex items-start gap-3 md:gap-4 p-4 md:p-5 rounded-xl md:rounded-2xl border transition-all cursor-pointer group/item ${cvData.selectedCertificates.includes(cert.id) ? "bg-espresso text-white border-espresso shadow-xl -translate-y-1" : "bg-white/40 border-espresso/5 hover:border-espresso/20 hover:bg-white/60"}`}>
                                         <input type="checkbox" className="hidden" checked={cvData.selectedCertificates.includes(cert.id)} onChange={() => toggleCertificate(cert.id)} />
-                                        <span className={`material-symbols-outlined text-[24px] transition-transform ${cvData.selectedCertificates.includes(cert.id) ? "text-white rotate-[360deg]" : "text-espresso/20"}`}>
+                                        <span className={`material-symbols-outlined text-[20px] md:text-[24px] transition-transform shrink-0 ${cvData.selectedCertificates.includes(cert.id) ? "text-white rotate-[360deg]" : "text-espresso/20"}`}>
                                             {cvData.selectedCertificates.includes(cert.id) ? 'verified' : 'radio_button_unchecked'}
                                         </span>
-                                        <div className="flex-1">
-                                            <p className={`text-sm font-black tracking-tight leading-tight ${cvData.selectedCertificates.includes(cert.id) ? "text-white" : "text-espresso dark:text-white"}`}>{cert.title}</p>
-                                            <p className={`text-[10px] uppercase tracking-widest mt-1 ${cvData.selectedCertificates.includes(cert.id) ? "text-white/60" : "text-espresso/40"}`}>{cert.date}</p>
+                                        <div className="flex-1 min-w-0">
+                                            <p className={`text-xs md:text-sm font-black tracking-tight leading-tight truncate ${cvData.selectedCertificates.includes(cert.id) ? "text-white" : "text-espresso dark:text-white"}`}>{cert.title}</p>
+                                            <p className={`text-[8px] md:text-[10px] uppercase tracking-widest mt-1 ${cvData.selectedCertificates.includes(cert.id) ? "text-white/60" : "text-espresso/40"}`}>{cert.date}</p>
                                         </div>
                                     </label>
                                 )) : (
-                                    <div className="col-span-full py-10 flex flex-col items-center justify-center text-espresso/30 opacity-60">
-                                        <span className="material-symbols-outlined text-5xl mb-2">history_edu</span>
-                                        <p className="text-sm font-serif italic">{t('student.cv_builder.certs.awaiting')}</p>
+                                    <div className="col-span-full py-8 md:py-10 flex flex-col items-center justify-center text-espresso/30 opacity-60">
+                                        <span className="material-symbols-outlined text-4xl md:text-5xl mb-2">history_edu</span>
+                                        <p className="text-xs md:text-sm font-serif italic text-center px-4">{t('student.cv_builder.certs.awaiting')}</p>
                                     </div>
                                 )}
                             </div>
@@ -423,29 +424,29 @@ export function CVBuilder() {
                         isOpen={activeSection === 'skills'}
                         onToggle={(open) => setActiveSection(open ? 'skills' : null)}
                     >
-                        <div className="pt-4">
-                            <p className="text-[10px] font-black uppercase text-espresso/40 dark:text-white/40 tracking-widest mb-4">{t('student.cv_builder.skills.label')}</p>
-                            <div className="flex flex-wrap gap-3 mb-6">
+                        <div className="pt-2 md:pt-4">
+                            <p className="text-[8px] md:text-[10px] font-black uppercase text-espresso/40 dark:text-white/40 tracking-widest mb-3 md:mb-4">{t('student.cv_builder.skills.label')}</p>
+                            <div className="flex flex-wrap gap-2 md:gap-3 mb-4 md:mb-6">
                                 {cvData.skills.other?.map((skill, idx) => (
-                                    <span key={idx} className="px-5 py-2.5 rounded-full bg-espresso text-white text-[10px] font-black uppercase tracking-widest flex items-center gap-3 shadow-lg animate-fade-in group/skill hover:-translate-y-1 transition-all">
+                                    <span key={idx} className="px-3 md:px-5 py-1.5 md:py-2.5 rounded-full bg-espresso text-white text-[8px] md:text-[10px] font-black uppercase tracking-widest flex items-center gap-2 md:gap-3 shadow-lg animate-fade-in group/skill hover:-translate-y-1 transition-all">
                                         {skill}
-                                        <button onClick={() => removeSkill('other', idx)} className="hover:text-red-300 w-5 h-5 flex items-center justify-center rounded-full bg-white/10 transition-colors">
-                                            <span className="material-symbols-outlined text-[14px]">close</span>
+                                        <button onClick={() => removeSkill('other', idx)} className="hover:text-red-300 size-4 md:size-5 flex items-center justify-center rounded-full bg-white/10 transition-colors">
+                                            <span className="material-symbols-outlined text-[10px] md:text-[14px]">close</span>
                                         </button>
                                     </span>
                                 ))}
                                 {cvData.skills.other?.length === 0 && (
-                                    <p className="text-xs text-espresso/30 font-medium italic">{t('student.cv_builder.skills.empty')}</p>
+                                    <p className="text-[10px] md:text-xs text-espresso/30 font-medium italic">{t('student.cv_builder.skills.empty')}</p>
                                 )}
                             </div>
-                            <div className="flex gap-4 group/input">
+                            <div className="flex gap-3 md:gap-4 group/input">
                                 <input
-                                    className="flex-1 rounded-2xl border border-espresso/10 bg-white/40 dark:bg-black/20 h-14 px-6 text-sm font-bold text-espresso dark:text-white placeholder:text-espresso/20 focus:outline-none focus:ring-2 focus:ring-espresso transition-all shadow-sm"
+                                    className="flex-1 rounded-xl md:rounded-2xl border border-espresso/10 bg-white/40 dark:bg-black/20 h-10 md:h-14 px-4 md:px-6 text-xs md:text-sm font-bold text-espresso dark:text-white placeholder:text-espresso/20 focus:outline-none focus:ring-2 focus:ring-espresso transition-all shadow-sm"
                                     placeholder={t('student.cv_builder.skills.placeholder')}
                                     onKeyDown={(e) => { if (e.key === 'Enter') { addSkill('other', e.target.value); e.target.value = ''; } }}
                                 />
                                 <button
-                                    className="w-14 h-14 rounded-2xl bg-espresso text-white flex items-center justify-center shadow-xl hover:shadow-espresso/40 active:scale-95 transition-all"
+                                    className="size-10 md:size-14 rounded-xl md:rounded-2xl bg-espresso text-white flex items-center justify-center shadow-xl hover:shadow-espresso/40 active:scale-95 transition-all shrink-0"
                                     onClick={(e) => { const input = e.currentTarget.previousSibling; if (input.value) { addSkill('other', input.value); input.value = ''; } }}
                                 >
                                     <span className="material-symbols-outlined">add</span>
@@ -461,16 +462,16 @@ export function CVBuilder() {
                         isOpen={activeSection === 'education'}
                         onToggle={(open) => setActiveSection(open ? 'education' : null)}
                     >
-                        <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="pt-2 md:pt-4 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                             {cvData.education.map((edu, idx) => (
-                                <div key={edu.id} className="bg-white/40 dark:bg-black/20 rounded-3xl p-8 border border-espresso/10 relative group/item animate-fade-in shadow-sm hover:shadow-md transition-all">
+                                <div key={edu.id} className="bg-white/40 dark:bg-black/20 rounded-2xl md:rounded-3xl p-6 md:p-8 border border-espresso/10 relative group/item animate-fade-in shadow-sm hover:shadow-md transition-all">
                                     <button
                                         onClick={() => removeEducation(idx)}
-                                        className="absolute top-4 right-4 w-10 h-10 rounded-xl bg-red-50 text-red-500 opacity-0 group-hover/item:opacity-100 transition-opacity flex items-center justify-center hover:bg-red-500 hover:text-white"
+                                        className="absolute top-3 md:top-4 right-3 md:right-4 size-8 md:size-10 rounded-lg md:rounded-xl bg-red-50 text-red-500 opacity-60 md:opacity-0 group-hover/item:opacity-100 transition-opacity flex items-center justify-center hover:bg-red-500 hover:text-white"
                                     >
-                                        <span className="material-symbols-outlined text-[20px]">delete_sweep</span>
+                                        <span className="material-symbols-outlined text-[18px] md:text-[20px]">delete_sweep</span>
                                     </button>
-                                    <div className="grid gap-6">
+                                    <div className="grid gap-4 md:gap-6">
                                         <Input label={t('student.cv_builder.education.institution')} placeholder="e.g. University of Coffee Arts" value={edu.school} onChange={(e) => updateEducation(idx, 'school', e.target.value)} />
                                         <Input label={t('student.cv_builder.education.credential')} placeholder="e.g. Master in Espresso Theory" value={edu.degree} onChange={(e) => updateEducation(idx, 'degree', e.target.value)} />
                                         <Input label={t('student.cv_builder.education.timeline')} placeholder="e.g. 2020 - 2024" value={edu.year} onChange={(e) => updateEducation(idx, 'year', e.target.value)} />
@@ -479,10 +480,10 @@ export function CVBuilder() {
                             ))}
                             <button
                                 onClick={addEducation}
-                                className="w-full py-10 rounded-3xl border-2 border-dashed border-espresso/10 text-espresso/40 hover:bg-white/40 hover:border-espresso/30 hover:text-espresso transition-all flex flex-col items-center justify-center gap-3 transition-all"
+                                className="w-full py-8 md:py-10 rounded-2xl md:rounded-3xl border-2 border-dashed border-espresso/10 text-espresso/40 hover:bg-white/40 hover:border-espresso/30 hover:text-espresso transition-all flex flex-col items-center justify-center gap-2 md:gap-3"
                             >
-                                <span className="material-symbols-outlined text-4xl">add_school</span>
-                                <span className="text-[10px] font-black uppercase tracking-widest">{t('student.cv_builder.education.append')}</span>
+                                <span className="material-symbols-outlined text-3xl md:text-4xl">add_school</span>
+                                <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest">{t('student.cv_builder.education.append')}</span>
                             </button>
                         </div>
                     </SectionDetails>
@@ -494,28 +495,28 @@ export function CVBuilder() {
                         isOpen={activeSection === 'experience'}
                         onToggle={(open) => setActiveSection(open ? 'experience' : null)}
                     >
-                        <div className="pt-4 space-y-6">
+                        <div className="pt-2 md:pt-4 space-y-4 md:space-y-6">
                             {cvData.experience.map((exp, idx) => (
-                                <div key={exp.id} className="bg-white/40 dark:bg-black/20 rounded-3xl p-10 border border-espresso/10 relative group/item animate-fade-in shadow-sm hover:shadow-md transition-all">
+                                <div key={exp.id} className="bg-white/40 dark:bg-black/20 rounded-[1.5rem] md:rounded-3xl p-6 md:p-10 border border-espresso/10 relative group/item animate-fade-in shadow-sm hover:shadow-md transition-all">
                                     <button
                                         onClick={() => removeExperience(idx)}
-                                        className="absolute top-6 right-6 w-12 h-12 rounded-2xl bg-red-50 text-red-500 opacity-0 group-hover/item:opacity-100 transition-opacity flex items-center justify-center hover:bg-red-500 hover:text-white"
+                                        className="absolute top-4 md:top-6 right-4 md:right-6 size-10 md:size-12 rounded-xl md:rounded-2xl bg-red-50 text-red-500 opacity-60 md:opacity-0 group-hover/item:opacity-100 transition-opacity flex items-center justify-center hover:bg-red-500 hover:text-white"
                                     >
-                                        <span className="material-symbols-outlined text-[24px]">delete_forever</span>
+                                        <span className="material-symbols-outlined text-[20px] md:text-[24px]">delete_forever</span>
                                     </button>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                        <div className="space-y-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                                        <div className="space-y-4 md:space-y-6">
                                             <Input label={t('student.cv_builder.experience.role')} placeholder="e.g. Senior Barista Operator" value={exp.title} onChange={(e) => updateExperience(idx, 'title', e.target.value)} />
                                             <Input label={t('student.cv_builder.experience.organization')} placeholder="e.g. Global Bean Collective" value={exp.company} onChange={(e) => updateExperience(idx, 'company', e.target.value)} />
-                                            <div className="grid grid-cols-2 gap-4">
+                                            <div className="grid grid-cols-2 gap-3 md:gap-4">
                                                 <Input type="month" label={t('student.cv_builder.experience.activation')} value={exp.startDate} onChange={(e) => updateExperience(idx, 'startDate', e.target.value)} />
                                                 <Input type="month" label={t('student.cv_builder.experience.termination')} value={exp.endDate} onChange={(e) => updateExperience(idx, 'endDate', e.target.value)} />
                                             </div>
                                         </div>
-                                        <div className="space-y-2">
-                                            <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest leading-normal pb-1.5">{t('student.cv_builder.experience.responsibilities')}</p>
+                                        <div className="space-y-1.5 md:space-y-2">
+                                            <p className="text-[8px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest leading-normal pb-1 transition-colors">{t('student.cv_builder.experience.responsibilities')}</p>
                                             <textarea
-                                                className="w-full rounded-2xl border border-espresso/10 bg-black/5 dark:bg-black/40 p-6 text-sm font-medium h-[180px] resize-none focus:outline-none focus:ring-2 focus:ring-espresso transition-all placeholder:text-espresso/20"
+                                                className="w-full rounded-xl md:rounded-2xl border border-espresso/10 bg-black/5 dark:bg-black/40 p-4 md:p-6 text-xs md:text-sm font-medium h-[140px] md:h-[180px] resize-none focus:outline-none focus:ring-2 focus:ring-espresso transition-all placeholder:text-espresso/20 shadow-inner"
                                                 placeholder={t('student.cv_builder.experience.placeholder')}
                                                 value={exp.description}
                                                 onChange={(e) => updateExperience(idx, 'description', e.target.value)}
@@ -526,10 +527,10 @@ export function CVBuilder() {
                             ))}
                             <button
                                 onClick={addExperience}
-                                className="w-full py-12 rounded-[2.5rem] border-2 border-dashed border-espresso/10 text-espresso/40 hover:bg-white/40 hover:border-espresso/30 hover:text-espresso transition-all flex flex-col items-center justify-center gap-4"
+                                className="w-full py-10 md:py-12 rounded-[1.5rem] md:rounded-[2.5rem] border-2 border-dashed border-espresso/10 text-espresso/40 hover:bg-white/40 hover:border-espresso/30 hover:text-espresso transition-all flex flex-col items-center justify-center gap-3 md:gap-4"
                             >
-                                <span className="material-symbols-outlined text-5xl">assignment_add</span>
-                                <span className="text-[10px] font-black uppercase tracking-widest">{t('student.cv_builder.experience.append')}</span>
+                                <span className="material-symbols-outlined text-4xl md:text-5xl">assignment_add</span>
+                                <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest">{t('student.cv_builder.experience.append')}</span>
                             </button>
                         </div>
                     </SectionDetails>
@@ -537,29 +538,29 @@ export function CVBuilder() {
                 </div>
 
                 {/* Footer Actions */}
-                <div className="sticky bottom-0 w-full bg-[#F5DEB3]/90 dark:bg-[#1c1916]/90 backdrop-blur-md border-t border-espresso/10 p-8 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] z-50 rounded-b-[2.5rem]">
-                    <div className="flex flex-col md:flex-row gap-6 w-full">
+                <div className="sticky bottom-0 w-full bg-[#F5DEB3]/90 dark:bg-[#1c1916]/90 backdrop-blur-md border-t border-espresso/10 p-4 md:p-8 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] z-50 rounded-b-none md:rounded-b-[2.5rem]">
+                    <div className="flex flex-col sm:flex-row gap-3 md:gap-6 w-full">
                         {saveSuccess ? (
-                            <button disabled className="flex-1 h-16 flex items-center justify-center gap-3 rounded-[1.25rem] border-2 border-green-600/50 text-green-600 font-black text-xs uppercase tracking-[0.2em] bg-green-50/50 backdrop-blur-sm shadow-inner transition-all">
-                                <span className="material-symbols-outlined text-[20px] animate-pulse">verified_user</span>
+                            <button disabled className="flex-1 h-12 md:h-16 flex items-center justify-center gap-2 md:gap-3 rounded-xl md:rounded-[1.25rem] border-2 border-green-600/50 text-green-600 font-black text-[10px] md:text-xs uppercase tracking-[0.15em] md:tracking-[0.2em] bg-green-50/50 backdrop-blur-sm shadow-inner transition-all">
+                                <span className="material-symbols-outlined text-[18px] md:text-[20px] animate-pulse">verified_user</span>
                                 {t('student.cv_builder.footer.synced')}
                             </button>
                         ) : (
                             <button
                                 onClick={handleSave}
                                 disabled={saving}
-                                className="flex-1 h-16 flex items-center justify-center gap-3 rounded-[1.25rem] border-2 border-espresso/20 text-espresso/60 font-black text-xs uppercase tracking-[0.2em] hover:bg-white/40 hover:border-espresso/40 transition-all active:scale-95 shadow-lg"
+                                className="flex-1 h-12 md:h-16 flex items-center justify-center gap-2 md:gap-3 rounded-xl md:rounded-[1.25rem] border-2 border-espresso/20 text-espresso/60 font-black text-[10px] md:text-xs uppercase tracking-[0.15em] md:tracking-[0.2em] hover:bg-white/40 hover:border-espresso/40 transition-all active:scale-95 shadow-lg"
                             >
-                                {saving ? <span className="material-symbols-outlined animate-spin text-[20px]">sync</span> : <span className="material-symbols-outlined text-[20px]">save_as</span>}
+                                {saving ? <span className="material-symbols-outlined animate-spin text-[18px] md:text-[20px]">sync</span> : <span className="material-symbols-outlined text-[18px] md:text-[20px]">save_as</span>}
                                 {saving ? t('student.cv_builder.footer.synchronizing') : t('student.cv_builder.footer.sync_state')}
                             </button>
                         )}
                         <button
                             onClick={handlePrint}
                             disabled={isPrinting}
-                            className="flex-[1.5] h-16 flex items-center justify-center gap-3 rounded-[1.25rem] bg-espresso text-white font-black text-xs uppercase tracking-[0.2em] shadow-2xl hover:shadow-espresso/40 hover:-translate-y-1 transition-all active:scale-95 group"
+                            className="flex-[1.5] h-12 md:h-16 flex items-center justify-center gap-2 md:gap-3 rounded-xl md:rounded-[1.25rem] bg-espresso text-white font-black text-[10px] md:text-xs uppercase tracking-[0.15em] md:tracking-[0.2em] shadow-2xl hover:shadow-espresso/40 hover:-translate-y-1 transition-all active:scale-95 group"
                         >
-                            {isPrinting ? <span className="material-symbols-outlined animate-spin text-[20px]">sync</span> : <span className="material-symbols-outlined text-[20px] group-hover:translate-y-1 transition-transform">picture_as_pdf</span>}
+                            {isPrinting ? <span className="material-symbols-outlined animate-spin text-[18px] md:text-[20px]">sync</span> : <span className="material-symbols-outlined text-[18px] md:text-[20px] group-hover:translate-y-1 transition-transform">picture_as_pdf</span>}
                             {isPrinting ? t('student.cv_builder.footer.compiling') : t('student.cv_builder.footer.execute_print')}
                         </button>
                     </div>
@@ -582,24 +583,24 @@ export function CVBuilder() {
 
 function SectionDetails({ title, icon, children, isOpen, onToggle }) {
     return (
-        <details className="group w-full shrink-0 rounded-[2rem] bg-[#F5DEB3] dark:bg-neutral-800 shadow-xl border border-espresso/10 overflow-hidden transition-all duration-300 hover:shadow-2xl relative" open={isOpen}>
-            <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+        <details className="group w-full shrink-0 rounded-2xl md:rounded-[2rem] bg-[#F5DEB3] dark:bg-neutral-800 shadow-xl border border-espresso/10 overflow-hidden transition-all duration-300 hover:shadow-2xl relative" open={isOpen}>
+            <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
             <summary
                 onClick={(e) => { e.preventDefault(); onToggle(!isOpen); }}
-                className="flex cursor-pointer items-center justify-between gap-6 px-10 py-8 bg-white/40 dark:bg-neutral-800 hover:bg-white/60 transition-all list-none"
+                className="flex cursor-pointer items-center justify-between gap-4 md:gap-6 px-6 md:px-10 py-6 md:py-8 bg-white/40 dark:bg-neutral-800 hover:bg-white/60 transition-all list-none"
             >
-                <div className="flex items-center gap-5">
-                    <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-espresso text-white shadow-lg shadow-espresso/20 transition-transform group-hover:scale-110">
-                        <span className="material-symbols-outlined text-[24px]">{icon}</span>
+                <div className="flex items-center gap-4 md:gap-5 min-w-0">
+                    <div className="flex items-center justify-center size-10 md:size-12 rounded-xl md:rounded-2xl bg-espresso text-white shadow-lg shadow-espresso/20 transition-transform group-hover:scale-110 shrink-0">
+                        <span className="material-symbols-outlined text-[20px] md:text-[24px]">{icon}</span>
                     </div>
-                    <p className="text-espresso dark:text-white text-2xl font-serif font-black tracking-tight leading-normal">{title}</p>
+                    <p className="text-espresso dark:text-white text-lg md:text-2xl font-serif font-black tracking-tight leading-normal truncate">{title}</p>
                 </div>
-                <div className="w-12 h-12 rounded-2xl bg-espresso/5 flex items-center justify-center transition-all group-hover:bg-espresso/10">
+                <div className="size-10 md:size-12 rounded-xl md:rounded-2xl bg-espresso/5 flex items-center justify-center transition-all group-hover:bg-espresso/10 shrink-0">
                     <span className={`material-symbols-outlined text-espresso transition-transform duration-500 ${isOpen ? 'rotate-180' : ''}`}>expand_more</span>
                 </div>
             </summary>
             {isOpen && (
-                <div className="px-10 pb-10 pt-4 border-t border-espresso/5 animate-fade-in bg-white/20">
+                <div className="px-6 md:px-10 pb-6 md:pb-10 pt-2 md:pt-4 border-t border-espresso/5 animate-fade-in bg-white/20">
                     {children}
                 </div>
             )}
@@ -610,11 +611,11 @@ function SectionDetails({ title, icon, children, isOpen, onToggle }) {
 function Input({ label, icon, ...props }) {
     return (
         <label className="flex flex-col w-full group/input">
-            {label && <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest leading-normal pb-1.5 transition-colors group-focus-within/input:text-espresso">{label}</p>}
+            {label && <p className="text-espresso/40 dark:text-white/40 text-[8px] md:text-[10px] font-black uppercase tracking-widest leading-normal pb-1 md:pb-1.5 transition-colors group-focus-within/input:text-espresso">{label}</p>}
             <div className="relative">
-                {icon && <span className="absolute left-5 top-1/2 -translate-y-1/2 text-espresso/40 material-symbols-outlined text-[20px] group-focus-within/input:text-espresso transition-colors">{icon}</span>}
+                {icon && <span className="absolute left-4 md:left-5 top-1/2 -translate-y-1/2 text-espresso/40 material-symbols-outlined text-[18px] md:text-[20px] group-focus-within/input:text-espresso transition-colors">{icon}</span>}
                 <input
-                    className={`w-full rounded-2xl text-espresso dark:text-white border border-espresso/10 bg-white/40 dark:bg-black/20 focus:border-espresso focus:ring-2 focus:ring-espresso focus:bg-white/60 h-14 p-6 text-sm font-bold placeholder:text-espresso/20 outline-none transition-all shadow-sm ${icon ? 'pl-14' : ''}`}
+                    className={`w-full rounded-xl md:rounded-2xl text-espresso dark:text-white border border-espresso/10 bg-white/40 dark:bg-black/20 focus:border-espresso focus:ring-2 focus:ring-espresso focus:bg-white/60 h-11 md:h-14 p-4 md:p-6 text-xs md:text-sm font-bold placeholder:text-espresso/20 outline-none transition-all shadow-sm ${icon ? 'pl-12 md:pl-14' : ''}`}
                     {...props}
                 />
             </div>

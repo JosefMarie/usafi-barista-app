@@ -108,42 +108,42 @@ export function SetupAdmin() {
     };
 
     return (
-        <div className="min-h-screen bg-background-light dark:bg-background-dark py-12 px-4 sm:px-6 lg:px-8 flex flex-col justify-center">
-            <div className="max-w-md w-full mx-auto space-y-8 bg-[#F5DEB3] dark:bg-white/5 p-10 rounded-3xl shadow-2xl border border-espresso/10 relative overflow-hidden group">
-                <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+        <div className="min-h-screen bg-background-light dark:bg-background-dark py-8 md:py-12 px-4 sm:px-6 lg:px-8 flex flex-col justify-center">
+            <div className="max-w-md w-full mx-auto space-y-8 bg-[#F5DEB3] dark:bg-white/5 p-6 md:p-10 rounded-2xl md:rounded-3xl shadow-2xl border border-espresso/10 relative overflow-hidden group">
+                <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
 
                 {/* Header */}
                 <div className="text-center">
                     <div className="mx-auto h-12 w-12 rounded-full bg-primary flex items-center justify-center text-white mb-4 shadow-lg">
                         <span className="material-symbols-outlined text-2xl">shield_person</span>
                     </div>
-                    <h2 className="text-3xl font-extrabold text-espresso dark:text-white font-serif">
+                    <h2 className="text-2xl md:text-3xl font-extrabold text-espresso dark:text-white font-serif">
                         Staff Portal
                     </h2>
-                    <p className="mt-2 text-sm text-espresso/70 dark:text-white/70">
+                    <p className="mt-2 text-xs md:text-sm text-espresso/70 dark:text-white/70">
                         {mode === 'login' ? 'Secure Login for Admins & Instructors' : 'Register New Staff Member'}
                     </p>
                 </div>
 
                 {/* Tabs */}
-                <div className="flex bg-gray-100 dark:bg-white/5 p-1 rounded-xl">
+                <div className="flex bg-white/20 dark:bg-white/5 p-1 rounded-xl border border-espresso/10">
                     <button
                         onClick={() => { setMode('login'); setStatus({ type: '', message: '' }); }}
-                        className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${mode === 'login'
-                            ? 'bg-white dark:bg-[#2c2825] text-primary shadow-sm'
-                            : 'text-espresso/60 dark:text-white/60 hover:text-espresso dark:hover:text-white'
+                        className={`flex-1 py-3 text-[10px] md:text-xs font-black uppercase tracking-widest rounded-lg transition-all ${mode === 'login'
+                            ? 'bg-espresso text-white shadow-lg'
+                            : 'text-espresso/40 dark:text-white/40 hover:text-espresso'
                             }`}
                     >
-                        Login
+                        Secure Access
                     </button>
                     <button
                         onClick={() => { setMode('register'); setStatus({ type: '', message: '' }); }}
-                        className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${mode === 'register'
-                            ? 'bg-white dark:bg-[#2c2825] text-primary shadow-sm'
-                            : 'text-espresso/60 dark:text-white/60 hover:text-espresso dark:hover:text-white'
+                        className={`flex-1 py-3 text-[10px] md:text-xs font-black uppercase tracking-widest rounded-lg transition-all ${mode === 'register'
+                            ? 'bg-espresso text-white shadow-lg'
+                            : 'text-espresso/40 dark:text-white/40 hover:text-espresso'
                             }`}
                     >
-                        Register
+                        Enroll Staff
                     </button>
                 </div>
 
@@ -198,14 +198,14 @@ export function SetupAdmin() {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-espresso dark:text-white mb-1">Password</label>
+                            <label className="block text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-2 ml-1">Password</label>
                             <input
                                 name="password"
                                 type="password"
                                 required
                                 minLength="6"
-                                className="block w-full px-3 py-2 border border-gray-300 dark:border-white/10 rounded-lg bg-gray-50 dark:bg-white/5 focus:outline-none focus:ring-2 focus:ring-primary"
-                                placeholder="Enter your password"
+                                className="block w-full px-4 md:px-5 py-3 md:py-4 border border-espresso/10 rounded-xl md:rounded-2xl bg-white/50 dark:bg-white/5 focus:outline-none focus:ring-2 focus:ring-espresso text-espresso dark:text-white placeholder:text-espresso/20 text-sm"
+                                placeholder="Min. 6 characters"
                                 value={formData.password}
                                 onChange={handleChange}
                             />
@@ -213,14 +213,14 @@ export function SetupAdmin() {
 
                         {mode === 'register' && (
                             <div>
-                                <label className="block text-sm font-medium text-espresso dark:text-white mb-1">Role Assignment</label>
-                                <div className="grid grid-cols-3 gap-4">
+                                <label className="block text-xs font-black uppercase tracking-widest text-espresso/40 mb-2 ml-1">Role Assignment</label>
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
                                     <button
                                         type="button"
                                         onClick={() => setFormData({ ...formData, role: 'instructor' })}
-                                        className={`px-4 py-3 rounded-xl border text-sm font-bold flex items-center justify-center gap-2 transition-all ${formData.role === 'instructor'
+                                        className={`px-4 py-3 md:py-4 rounded-xl border text-[10px] md:text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all ${formData.role === 'instructor'
                                             ? 'bg-primary text-white border-primary shadow-md'
-                                            : 'bg-white dark:bg-white/5 text-espresso/70 dark:text-white/70 border-gray-200 dark:border-white/10 hover:bg-gray-50'
+                                            : 'bg-white dark:bg-white/5 text-espresso/70 dark:text-white/70 border-espresso/10 hover:bg-white/80'
                                             }`}
                                     >
                                         <span className="material-symbols-outlined text-lg">school</span>
@@ -229,9 +229,9 @@ export function SetupAdmin() {
                                     <button
                                         type="button"
                                         onClick={() => setFormData({ ...formData, role: 'manager' })}
-                                        className={`px-4 py-3 rounded-xl border text-sm font-bold flex items-center justify-center gap-2 transition-all ${formData.role === 'manager'
+                                        className={`px-4 py-3 md:py-4 rounded-xl border text-[10px] md:text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all ${formData.role === 'manager'
                                             ? 'bg-blue-600 text-white border-blue-600 shadow-md'
-                                            : 'bg-white dark:bg-white/5 text-espresso/70 dark:text-white/70 border-gray-200 dark:border-white/10 hover:bg-gray-50'
+                                            : 'bg-white dark:bg-white/5 text-espresso/70 dark:text-white/70 border-espresso/10 hover:bg-white/80'
                                             }`}
                                     >
                                         <span className="material-symbols-outlined text-lg">campaign</span>
@@ -240,9 +240,9 @@ export function SetupAdmin() {
                                     <button
                                         type="button"
                                         onClick={() => setFormData({ ...formData, role: 'admin' })}
-                                        className={`px-4 py-3 rounded-xl border text-sm font-bold flex items-center justify-center gap-2 transition-all ${formData.role === 'admin'
+                                        className={`px-4 py-3 md:py-4 rounded-xl border text-[10px] md:text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all ${formData.role === 'admin'
                                             ? 'bg-espresso dark:bg-black text-white border-espresso shadow-md'
-                                            : 'bg-white dark:bg-white/5 text-espresso/70 dark:text-white/70 border-gray-200 dark:border-white/10 hover:bg-gray-50'
+                                            : 'bg-white dark:bg-white/5 text-espresso/70 dark:text-white/70 border-espresso/10 hover:bg-white/80'
                                             }`}
                                     >
                                         <span className="material-symbols-outlined text-lg">admin_panel_settings</span>

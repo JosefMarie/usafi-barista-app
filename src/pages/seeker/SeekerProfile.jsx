@@ -99,48 +99,48 @@ export function SeekerProfile() {
 
     return (
         <div className="min-h-screen bg-background-light dark:bg-background-dark">
-            <div className="flex flex-col w-full max-w-5xl mx-auto pb-12 animate-fade-in px-4">
+            <div className="flex flex-col w-full max-w-5xl mx-auto pb-12 animate-fade-in px-4 md:px-6">
                 {/* TopAppBar - Unified for Seeker/Student */}
-                <header className="sticky top-0 z-50 bg-[#F5DEB3]/90 dark:bg-[#1c1916]/90 backdrop-blur-md transition-colors duration-200 rounded-b-[2.5rem] shadow-lg mb-12 border-b border-espresso/10">
-                    <div className="flex items-center justify-between px-8 py-6">
+                <header className="sticky top-0 z-50 bg-[#F5DEB3]/90 dark:bg-[#1c1916]/90 backdrop-blur-md transition-colors duration-200 rounded-b-[2rem] md:rounded-b-[2.5rem] shadow-lg mb-8 md:mb-12 border-b border-espresso/10">
+                    <div className="flex items-center justify-between px-4 md:px-8 py-4 md:py-6">
                         <button
                             onClick={() => navigate('/seeker/dashboard')}
-                            className="flex items-center justify-center w-12 h-12 rounded-2xl bg-white/40 hover:bg-white/60 transition-all text-espresso shadow-sm"
+                            className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-white/40 hover:bg-white/60 transition-all text-espresso shadow-sm"
                         >
-                            <span className="material-symbols-outlined text-[24px]">arrow_back_ios_new</span>
+                            <span className="material-symbols-outlined text-[20px] md:text-[24px]">arrow_back_ios_new</span>
                         </button>
-                        <h2 className="text-espresso dark:text-white text-2xl font-serif font-black uppercase tracking-widest leading-tight text-center flex-1">
+                        <h2 className="text-espresso dark:text-white text-xl md:text-2xl font-serif font-black uppercase tracking-widest leading-tight text-center flex-1">
                             Seeker Profile
                         </h2>
                         <button
                             onClick={handleEditClick}
-                            className="flex items-center justify-center h-12 px-8 rounded-2xl bg-espresso text-white text-[11px] font-black uppercase tracking-[0.2em] shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all"
+                            className="flex items-center justify-center h-10 md:h-12 px-4 md:px-8 rounded-xl md:rounded-2xl bg-espresso text-white text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all"
                         >
                             Edit
                         </button>
                     </div>
                 </header>
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-10">
                     {/* Left Column: Avatar and Quick Info */}
                     <div className="lg:col-span-4 flex flex-col items-center">
-                        <div className="bg-[#F5DEB3] dark:bg-[#1c1916] rounded-3xl p-10 shadow-xl border border-primary/20 w-full flex flex-col items-center relative overflow-hidden group">
+                        <div className="bg-[#F5DEB3] dark:bg-[#1c1916] rounded-2xl md:rounded-3xl p-6 md:p-10 shadow-xl border border-primary/20 w-full flex flex-col items-center relative overflow-hidden group">
                             <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/30 group-hover:bg-espresso transition-colors"></div>
 
                             <div
                                 onClick={handleAvatarClick}
-                                className="relative mb-8 group/avatar cursor-pointer"
+                                className="relative mb-6 md:mb-8 group/avatar cursor-pointer"
                             >
                                 <div
-                                    className="w-44 h-44 rounded-full border-4 border-white dark:border-[#2c2825] shadow-2xl bg-cover bg-center overflow-hidden flex items-center justify-center bg-white/50 backdrop-blur-sm transition-transform duration-500 group-hover/avatar:scale-105"
+                                    className="w-32 h-32 md:w-44 md:h-44 rounded-full border-4 border-white dark:border-[#2c2825] shadow-2xl bg-cover bg-center overflow-hidden flex items-center justify-center bg-white/50 backdrop-blur-sm transition-transform duration-500 group-hover/avatar:scale-105"
                                     style={{ backgroundImage: uploading ? 'none' : `url('${avatarUrl}')` }}
                                 >
                                     {uploading && (
-                                        <div className="animate-spin rounded-full h-14 w-14 border-b-2 border-primary"></div>
+                                        <div className="animate-spin rounded-full h-12 w-12 md:h-14 md:w-14 border-b-2 border-primary"></div>
                                     )}
                                 </div>
-                                <div className="absolute bottom-2 right-2 bg-espresso text-white p-3 rounded-full shadow-lg flex items-center justify-center border-4 border-[#F5DEB3] dark:border-[#1c1916] group-hover/avatar:scale-110 transition-transform">
-                                    <span className="material-symbols-outlined text-[20px]">photo_camera</span>
+                                <div className="absolute bottom-1.5 right-1.5 md:bottom-2 md:right-2 bg-espresso text-white p-2.5 md:p-3 rounded-full shadow-lg flex items-center justify-center border-4 border-[#F5DEB3] dark:border-[#1c1916] group-hover/avatar:scale-110 transition-transform">
+                                    <span className="material-symbols-outlined text-[18px] md:text-[20px]">photo_camera</span>
                                 </div>
                                 <input
                                     type="file"
@@ -151,14 +151,14 @@ export function SeekerProfile() {
                                 />
                             </div>
 
-                            <h1 className="text-2xl font-bold text-espresso dark:text-white text-center mb-1 font-serif">
+                            <h1 className="text-xl md:text-2xl font-bold text-espresso dark:text-white text-center mb-1 font-serif">
                                 {displayName}
                             </h1>
-                            <p className="text-espresso/60 font-black text-[10px] tracking-[0.2em] uppercase mb-4 bg-white/30 px-4 py-1.5 rounded-full border border-white/20">
+                            <p className="text-espresso/60 font-black text-[10px] tracking-[0.2em] uppercase mb-4 bg-white/30 px-3 md:px-4 py-1.5 rounded-full border border-white/20">
                                 Seeker ID: {userId}
                             </p>
 
-                            <div className="px-5 py-2 bg-green-600 text-white rounded-full mb-8 shadow-md border border-white/10">
+                            <div className="px-4 md:px-5 py-2 bg-green-600 text-white rounded-full mb-6 md:mb-8 shadow-md border border-white/10">
                                 <p className="text-[10px] font-black tracking-[0.2em] uppercase">
                                     Job Seeker
                                 </p>
@@ -167,7 +167,7 @@ export function SeekerProfile() {
                             <div className="flex flex-col gap-3 w-full">
                                 <button
                                     onClick={handleLogout}
-                                    className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-white/40 text-red-600 border border-red-200/50 hover:bg-red-50 hover:border-red-300 transition-all font-bold text-xs uppercase tracking-widest shadow-sm active:scale-95"
+                                    className="w-full flex items-center justify-center gap-2 px-5 md:px-6 py-3 md:py-3.5 rounded-xl md:rounded-2xl bg-white/40 text-red-600 border border-red-200/50 hover:bg-red-50 hover:border-red-300 transition-all font-bold text-xs uppercase tracking-widest shadow-sm active:scale-95"
                                 >
                                     <span className="material-symbols-outlined text-[18px]">logout</span>
                                     Sign Out Account
@@ -177,55 +177,55 @@ export function SeekerProfile() {
                     </div>
 
                     {/* Right Column: Settings and Info */}
-                    <div className="lg:col-span-8 space-y-8">
+                    <div className="lg:col-span-8 space-y-6 md:space-y-8">
                         {/* Identity Info Card */}
-                        <div className="bg-[#F5DEB3] dark:bg-[#1c1916] rounded-3xl shadow-xl border border-primary/20 overflow-hidden relative group">
+                        <div className="bg-[#F5DEB3] dark:bg-[#1c1916] rounded-2xl md:rounded-3xl shadow-xl border border-primary/20 overflow-hidden relative group">
                             <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/30 group-hover:bg-espresso transition-colors"></div>
-                            <div className="px-8 py-5 border-b border-espresso/10 flex items-center justify-between bg-white/20">
-                                <div className="flex items-center gap-3">
-                                    <span className="material-symbols-outlined text-espresso/60">fingerprint</span>
+                            <div className="px-5 md:px-8 py-4 md:py-5 border-b border-espresso/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white/20">
+                                <div className="flex items-center gap-2 md:gap-3">
+                                    <span className="material-symbols-outlined text-espresso/60 text-xl md:text-2xl">fingerprint</span>
                                     <h3 className="font-bold text-espresso dark:text-white uppercase tracking-widest text-xs">Identity Profile</h3>
                                 </div>
                                 <button
                                     onClick={handleEditClick}
-                                    className="h-10 px-6 rounded-xl bg-espresso text-white text-[10px] font-black uppercase tracking-widest hover:shadow-lg hover:-translate-y-0.5 transition-all active:scale-95"
+                                    className="h-9 md:h-10 px-4 md:px-6 rounded-xl bg-espresso text-white text-[10px] font-black uppercase tracking-widest hover:shadow-lg hover:-translate-y-0.5 transition-all active:scale-95 w-full sm:w-auto"
                                 >
                                     Edit Info
                                 </button>
                             </div>
-                            <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+                            <div className="p-5 md:p-8 grid grid-cols-1 gap-6 md:gap-8 relative z-10">
                                 <div className="space-y-1.5">
                                     <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">Full Name</p>
-                                    <p className="text-espresso dark:text-white font-bold text-lg">{displayName}</p>
+                                    <p className="text-espresso dark:text-white font-bold text-base md:text-lg">{displayName}</p>
                                 </div>
                                 <div className="space-y-1.5">
                                     <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">Email Address</p>
-                                    <p className="text-espresso dark:text-white font-bold text-lg">{user?.email}</p>
+                                    <p className="text-espresso dark:text-white font-bold text-base md:text-lg break-all">{user?.email}</p>
                                 </div>
                                 <div className="space-y-1.5">
                                     <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">Phone Number</p>
-                                    <p className="text-espresso dark:text-white font-bold text-lg">{user?.phone || 'Not provided'}</p>
+                                    <p className="text-espresso dark:text-white font-bold text-base md:text-lg">{user?.phone || 'Not provided'}</p>
                                 </div>
                                 <div className="space-y-1.5">
                                     <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">Current Location</p>
-                                    <p className="text-espresso dark:text-white font-bold text-lg">{user?.location || 'Not set'}</p>
+                                    <p className="text-espresso dark:text-white font-bold text-base md:text-lg">{user?.location || 'Not set'}</p>
                                 </div>
                             </div>
                         </div>
 
                         {/* Account Status Card - Integrated with Theme */}
-                        <div className="bg-[#F5DEB3] dark:bg-[#1c1916] rounded-3xl shadow-xl border border-primary/20 overflow-hidden relative group">
+                        <div className="bg-[#F5DEB3] dark:bg-[#1c1916] rounded-2xl md:rounded-3xl shadow-xl border border-primary/20 overflow-hidden relative group">
                             <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/30 group-hover:bg-espresso transition-colors"></div>
-                            <div className="px-8 py-5 border-b border-espresso/10 bg-white/20">
-                                <div className="flex items-center gap-3">
-                                    <span className="material-symbols-outlined text-espresso/60">verified</span>
+                            <div className="px-5 md:px-8 py-4 md:py-5 border-b border-espresso/10 bg-white/20">
+                                <div className="flex items-center gap-2 md:gap-3">
+                                    <span className="material-symbols-outlined text-espresso/60 text-xl md:text-2xl">verified</span>
                                     <h3 className="font-bold text-espresso dark:text-white uppercase tracking-widest text-xs">Account Verification</h3>
                                 </div>
                             </div>
-                            <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
-                                <div className="flex items-center gap-5 p-5 bg-white/40 dark:bg-white/5 rounded-2xl border border-white/20 shadow-sm transition-transform hover:scale-[1.02]">
-                                    <div className="w-12 h-12 rounded-full bg-green-600 text-white flex items-center justify-center shadow-md">
-                                        <span className="material-symbols-outlined">check_circle</span>
+                            <div className="p-5 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 relative z-10">
+                                <div className="flex items-center gap-4 md:gap-5 p-4 md:p-5 bg-white/40 dark:bg-white/5 rounded-xl md:rounded-2xl border border-white/20 shadow-sm transition-transform hover:scale-[1.02]">
+                                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-green-600 text-white flex items-center justify-center shadow-md shrink-0">
+                                        <span className="material-symbols-outlined text-xl md:text-2xl">check_circle</span>
                                     </div>
                                     <div>
                                         <p className="font-black text-espresso dark:text-white text-[10px] uppercase tracking-widest leading-none mb-1">Payment Status</p>
@@ -233,9 +233,9 @@ export function SeekerProfile() {
                                     </div>
                                 </div>
 
-                                <div className="flex items-center gap-5 p-5 bg-white/40 dark:bg-white/5 rounded-2xl border border-white/20 shadow-sm transition-transform hover:scale-[1.02]">
-                                    <div className="w-12 h-12 rounded-full bg-espresso text-white flex items-center justify-center shadow-md">
-                                        <span className="material-symbols-outlined">work_history</span>
+                                <div className="flex items-center gap-4 md:gap-5 p-4 md:p-5 bg-white/40 dark:bg-white/5 rounded-xl md:rounded-2xl border border-white/20 shadow-sm transition-transform hover:scale-[1.02]">
+                                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-espresso text-white flex items-center justify-center shadow-md shrink-0">
+                                        <span className="material-symbols-outlined text-xl md:text-2xl">work_history</span>
                                     </div>
                                     <div>
                                         <p className="font-black text-espresso dark:text-white text-[10px] uppercase tracking-widest leading-none mb-1">Access Level</p>
@@ -246,22 +246,22 @@ export function SeekerProfile() {
                         </div>
 
                         {/* Account Settings Card */}
-                        <div className="bg-[#F5DEB3] dark:bg-[#1c1916] rounded-3xl shadow-xl border border-primary/20 overflow-hidden relative group">
+                        <div className="bg-[#F5DEB3] dark:bg-[#1c1916] rounded-2xl md:rounded-3xl shadow-xl border border-primary/20 overflow-hidden relative group">
                             <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/30 group-hover:bg-espresso transition-colors"></div>
-                            <div className="px-8 py-5 border-b border-espresso/10 bg-white/20">
-                                <div className="flex items-center gap-3">
-                                    <span className="material-symbols-outlined text-espresso/60">settings</span>
+                            <div className="px-5 md:px-8 py-4 md:py-5 border-b border-espresso/10 bg-white/20">
+                                <div className="flex items-center gap-2 md:gap-3">
+                                    <span className="material-symbols-outlined text-espresso/60 text-xl md:text-2xl">settings</span>
                                     <h3 className="font-bold text-espresso dark:text-white uppercase tracking-widest text-xs">Security & Access</h3>
                                 </div>
                             </div>
                             <div className="divide-y divide-espresso/10 relative z-10">
                                 <button
                                     onClick={() => setShowPasswordModal(true)}
-                                    className="w-full flex items-center justify-between px-8 py-6 hover:bg-white/30 dark:hover:bg-white/5 transition-all group/item"
+                                    className="w-full flex items-center justify-between px-5 md:px-8 py-5 md:py-6 hover:bg-white/30 dark:hover:bg-white/5 transition-all group/item"
                                 >
-                                    <div className="flex items-center gap-5 text-left">
-                                        <div className="w-12 h-12 rounded-2xl bg-espresso text-white flex items-center justify-center group-hover/item:scale-110 transition-transform shadow-md">
-                                            <span className="material-symbols-outlined">lock</span>
+                                    <div className="flex items-center gap-4 md:gap-5 text-left">
+                                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-espresso text-white flex items-center justify-center group-hover/item:scale-110 transition-transform shadow-md shrink-0">
+                                            <span className="material-symbols-outlined text-xl md:text-2xl">lock</span>
                                         </div>
                                         <div>
                                             <p className="font-black text-espresso dark:text-white text-[11px] uppercase tracking-widest leading-none mb-1">Update Password</p>
@@ -273,11 +273,11 @@ export function SeekerProfile() {
 
                                 <button
                                     onClick={() => navigate('../privacy-settings')}
-                                    className="w-full flex items-center justify-between px-8 py-6 hover:bg-white/30 dark:hover:bg-white/5 transition-all group/item"
+                                    className="w-full flex items-center justify-between px-5 md:px-8 py-5 md:py-6 hover:bg-white/30 dark:hover:bg-white/5 transition-all group/item"
                                 >
-                                    <div className="flex items-center gap-5 text-left">
-                                        <div className="w-12 h-12 rounded-2xl bg-white/50 text-espresso flex items-center justify-center group-hover/item:scale-110 transition-transform shadow-sm border border-white/20">
-                                            <span className="material-symbols-outlined font-bold">shield_person</span>
+                                    <div className="flex items-center gap-4 md:gap-5 text-left">
+                                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-white/50 text-espresso flex items-center justify-center group-hover/item:scale-110 transition-transform shadow-sm border border-white/20 shrink-0">
+                                            <span className="material-symbols-outlined font-bold text-xl md:text-2xl">shield_person</span>
                                         </div>
                                         <div>
                                             <p className="font-black text-espresso dark:text-white text-[11px] uppercase tracking-widest leading-none mb-1">Privacy Controls</p>

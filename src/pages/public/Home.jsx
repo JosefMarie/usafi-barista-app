@@ -28,18 +28,18 @@ export function Home() {
                 <div className="absolute inset-0 bg-black/50"></div>
 
                 {/* Content */}
-                <div className="relative z-10 container mx-auto px-6 flex flex-col items-center md:items-start text-center md:text-left gap-8 max-w-6xl">
+                <div className="relative z-10 container mx-auto px-6 flex flex-col items-center md:items-start text-center md:text-left gap-6 md:gap-8 max-w-6xl">
                     <div className="max-w-3xl">
-                        <h1 className="font-serif text-4xl md:text-6xl font-bold leading-tight text-[#FAF5E8] tracking-tight mb-4">
+                        <h1 className="font-serif text-3xl md:text-5xl font-bold leading-tight text-[#FAF5E8] tracking-tight mb-3 md:mb-4">
                             {t('home.hero.title')}
                         </h1>
 
-                        <h2 className="text-white/90 text-lg md:text-xl font-normal leading-relaxed max-w-2xl mx-auto md:mx-0">
+                        <h2 className="text-white/90 text-base md:text-lg font-normal leading-relaxed max-w-2xl mx-auto md:mx-0">
                             {t('home.hero.subtitle')}
                         </h2>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-4 w-full max-w-3xl">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 mt-2 md:mt-4 w-full max-w-3xl">
                         {/* 1. Apply Now - Growing Orange/Red */}
                         <GradientButton to="/enroll">
                             {t('home.hero.cta_apply')}
@@ -48,7 +48,7 @@ export function Home() {
                         {/* 2. Opportunities - Growing Green */}
                         <Link to="/opportunities" className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 p-[2px] transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-green-500/30">
                             <div className="relative flex h-14 w-full items-center justify-center rounded-xl bg-transparent px-8 transition-all duration-300 group-hover:bg-white/10">
-                                <span className="text-lg font-bold tracking-wide text-white">
+                                <span className="text-base md:text-lg font-bold tracking-wide text-white">
                                     {t('home.hero.cta_opportunities')}
                                 </span>
                             </div>
@@ -57,7 +57,7 @@ export function Home() {
                         {/* 3. Testimonials - Growing Blue */}
                         <Link to="/testimonials" className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 p-[2px] transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/30">
                             <div className="relative flex h-14 w-full items-center justify-center rounded-xl bg-transparent px-8 transition-all duration-300 group-hover:bg-white/10">
-                                <span className="text-lg font-bold tracking-wide text-white">
+                                <span className="text-base md:text-lg font-bold tracking-wide text-white">
                                     {t('home.hero.cta_testimonials')}
                                 </span>
                             </div>
@@ -66,7 +66,7 @@ export function Home() {
                         {/* 4. Business Classes - Growing Purple */}
                         <Link to="/business/register" className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-purple-500 to-violet-600 p-[2px] transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/30">
                             <div className="relative flex h-14 w-full items-center justify-center rounded-xl bg-transparent px-8 transition-all duration-300 group-hover:bg-white/10">
-                                <span className="text-lg font-bold tracking-wide text-white">
+                                <span className="text-base md:text-lg font-bold tracking-wide text-white">
                                     {t('home.hero.cta_business')}
                                 </span>
                             </div>
@@ -75,7 +75,7 @@ export function Home() {
                         {/* 5. Tools and Equipment - Golden/Amber */}
                         <Link to="/equipment" className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-amber-600 to-yellow-700 p-[2px] transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-amber-600/30">
                             <div className="relative flex h-14 w-full items-center justify-center rounded-xl bg-transparent px-8 transition-all duration-300 group-hover:bg-white/10">
-                                <span className="text-lg font-bold tracking-wide text-white">
+                                <span className="text-base md:text-lg font-bold tracking-wide text-white">
                                     {t('home.hero.cta_equipment')}
                                 </span>
                             </div>
@@ -88,56 +88,56 @@ export function Home() {
             </section>
 
             {/* 2. Key Benefits Section (Why Choose Us?) */}
-            <section className="py-20 px-6 bg-background-light dark:bg-background-dark">
+            <section className="py-16 md:py-20 px-6 bg-background-light dark:bg-background-dark">
                 <div className="container mx-auto max-w-6xl">
-                    <div className="text-center mb-16">
-                        <h2 className="font-serif text-3xl md:text-4xl font-bold text-espresso dark:text-white mb-4">
+                    <div className="text-center mb-12 md:mb-16">
+                        <h2 className="font-serif text-2xl md:text-3xl font-bold text-espresso dark:text-white mb-3 md:mb-4">
                             {t('home.benefits.title')}
                         </h2>
-                        <p className="text-espresso/70 dark:text-white/70 text-lg font-normal">
+                        <p className="text-espresso/70 dark:text-white/70 text-base md:text-lg font-normal">
                             {t('home.benefits.subtitle')}
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
                         {/* Column 1: Comprehensive Curriculum */}
-                        <div className="flex flex-col items-center text-center p-8 bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/5 gap-4 group hover:-translate-y-2 transition-all duration-300 relative overflow-hidden">
+                        <div className="flex flex-col items-center text-center p-6 md:p-8 bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/5 gap-4 group hover:-translate-y-2 transition-all duration-300 relative overflow-hidden">
                             <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-espresso text-white mb-2 shadow-md group-hover:scale-110 transition-transform">
-                                <span className="material-symbols-outlined text-3xl">school</span>
+                            <div className="flex h-14 w-14 md:h-16 md:w-16 items-center justify-center rounded-2xl bg-espresso text-white mb-2 shadow-md group-hover:scale-110 transition-transform">
+                                <span className="material-symbols-outlined text-2xl md:text-3xl">school</span>
                             </div>
-                            <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white">
+                            <h3 className="font-serif text-xl md:text-2xl font-bold text-espresso dark:text-white">
                                 {t('home.benefits.item1.title')}
                             </h3>
-                            <p className="text-espresso/70 dark:text-white/70 leading-relaxed">
+                            <p className="text-espresso/70 dark:text-white/70 leading-relaxed text-sm md:text-base">
                                 {t('home.benefits.item1.description')}
                             </p>
                         </div>
 
                         {/* Column 2: Flexible Learning Options */}
-                        <div className="flex flex-col items-center text-center p-8 bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/5 gap-4 group hover:-translate-y-2 transition-all duration-300 relative overflow-hidden">
+                        <div className="flex flex-col items-center text-center p-6 md:p-8 bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/5 gap-4 group hover:-translate-y-2 transition-all duration-300 relative overflow-hidden">
                             <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-espresso text-white mb-2 shadow-md group-hover:scale-110 transition-transform">
-                                <span className="material-symbols-outlined text-3xl">sync_alt</span>
+                            <div className="flex h-14 w-14 md:h-16 md:w-16 items-center justify-center rounded-2xl bg-espresso text-white mb-2 shadow-md group-hover:scale-110 transition-transform">
+                                <span className="material-symbols-outlined text-2xl md:text-3xl">sync_alt</span>
                             </div>
-                            <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white">
+                            <h3 className="font-serif text-xl md:text-2xl font-bold text-espresso dark:text-white">
                                 {t('home.benefits.item2.title')}
                             </h3>
-                            <p className="text-espresso/70 dark:text-white/70 leading-relaxed">
+                            <p className="text-espresso/70 dark:text-white/70 leading-relaxed text-sm md:text-base">
                                 {t('home.benefits.item2.description')}
                             </p>
                         </div>
 
                         {/* Column 3: Real Career Support */}
-                        <div className="flex flex-col items-center text-center p-8 bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/5 gap-4 group hover:-translate-y-2 transition-all duration-300 relative overflow-hidden">
+                        <div className="flex flex-col items-center text-center p-6 md:p-8 bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/5 gap-4 group hover:-translate-y-2 transition-all duration-300 relative overflow-hidden">
                             <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-espresso text-white mb-2 shadow-md group-hover:scale-110 transition-transform">
-                                <span className="material-symbols-outlined text-3xl">work</span>
+                            <div className="flex h-14 w-14 md:h-16 md:w-16 items-center justify-center rounded-2xl bg-espresso text-white mb-2 shadow-md group-hover:scale-110 transition-transform">
+                                <span className="material-symbols-outlined text-2xl md:text-3xl">work</span>
                             </div>
-                            <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white">
+                            <h3 className="font-serif text-xl md:text-2xl font-bold text-espresso dark:text-white">
                                 {t('home.benefits.item3.title')}
                             </h3>
-                            <p className="text-espresso/70 dark:text-white/70 leading-relaxed">
+                            <p className="text-espresso/70 dark:text-white/70 leading-relaxed text-sm md:text-base">
                                 {t('home.benefits.item3.description')}
                             </p>
                         </div>

@@ -101,49 +101,49 @@ export function Dashboard() {
             {/* Welcome Section */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-serif font-bold text-espresso dark:text-white">
+                    <h1 className="text-2xl md:text-3xl font-serif font-bold text-espresso dark:text-white">
                         {t('student.dashboard.welcome', { name: (user?.name || user?.fullName || user?.email || 'Student').split(' ')[0] })}
                     </h1>
-                    <p className="text-espresso/60 dark:text-white/60 font-medium mt-1">
+                    <p className="text-espresso/60 dark:text-white/60 font-medium mt-1 text-sm md:text-base">
                         {t('student.dashboard.subtitle')}
                     </p>
                 </div>
-                <div className="bg-[#F5DEB3] dark:bg-white/5 px-6 py-3 rounded-2xl shadow-xl border border-espresso/10 relative overflow-hidden group">
+                <div className="bg-[#F5DEB3] dark:bg-white/5 px-4 py-3 md:px-6 md:py-3 rounded-2xl shadow-xl border border-espresso/10 relative overflow-hidden group self-start md:self-auto">
                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">{t('student.dashboard.current_expedition')}</p>
-                    <p className="text-sm font-serif font-bold text-espresso dark:text-white">
+                    <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">{t('student.dashboard.current_expedition')}</p>
+                    <p className="text-xs md:text-sm font-serif font-bold text-espresso dark:text-white">
                         {new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}
                     </p>
                 </div>
             </div>
 
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
                 {stats.map((stat) => (
-                    <div key={stat.label} className="bg-[#F5DEB3] dark:bg-white/5 p-6 rounded-3xl shadow-xl border border-espresso/10 flex items-center gap-5 transition-all hover:-translate-y-1 relative overflow-hidden group">
+                    <div key={stat.label} className="bg-[#F5DEB3] dark:bg-white/5 p-4 md:p-6 rounded-3xl shadow-xl border border-espresso/10 flex items-center gap-4 md:gap-5 transition-all hover:-translate-y-1 relative overflow-hidden group">
                         <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                        <div className={cn("h-14 w-14 rounded-2xl flex items-center justify-center text-white shadow-2xl relative z-10 rotate-3 group-hover:rotate-0 transition-transform", stat.color.replace('bg-', 'bg-espresso/80 '))}>
-                            <span className="material-symbols-outlined text-2xl">{stat.icon}</span>
+                        <div className={cn("h-12 w-12 md:h-14 md:w-14 rounded-2xl flex items-center justify-center text-white shadow-2xl relative z-10 rotate-3 group-hover:rotate-0 transition-transform", stat.color.replace('bg-', 'bg-espresso/80 '))}>
+                            <span className="material-symbols-outlined text-xl md:text-2xl">{stat.icon}</span>
                         </div>
                         <div className="relative z-10">
-                            <p className="text-2xl font-black text-espresso dark:text-white tracking-tight">{stat.value}</p>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">{stat.label}</p>
+                            <p className="text-xl md:text-2xl font-black text-espresso dark:text-white tracking-tight">{stat.value}</p>
+                            <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">{stat.label}</p>
                         </div>
                     </div>
                 ))}
             </div>
 
             {/* Main Content Split */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
 
                 {/* Left Column: Featured Course */}
-                <div className="lg:col-span-2 space-y-6">
+                <div className="lg:col-span-2 space-y-4 md:space-y-6">
                     <div className="flex items-center justify-between">
-                        <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 uppercase tracking-[0.2em] flex items-center gap-3">
+                        <h2 className="text-[9px] md:text-[10px] font-black text-espresso/50 dark:text-white/50 uppercase tracking-[0.2em] flex items-center gap-2 md:gap-3">
                             <span className="h-2 w-2 rounded-full bg-espresso"></span>
                             {t('student.dashboard.curriculum.title')}
                         </h2>
-                        <Link to="/student/courses" className="text-[10px] font-black uppercase tracking-widest text-espresso/40 hover:text-espresso transition-colors">
+                        <Link to="/student/courses" className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 hover:text-espresso transition-colors">
                             {t('student.dashboard.curriculum.view_map')}
                         </Link>
                     </div>

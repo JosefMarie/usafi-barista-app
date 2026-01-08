@@ -327,34 +327,35 @@ export function BusinessCourseView() {
 
     return (
         <div
-            className="min-h-screen bg-background-light dark:bg-background-dark flex flex-col md:flex-row select-none"
+            className="min-h-screen bg-[#FAF5E8] dark:bg-background-dark flex flex-col md:flex-row select-none overflow-hidden"
             onContextMenu={(e) => e.preventDefault()}
         >
             {/* Sidebar / Chapter List */}
-            <aside className="w-full md:w-80 bg-[#F5DEB3] dark:bg-[#1c1916] border-r border-espresso/10 flex flex-col h-[40vh] md:h-screen sticky top-0 shadow-2xl z-20">
-                <div className="p-8 border-b border-espresso/10 bg-white/20 backdrop-blur-sm">
-                    <Link to="/business/dashboard" className="text-[10px] font-black text-espresso/50 dark:text-white/50 uppercase tracking-[0.2em] mb-4 block hover:text-espresso transition-colors">
-                        &larr; Back to Dashboard
+            <aside className="w-full md:w-80 lg:w-96 bg-[#F5DEB3] dark:bg-[#1c1916] border-b md:border-b-0 md:border-r border-espresso/10 flex flex-col h-auto md:h-screen sticky top-0 shadow-xl z-20 shrink-0">
+                <div className="p-6 md:p-8 border-b border-espresso/10 bg-white/20 backdrop-blur-sm">
+                    <Link to="/business/dashboard" className="text-[9px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.2em] mb-4 flex items-center gap-1 hover:text-espresso transition-colors group">
+                        <span className="material-symbols-outlined text-sm group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                        Back to Dashboard
                     </Link>
-                    <h2 className="font-serif text-2xl font-bold text-espresso dark:text-white leading-tight mb-6">
+                    <h2 className="font-serif text-xl md:text-2xl font-black text-espresso dark:text-white leading-tight mb-6">
                         {course.title}
                     </h2>
 
                     {/* Progress Bar in Sidebar */}
-                    <div className="space-y-2 p-4 bg-white/40 dark:bg-white/5 rounded-2xl border border-white/20">
+                    <div className="space-y-2 p-4 bg-white/40 dark:bg-white/5 rounded-2xl border border-white/10 shadow-sm">
                         <div className="flex justify-between items-end">
-                            <span className="text-[10px] font-black text-espresso/60 dark:text-white/60 uppercase tracking-widest">Your Progress</span>
+                            <span className="text-[9px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest text-[8px]">Current Progress</span>
                             <span className="text-sm font-black text-espresso dark:text-white">{progressPercent}%</span>
                         </div>
                         <div className="w-full h-2 bg-espresso/5 dark:bg-white/5 rounded-full overflow-hidden">
                             <div
-                                className="h-full bg-espresso transition-all duration-700 ease-out"
+                                className="h-full bg-espresso transition-all duration-700 ease-out shadow-[0_0_10px_rgba(44,38,34,0.3)]"
                                 style={{ width: `${progressPercent}%` }}
                             />
                         </div>
                     </div>
                 </div>
-                <div className="flex-1 overflow-y-auto p-4 space-y-2">
+                <div className="flex-1 overflow-y-auto p-4 space-y-2 max-h-[40vh] md:max-h-none scrollbar-hide">
                     {chapters.map((chapter, index) => (
                         <button
                             key={chapter.id}
@@ -364,21 +365,21 @@ export function BusinessCourseView() {
                                 synth.current.cancel();
                                 setIsSpeaking(false);
                             }}
-                            className={`w-full text-left p-4 rounded-[1.25rem] transition-all flex items-start gap-4 group ${activeChapter?.id === chapter.id
+                            className={`w-full text-left p-4 rounded-2xl transition-all flex items-start gap-4 group ${activeChapter?.id === chapter.id
                                 ? 'bg-espresso text-white shadow-xl shadow-espresso/20 scale-[1.02]'
                                 : 'hover:bg-white/40 dark:hover:bg-white/5 text-espresso/80 dark:text-white/80 hover:translate-x-1'
                                 }`}
                         >
-                            <span className={`flex-shrink-0 h-7 w-7 rounded-full flex items-center justify-center text-xs font-black ${activeChapter?.id === chapter.id ? 'bg-white/20 text-white' : 'bg-espresso/10 text-espresso/50'
+                            <span className={`flex-shrink-0 size-8 rounded-xl flex items-center justify-center text-xs font-black ${activeChapter?.id === chapter.id ? 'bg-white/20 text-white' : 'bg-espresso/10 text-espresso/50'
                                 }`}>
-                                {index + 1}
+                                {(index + 1).toString().padStart(2, '0')}
                             </span>
                             <div className="flex-1 min-w-0">
-                                <span className={`text-sm font-bold line-clamp-2 ${activeChapter?.id === chapter.id ? 'text-white' : 'text-espresso dark:text-white'}`}>{chapter.title}</span>
+                                <span className={`text-sm font-black line-clamp-2 leading-snug ${activeChapter?.id === chapter.id ? 'text-white' : 'text-espresso dark:text-white'}`}>{chapter.title}</span>
                                 {chapter.quiz?.enabled && (
-                                    <div className="flex items-center gap-1 mt-1 text-[10px] font-medium opacity-60 uppercase tracking-wide">
-                                        <span className="material-symbols-outlined text-[10px]">timer</span>
-                                        Quiz
+                                    <div className="flex items-center gap-1.5 mt-1 text-[8px] md:text-[10px] font-black opacity-40 uppercase tracking-widest text-espresso dark:text-white">
+                                        <span className="material-symbols-outlined text-xs md:text-sm">timer</span>
+                                        Quiz Assessment
                                     </div>
                                 )}
                             </div>
@@ -388,33 +389,36 @@ export function BusinessCourseView() {
             </aside>
 
             {/* Main Content Area */}
-            <main className="flex-1 p-6 md:p-12 overflow-y-auto h-screen">
+            <main className="flex-1 md:h-screen overflow-y-auto scroll-smooth">
                 {activeChapter ? (
-                    <div className="max-w-3xl mx-auto animate-fadeIn">
+                    <div className="p-6 md:p-12 lg:p-16 max-w-4xl mx-auto animate-fade-in">
 
                         {/* HEADER */}
-                        <header className="mb-8 border-b border-black/5 dark:border-white/5 pb-8">
-                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                <h1 className="font-serif text-3xl font-bold text-espresso dark:text-white">
-                                    {activeChapter.title}
-                                </h1>
+                        <header className="mb-10 md:mb-16 border-b border-espresso/5 pb-8 md:pb-12">
+                            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                                <div className="space-y-2">
+                                    <span className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.2em]">Chapter {(activeIndex + 1).toString().padStart(2, '0')}</span>
+                                    <h1 className="font-serif text-3xl md:text-5xl font-black text-espresso dark:text-white leading-tight">
+                                        {activeChapter.title}
+                                    </h1>
+                                </div>
 
                                 {/* TTS & Tools */}
-                                <div className="flex items-center gap-3 bg-white dark:bg-white/5 p-2 rounded-xl shadow-sm border border-black/5 dark:border-white/5">
+                                <div className="flex items-center gap-2 md:gap-3 bg-white/60 dark:bg-white/5 p-2 md:p-3 rounded-2xl shadow-xl border border-espresso/5 backdrop-blur-md self-start lg:self-center">
                                     {activeMode === 'read' && (
                                         <>
-                                            <div className="flex bg-gray-100 dark:bg-white/10 rounded-lg p-1">
-                                                <button onClick={() => setSelectedGender('male')} className={`px-3 py-1 text-xs font-bold rounded-md ${selectedGender === 'male' ? 'bg-white shadow' : 'opacity-50'}`}>Male</button>
-                                                <button onClick={() => setSelectedGender('female')} className={`px-3 py-1 text-xs font-bold rounded-md ${selectedGender === 'female' ? 'bg-white shadow' : 'opacity-50'}`}>Female</button>
+                                            <div className="flex bg-espresso/5 dark:bg-white/5 rounded-xl p-1 shrink-0">
+                                                <button onClick={() => setSelectedGender('male')} className={`px-3 md:px-4 py-1.5 text-[10px] md:text-xs font-black rounded-lg transition-all ${selectedGender === 'male' ? 'bg-white dark:bg-espresso text-espresso dark:text-white shadow-md' : 'text-espresso/40 dark:text-white/40'}`}>MALE</button>
+                                                <button onClick={() => setSelectedGender('female')} className={`px-3 md:px-4 py-1.5 text-[10px] md:text-xs font-black rounded-lg transition-all ${selectedGender === 'female' ? 'bg-white dark:bg-espresso text-espresso dark:text-white shadow-md' : 'text-espresso/40 dark:text-white/40'}`}>FEMALE</button>
                                             </div>
-                                            <button onClick={handleSpeak} className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm text-white ${isSpeaking ? 'bg-red-500' : 'bg-primary'}`}>
+                                            <button onClick={handleSpeak} className={`flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 rounded-xl font-black text-[10px] md:text-xs uppercase tracking-widest text-white transition-all active:scale-95 shrink-0 ${isSpeaking ? 'bg-red-500 shadow-red-500/20' : 'bg-espresso shadow-espresso/20'}`}>
                                                 <span className="material-symbols-outlined text-lg">{isSpeaking ? 'stop' : 'volume_up'}</span>
                                                 {isSpeaking ? 'Stop' : 'Listen'}
                                             </button>
                                         </>
                                     )}
-                                    <button onClick={() => setShowNotes(!showNotes)} className={cn("flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm", showNotes ? "bg-primary text-white" : "bg-primary/10 text-primary")}>
-                                        <span className="material-symbols-outlined">{showNotes ? 'edit_note' : 'note_add'}</span>
+                                    <button onClick={() => setShowNotes(!showNotes)} className={cn("flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 rounded-xl font-black text-[10px] md:text-xs uppercase tracking-widest transition-all active:scale-95 shrink-0", showNotes ? "bg-espresso text-white shadow-xl shadow-espresso/20" : "bg-espresso/5 text-espresso")}>
+                                        <span className="material-symbols-outlined text-lg">{showNotes ? 'edit_note' : 'note_add'}</span>
                                         {showNotes ? 'Hide' : 'Notes'}
                                     </button>
                                 </div>
@@ -424,44 +428,54 @@ export function BusinessCourseView() {
                         {/* MODE SWITCHER: READ / QUIZ */}
                         {activeMode === 'read' ? (
                             <>
-                                <div className="prose dark:prose-invert max-w-none">
+                                <article className="prose prose-stone dark:prose-invert max-w-none">
                                     {activeChapter.imageUrl && (
-                                        <img src={activeChapter.imageUrl} alt={activeChapter.title} className="w-full h-auto rounded-2xl shadow-lg mb-8" />
+                                        <div className="relative group overflow-hidden rounded-[2rem] md:rounded-[3rem] shadow-2xl mb-12 border-8 border-white/20">
+                                            <img src={activeChapter.imageUrl} alt={activeChapter.title} className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-105" />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                        </div>
                                     )}
-                                    <div className="text-lg leading-relaxed text-espresso/80 dark:text-white/80 font-serif" dangerouslySetInnerHTML={{ __html: activeChapter.content }} />
-                                </div>
+                                    <div className="text-lg md:text-xl md:leading-relaxed text-espresso/80 dark:text-white/80 font-serif leading-relaxed" dangerouslySetInnerHTML={{ __html: activeChapter.content }} />
+                                </article>
 
                                 {/* NEXT / QUIZ ACTION */}
-                                <div className="mt-12 p-8 bg-gray-50 dark:bg-white/5 rounded-3xl text-center border border-black/5 dark:border-white/5">
+                                <div className="mt-16 md:mt-24 p-8 md:p-16 bg-white dark:bg-white/5 rounded-[2.5rem] md:rounded-[4rem] text-center border border-espresso/5 shadow-2xl relative overflow-hidden group">
+                                    <div className="absolute top-0 left-0 w-full h-1.5 bg-espresso/10 group-hover:bg-espresso transition-colors"></div>
                                     {activeChapter.quiz?.enabled ? (
-                                        <div className="space-y-4">
-                                            <h3 className="text-2xl font-bold font-serif text-espresso dark:text-white">Knowledge Check</h3>
-                                            <p className="text-espresso/60 dark:text-white/60 max-w-md mx-auto">
-                                                To complete this chapter and unlock the next one, you must pass the assessment.
-                                            </p>
-                                            <div className="flex justify-center gap-4 text-sm text-espresso/50 font-bold uppercase tracking-wider">
-                                                <span className="flex items-center gap-1"><span className="material-symbols-outlined text-lg">timer</span> Timed</span>
-                                                <span className="flex items-center gap-1"><span className="material-symbols-outlined text-lg">checklist</span> {activeChapter.quiz.questions.length} Questions</span>
-                                                <span className="flex items-center gap-1"><span className="material-symbols-outlined text-lg">percent</span> {activeChapter.quiz.passMark}% Passing</span>
+                                        <div className="space-y-6 md:space-y-8">
+                                            <div className="size-16 md:size-24 rounded-3xl bg-espresso/5 text-espresso flex items-center justify-center mx-auto mb-4">
+                                                <span className="material-symbols-outlined text-3xl md:text-5xl">quiz</span>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <h3 className="text-2xl md:text-4xl font-black font-serif text-espresso dark:text-white">Knowledge Check</h3>
+                                                <p className="text-espresso/60 dark:text-white/40 max-w-md mx-auto text-sm md:text-base">
+                                                    Complete this assessment to unlock the next chapter and validate your learning progress.
+                                                </p>
+                                            </div>
+                                            <div className="flex flex-wrap justify-center gap-4 md:gap-8 text-[9px] md:text-xs text-espresso/40 font-black uppercase tracking-[0.2em]">
+                                                <span className="flex items-center gap-2"><span className="material-symbols-outlined text-lg text-espresso/20">timer</span> Timed Test</span>
+                                                <span className="flex items-center gap-2"><span className="material-symbols-outlined text-lg text-espresso/20">checklist</span> {activeChapter.quiz.questions.length} Questions</span>
+                                                <span className="flex items-center gap-2"><span className="material-symbols-outlined text-lg text-espresso/20">workspace_premium</span> {activeChapter.quiz.passMark}% Passing</span>
                                             </div>
                                             <button
                                                 onClick={startQuiz}
-                                                className="mt-4 px-8 py-3 bg-primary text-white font-bold rounded-xl shadow-lg hover:bg-primary-dark transition-all transform hover:-translate-y-1"
+                                                className="mt-4 px-10 md:px-16 py-4 md:py-6 bg-espresso text-white font-black text-xs md:text-sm uppercase tracking-widest rounded-2xl md:rounded-3xl shadow-2xl shadow-espresso/20 hover:shadow-espresso/40 hover:-translate-y-1 active:scale-95 transition-all"
                                             >
                                                 Start Assessment
                                             </button>
                                         </div>
                                     ) : (
-                                        <div className="space-y-4">
-                                            <h3 className="text-2xl font-bold font-serif text-espresso dark:text-white">Chapter Completed</h3>
+                                        <div className="space-y-6 md:space-y-8">
+                                            <div className="size-16 md:size-24 rounded-3xl bg-green-500/10 text-green-600 flex items-center justify-center mx-auto mb-4">
+                                                <span className="material-symbols-outlined text-3xl md:text-5xl">check_circle</span>
+                                            </div>
+                                            <h3 className="text-2xl md:text-4xl font-black font-serif text-espresso dark:text-white">Chapter Completed</h3>
                                             <button
                                                 onClick={() => {
-                                                    // Manually trigger unlock if no quiz
-                                                    // For now, simpler: just let them click next if it exists
                                                     const idx = chapters.findIndex(c => c.id === activeChapter.id);
                                                     if (idx < chapters.length - 1) setActiveChapter(chapters[idx + 1]);
                                                 }}
-                                                className="px-8 py-3 bg-primary text-white font-bold rounded-xl shadow-lg hover:bg-primary-dark"
+                                                className="px-10 md:px-16 py-4 md:py-6 bg-espresso text-white font-black text-xs md:text-sm uppercase tracking-widest rounded-2xl md:rounded-3xl shadow-2xl shadow-espresso/20 hover:-translate-y-1 active:scale-95 transition-all"
                                             >
                                                 Next Chapter &rarr;
                                             </button>
@@ -471,90 +485,135 @@ export function BusinessCourseView() {
                             </>
                         ) : (
                             // QUIZ MODE
-                            <div className="animate-fade-in space-y-8">
+                            <div className="animate-fade-in space-y-8 md:space-y-12">
                                 {quizResult ? (
                                     // RESULT
-                                    <div className="text-center py-10 animate-scale-in">
-                                        <div className={cn("inline-flex items-center justify-center w-24 h-24 rounded-full mb-6 shadow-xl text-5xl", quizResult.passed ? "bg-green-100 text-green-600" : "bg-red-100 text-red-600")}>
-                                            <span className="material-symbols-outlined text-6xl">{quizResult.passed ? 'emoji_events' : 'sentiment_dissatisfied'}</span>
+                                    <div className="text-center py-16 md:py-24 animate-scale-in bg-white dark:bg-[#1c1916] rounded-[3rem] shadow-2xl border border-espresso/5 relative overflow-hidden">
+                                        <div className={`absolute top-0 left-0 w-full h-2 ${quizResult.passed ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                                        <div className={cn("inline-flex items-center justify-center size-24 md:size-32 rounded-[2.5rem] mb-8 shadow-2xl text-5xl", quizResult.passed ? "bg-green-500/10 text-green-600" : "bg-red-500/10 text-red-600")}>
+                                            <span className="material-symbols-outlined text-5xl md:text-7xl">{quizResult.passed ? 'emoji_events' : 'error'}</span>
                                         </div>
-                                        <h2 className="text-3xl font-serif font-bold text-espresso dark:text-white mb-2">{quizResult.passed ? 'Assessment Passed!' : 'Assessment Failed'}</h2>
-                                        <p className="text-xl text-espresso/60 mb-8">Score: <span className="font-bold">{quizResult.score.toFixed(0)}%</span></p>
+                                        <h2 className="text-3xl md:text-5xl font-serif font-black text-espresso dark:text-white mb-4 leading-tight">{quizResult.passed ? 'Excellent Work!' : 'Assessment Failed'}</h2>
+                                        <div className="flex flex-col items-center gap-2 mb-12">
+                                            <p className="text-[10px] md:text-xs font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em]">{quizResult.passed ? 'PASSED WITH SCORE' : 'FINAL SCORE'}</p>
+                                            <span className={`text-4xl md:text-6xl font-black font-serif ${quizResult.passed ? 'text-green-600' : 'text-red-600'}`}>{quizResult.score.toFixed(0)}%</span>
+                                        </div>
 
                                         {quizResult.passed ? (
-                                            <button onClick={nextChapter} className="px-8 py-3 bg-green-600 text-white font-bold rounded-xl shadow-lg hover:bg-green-700">Continue to Next Chapter</button>
+                                            <button onClick={nextChapter} className="px-12 md:px-20 py-5 md:py-7 bg-espresso text-white font-black text-xs md:text-sm uppercase tracking-widest rounded-2xl md:rounded-3xl shadow-2xl shadow-espresso/20 hover:-translate-y-1 active:scale-95 transition-all">
+                                                Continue Journey
+                                            </button>
                                         ) : (
-                                            <button onClick={retakeQuiz} className="px-8 py-3 bg-espresso text-white font-bold rounded-xl shadow-lg">Try Again</button>
+                                            <button onClick={retakeQuiz} className="px-12 md:px-20 py-5 md:py-7 bg-espresso text-white font-black text-xs md:text-sm uppercase tracking-widest rounded-2xl md:rounded-3xl shadow-2xl shadow-espresso/20 hover:-translate-y-1 active:scale-95 transition-all">
+                                                Try Once More
+                                            </button>
                                         )}
                                     </div>
                                 ) : (
                                     // QUESTIONS
-                                    <div className="space-y-6">
-                                        <div className="flex items-center justify-between bg-white dark:bg-white/5 p-4 rounded-2xl border border-black/5 sticky top-0 z-10 backdrop-blur-md">
-                                            <div className="text-sm font-bold text-primary">Question {currentQuestionIndex + 1}/{activeChapter.quiz.questions.length}</div>
-                                            <div className={cn("flex items-center gap-2 px-3 py-1 rounded-lg font-mono font-bold border", timeLeft < 10 ? "border-red-500 text-red-500 bg-red-50" : "border-gray-200")}>
-                                                <span className="material-symbols-outlined text-sm">timer</span>{timeLeft}s
+                                    <div className="space-y-6 md:space-y-10">
+                                        <div className="flex items-center justify-between bg-white/80 dark:bg-[#1c1916]/80 p-5 md:p-8 rounded-[2rem] border border-espresso/10 sticky top-0 z-10 backdrop-blur-md shadow-lg">
+                                            <div className="space-y-1">
+                                                <p className="text-[9px] md:text-[10px] font-black text-espresso/40 uppercase tracking-widest">Question {currentQuestionIndex + 1}/{activeChapter.quiz.questions.length}</p>
+                                                <div className="h-1.5 w-32 md:w-64 bg-espresso/5 rounded-full overflow-hidden">
+                                                    <div className="h-full bg-espresso transition-all duration-500" style={{ width: `${((currentQuestionIndex + 1) / activeChapter.quiz.questions.length) * 100}%` }}></div>
+                                                </div>
+                                            </div>
+                                            <div className={cn("flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl font-black text-sm md:text-xl border transition-all", timeLeft < 10 ? "border-red-500 text-red-600 bg-red-50 animate-pulse" : "border-espresso/10 bg-white shadow-sm")}>
+                                                <span className="material-symbols-outlined text-xl md:text-2xl">timer</span>
+                                                {timeLeft}s
                                             </div>
                                         </div>
 
-                                        <div className="bg-white dark:bg-white/5 p-8 rounded-3xl border border-black/5 shadow-xl animate-scale-in">
-                                            <h2 className="text-2xl font-serif font-bold text-espresso dark:text-white mb-8">
+                                        <div className="bg-white dark:bg-[#1c1916] p-8 md:p-16 rounded-[2.5rem] md:rounded-[4rem] border border-espresso/5 shadow-2xl animate-scale-in">
+                                            <h2 className="text-2xl md:text-4xl font-serif font-black text-espresso dark:text-white mb-10 md:mb-16 leading-tight">
                                                 {activeChapter.quiz.questions[currentQuestionIndex].question}
                                             </h2>
 
-                                            <div className="space-y-4">
+                                            <div className="space-y-4 md:space-y-6">
                                                 {/* RE-USE RENDERERS SIMPLIFIED */}
                                                 {activeChapter.quiz.questions[currentQuestionIndex].type === 'multiple_choice' && (
-                                                    <div className="grid grid-cols-1 gap-3">
+                                                    <div className="grid grid-cols-1 gap-3 md:gap-4">
                                                         {activeChapter.quiz.questions[currentQuestionIndex].options.map((opt, i) => (
-                                                            <button key={i} onClick={() => handleAnswer(currentQuestionIndex, i)} className={cn("p-4 rounded-xl border-2 text-left font-medium transition-all", userAnswers[currentQuestionIndex] === i ? "bg-primary text-white border-primary" : "bg-gray-50 dark:bg-white/5 border-transparent")}>
-                                                                {opt}
+                                                            <button
+                                                                key={i}
+                                                                onClick={() => handleAnswer(currentQuestionIndex, i)}
+                                                                className={cn(
+                                                                    "p-5 md:p-8 rounded-2xl md:rounded-3xl border-2 text-left font-black transition-all flex items-center gap-4 group active:scale-[0.98]",
+                                                                    userAnswers[currentQuestionIndex] === i
+                                                                        ? "bg-espresso text-white border-espresso shadow-xl translate-x-1"
+                                                                        : "bg-[#FAF5E8] dark:bg-black/20 border-transparent hover:border-espresso/30 hover:translate-x-1"
+                                                                )}
+                                                            >
+                                                                <span className={cn("size-6 md:size-8 rounded-lg flex items-center justify-center text-[10px] md:text-xs font-black", userAnswers[currentQuestionIndex] === i ? "bg-white/20 text-white" : "bg-espresso text-white")}>
+                                                                    {String.fromCharCode(65 + i)}
+                                                                </span>
+                                                                <span className="flex-1 md:text-lg">{opt}</span>
                                                             </button>
                                                         ))}
                                                     </div>
                                                 )}
                                                 {activeChapter.quiz.questions[currentQuestionIndex].type === 'true_false' && (
-                                                    <div className="flex gap-4">
-                                                        <button onClick={() => handleAnswer(currentQuestionIndex, true)} className={cn("flex-1 py-8 rounded-2xl border-2 font-bold text-xl", userAnswers[currentQuestionIndex] === true ? "bg-green-600 text-white border-green-600" : "bg-gray-50 border-transparent")}>TRUE</button>
-                                                        <button onClick={() => handleAnswer(currentQuestionIndex, false)} className={cn("flex-1 py-8 rounded-2xl border-2 font-bold text-xl", userAnswers[currentQuestionIndex] === false ? "bg-red-600 text-white border-red-600" : "bg-gray-50 border-transparent")}>FALSE</button>
+                                                    <div className="flex flex-col sm:flex-row gap-4 md:gap-6">
+                                                        <button
+                                                            onClick={() => handleAnswer(currentQuestionIndex, true)}
+                                                            className={cn("flex-1 py-8 md:py-16 rounded-[2rem] md:rounded-[3rem] border-2 font-black text-2xl md:text-4xl transition-all shadow-lg active:scale-95", userAnswers[currentQuestionIndex] === true ? "bg-green-600 text-white border-green-600 translate-y-1" : "bg-[#FAF5E8] border-transparent")}
+                                                        >
+                                                            TRUE
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleAnswer(currentQuestionIndex, false)}
+                                                            className={cn("flex-1 py-8 md:py-16 rounded-[2rem] md:rounded-[3rem] border-2 font-black text-2xl md:text-4xl transition-all shadow-lg active:scale-95", userAnswers[currentQuestionIndex] === false ? "bg-red-600 text-white border-red-600 translate-y-1" : "bg-[#FAF5E8] border-transparent")}
+                                                        >
+                                                            FALSE
+                                                        </button>
                                                     </div>
                                                 )}
                                                 {activeChapter.quiz.questions[currentQuestionIndex].type === 'fill_in' && (
-                                                    <input
-                                                        autoFocus
-                                                        className="w-full p-4 bg-gray-50 dark:bg-white/5 border-2 border-primary/20 rounded-xl text-xl font-bold text-center focus:border-primary focus:outline-none"
-                                                        value={userAnswers[currentQuestionIndex] || ''}
-                                                        onChange={e => handleAnswer(currentQuestionIndex, e.target.value)}
-                                                    />
+                                                    <div className="space-y-4">
+                                                        <label className="text-[10px] font-black text-espresso/40 uppercase tracking-widest block text-center">Type your answer below</label>
+                                                        <input
+                                                            autoFocus
+                                                            className="w-full p-6 md:p-10 bg-[#FAF5E8] dark:bg-black/20 border-2 border-espresso/10 rounded-2xl md:rounded-[2.5rem] text-2xl md:text-5xl font-black text-center focus:border-espresso focus:outline-none transition-all placeholder:text-espresso/10 text-espresso dark:text-white uppercase tracking-widest shadow-inner"
+                                                            value={userAnswers[currentQuestionIndex] || ''}
+                                                            onChange={e => handleAnswer(currentQuestionIndex, e.target.value)}
+                                                            placeholder="..."
+                                                        />
+                                                    </div>
                                                 )}
                                                 {activeChapter.quiz.questions[currentQuestionIndex].type === 'matching' && (
-                                                    <div className="grid grid-cols-2 gap-4">
-                                                        <div className="space-y-2">
+                                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-10">
+                                                        <div className="space-y-3">
+                                                            <p className="text-[10px] font-black text-espresso/40 uppercase tracking-widest mb-4">Static Column</p>
                                                             {activeChapter.quiz.questions[currentQuestionIndex].pairs.map((p, i) => (
-                                                                <div key={i} className="p-3 bg-gray-100 dark:bg-white/10 rounded-lg font-bold">{p.key}</div>
+                                                                <div key={i} className="p-4 md:p-6 bg-white dark:bg-black/40 border border-espresso/5 rounded-2xl font-black text-espresso dark:text-white shadow-sm flex items-center gap-4">
+                                                                    <span className="size-6 bg-espresso text-white rounded-lg flex items-center justify-center text-[10px]">{i + 1}</span>
+                                                                    {p.key}
+                                                                </div>
                                                             ))}
                                                         </div>
-                                                        <div className="space-y-2">
+                                                        <div className="space-y-3">
+                                                            <p className="text-[10px] font-black text-espresso/40 uppercase tracking-widest mb-4">Match the correct order</p>
                                                             {(matchingOrder || []).map((matchedIdx, i) => (
                                                                 <div key={i} className="flex gap-2">
-                                                                    <div className="flex-1 p-3 bg-primary/10 border border-primary/20 rounded-lg font-bold text-primary">
-                                                                        {activeChapter.quiz.questions[currentQuestionIndex].pairs[matchedIdx].value}
-                                                                    </div>
-                                                                    <div className="flex flex-col gap-1">
-                                                                        <button onClick={() => {
-                                                                            if (i === 0) return;
-                                                                            const newOrder = [...matchingOrder];
-                                                                            [newOrder[i], newOrder[i - 1]] = [newOrder[i - 1], newOrder[i]];
-                                                                            setMatchingOrder(newOrder);
-                                                                            handleAnswer(currentQuestionIndex, newOrder);
-                                                                        }} className="text-xs">▲</button>
-                                                                        <button onClick={() => {
-                                                                            if (i === matchingOrder.length - 1) return;
-                                                                            const newOrder = [...matchingOrder];
-                                                                            [newOrder[i], newOrder[i + 1]] = [newOrder[i + 1], newOrder[i]];
-                                                                            setMatchingOrder(newOrder);
-                                                                            handleAnswer(currentQuestionIndex, newOrder);
-                                                                        }} className="text-xs">▼</button>
+                                                                    <div className="flex-1 p-4 md:p-6 bg-espresso text-white rounded-2xl font-black shadow-xl flex items-center justify-between group/match">
+                                                                        <span className="truncate">{activeChapter.quiz.questions[currentQuestionIndex].pairs[matchedIdx].value}</span>
+                                                                        <div className="flex items-center gap-1 opacity-40 group-hover/match:opacity-100 transition-opacity">
+                                                                            <button onClick={() => {
+                                                                                if (i === 0) return;
+                                                                                const newOrder = [...matchingOrder];
+                                                                                [newOrder[i], newOrder[i - 1]] = [newOrder[i - 1], newOrder[i]];
+                                                                                setMatchingOrder(newOrder);
+                                                                                handleAnswer(currentQuestionIndex, newOrder);
+                                                                            }} className="size-6 flex items-center justify-center rounded-lg hover:bg-white/20 transition-colors">▲</button>
+                                                                            <button onClick={() => {
+                                                                                if (i === matchingOrder.length - 1) return;
+                                                                                const newOrder = [...matchingOrder];
+                                                                                [newOrder[i], newOrder[i + 1]] = [newOrder[i + 1], newOrder[i]];
+                                                                                setMatchingOrder(newOrder);
+                                                                                handleAnswer(currentQuestionIndex, newOrder);
+                                                                            }} className="size-6 flex items-center justify-center rounded-lg hover:bg-white/20 transition-colors">▼</button>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             ))}
@@ -563,9 +622,9 @@ export function BusinessCourseView() {
                                                 )}
                                             </div>
 
-                                            <div className="mt-8 flex justify-end">
-                                                <button onClick={handleNextQuestion} className="px-6 py-3 bg-primary text-white font-bold rounded-xl shadow-lg hover:bg-primary-dark">
-                                                    {currentQuestionIndex === activeChapter.quiz.questions.length - 1 ? 'Submit' : 'Next'}
+                                            <div className="mt-12 md:mt-20 flex justify-center">
+                                                <button onClick={handleNextQuestion} className="px-12 md:px-20 py-4 md:py-6 bg-espresso text-white font-black text-xs md:text-sm uppercase tracking-widest rounded-2xl md:rounded-3xl shadow-2xl shadow-espresso/20 hover:-translate-y-1 active:scale-95 transition-all">
+                                                    {currentQuestionIndex === activeChapter.quiz.questions.length - 1 ? 'Finalize & Submit' : 'Next Question'}
                                                 </button>
                                             </div>
                                         </div>
@@ -575,40 +634,47 @@ export function BusinessCourseView() {
                         )}
                     </div>
                 ) : (
-                    <div className="h-full flex flex-col items-center justify-center text-espresso/50 dark:text-white/50">
-                        <span className="material-symbols-outlined text-6xl mb-4">menu_book</span>
-                        <p className="text-xl">Select a chapter to begin reading</p>
+                    <div className="h-full flex flex-col items-center justify-center text-espresso/20 dark:text-white/20 p-8 text-center">
+                        <span className="material-symbols-outlined text-[80px] md:text-[120px] mb-8 animate-pulse">auto_stories</span>
+                        <h2 className="text-2xl md:text-4xl font-serif font-black text-espresso dark:text-white mb-2">Ready to learn?</h2>
+                        <p className="text-sm md:text-lg max-w-sm">Select a chapter from the sidebar to begin your premium brewing education.</p>
                     </div>
                 )}
             </main>
 
-
             {/* Rich Text Notes Drawer */}
             <div className={cn(
-                "fixed inset-y-0 right-0 w-full max-w-md bg-white dark:bg-[#1e1e1e] shadow-2xl z-[100] transform transition-transform duration-300 border-l border-black/5 dark:border-white/5 flex flex-col",
+                "fixed inset-y-0 right-0 w-full md:w-[400px] lg:w-[500px] bg-[#FAF5E8] dark:bg-[#1c1916] shadow-[0_0_100px_rgba(0,0,0,0.2)] z-[100] transform transition-transform duration-500 flex flex-col",
                 showNotes ? "translate-x-0" : "translate-x-full"
             )}>
-                <div className="p-4 border-b border-black/5 dark:border-white/5 flex items-center justify-between bg-gray-50 dark:bg-black/20">
-                    <div className="flex items-center gap-2">
-                        <span className="material-symbols-outlined text-primary">description</span>
-                        <h2 className="font-serif font-bold text-espresso dark:text-white">Chapter Notes</h2>
+                <div className="p-6 md:p-8 border-b border-espresso/10 flex items-center justify-between bg-white dark:bg-black/20">
+                    <div className="flex items-center gap-4">
+                        <div className="size-10 rounded-xl bg-espresso text-white flex items-center justify-center shadow-lg shadow-espresso/20">
+                            <span className="material-symbols-outlined">edit_note</span>
+                        </div>
+                        <div>
+                            <h2 className="font-serif font-black text-espresso dark:text-white uppercase tracking-widest text-xs md:text-base leading-none mb-1">Learning Notes</h2>
+                            <p className="text-[10px] text-espresso/40 uppercase tracking-widest leading-none">Your personal study guide</p>
+                        </div>
                     </div>
                     <button
                         onClick={() => setShowNotes(false)}
-                        className="p-2 hover:bg-black/10 rounded-full text-espresso/40 dark:text-white/40"
+                        className="size-10 flex items-center justify-center hover:bg-black/5 rounded-xl text-espresso/40 transition-colors"
                     >
                         <span className="material-symbols-outlined">close</span>
                     </button>
                 </div>
 
-                <div className="flex-1 overflow-hidden">
+                <div className="flex-1 overflow-hidden p-6 md:p-8">
                     {user && activeChapter && (
-                        <NoteEditor
-                            userId={user.uid}
-                            noteKey={`notes_biz_${courseId}_${activeChapter.id}`}
-                            title={activeChapter.title}
-                            className="h-full"
-                        />
+                        <div className="h-full bg-white dark:bg-black/20 rounded-[2rem] shadow-inner overflow-hidden border border-espresso/5">
+                            <NoteEditor
+                                userId={user.uid}
+                                noteKey={`notes_biz_${courseId}_${activeChapter.id}`}
+                                title={activeChapter.title}
+                                className="h-full"
+                            />
+                        </div>
                     )}
                 </div>
             </div>
@@ -616,7 +682,7 @@ export function BusinessCourseView() {
             {/* Overlay for Notes */}
             {showNotes && (
                 <div
-                    className="fixed inset-0 bg-black/20 backdrop-blur-[2px] z-[90] transition-opacity"
+                    className="fixed inset-0 bg-espresso/20 backdrop-blur-sm z-[90] transition-opacity duration-500 animate-fade-in"
                     onClick={() => setShowNotes(false)}
                 />
             )}

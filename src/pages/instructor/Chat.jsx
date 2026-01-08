@@ -68,10 +68,11 @@ export function InstructorChat() {
         });
 
     return (
-        <div className="max-w-4xl mx-auto space-y-6">
-            <div>
-                <h1 className="text-3xl font-serif font-bold text-espresso dark:text-white">{t('chat.instructor_title')}</h1>
-                <p className="text-espresso/60 dark:text-white/60 font-medium mt-1">
+        <div className="max-w-4xl mx-auto space-y-6 px-4 md:px-0 py-4 md:py-0">
+            <div className="relative pl-4 md:pl-0">
+                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 -ml-4 md:hidden"></div>
+                <h1 className="text-2xl md:text-3xl font-serif font-black text-espresso dark:text-white leading-none">{t('chat.instructor_title')}</h1>
+                <p className="text-espresso/60 dark:text-white/60 font-medium mt-2 text-xs md:text-sm leading-relaxed">
                     {t('chat.instructor_subtitle', { count: assignedStudents.length })}
                 </p>
             </div>
@@ -89,7 +90,7 @@ export function InstructorChat() {
                     </p>
                 </div>
             ) : (
-                <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl border border-espresso/10 shadow-xl overflow-hidden divide-y divide-espresso/5 dark:divide-white/5 relative group">
+                <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-[2rem] border border-espresso/10 shadow-xl overflow-hidden divide-y divide-espresso/5 dark:divide-white/5 relative group">
                     <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                     {filteredChats.map(chat => {
                         const otherUser = chat.otherParticipant;
@@ -100,36 +101,36 @@ export function InstructorChat() {
                             <Link
                                 key={chat.id}
                                 to={`/instructor/chat/${otherUser.id}`}
-                                className="flex items-center gap-5 p-5 hover:bg-white/40 dark:hover:bg-white/5 transition-all relative z-10 group/item"
+                                className="flex items-center gap-4 md:gap-5 p-4 md:p-5 hover:bg-white/40 dark:hover:bg-white/5 transition-all relative z-10 group/item"
                             >
-                                <div className="relative">
+                                <div className="relative shrink-0">
                                     <div
-                                        className="bg-center bg-no-repeat bg-cover rounded-2xl h-14 w-14 border-2 border-white/50 dark:border-white/10 shadow-md group-hover/item:scale-105 transition-transform"
+                                        className="bg-center bg-no-repeat bg-cover rounded-2xl size-12 md:size-14 border-2 border-white/50 dark:border-white/10 shadow-md group-hover/item:scale-105 transition-transform"
                                         style={{
                                             backgroundImage: `url("${otherUser.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(otherUser.name || 'S')}&background=random`}")`
                                         }}
                                     />
                                     {otherUser.status === 'active' && (
-                                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white dark:border-background-dark rounded-full shadow-sm"></div>
+                                        <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-green-500 border-2 border-white dark:border-[#1c1916] rounded-full shadow-sm"></div>
                                     )}
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <div className="flex items-center justify-between mb-1.5">
-                                        <h3 className="font-serif font-bold text-lg text-espresso dark:text-white truncate">
+                                    <div className="flex items-center justify-between mb-1 md:mb-1.5">
+                                        <h3 className="font-serif font-black text-base md:text-lg text-espresso dark:text-white truncate leading-none">
                                             {otherUser.name || otherUser.email}
                                         </h3>
                                         {lastMessageTime && (
-                                            <span className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">
+                                            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40 whitespace-nowrap pl-2">
                                                 {lastMessageTime.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                                             </span>
                                         )}
                                     </div>
                                     <div className="flex items-center justify-between">
-                                        <p className="text-sm font-medium text-espresso/60 dark:text-white/60 truncate leading-relaxed">
+                                        <p className="text-xs md:text-sm font-medium text-espresso/60 dark:text-white/60 truncate leading-relaxed">
                                             {chat.lastMessage || t('chat.awaiting_input')}
                                         </p>
                                         {unreadCount > 0 && (
-                                            <span className="ml-3 flex items-center justify-center min-w-[24px] h-6 px-2.5 bg-espresso text-white text-[10px] font-black rounded-full shadow-lg">
+                                            <span className="ml-3 flex items-center justify-center min-w-[20px] md:min-w-[24px] h-5 md:h-6 px-2 bg-espresso text-white text-[8px] md:text-[10px] font-black rounded-full shadow-lg">
                                                 {unreadCount > 99 ? '99+' : unreadCount}
                                             </span>
                                         )}
@@ -153,21 +154,21 @@ export function InstructorChat() {
                             <Link
                                 key={student.id}
                                 to={`/instructor/chat/${student.id}`}
-                                className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl p-5 shadow-xl border border-espresso/10 flex items-center gap-5 relative overflow-hidden group transition-all hover:-translate-y-1"
+                                className="bg-[#F5DEB3] dark:bg-white/5 rounded-[2rem] p-4 md:p-5 shadow-xl border border-espresso/10 flex items-center gap-4 md:gap-5 relative overflow-hidden group transition-all hover:-translate-y-1"
                             >
                                 <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                                 <div
-                                    className="bg-center bg-no-repeat bg-cover rounded-2xl h-14 w-14 border-2 border-white/50 dark:border-white/10 shadow-md group-hover:scale-105 transition-transform flex-shrink-0"
+                                    className="bg-center bg-no-repeat bg-cover rounded-2xl size-12 md:size-14 border-2 border-white/50 dark:border-white/10 shadow-md group-hover:scale-105 transition-transform shrink-0"
                                     style={{
                                         backgroundImage: `url("${student.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(student.name || 'S')}&background=random`}")`
                                     }}
                                 />
-                                <div className="flex-1 min-w-0 relative z-10">
-                                    <h3 className="font-serif font-bold text-lg text-espresso dark:text-white truncate mb-1">{student.name || student.email}</h3>
-                                    <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest truncate">{student.email}</p>
+                                <div className="flex-1 min-w-0 relative z-10 pr-2">
+                                    <h3 className="font-serif font-black text-base md:text-lg text-espresso dark:text-white truncate mb-1 leading-none">{student.name || student.email}</h3>
+                                    <p className="text-[8px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest truncate">{student.email}</p>
                                 </div>
-                                <div className="p-3 rounded-full bg-white/50 dark:bg-white/5 text-espresso/40 group-hover:text-espresso transition-all shadow-sm">
-                                    <span className="material-symbols-outlined text-xl">send</span>
+                                <div className="p-2.5 md:p-3 rounded-full bg-white/50 dark:bg-white/5 text-espresso/40 group-hover:text-espresso transition-all shadow-sm">
+                                    <span className="material-symbols-outlined text-lg md:text-xl">send</span>
                                 </div>
                             </Link>
                         ))}

@@ -76,28 +76,28 @@ export function Notifications() {
         <div className="flex-1 flex flex-col h-full bg-[#F5DEB3] dark:bg-[#1c1916] overflow-y-auto animate-fade-in pb-32">
             <div className=" w-full px-2 py-10 space-y-10">
                 {/* Header Section */}
-                <div className="flex items-center justify-between relative">
-                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 -ml-10"></div>
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 relative">
+                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 -ml-4 md:-ml-10"></div>
                     <div>
-                        <h1 className="text-4xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none">Directive Registry</h1>
-                        <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] mt-2">Administrative Protocol & Intelligence Feed</p>
+                        <h1 className="text-2xl md:text-4xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none">Directive Registry</h1>
+                        <p className="text-[9px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] mt-1 md:mt-2">Administrative Protocol & Intelligence Feed</p>
                     </div>
                     <button
                         onClick={handleMarkAllRead}
-                        className="text-[10px] font-black text-espresso uppercase tracking-[0.2em] hover:text-espresso/60 transition-colors border-b-2 border-espresso/20 pb-1"
+                        className="w-fit text-[9px] md:text-[10px] font-black text-espresso uppercase tracking-[0.2em] hover:text-espresso/60 transition-colors border-b-2 border-espresso/20 pb-1"
                     >
                         Mark all archived
                     </button>
                 </div>
 
                 {/* Filter Array */}
-                <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                <div className="flex gap-2 md:gap-3 overflow-x-auto pb-2 no-scrollbar">
                     {['All', 'Urgency', 'Enrollment', 'Inventory'].map(tab => (
                         <button
                             key={tab}
                             onClick={() => setActiveTab(tab)}
                             className={cn(
-                                "flex h-10 shrink-0 items-center justify-center px-6 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all shadow-sm",
+                                "flex h-9 md:h-10 shrink-0 items-center justify-center px-4 md:px-6 rounded-lg md:rounded-xl text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] transition-all shadow-sm whitespace-nowrap",
                                 activeTab === tab
                                     ? "bg-espresso text-white shadow-lg"
                                     : "bg-white/40 dark:bg-black/20 border border-espresso/10 text-espresso/60 hover:bg-white/60"
@@ -112,30 +112,30 @@ export function Notifications() {
                 <div className="space-y-12">
                     {/* New Directives */}
                     {newNotifications.length > 0 && (
-                        <div className="space-y-6">
-                            <h3 className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.4em] flex items-center gap-3">
-                                <span className="w-8 h-px bg-espresso/20"></span>
+                        <div className="space-y-4 md:space-y-6">
+                            <h3 className="text-[9px] md:text-[10px] font-black text-espresso/40 uppercase tracking-[0.4em] flex items-center gap-2 md:gap-3">
+                                <span className="w-6 md:w-8 h-px bg-espresso/20"></span>
                                 Priority Synchronizations
                             </h3>
-                            <div className="grid gap-6">
+                            <div className="grid gap-4 md:gap-6">
                                 {newNotifications.map(n => (
-                                    <div key={n.id} className="group relative bg-white dark:bg-black/40 rounded-[2.5rem] p-8 border border-primary/20 shadow-xl transition-all hover:shadow-2xl hover:-translate-y-1 overflow-hidden">
-                                        <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso group-hover:bg-espresso/80 transition-colors"></div>
-                                        <div className="flex gap-8 items-start">
-                                            <div className={`w-16 h-16 rounded-3xl flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform ${getColor(n.type)}`}>
-                                                <span className="material-symbols-outlined text-[32px]">{getIcon(n.type)}</span>
+                                    <div key={n.id} className="group relative bg-white dark:bg-black/40 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 border border-primary/20 shadow-xl transition-all hover:shadow-2xl hover:-translate-y-1 overflow-hidden">
+                                        <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-espresso group-hover:bg-espresso/80 transition-colors"></div>
+                                        <div className="flex flex-col sm:flex-row gap-4 md:gap-8 items-start">
+                                            <div className={`w-12 h-12 md:w-16 md:h-16 rounded-2xl md:rounded-3xl flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform shrink-0 ${getColor(n.type)}`}>
+                                                <span className="material-symbols-outlined text-[24px] md:text-[32px]">{getIcon(n.type)}</span>
                                             </div>
-                                            <div className="flex-1 space-y-2">
-                                                <div className="flex justify-between items-start">
-                                                    <h4 className="text-2xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-tight group-hover:text-espresso/80 transition-colors">
+                                            <div className="flex-1 space-y-2 w-full">
+                                                <div className="flex flex-col sm:flex-row justify-between items-start gap-2">
+                                                    <h4 className="text-xl md:text-2xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-tight group-hover:text-espresso/80 transition-colors break-words">
                                                         {n.title}
                                                     </h4>
-                                                    <span className="text-[9px] font-black text-espresso/40 uppercase tracking-widest">{n.time}</span>
+                                                    <span className="text-[8px] md:text-[9px] font-black text-espresso/40 uppercase tracking-widest whitespace-nowrap">{n.time}</span>
                                                 </div>
-                                                <p className="text-espresso/60 dark:text-white/60 text-sm leading-relaxed font-medium italic">
+                                                <p className="text-espresso/60 dark:text-white/60 text-xs md:text-sm leading-relaxed font-medium italic">
                                                     "{n.desc}"
                                                 </p>
-                                                <div className="absolute top-8 right-8 h-3 w-3 rounded-full bg-espresso animate-pulse shadow-[0_0_15px_rgba(75,56,50,0.5)]"></div>
+                                                <div className="absolute top-4 md:top-8 right-4 md:right-8 h-2.5 w-2.5 md:h-3 md:w-3 rounded-full bg-espresso animate-pulse shadow-[0_0_15px_rgba(75,56,50,0.5)]"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -146,27 +146,27 @@ export function Notifications() {
 
                     {/* Archived Directives */}
                     {earlierNotifications.length > 0 && (
-                        <div className="space-y-6">
-                            <h3 className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.4em] flex items-center gap-3">
-                                <span className="w-8 h-px bg-espresso/20"></span>
+                        <div className="space-y-4 md:space-y-6">
+                            <h3 className="text-[9px] md:text-[10px] font-black text-espresso/40 uppercase tracking-[0.4em] flex items-center gap-2 md:gap-3">
+                                <span className="w-6 md:w-8 h-px bg-espresso/20"></span>
                                 Historical Archives
                             </h3>
-                            <div className="grid gap-4">
+                            <div className="grid gap-3 md:gap-4">
                                 {earlierNotifications.map(n => (
-                                    <div key={n.id} className="group relative bg-white/20 dark:bg-black/20 rounded-3xl p-6 border border-espresso/5 shadow-sm transition-all hover:bg-white/40 overflow-hidden opacity-60 hover:opacity-100">
-                                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/10 group-hover:bg-espresso/20 transition-colors"></div>
-                                        <div className="flex gap-6 items-center">
-                                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-inner ${getColor(n.type)} opacity-50 group-hover:opacity-100 transition-opacity`}>
-                                                <span className="material-symbols-outlined text-[24px]">{getIcon(n.type)}</span>
+                                    <div key={n.id} className="group relative bg-white/20 dark:bg-black/20 rounded-2xl md:rounded-3xl p-4 md:p-6 border border-espresso/5 shadow-sm transition-all hover:bg-white/40 overflow-hidden opacity-60 hover:opacity-100">
+                                        <div className="absolute left-0 top-0 bottom-0 w-1 md:w-1.5 bg-espresso/10 group-hover:bg-espresso/20 transition-colors"></div>
+                                        <div className="flex flex-col sm:flex-row gap-4 md:gap-6 items-start sm:items-center">
+                                            <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center shadow-inner shrink-0 ${getColor(n.type)} opacity-50 group-hover:opacity-100 transition-opacity`}>
+                                                <span className="material-symbols-outlined text-[20px] md:text-[24px]">{getIcon(n.type)}</span>
                                             </div>
-                                            <div className="flex-1 min-w-0">
-                                                <div className="flex justify-between items-center mb-1">
-                                                    <h4 className="text-base font-serif font-black text-espresso dark:text-white uppercase tracking-tight truncate">
+                                            <div className="flex-1 min-w-0 w-full">
+                                                <div className="flex justify-between items-center mb-1 gap-2">
+                                                    <h4 className="text-sm md:text-base font-serif font-black text-espresso dark:text-white uppercase tracking-tight truncate">
                                                         {n.title}
                                                     </h4>
-                                                    <span className="text-[8px] font-black text-espresso/30 uppercase tracking-widest">{n.time}</span>
+                                                    <span className="text-[7px] md:text-[8px] font-black text-espresso/30 uppercase tracking-widest whitespace-nowrap">{n.time}</span>
                                                 </div>
-                                                <p className="text-espresso/40 dark:text-white/40 text-[10px] font-medium truncate uppercase tracking-wider">
+                                                <p className="text-espresso/40 dark:text-white/40 text-[9px] md:text-[10px] font-medium truncate uppercase tracking-wider">
                                                     {n.desc}
                                                 </p>
                                             </div>

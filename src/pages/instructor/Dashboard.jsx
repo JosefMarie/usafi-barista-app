@@ -88,40 +88,40 @@ export function InstructorDashboard() {
 
                     <div className="grid lg:grid-cols-3 gap-6">
                         {/* Chart Section */}
-                        <div className="lg:col-span-2 bg-[#F5DEB3] dark:bg-white/5 p-8 rounded-3xl border border-espresso/10 shadow-xl relative overflow-hidden group">
+                        <div className="lg:col-span-2 bg-[#F5DEB3] dark:bg-white/5 p-5 md:p-8 rounded-3xl border border-espresso/10 shadow-xl relative overflow-hidden group">
                             <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                            <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 mb-8 uppercase tracking-[0.2em] relative z-10">{t('instructor.dashboard.completion_performance')}</h2>
-                            <div className="h-64 flex items-end justify-between gap-4 px-2 relative z-10">
+                            <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 mb-6 md:mb-8 uppercase tracking-[0.2em] relative z-10">{t('instructor.dashboard.completion_performance')}</h2>
+                            <div className="h-48 md:h-64 flex items-end justify-between gap-2 md:gap-4 px-2 relative z-10">
                                 {studentProgressData.map((item, index) => (
-                                    <div key={index} className="flex flex-col items-center gap-3 flex-1 group/bar">
-                                        <div className="text-[10px] font-black text-espresso dark:text-white opacity-0 group-hover/bar:opacity-100 transition-all mb-1 bg-white/50 dark:bg-black/20 px-2 py-0.5 rounded shadow-sm">{item.value}%</div>
-                                        <div className="w-full bg-white/40 dark:bg-white/5 rounded-t-2xl relative h-48 overflow-hidden border border-espresso/5">
+                                    <div key={index} className="flex flex-col items-center gap-2 md:gap-3 flex-1 group/bar">
+                                        <div className="text-[9px] md:text-[10px] font-black text-espresso dark:text-white opacity-0 group-hover/bar:opacity-100 transition-all mb-1 bg-white/50 dark:bg-black/20 px-2 py-0.5 rounded shadow-sm">{item.value}%</div>
+                                        <div className="w-full bg-white/40 dark:bg-white/5 rounded-t-2xl relative h-32 md:h-48 overflow-hidden border border-espresso/5">
                                             <div
                                                 className="absolute bottom-0 left-0 w-full bg-espresso transition-all duration-1000 ease-out group-hover/bar:bg-espresso/80"
                                                 style={{ height: `${item.value}%` }}
                                             />
                                         </div>
-                                        <span className="text-[10px] font-black text-espresso/40 dark:text-white/40 text-center truncate w-full uppercase tracking-tighter">{item.name}</span>
+                                        <span className="text-[9px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 text-center truncate w-full uppercase tracking-tighter">{item.name}</span>
                                     </div>
                                 ))}
                             </div>
                         </div>
 
                         {/* Recent Activity */}
-                        <div className="bg-[#F5DEB3] dark:bg-white/5 p-8 rounded-3xl border border-espresso/10 shadow-xl relative overflow-hidden group">
+                        <div className="bg-[#F5DEB3] dark:bg-white/5 p-5 md:p-8 rounded-3xl border border-espresso/10 shadow-xl relative overflow-hidden group">
                             <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                            <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 mb-8 uppercase tracking-[0.2em] relative z-10">{t('instructor.dashboard.live_pulse')}</h2>
-                            <div className="space-y-5 relative z-10">
+                            <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 mb-6 md:mb-8 uppercase tracking-[0.2em] relative z-10">{t('instructor.dashboard.live_pulse')}</h2>
+                            <div className="space-y-4 md:space-y-5 relative z-10">
                                 {recentActivity.map((activity) => (
-                                    <div key={activity.id} className="flex items-start gap-4 pb-5 border-b border-espresso/5 dark:border-white/5 last:border-0 last:pb-0 group/activity">
-                                        <div className="h-10 w-10 rounded-2xl bg-espresso flex items-center justify-center text-white shadow-lg shrink-0 group-hover/activity:scale-110 transition-transform">
-                                            <span className="material-symbols-outlined text-[18px]">
+                                    <div key={activity.id} className="flex items-start gap-3 md:gap-4 pb-4 md:pb-5 border-b border-espresso/5 dark:border-white/5 last:border-0 last:pb-0 group/activity">
+                                        <div className="h-8 we-8 md:h-10 md:w-10 rounded-2xl bg-espresso flex items-center justify-center text-white shadow-lg shrink-0 group-hover/activity:scale-110 transition-transform">
+                                            <span className="material-symbols-outlined text-[16px] md:text-[18px]">
                                                 {activity.action.includes('Quiz') ? 'quiz' : activity.action.includes('Session') ? 'videocam' : 'upload_file'}
                                             </span>
                                         </div>
-                                        <div className="flex-1">
-                                            <p className="text-sm font-black text-espresso dark:text-white">{activity.student}</p>
-                                            <p className="text-xs font-bold text-espresso/60 dark:text-white/60 mb-2">
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-sm font-black text-espresso dark:text-white truncate">{activity.student}</p>
+                                            <p className="text-xs font-bold text-espresso/60 dark:text-white/60 mb-2 truncate">
                                                 {activity.action.includes('Quiz') ? t('instructor.dashboard.activity.quiz', { name: activity.action.split(': ')[1] }) :
                                                     activity.action.includes('Session') ? t('instructor.dashboard.activity.session', { name: activity.action.split(': ')[1] }) :
                                                         activity.action.includes('Assignment') ? t('instructor.dashboard.activity.assignment', { name: activity.action.split(': ')[1] }) :
@@ -148,7 +148,7 @@ export function InstructorDashboard() {
                                     </div>
                                 ))}
                             </div>
-                            <Link to="/instructor/students" className="flex items-center justify-center gap-2 mt-8 py-3 bg-white/40 dark:bg-white/5 text-[10px] font-black uppercase tracking-widest text-espresso/60 hover:bg-white/60 dark:hover:bg-white/10 rounded-xl transition-all relative z-10 active:scale-95 shadow-sm">
+                            <Link to="/instructor/students" className="flex items-center justify-center gap-2 mt-6 md:mt-8 py-3 bg-white/40 dark:bg-white/5 text-[10px] font-black uppercase tracking-widest text-espresso/60 hover:bg-white/60 dark:hover:bg-white/10 rounded-xl transition-all relative z-10 active:scale-95 shadow-sm">
                                 {t('instructor.dashboard.explore_all')}
                                 <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
                             </Link>
@@ -162,14 +162,14 @@ export function InstructorDashboard() {
 
 function StatCard({ icon, label, value, color }) {
     return (
-        <div className="bg-[#F5DEB3] dark:bg-white/5 p-6 rounded-3xl border border-espresso/10 shadow-xl flex items-center gap-5 relative overflow-hidden group">
+        <div className="bg-[#F5DEB3] dark:bg-white/5 p-4 md:p-6 rounded-3xl border border-espresso/10 shadow-xl flex items-center gap-4 md:gap-5 relative overflow-hidden group">
             <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-            <div className={cn("h-14 w-14 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform relative z-10", color)}>
-                <span className="material-symbols-outlined text-2xl">{icon}</span>
+            <div className={cn("h-12 w-12 md:h-14 md:w-14 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform relative z-10", color)}>
+                <span className="material-symbols-outlined text-xl md:text-2xl">{icon}</span>
             </div>
             <div className="relative z-10">
-                <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest mb-1">{label}</p>
-                <p className="text-3xl font-serif font-bold text-espresso dark:text-white leading-none">{value}</p>
+                <p className="text-[9px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest mb-1">{label}</p>
+                <p className="text-2xl md:text-3xl font-serif font-bold text-espresso dark:text-white leading-none">{value}</p>
             </div>
         </div>
     );

@@ -91,54 +91,58 @@ export function ChatWindow() {
     const recipientAvatar = recipient.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(recipient.fullName || 'User')}&background=random`;
 
     return (
-        <div className="bg-background-light dark:bg-[#1c1916] h-[calc(100vh-theme(spacing.16))] md:h-[calc(100vh-64px)] flex flex-col font-sans overflow-hidden">
+        <div className="bg-[#FAF5E8] dark:bg-[#1c1916] h-[calc(100vh-theme(spacing.16))] md:h-[calc(100vh-80px)] flex flex-col font-sans overflow-hidden">
 
             {/* Header */}
-            <header className="flex-none bg-background-light dark:bg-[#1c1916] border-b border-[#E6DEC8] dark:border-white/10 px-4 py-3 shadow-sm z-10">
-                <div className="flex items-center justify-between">
+            <header className="flex-none bg-[#F5DEB3]/90 dark:bg-[#1c1916]/90 backdrop-blur-md border-b border-espresso/10 px-4 md:px-8 py-3 md:py-4 shadow-sm z-10 transition-colors">
+                <div className="flex items-center justify-between gap-3">
                     <button
                         onClick={() => navigate('/student/chat')}
-                        className="flex items-center justify-center text-espresso dark:text-white hover:text-primary transition-colors size-10 -ml-2 rounded-full active:bg-black/5 dark:active:bg-white/10"
+                        className="flex items-center justify-center text-espresso dark:text-white hover:bg-white/40 size-10 md:size-12 rounded-xl md:rounded-2xl active:scale-95 transition-all shrink-0"
                     >
-                        <span className="material-symbols-outlined text-2xl">arrow_back_ios_new</span>
+                        <span className="material-symbols-outlined text-[20px] md:text-[24px]">arrow_back_ios_new</span>
                     </button>
-                    <div className="flex flex-1 items-center gap-3 ml-1">
-                        <div className="relative">
-                            <img src={recipientAvatar} alt="" className="bg-center bg-no-repeat bg-cover rounded-full size-10 border border-[#E6DEC8] object-cover" />
-                            <div className="absolute bottom-0 right-0 size-2.5 bg-green-500 border-2 border-background-light rounded-full"></div>
+                    <div className="flex flex-1 items-center gap-3 md:gap-4 min-w-0">
+                        <div className="relative shrink-0">
+                            <img src={recipientAvatar} alt="" className="size-10 md:size-14 rounded-full border-2 border-espresso/10 object-cover shadow-md" />
+                            <div className="absolute bottom-0 right-0 size-3 md:size-4 bg-green-500 border-2 border-[#F5DEB3] dark:border-[#1c1916] rounded-full shadow-sm animate-pulse"></div>
                         </div>
-                        <div className="flex flex-col">
-                            <h2 className="text-espresso dark:text-white text-lg font-serif font-bold leading-tight">{recipient.fullName}</h2>
-                            <span className="text-[#837363] text-xs font-normal">{t('chat.active_now')}</span> {/* Translated */}
+                        <div className="flex flex-col min-w-0">
+                            <h2 className="text-espresso dark:text-white text-base md:text-xl font-serif font-black leading-tight truncate">{recipient.fullName}</h2>
+                            <span className="text-espresso/40 dark:text-white/40 text-[9px] md:text-[10px] font-black uppercase tracking-widest">{t('chat.active_now')}</span>
                         </div>
                     </div>
+                    <div className="w-10 md:w-12 shrink-0"></div> {/* Spacer for balance */}
                 </div>
             </header>
 
             {/* Chat Area */}
-            <main className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#FAF5E8] dark:bg-[#1c1916] scroll-smooth">
+            <main className="flex-1 overflow-y-auto p-4 md:p-8 space-y-4 md:space-y-6 bg-[#FAF5E8] dark:bg-[#1c1916] scroll-smooth scrollbar-hide">
                 {messages.length === 0 && (
-                    <div className="text-center text-gray-500 text-sm py-10">
-                        {t('chat.start_convo', { name: recipient.fullName.split(' ')[0] })} {/* Translated */}
+                    <div className="flex flex-col items-center justify-center py-20 opacity-40">
+                        <span className="material-symbols-outlined text-6xl md:text-8xl mb-4 text-espresso/20">chat_bubble</span>
+                        <p className="text-center text-espresso font-serif italic text-sm md:text-lg px-10">
+                            {t('chat.start_convo', { name: recipient.fullName.split(' ')[0] })}
+                        </p>
                     </div>
                 )}
 
                 {messages.map(msg => {
                     const isMe = msg.senderId === user.uid;
                     return (
-                        <div key={msg.id} className={`flex items-end gap-2 group ${isMe ? 'justify-end' : ''}`}>
+                        <div key={msg.id} className={`flex items-end gap-2 md:gap-4 group animate-fade-in ${isMe ? 'justify-end' : ''}`}>
                             {!isMe && (
-                                <img src={recipientAvatar} className="rounded-full size-8 shrink-0 mb-1 shadow-sm object-cover" alt="" />
+                                <img src={recipientAvatar} className="rounded-full size-8 md:size-10 shrink-0 mb-1 shadow-md object-cover border border-espresso/5" alt="" />
                             )}
 
-                            <div className={`flex flex-col gap-1 max-w-[80%] ${isMe ? 'items-end' : ''}`}>
-                                <div className={`p-3 rounded-2xl shadow-sm ${isMe
-                                    ? 'bg-primary text-white bubble-sent rounded-br-none'
-                                    : 'bg-white dark:bg-[#2c2825] text-espresso dark:text-gray-100 bubble-received border border-[#E6DEC8] dark:border-transparent rounded-bl-none'
+                            <div className={`flex flex-col gap-1.5 md:gap-2 max-w-[85%] md:max-w-[75%] ${isMe ? 'items-end' : ''}`}>
+                                <div className={`px-4 md:px-6 py-3 md:py-4 rounded-2xl md:rounded-3xl shadow-sm md:shadow-md transition-all ${isMe
+                                    ? 'bg-espresso text-white rounded-br-none'
+                                    : 'bg-white dark:bg-[#2c2825] text-espresso dark:text-gray-100 border border-espresso/5 dark:border-white/5 rounded-bl-none'
                                     }`}>
-                                    <p className="text-[15px] leading-relaxed whitespace-pre-wrap">{msg.text}</p>
+                                    <p className="text-sm md:text-base leading-relaxed whitespace-pre-wrap font-medium">{msg.text}</p>
                                 </div>
-                                <span className="text-[#837363] text-[10px] ml-1">
+                                <span className="text-espresso/30 dark:text-white/30 text-[9px] md:text-[10px] font-black uppercase tracking-widest px-1">
                                     {msg.createdAt?.seconds ? format(msg.createdAt.toDate(), 'h:mm a') : '...'}
                                 </span>
                             </div>
@@ -149,25 +153,29 @@ export function ChatWindow() {
             </main>
 
             {/* Input Area */}
-            <footer className="flex-none p-3 pb-6 bg-background-light dark:bg-[#1c1916] border-t border-[#E6DEC8] dark:border-white/10">
-                <div className="flex items-end gap-2 w-full px-4">
-                    <div className="flex-1 bg-white dark:bg-[#2c2825] rounded-2xl border border-[#E6DEC8] dark:border-transparent shadow-sm flex items-center px-4 py-2 min-h-[44px]">
-                        <input
+            <footer className="flex-none p-4 md:p-6 pb-8 md:pb-10 bg-[#F5DEB3]/90 dark:bg-[#1c1916]/90 backdrop-blur-md border-t border-espresso/10">
+                <div className="max-w-4xl mx-auto flex items-end gap-3 md:gap-4 px-2 md:px-4">
+                    <div className="flex-1 bg-white/60 dark:bg-[#2c2825] rounded-2xl md:rounded-3xl border border-espresso/10 dark:border-white/5 shadow-inner flex items-center px-4 md:px-6 py-2 md:py-3 min-h-[48px] md:min-h-[56px] focus-within:border-espresso/30 transition-all">
+                        <textarea
                             value={newMessage}
                             onChange={(e) => setNewMessage(e.target.value)}
                             onKeyDown={(e) => {
-                                if (e.key === 'Enter') handleSendMessage(e);
+                                if (e.key === 'Enter' && !e.shiftKey) {
+                                    e.preventDefault();
+                                    handleSendMessage(e);
+                                }
                             }}
-                            className="w-full bg-transparent border-none p-0 text-espresso dark:text-white placeholder:text-[#837363]/60 focus:ring-0 text-[15px] font-medium font-display leading-normal outline-none"
-                            placeholder="Type a message..."
-                            type="text"
+                            rows="1"
+                            className="w-full bg-transparent border-none p-0 text-espresso dark:text-white placeholder:text-espresso/30 dark:placeholder:text-white/20 focus:ring-0 text-sm md:text-base font-bold leading-relaxed outline-none resize-none overflow-hidden"
+                            placeholder={t('chat.type_placeholder') || "Type a message..."}
                         />
                     </div>
                     <button
                         onClick={handleSendMessage}
-                        className="flex items-center justify-center size-10 rounded-full bg-primary hover:bg-primary/90 text-white transition-colors shrink-0 shadow-md shadow-primary/30"
+                        disabled={!newMessage.trim()}
+                        className="flex items-center justify-center size-12 md:size-14 rounded-2xl md:rounded-3xl bg-espresso text-white hover:shadow-xl hover:shadow-espresso/40 active:scale-95 transition-all shrink-0 shadow-lg disabled:opacity-20 disabled:grayscale"
                     >
-                        <span className="material-symbols-outlined text-[20px] ml-0.5">send</span>
+                        <span className="material-symbols-outlined text-[20px] md:text-[24px]">send</span>
                     </button>
                 </div>
             </footer>

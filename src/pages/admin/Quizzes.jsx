@@ -251,17 +251,17 @@ export function Quizzes() {
             <div className=" w-full px-2 py-10 space-y-10">
                 {/* Header Section */}
                 <div className="flex flex-col gap-6 relative">
-                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 -ml-10"></div>
-                    <div className="flex items-center justify-between">
+                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 -ml-4 md:-ml-10"></div>
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                         <div>
-                            <h1 className="text-4xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none">Evaluation Matrix</h1>
-                            <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] mt-2">Knowledge Assessment & Proficiency Oversight</p>
+                            <h1 className="text-2xl md:text-4xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none">Evaluation Matrix</h1>
+                            <p className="text-[9px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] mt-1 md:mt-2">Knowledge Assessment & Proficiency Oversight</p>
                         </div>
-                        <div className="flex bg-white/40 dark:bg-black/20 p-1.5 rounded-[1.5rem] shadow-sm border border-espresso/10 backdrop-blur-md">
+                        <div className="flex bg-white/40 dark:bg-black/20 p-1 md:p-1.5 rounded-xl md:rounded-[1.5rem] shadow-sm border border-espresso/10 backdrop-blur-md w-full md:w-auto overflow-x-auto no-scrollbar">
                             <button
                                 onClick={() => setActiveTab('editor')}
                                 className={cn(
-                                    "px-6 py-2.5 text-[10px] font-black uppercase tracking-[0.2em] rounded-xl transition-all",
+                                    "flex-1 md:flex-none px-4 md:px-6 py-2 md:py-2.5 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] rounded-lg md:rounded-xl transition-all whitespace-nowrap",
                                     activeTab === 'editor' ? "bg-espresso text-white shadow-lg" : "text-espresso/40 hover:text-espresso"
                                 )}
                             >
@@ -270,7 +270,7 @@ export function Quizzes() {
                             <button
                                 onClick={() => setActiveTab('results')}
                                 className={cn(
-                                    "px-6 py-2.5 text-[10px] font-black uppercase tracking-[0.2em] rounded-xl transition-all",
+                                    "flex-1 md:flex-none px-4 md:px-6 py-2 md:py-2.5 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] rounded-lg md:rounded-xl transition-all whitespace-nowrap",
                                     activeTab === 'results' ? "bg-espresso text-white shadow-lg" : "text-espresso/40 hover:text-espresso"
                                 )}
                             >
@@ -283,41 +283,43 @@ export function Quizzes() {
                 {activeTab === 'editor' ? (
                     <div className="space-y-10 animate-fade-in">
                         {/* Featured Schema Card */}
-                        <div className="bg-espresso dark:bg-black/40 rounded-[3rem] p-10 shadow-2xl relative overflow-hidden group">
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl group-hover:bg-white/10 transition-colors"></div>
-                            <div className="flex items-start justify-between relative z-10">
-                                <div className="space-y-4">
-                                    <span className="inline-flex items-center bg-white/10 px-4 py-1.5 rounded-full text-[9px] font-black text-white uppercase tracking-[0.3em] backdrop-blur-md border border-white/10">
+                        <div className="bg-espresso dark:bg-black/40 rounded-[2rem] md:rounded-[3rem] p-6 md:p-10 shadow-2xl relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 w-48 md:w-64 h-48 md:h-64 bg-white/5 rounded-full -mr-16 md:-mr-20 -mt-16 md:-mt-20 blur-3xl group-hover:bg-white/10 transition-colors"></div>
+                            <div className="flex flex-col sm:flex-row items-start justify-between relative z-10 gap-6">
+                                <div className="space-y-3 md:space-y-4">
+                                    <span className="inline-flex items-center bg-white/10 px-3 md:px-4 py-1 md:py-1.5 rounded-full text-[8px] md:text-[9px] font-black text-white uppercase tracking-[0.3em] backdrop-blur-md border border-white/10">
                                         {activeQuiz?.type === 'business' ? 'Business Intelligence Schema' : 'Core Certification Schema'}
                                     </span>
-                                    <h2 className="text-white text-4xl font-serif font-black leading-tight tracking-tight uppercase">
+                                    <h2 className="text-white text-2xl md:text-4xl font-serif font-black leading-tight tracking-tight uppercase break-all">
                                         {activeQuiz?.title || 'System Initializing...'}
                                     </h2>
-                                    <p className="text-white/60 text-xs font-medium max-w-md leading-relaxed">
+                                    <p className="text-white/60 text-[11px] md:text-xs font-medium max-w-md leading-relaxed">
                                         Modify universal knowledge nodes for this curriculum component. Changes propagate across all active instances.
                                     </p>
                                 </div>
-                                <div className="w-24 h-24 rounded-[2rem] bg-white/10 border-2 border-white/20 overflow-hidden shadow-2xl backdrop-blur-md flex items-center justify-center">
-                                    <span className="material-symbols-outlined text-white text-4xl opacity-40">
+                                <div className="w-16 h-16 md:w-24 md:h-24 rounded-2xl md:rounded-[2rem] bg-white/10 border-2 border-white/20 overflow-hidden shadow-2xl backdrop-blur-md flex items-center justify-center shrink-0">
+                                    <span className="material-symbols-outlined text-white text-2xl md:text-4xl opacity-40">
                                         {activeQuiz?.type === 'business' ? 'corporate_fare' : 'psychology'}
                                     </span>
                                 </div>
                             </div>
-                            <div className="mt-10 pt-6 border-t border-white/10 flex items-center gap-6">
-                                <div className="flex items-center gap-2 text-[9px] font-black text-white/40 uppercase tracking-widest">
-                                    <span className="material-symbols-outlined text-[18px]">verified</span>
-                                    {activeQuiz?.type?.toUpperCase()} PROTOCOL ACTIVE
+                            <div className="mt-6 md:mt-10 pt-6 border-t border-white/10 flex flex-col lg:flex-row lg:items-center gap-4 md:gap-6">
+                                <div className="flex flex-wrap gap-4 md:gap-6">
+                                    <div className="flex items-center gap-2 text-[8px] md:text-[9px] font-black text-white/40 uppercase tracking-widest">
+                                        <span className="material-symbols-outlined text-[16px] md:text-[18px]">verified</span>
+                                        {activeQuiz?.type?.toUpperCase()} PROTOCOL ACTIVE
+                                    </div>
+                                    <div className="flex items-center gap-2 text-[8px] md:text-[9px] font-black text-white/40 uppercase tracking-widest">
+                                        <span className="material-symbols-outlined text-[16px] md:text-[18px]">account_tree</span>
+                                        {activeQuiz?.questions?.length || 0} Logic Nodes
+                                    </div>
                                 </div>
-                                <div className="flex items-center gap-2 text-[9px] font-black text-white/40 uppercase tracking-widest">
-                                    <span className="material-symbols-outlined text-[18px]">account_tree</span>
-                                    {activeQuiz?.questions?.length || 0} Logic Nodes
-                                </div>
-                                <div className="flex-1"></div>
-                                <div className="relative">
+                                <div className="hidden lg:block flex-1"></div>
+                                <div className="relative w-full lg:w-auto">
                                     <select
                                         value={selectedQuizId}
                                         onChange={(e) => setSelectedQuizId(e.target.value)}
-                                        className="bg-white/10 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl border border-white/20 outline-none appearance-none pr-10 cursor-pointer"
+                                        className="w-full lg:w-auto bg-white/10 text-white text-[9px] md:text-[10px] font-black uppercase tracking-widest px-4 py-2.5 rounded-xl border border-white/20 outline-none appearance-none pr-10 cursor-pointer"
                                     >
                                         {allQuizzes.map(q => (
                                             <option key={q.id} value={q.id} className="bg-espresso text-white">
@@ -333,11 +335,11 @@ export function Quizzes() {
                         {/* Search & Collection Header */}
                         <div className="space-y-6">
                             <div className="relative group">
-                                <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none text-espresso/30">
-                                    <span className="material-symbols-outlined">search</span>
+                                <div className="absolute inset-y-0 left-5 md:left-6 flex items-center pointer-events-none text-espresso/30">
+                                    <span className="material-symbols-outlined text-[20px] md:text-[24px]">search</span>
                                 </div>
                                 <input
-                                    className="w-full h-16 pl-16 pr-8 bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-[1.5rem] text-espresso dark:text-white font-serif text-lg focus:outline-none focus:ring-2 focus:ring-espresso transition-all placeholder:text-espresso/20 placeholder:font-black placeholder:uppercase placeholder:tracking-[0.4em] placeholder:text-[10px]"
+                                    className="w-full h-14 md:h-16 pl-12 md:pl-16 pr-6 md:pr-8 bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-xl md:rounded-[1.5rem] text-espresso dark:text-white font-serif text-base md:text-lg focus:outline-none focus:ring-2 focus:ring-espresso transition-all placeholder:text-espresso/20 placeholder:font-black placeholder:uppercase placeholder:tracking-[0.4em] placeholder:text-[9px] md:placeholder:text-[10px]"
                                     placeholder="Locate logic nodes..."
                                     type="text"
                                     value={quizSearch}
@@ -347,38 +349,36 @@ export function Quizzes() {
 
                             <div className="flex flex-col gap-4">
                                 <div className="flex items-center justify-between">
-                                    <h3 className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.4em] flex items-center gap-3">
-                                        <span className="w-8 h-px bg-espresso/20"></span>
+                                    <h3 className="text-[9px] md:text-[10px] font-black text-espresso/40 uppercase tracking-[0.4em] flex items-center gap-3">
+                                        <span className="w-6 md:w-8 h-px bg-espresso/20"></span>
                                         Logic Array Preview
                                     </h3>
                                 </div>
                                 {activeQuiz?.questions?.map((q, idx) => (
-                                    <div key={idx} className="group bg-white/40 dark:bg-black/20 rounded-[2rem] p-8 border border-espresso/10 hover:shadow-xl hover:-translate-y-1 transition-all relative overflow-hidden">
-                                        <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover:bg-espresso transition-colors"></div>
-                                        <div className="flex gap-8">
-                                            <div className="w-12 h-12 shrink-0 rounded-2xl bg-espresso/5 flex items-center justify-center text-espresso font-black font-serif text-xl border border-espresso/5 group-hover:bg-espresso group-hover:text-white transition-all shadow-inner">
+                                    <div key={idx} className="group bg-white/40 dark:bg-black/20 rounded-[1.5rem] md:rounded-[2rem] p-5 md:p-8 border border-espresso/10 hover:shadow-xl hover:-translate-y-1 transition-all relative overflow-hidden">
+                                        <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-espresso/5 group-hover:bg-espresso transition-colors"></div>
+                                        <div className="flex flex-col sm:flex-row gap-4 md:gap-8">
+                                            <div className="w-10 h-10 md:w-12 md:h-12 shrink-0 rounded-xl md:rounded-2xl bg-espresso/5 flex items-center justify-center text-espresso font-black font-serif text-lg md:text-xl border border-espresso/5 group-hover:bg-espresso group-hover:text-white transition-all shadow-inner">
                                                 {String(idx + 1).padStart(2, '0')}
                                             </div>
-                                            <div className="flex-1 space-y-4">
-                                                <div className="flex justify-between items-start">
-                                                    <p className="text-xl font-serif font-black text-espresso dark:text-white leading-tight tracking-tight uppercase group-hover:text-espresso/80 transition-colors">
+                                            <div className="flex-1 space-y-3 md:space-y-4">
+                                                <div className="flex justify-between items-start gap-4">
+                                                    <p className="text-lg md:text-xl font-serif font-black text-espresso dark:text-white leading-tight tracking-tight uppercase group-hover:text-espresso/80 transition-colors break-words">
                                                         {q.question || q.text}
                                                     </p>
-                                                    <div className="flex gap-2">
-                                                        <button
-                                                            onClick={() => handleOpenNodeModal(q, idx)}
-                                                            className="p-2 text-espresso/40 hover:text-espresso transition-colors"
-                                                        >
-                                                            <span className="material-symbols-outlined text-[20px]">edit</span>
-                                                        </button>
-                                                    </div>
+                                                    <button
+                                                        onClick={() => handleOpenNodeModal(q, idx)}
+                                                        className="p-2 text-espresso/40 hover:text-espresso transition-colors shrink-0"
+                                                    >
+                                                        <span className="material-symbols-outlined text-[18px] md:text-[20px]">edit</span>
+                                                    </button>
                                                 </div>
-                                                <div className="flex items-center gap-3">
-                                                    <span className="px-3 py-1 bg-green-50 text-green-700 text-[9px] font-black uppercase tracking-widest rounded-lg border border-green-100 flex items-center gap-2">
-                                                        <span className="material-symbols-outlined text-[14px]">task_alt</span>
-                                                        Correct Response: {getCorrectResponse(q)}
+                                                <div className="flex flex-wrap items-center gap-3">
+                                                    <span className="px-2 md:px-3 py-1 bg-green-50 text-green-700 text-[8px] md:text-[9px] font-black uppercase tracking-widest rounded-lg border border-green-100 flex items-center gap-2">
+                                                        <span className="material-symbols-outlined text-[12px] md:text-[14px]">task_alt</span>
+                                                        Response: <span className="truncate max-w-[150px]">{getCorrectResponse(q)}</span>
                                                     </span>
-                                                    <span className="text-[9px] font-black text-espresso/20 uppercase tracking-widest italic font-medium">Type: {q.type?.replace('_', ' ')}</span>
+                                                    <span className="text-[8px] md:text-[9px] font-black text-espresso/20 uppercase tracking-widest italic font-medium">Type: {q.type?.replace('_', ' ')}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -395,22 +395,22 @@ export function Quizzes() {
                 ) : (
                     <div className="space-y-10 animate-fade-in">
                         {/* Analytics Summary */}
-                        <div className="flex flex-col md:flex-row gap-6">
+                        <div className="flex flex-col lg:flex-row gap-4 md:gap-6">
                             <div className="flex-1 relative group">
-                                <span className="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-espresso/30 group-focus-within:text-espresso transition-colors">search</span>
+                                <span className="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-espresso/30 group-focus-within:text-espresso transition-colors text-[20px]">search</span>
                                 <input
                                     type="text"
                                     placeholder="IDENTIFY PARTICIPANT OR MODULE..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full h-14 pl-14 pr-6 rounded-2xl bg-white/40 dark:bg-black/20 border border-espresso/10 text-[10px] font-black uppercase tracking-widest focus:ring-2 focus:ring-espresso focus:outline-none transition-all shadow-inner"
+                                    className="w-full h-12 md:h-14 pl-12 md:pl-14 pr-6 rounded-xl md:rounded-2xl bg-white/40 dark:bg-black/20 border border-espresso/10 text-[9px] md:text-[10px] font-black uppercase tracking-widest focus:ring-2 focus:ring-espresso focus:outline-none transition-all shadow-inner"
                                 />
                             </div>
                             <div className="relative">
                                 <select
                                     value={selectedModule}
                                     onChange={(e) => setSelectedModule(e.target.value)}
-                                    className="h-14 pl-6 pr-12 rounded-2xl bg-white/40 dark:bg-black/20 border border-espresso/10 text-[10px] font-black uppercase tracking-widest focus:ring-2 focus:ring-espresso focus:outline-none min-w-[240px] appearance-none cursor-pointer shadow-sm"
+                                    className="w-full lg:w-auto h-12 md:h-14 pl-6 pr-12 rounded-xl md:rounded-2xl bg-white/40 dark:bg-black/20 border border-espresso/10 text-[9px] md:text-[10px] font-black uppercase tracking-widest focus:ring-2 focus:ring-espresso focus:outline-none min-w-[200px] lg:min-w-[240px] appearance-none cursor-pointer shadow-sm"
                                 >
                                     <option value="all">Universal View</option>
                                     {modules.map(m => (
@@ -422,17 +422,17 @@ export function Quizzes() {
                         </div>
 
                         {/* Registry Table */}
-                        <div className="bg-white/40 dark:bg-black/20 rounded-[2.5rem] border border-espresso/10 overflow-hidden shadow-2xl relative">
-                            <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/10"></div>
-                            <div className="overflow-x-auto">
-                                <table className="w-full text-left border-collapse">
+                        <div className="bg-white/40 dark:bg-black/20 rounded-[1.5rem] md:rounded-[2.5rem] border border-espresso/10 overflow-hidden shadow-2xl relative">
+                            <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-espresso/10"></div>
+                            <div className="overflow-x-auto no-scrollbar">
+                                <table className="w-full text-left border-collapse min-w-[800px]">
                                     <thead>
                                         <tr className="bg-espresso/5 border-b border-espresso/10">
-                                            <th className="px-8 py-6 text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em]">Participant</th>
-                                            <th className="px-8 py-6 text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em]">Module Schema</th>
-                                            <th className="px-8 py-6 text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em] text-center">Score Matrix</th>
-                                            <th className="px-8 py-6 text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em]">Completion</th>
-                                            <th className="px-8 py-6 text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em] text-right">Status</th>
+                                            <th className="px-6 md:px-8 py-4 md:py-6 text-[9px] md:text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em]">Participant</th>
+                                            <th className="px-6 md:px-8 py-4 md:py-6 text-[9px] md:text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em]">Module Schema</th>
+                                            <th className="px-6 md:px-8 py-4 md:py-6 text-[9px] md:text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em] text-center">Score Matrix</th>
+                                            <th className="px-6 md:px-8 py-4 md:py-6 text-[9px] md:text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em]">Completion</th>
+                                            <th className="px-6 md:px-8 py-4 md:py-6 text-[9px] md:text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em] text-right">Status</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-espresso/5 font-medium">
@@ -490,17 +490,17 @@ export function Quizzes() {
 
             {/* Matrix Expansion Trigger */}
             {activeTab === 'editor' && (
-                <div className="fixed bottom-12 right-12 z-50">
+                <div className="fixed bottom-6 md:bottom-12 right-6 md:right-12 z-50">
                     <button
                         onClick={() => handleOpenNodeModal()}
-                        className="group flex items-center gap-4 bg-espresso hover:bg-espresso/90 text-white rounded-[2rem] shadow-2xl hover:shadow-espresso/40 transition-all p-2 pr-10 hover:scale-105 active:scale-95"
+                        className="group flex items-center gap-3 md:gap-4 bg-espresso hover:bg-espresso/90 text-white rounded-[1.5rem] md:rounded-[2rem] shadow-2xl hover:shadow-espresso/40 transition-all p-1.5 md:p-2 pr-6 md:pr-10 hover:scale-105 active:scale-95"
                     >
-                        <div className="h-16 w-16 rounded-[1.75rem] border-2 border-white/20 flex items-center justify-center bg-white/10 group-hover:rotate-90 transition-transform duration-500">
-                            <span className="material-symbols-outlined text-[32px]">add</span>
+                        <div className="h-12 w-12 md:h-16 md:w-16 rounded-xl md:rounded-[1.75rem] border-2 border-white/20 flex items-center justify-center bg-white/10 group-hover:rotate-90 transition-transform duration-500">
+                            <span className="material-symbols-outlined text-[24px] md:text-[32px]">add</span>
                         </div>
                         <div className="flex flex-col items-start">
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em] opacity-60">Assemble</span>
-                            <span className="font-serif font-black text-xl uppercase tracking-tight">Logic Node</span>
+                            <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.3em] opacity-60">Assemble</span>
+                            <span className="font-serif font-black text-base md:text-xl uppercase tracking-tight">Logic Node</span>
                         </div>
                     </button>
                 </div>
@@ -509,19 +509,19 @@ export function Quizzes() {
             {/* Logic Node Modal */}
             {isNodeModalOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-espresso/40 backdrop-blur-md animate-in fade-in duration-300">
-                    <div className="bg-[#F5DEB3] dark:bg-[#1c1916] rounded-[3rem] w-full max-w-2xl border border-espresso/10 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-                        <div className="p-10 border-b border-espresso/10 bg-white/20 dark:bg-black/20">
-                            <h2 className="text-3xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight">
+                    <div className="bg-[#F5DEB3] dark:bg-[#1c1916] rounded-[2rem] md:rounded-[3rem] w-full max-w-2xl border border-espresso/10 shadow-2xl overflow-hidden flex flex-col max-h-[95vh]">
+                        <div className="p-6 md:p-10 border-b border-espresso/10 bg-white/20 dark:bg-black/20">
+                            <h2 className="text-xl md:text-3xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight">
                                 {editingNode ? 'Modify Logic Node' : 'Assemble Logic Node'}
                             </h2>
-                            <p className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em] mt-2">Relational Knowledge Synthesis Protocol</p>
+                            <p className="text-[9px] md:text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em] mt-1 md:mt-2">Relational Knowledge Synthesis Protocol</p>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto p-10 space-y-8">
-                            <div className="space-y-4">
-                                <label className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em]">Query Designation</label>
+                        <div className="flex-1 overflow-y-auto p-6 md:p-10 space-y-6 md:space-y-8 no-scrollbar">
+                            <div className="space-y-3 md:space-y-4">
+                                <label className="text-[9px] md:text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em] ml-1">Query Designation</label>
                                 <textarea
-                                    className="w-full bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-2xl p-6 text-espresso dark:text-white font-serif text-lg outline-none focus:ring-2 focus:ring-espresso transition-all shadow-inner"
+                                    className="w-full bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-xl md:rounded-2xl p-4 md:p-6 text-espresso dark:text-white font-serif text-lg outline-none focus:ring-2 focus:ring-espresso transition-all shadow-inner"
                                     placeholder="SYNTHESIZE QUERY..."
                                     rows={3}
                                     value={nodeForm.question}
@@ -529,11 +529,11 @@ export function Quizzes() {
                                 />
                             </div>
 
-                            <div className="grid grid-cols-2 gap-6">
-                                <div className="space-y-4">
-                                    <label className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em]">Query Type</label>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+                                <div className="space-y-3 md:space-y-4">
+                                    <label className="text-[9px] md:text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em] ml-1">Query Type</label>
                                     <select
-                                        className="w-full h-14 bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-2xl px-6 text-[10px] font-black uppercase tracking-widest outline-none focus:ring-2 focus:ring-espresso transition-all"
+                                        className="w-full h-12 md:h-14 bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-xl md:rounded-2xl px-4 md:px-6 text-[9px] md:text-[10px] font-black uppercase tracking-widest outline-none focus:ring-2 focus:ring-espresso transition-all"
                                         value={nodeForm.type}
                                         onChange={(e) => setNodeForm({ ...nodeForm, type: e.target.value })}
                                     >
@@ -543,11 +543,11 @@ export function Quizzes() {
                                         <option value="matching">Relational Matching</option>
                                     </select>
                                 </div>
-                                <div className="space-y-4">
-                                    <label className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em]">Time Delta (SEC)</label>
+                                <div className="space-y-3 md:space-y-4">
+                                    <label className="text-[9px] md:text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em] ml-1">Time Delta (SEC)</label>
                                     <input
                                         type="number"
-                                        className="w-full h-14 bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-2xl px-6 text-center text-espresso dark:text-white font-black outline-none focus:ring-2 focus:ring-espresso transition-all"
+                                        className="w-full h-12 md:h-14 bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-xl md:rounded-2xl px-4 md:px-6 text-center text-espresso dark:text-white font-black outline-none focus:ring-2 focus:ring-espresso transition-all"
                                         value={nodeForm.duration}
                                         onChange={(e) => setNodeForm({ ...nodeForm, duration: parseInt(e.target.value) })}
                                     />
@@ -668,16 +668,16 @@ export function Quizzes() {
                             )}
                         </div>
 
-                        <div className="p-10 bg-white/40 dark:bg-black/20 flex justify-end gap-6">
+                        <div className="p-6 md:p-10 bg-white/40 dark:bg-black/20 flex flex-col md:flex-row justify-end gap-3 md:gap-6">
                             <button
                                 onClick={() => setIsNodeModalOpen(false)}
-                                className="px-8 py-4 text-[10px] font-black text-espresso/40 uppercase tracking-widest hover:text-espresso transition-colors"
+                                className="order-2 md:order-1 px-8 py-3 md:py-4 text-[9px] md:text-[10px] font-black text-espresso/40 uppercase tracking-widest hover:text-espresso transition-colors"
                             >
                                 Abort Protocol
                             </button>
                             <button
                                 onClick={handleSaveNode}
-                                className="px-10 py-4 bg-espresso text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-xl hover:shadow-espresso/40 transition-all active:scale-95"
+                                className="order-1 md:order-2 px-10 py-3 md:py-4 bg-espresso text-white text-[9px] md:text-[10px] font-black uppercase tracking-widest rounded-xl md:rounded-2xl shadow-xl hover:shadow-espresso/40 transition-all active:scale-95"
                             >
                                 Synchronize Logic
                             </button>

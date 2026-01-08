@@ -100,9 +100,9 @@ export function Profile() {
     return (
         <div className="flex-1 flex flex-col h-full overflow-y-auto w-full max-w-5xl mx-auto pb-12 animate-fade-in px-4 custom-scrollbar">
             {/* Header Area */}
-            <div className="flex items-center justify-between mb-10">
+            <div className="flex items-center justify-between mb-8 md:mb-10">
                 <div>
-                    <h2 className="text-3xl font-serif font-bold text-espresso dark:text-white leading-tight">
+                    <h2 className="text-2xl md:text-3xl font-serif font-bold text-espresso dark:text-white leading-tight">
                         {t('profile.title')}
                     </h2>
                     <p className="text-espresso/60 dark:text-white/60 text-sm font-medium uppercase tracking-wide mt-1">
@@ -111,26 +111,26 @@ export function Profile() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-10">
                 {/* Left Column: Avatar and Quick Info */}
                 <div className="lg:col-span-4 flex flex-col items-center">
-                    <div className="bg-[#F5DEB3] dark:bg-[#1c1916] rounded-3xl p-10 shadow-xl border border-primary/20 w-full flex flex-col items-center relative overflow-hidden group">
+                    <div className="bg-[#F5DEB3] dark:bg-[#1c1916] rounded-2xl md:rounded-3xl p-6 md:p-10 shadow-xl border border-primary/20 w-full flex flex-col items-center relative overflow-hidden group">
                         <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/30 group-hover:bg-espresso transition-colors"></div>
 
                         <div
                             onClick={handleAvatarClick}
-                            className="relative mb-8 group/avatar cursor-pointer"
+                            className="relative mb-6 md:mb-8 group/avatar cursor-pointer"
                         >
                             <div
-                                className="w-44 h-44 rounded-full border-4 border-white dark:border-[#2c2825] shadow-2xl bg-cover bg-center overflow-hidden flex items-center justify-center bg-white/50 backdrop-blur-sm transition-transform duration-500 group-hover/avatar:scale-105"
+                                className="w-32 h-32 md:w-44 md:h-44 rounded-full border-4 border-white dark:border-[#2c2825] shadow-2xl bg-cover bg-center overflow-hidden flex items-center justify-center bg-white/50 backdrop-blur-sm transition-transform duration-500 group-hover/avatar:scale-105"
                                 style={{ backgroundImage: uploading ? 'none' : `url('${avatarUrl}')` }}
                             >
                                 {uploading && (
-                                    <div className="animate-spin rounded-full h-14 w-14 border-b-2 border-primary"></div>
+                                    <div className="animate-spin rounded-full h-12 w-12 md:h-14 md:w-14 border-b-2 border-primary"></div>
                                 )}
                             </div>
-                            <div className="absolute bottom-2 right-2 bg-espresso text-white p-3 rounded-full shadow-lg flex items-center justify-center border-4 border-[#F5DEB3] dark:border-[#1c1916] group-hover/avatar:scale-110 transition-transform">
-                                <span className="material-symbols-outlined text-[20px]">photo_camera</span>
+                            <div className="absolute bottom-1.5 right-1.5 md:bottom-2 md:right-2 bg-espresso text-white p-2.5 md:p-3 rounded-full shadow-lg flex items-center justify-center border-4 border-[#F5DEB3] dark:border-[#1c1916] group-hover/avatar:scale-110 transition-transform">
+                                <span className="material-symbols-outlined text-[18px] md:text-[20px]">photo_camera</span>
                             </div>
                             <input
                                 type="file"
@@ -141,17 +141,17 @@ export function Profile() {
                             />
                         </div>
 
-                        <h1 className="text-2xl font-bold text-espresso dark:text-white text-center mb-1 font-serif">
+                        <h1 className="text-xl md:text-2xl font-bold text-espresso dark:text-white text-center mb-1 font-serif">
                             {displayName}
                         </h1>
-                        <p className="text-espresso/60 font-black text-[10px] tracking-[0.2em] uppercase mb-6 bg-white/30 px-4 py-1.5 rounded-full border border-white/20">
+                        <p className="text-espresso/60 font-black text-[10px] tracking-[0.2em] uppercase mb-4 md:mb-6 bg-white/30 px-3 md:px-4 py-1.5 rounded-full border border-white/20">
                             {idLabel.replace('{{id}}', userId)}
                         </p>
 
                         <div className="flex flex-col gap-3 w-full">
                             <button
                                 onClick={handleLogout}
-                                className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-white/40 text-red-600 border border-red-200/50 hover:bg-red-50 hover:border-red-300 transition-all font-bold text-xs uppercase tracking-widest shadow-sm active:scale-95"
+                                className="w-full flex items-center justify-center gap-2 px-5 md:px-6 py-3 md:py-3.5 rounded-xl md:rounded-2xl bg-white/40 text-red-600 border border-red-200/50 hover:bg-red-50 hover:border-red-300 transition-all font-bold text-xs uppercase tracking-widest shadow-sm active:scale-95"
                             >
                                 <span className="material-symbols-outlined text-[18px]">logout</span>
                                 {t('profile.sign_out')}
@@ -161,59 +161,59 @@ export function Profile() {
                 </div>
 
                 {/* Right Column: Settings and Info */}
-                <div className="lg:col-span-8 space-y-8">
+                <div className="lg:col-span-8 space-y-6 md:space-y-8">
                     {/* Personal Info Card */}
-                    <div className="bg-[#F5DEB3] dark:bg-[#1c1916] rounded-3xl shadow-xl border border-primary/20 overflow-hidden relative group">
+                    <div className="bg-[#F5DEB3] dark:bg-[#1c1916] rounded-2xl md:rounded-3xl shadow-xl border border-primary/20 overflow-hidden relative group">
                         <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/30 group-hover:bg-espresso transition-colors"></div>
-                        <div className="px-8 py-5 border-b border-espresso/10 flex items-center justify-between bg-white/20">
-                            <div className="flex items-center gap-3">
-                                <span className="material-symbols-outlined text-espresso/60">badge</span>
+                        <div className="px-5 md:px-8 py-4 md:py-5 border-b border-espresso/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white/20">
+                            <div className="flex items-center gap-2 md:gap-3">
+                                <span className="material-symbols-outlined text-espresso/60 text-xl md:text-2xl">badge</span>
                                 <h3 className="font-bold text-espresso dark:text-white uppercase tracking-widest text-xs">{t('profile.identity')}</h3>
                             </div>
                             <button
                                 onClick={handleEditClick}
-                                className="h-10 px-6 rounded-xl bg-espresso text-white text-[10px] font-black uppercase tracking-widest hover:shadow-lg hover:-translate-y-0.5 transition-all active:scale-95"
+                                className="h-9 md:h-10 px-4 md:px-6 rounded-xl bg-espresso text-white text-[10px] font-black uppercase tracking-widest hover:shadow-lg hover:-translate-y-0.5 transition-all active:scale-95 w-full sm:w-auto"
                             >
                                 {t('profile.edit_info')}
                             </button>
                         </div>
-                        <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+                        <div className="p-5 md:p-8 grid grid-cols-1 gap-6 md:gap-8 relative z-10">
                             <div className="space-y-1.5">
                                 <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">{t('profile.full_name')}</p>
-                                <p className="text-espresso dark:text-white font-bold text-lg">{displayName}</p>
+                                <p className="text-espresso dark:text-white font-bold text-base md:text-lg">{displayName}</p>
                             </div>
                             <div className="space-y-1.5">
                                 <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">{t('profile.email')}</p>
-                                <p className="text-espresso dark:text-white font-bold text-lg">{user?.email}</p>
+                                <p className="text-espresso dark:text-white font-bold text-base md:text-lg break-all">{user?.email}</p>
                             </div>
                             <div className="space-y-1.5">
                                 <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">{t('profile.phone')}</p>
-                                <p className="text-espresso dark:text-white font-bold text-lg">{user?.phone || t('profile.not_provided')}</p>
+                                <p className="text-espresso dark:text-white font-bold text-base md:text-lg">{user?.phone || t('profile.not_provided')}</p>
                             </div>
                             <div className="space-y-1.5">
                                 <p className="text-[10px] text-espresso/40 dark:text-white/50 font-black uppercase tracking-[0.2em]">{t('profile.location')}</p>
-                                <p className="text-espresso dark:text-white font-bold text-lg">{user?.location || t('profile.not_set')}</p>
+                                <p className="text-espresso dark:text-white font-bold text-base md:text-lg">{user?.location || t('profile.not_set')}</p>
                             </div>
                         </div>
                     </div>
 
                     {/* Account Settings Card */}
-                    <div className="bg-[#F5DEB3] dark:bg-[#1c1916] rounded-3xl shadow-xl border border-primary/20 overflow-hidden relative group">
+                    <div className="bg-[#F5DEB3] dark:bg-[#1c1916] rounded-2xl md:rounded-3xl shadow-xl border border-primary/20 overflow-hidden relative group">
                         <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/30 group-hover:bg-espresso transition-colors"></div>
-                        <div className="px-8 py-5 border-b border-espresso/10 bg-white/20">
-                            <div className="flex items-center gap-3">
-                                <span className="material-symbols-outlined text-espresso/60">settings</span>
+                        <div className="px-5 md:px-8 py-4 md:py-5 border-b border-espresso/10 bg-white/20">
+                            <div className="flex items-center gap-2 md:gap-3">
+                                <span className="material-symbols-outlined text-espresso/60 text-xl md:text-2xl">settings</span>
                                 <h3 className="font-bold text-espresso dark:text-white uppercase tracking-widest text-xs">{t('profile.security')}</h3>
                             </div>
                         </div>
                         <div className="divide-y divide-espresso/10 relative z-10">
                             <button
                                 onClick={() => setShowPasswordModal(true)}
-                                className="w-full flex items-center justify-between px-8 py-6 hover:bg-white/30 dark:hover:bg-white/5 transition-all group/item"
+                                className="w-full flex items-center justify-between px-5 md:px-8 py-5 md:py-6 hover:bg-white/30 dark:hover:bg-white/5 transition-all group/item"
                             >
-                                <div className="flex items-center gap-5 text-left">
-                                    <div className="w-12 h-12 rounded-2xl bg-espresso text-white flex items-center justify-center group-hover/item:scale-110 transition-transform shadow-md">
-                                        <span className="material-symbols-outlined">lock</span>
+                                <div className="flex items-center gap-4 md:gap-5 text-left">
+                                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-espresso text-white flex items-center justify-center group-hover/item:scale-110 transition-transform shadow-md shrink-0">
+                                        <span className="material-symbols-outlined text-xl md:text-2xl">lock</span>
                                     </div>
                                     <div>
                                         <p className="font-black text-espresso dark:text-white text-[11px] uppercase tracking-widest leading-none mb-1">{t('profile.update_password')}</p>
@@ -225,11 +225,11 @@ export function Profile() {
 
                             <button
                                 onClick={() => navigate('../privacy-settings')}
-                                className="w-full flex items-center justify-between px-8 py-6 hover:bg-white/30 dark:hover:bg-white/5 transition-all group/item"
+                                className="w-full flex items-center justify-between px-5 md:px-8 py-5 md:py-6 hover:bg-white/30 dark:hover:bg-white/5 transition-all group/item"
                             >
-                                <div className="flex items-center gap-5 text-left">
-                                    <div className="w-12 h-12 rounded-2xl bg-white/50 text-espresso flex items-center justify-center group-hover/item:scale-110 transition-transform shadow-sm border border-white/20">
-                                        <span className="material-symbols-outlined font-bold">shield_person</span>
+                                <div className="flex items-center gap-4 md:gap-5 text-left">
+                                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-white/50 text-espresso flex items-center justify-center group-hover/item:scale-110 transition-transform shadow-sm border border-white/20 shrink-0">
+                                        <span className="material-symbols-outlined font-bold text-xl md:text-2xl">shield_person</span>
                                     </div>
                                     <div>
                                         <p className="font-black text-espresso dark:text-white text-[11px] uppercase tracking-widest leading-none mb-1">{t('profile.privacy')}</p>
@@ -239,10 +239,10 @@ export function Profile() {
                                 <span className="material-symbols-outlined text-espresso/30 group-hover/item:translate-x-2 transition-transform">arrow_forward</span>
                             </button>
 
-                            <button className="w-full flex items-center justify-between px-8 py-6 hover:bg-white/30 dark:hover:bg-white/5 transition-all group/item">
-                                <div className="flex items-center gap-5 text-left">
-                                    <div className="w-12 h-12 rounded-2xl bg-white/50 text-espresso flex items-center justify-center group-hover/item:scale-110 transition-transform shadow-sm border border-white/20">
-                                        <span className="material-symbols-outlined font-bold">notifications_active</span>
+                            <button className="w-full flex items-center justify-between px-5 md:px-8 py-5 md:py-6 hover:bg-white/30 dark:hover:bg-white/5 transition-all group/item">
+                                <div className="flex items-center gap-4 md:gap-5 text-left">
+                                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-white/50 text-espresso flex items-center justify-center group-hover/item:scale-110 transition-transform shadow-sm border border-white/20 shrink-0">
+                                        <span className="material-symbols-outlined font-bold text-xl md:text-2xl">notifications_active</span>
                                     </div>
                                     <div>
                                         <p className="font-black text-espresso dark:text-white text-[11px] uppercase tracking-widest leading-none mb-1">{t('profile.alerts')}</p>

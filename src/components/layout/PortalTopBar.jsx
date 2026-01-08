@@ -31,7 +31,7 @@ export function PortalTopBar({ user, unreadNotifications = 0, onLogout, onToggle
     const avatarUrl = user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=random`;
 
     return (
-        <div className="h-20 border-b border-espresso/10 bg-[#F5DEB3]/80 dark:bg-[#1c1916]/80 backdrop-blur-md sticky top-0 z-30 px-4 sm:px-8 flex items-center transition-colors gap-4">
+        <div className="h-16 md:h-20 border-b border-espresso/10 bg-[#F5DEB3]/80 dark:bg-[#1c1916]/80 backdrop-blur-md sticky top-0 z-30 px-4 sm:px-8 flex items-center transition-colors gap-4">
 
             {/* Mobile Menu Toggle */}
             <button

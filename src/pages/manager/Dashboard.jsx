@@ -65,17 +65,18 @@ export function ManagerDashboard() {
     }
 
     return (
-        <div className="max-w-7xl mx-auto space-y-6">
-            <header className="mb-8">
-                <h1 className="text-3xl font-bold text-espresso dark:text-white font-serif">
+        <div className="max-w-7xl mx-auto space-y-6 px-4 md:px-0 py-4 md:py-0">
+            <header className="mb-6 md:mb-8 relative pl-4 md:pl-0">
+                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 -ml-4 md:hidden"></div>
+                <h1 className="text-2xl md:text-3xl font-black font-serif text-espresso dark:text-white leading-none">
                     {t('manager.dashboard.marketing_overview')}
                 </h1>
-                <p className="text-espresso/60 dark:text-white/60">
+                <p className="text-xs md:text-sm text-espresso/60 dark:text-white/60 mt-2 leading-relaxed">
                     {t('manager.dashboard.track_growth')}
                 </p>
             </header>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                 <StatCard
                     title={t('manager.dashboard.total_users')}
                     value={stats.totalUsers}
@@ -103,9 +104,9 @@ export function ManagerDashboard() {
             </div>
 
             {/* Placeholder for future charts/graphs */}
-            <div className="bg-[#F5DEB3] dark:bg-[#1c1916] p-10 rounded-[2.5rem] border border-espresso/10 h-72 flex items-center justify-center text-espresso/40 dark:text-white/40 shadow-xl relative overflow-hidden group">
+            <div className="bg-[#F5DEB3] dark:bg-[#1c1916] p-6 md:p-10 rounded-3xl md:rounded-[2.5rem] border border-espresso/10 h-56 md:h-72 flex items-center justify-center text-espresso/40 dark:text-white/40 shadow-xl relative overflow-hidden group">
                 <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                <p className="font-black uppercase tracking-[0.2em] text-sm">{t('manager.dashboard.engagement_chart_soon')}</p>
+                <p className="font-black uppercase tracking-[0.2em] text-xs md:text-sm">{t('manager.dashboard.engagement_chart_soon')}</p>
             </div>
         </div>
     );
@@ -113,18 +114,18 @@ export function ManagerDashboard() {
 
 function StatCard({ title, value, icon, color }) {
     return (
-        <div className="bg-[#F5DEB3] dark:bg-[#1c1916] p-8 rounded-[2.5rem] border border-espresso/10 shadow-xl relative overflow-hidden group hover:shadow-2xl transition-all hover:-translate-y-1">
+        <div className="bg-[#F5DEB3] dark:bg-[#1c1916] p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-espresso/10 shadow-xl relative overflow-hidden group hover:shadow-2xl transition-all hover:-translate-y-1">
             <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
             <div className="flex items-center justify-between relative z-10">
                 <div>
                     <p className="text-[10px] font-black text-espresso/50 dark:text-white/50 uppercase tracking-[0.2em] mb-2">
                         {title}
                     </p>
-                    <h3 className="text-4xl font-serif font-bold text-espresso dark:text-white leading-none">
+                    <h3 className="text-3xl md:text-4xl font-serif font-bold text-espresso dark:text-white leading-none">
                         {value.toLocaleString()}
                     </h3>
                 </div>
-                <div className={`h-14 w-14 rounded-2xl bg-espresso flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform`}>
+                <div className={`h-12 w-12 md:h-14 md:w-14 rounded-2xl bg-espresso flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform`}>
                     <span className="material-symbols-outlined text-2xl">{icon}</span>
                 </div>
             </div>

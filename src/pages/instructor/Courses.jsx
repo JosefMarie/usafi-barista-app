@@ -33,10 +33,11 @@ export function InstructorCourses() {
     const otherCourses = courses.filter(c => !assignedCourseIds.includes(c.id));
 
     return (
-        <div className="max-w-5xl mx-auto space-y-8">
-            <div>
-                <h1 className="text-3xl font-serif font-bold text-espresso dark:text-white mb-2">Academic Curriculum</h1>
-                <p className="text-espresso/60 dark:text-white/60 font-medium">Explore and view the complete curriculum and your specialized assignments</p>
+        <div className="max-w-5xl mx-auto space-y-6 md:space-y-8 px-4 md:px-0 py-4 md:py-0">
+            <div className="relative pl-4 md:pl-0">
+                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 -ml-4 md:hidden"></div>
+                <h1 className="text-2xl md:text-3xl font-serif font-black text-espresso dark:text-white leading-none">Academic Curriculum</h1>
+                <p className="text-espresso/60 dark:text-white/60 font-medium mt-2 text-xs md:text-sm leading-relaxed">Explore the complete curriculum and your specialized assignments</p>
             </div>
 
             {loading ? (
@@ -54,8 +55,8 @@ export function InstructorCourses() {
                     {/* Assigned Courses */}
                     {myCourses.length > 0 && (
                         <div className="space-y-6">
-                            <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 uppercase tracking-[0.2em] flex items-center gap-3">
-                                <span className="h-2 w-2 rounded-full bg-espresso"></span>
+                            <h2 className="text-[9px] md:text-[10px] font-black text-espresso/50 dark:text-white/50 uppercase tracking-[0.2em] flex items-center gap-3">
+                                <span className="h-1.5 w-1.5 md:h-2 md:w-2 rounded-full bg-espresso"></span>
                                 Personalized Assignments
                             </h2>
                             <div className="grid gap-4 md:grid-cols-2">
@@ -67,8 +68,8 @@ export function InstructorCourses() {
                     {/* Other Courses */}
                     {otherCourses.length > 0 && (
                         <div className="space-y-6">
-                            <h2 className="text-[10px] font-black text-espresso/30 dark:text-white/30 uppercase tracking-[0.2em] flex items-center gap-3">
-                                <span className="h-2 w-2 rounded-full bg-espresso/30"></span>
+                            <h2 className="text-[9px] md:text-[10px] font-black text-espresso/30 dark:text-white/30 uppercase tracking-[0.2em] flex items-center gap-3">
+                                <span className="h-1.5 w-1.5 md:h-2 md:w-2 rounded-full bg-espresso/30"></span>
                                 General Curriculum
                             </h2>
                             <div className="grid gap-4 md:grid-cols-2 opacity-80 hover:opacity-100 transition-opacity">
@@ -85,7 +86,7 @@ export function InstructorCourses() {
 function CourseCard({ course, isAssigned }) {
     return (
         <div className={cn(
-            "bg-[#F5DEB3] dark:bg-white/5 rounded-3xl overflow-hidden shadow-xl border border-espresso/10 transition-all hover:-translate-y-1 relative group",
+            "bg-[#F5DEB3] dark:bg-white/5 rounded-[2rem] overflow-hidden shadow-xl border border-espresso/10 transition-all hover:-translate-y-1 relative group",
             !isAssigned && "opacity-80 grayscale hover:grayscale-0 hover:opacity-100"
         )}>
             <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
@@ -98,33 +99,33 @@ function CourseCard({ course, isAssigned }) {
                         onError={(e) => { e.target.style.display = 'none'; }}
                     />
                     {isAssigned && (
-                        <div className="absolute top-4 right-4 bg-espresso text-white text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full shadow-lg border border-white/10">
+                        <div className="absolute top-3 right-3 md:top-4 md:right-4 bg-espresso text-white text-[8px] md:text-[9px] font-black uppercase tracking-widest px-2.5 py-1 md:px-3 md:py-1.5 rounded-full shadow-lg border border-white/10">
                             Authorized
                         </div>
                     )}
                 </div>
             )}
-            <div className="p-6 relative z-10">
-                <h3 className="font-serif font-bold text-xl text-espresso dark:text-white mb-3">{course.title || 'Untitled Course'}</h3>
+            <div className="p-5 md:p-6 relative z-10">
+                <h3 className="font-serif font-black text-lg md:text-xl text-espresso dark:text-white mb-2 leading-tight">{course.title || 'Untitled Course'}</h3>
                 {course.description && (
-                    <p className="text-sm text-espresso/60 dark:text-white/60 line-clamp-2 mb-4 leading-relaxed font-medium">{course.description}</p>
+                    <p className="text-xs md:text-sm text-espresso/60 dark:text-white/60 line-clamp-2 mb-4 leading-relaxed font-medium">{course.description}</p>
                 )}
                 <div className="flex items-center justify-between border-t border-espresso/5 pt-4">
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3 md:gap-4">
                         {course.duration && (
-                            <span className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-espresso/40">
-                                <span className="material-symbols-outlined text-[16px]">schedule</span>
+                            <span className="flex items-center gap-1 text-[8px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40">
+                                <span className="material-symbols-outlined text-[14px] md:text-[16px]">schedule</span>
                                 {course.duration}
                             </span>
                         )}
                         {course.level && (
-                            <span className="px-3 py-1 rounded-full bg-espresso/5 border border-espresso/5 text-[10px] font-black uppercase tracking-widest text-espresso/60">
+                            <span className="px-2 py-0.5 md:px-3 md:py-1 rounded-full bg-espresso/5 border border-espresso/5 text-[8px] md:text-[10px] font-black uppercase tracking-widest text-espresso/60">
                                 {course.level}
                             </span>
                         )}
                     </div>
-                    <Link to={`/instructor/courses/${course.id}`} className="p-2 rounded-full bg-white/50 dark:bg-white/5 text-espresso/40 hover:text-espresso hover:bg-white transition-all">
-                        <span className="material-symbols-outlined text-lg">arrow_forward</span>
+                    <Link to={`/instructor/courses/${course.id}`} className="p-2 rounded-full bg-white/50 dark:bg-white/5 text-espresso/40 hover:text-espresso hover:bg-white transition-all shadow-sm shrink-0">
+                        <span className="material-symbols-outlined text-base md:text-lg">arrow_forward</span>
                     </Link>
                 </div>
             </div>

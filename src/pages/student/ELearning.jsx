@@ -86,32 +86,32 @@ export function ELearning() {
     };
 
     return (
-        <div className="w-full space-y-8">
-            <div>
-                <h1 className="text-3xl font-serif font-bold text-espresso dark:text-white">Active Learning Sphere</h1>
-                <p className="text-espresso/60 dark:text-white/60 font-medium mt-1">Engage with live masterclasses and curated instructional media</p>
+        <div className="w-full space-y-6 md:space-y-8 animate-fade-in">
+            <div className="text-left">
+                <h1 className="text-2xl md:text-3xl font-serif font-bold text-espresso dark:text-white leading-tight">Active Learning Sphere</h1>
+                <p className="text-xs md:text-sm font-medium text-espresso/60 dark:text-white/60 mt-1">Engage with live masterclasses and curated instructional media</p>
             </div>
 
             {/* Tabs */}
-            <div className="flex gap-4 border-b border-espresso/10 pb-4 justify-start">
+            <div className="flex flex-wrap gap-2 sm:gap-4 border-b border-espresso/10 pb-4 justify-start">
                 <button
                     onClick={() => setActiveTab('schedule')}
                     className={cn(
-                        "flex items-center gap-3 px-6 py-3 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all",
+                        "flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2.5 md:py-3 rounded-xl md:rounded-2xl font-black uppercase tracking-widest text-[9px] md:text-[10px] transition-all",
                         activeTab === 'schedule' ? "bg-espresso text-white shadow-xl" : "text-espresso/40 dark:text-white/40 hover:bg-white/40 dark:hover:bg-white/5"
                     )}
                 >
-                    <span className="material-symbols-outlined text-[20px]">event_repeat</span>
+                    <span className="material-symbols-outlined text-[18px] md:text-[20px]">event_repeat</span>
                     Live Sessions
                 </button>
                 <button
                     onClick={() => setActiveTab('videos')}
                     className={cn(
-                        "flex items-center gap-3 px-6 py-3 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all",
+                        "flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2.5 md:py-3 rounded-xl md:rounded-2xl font-black uppercase tracking-widest text-[9px] md:text-[10px] transition-all",
                         activeTab === 'videos' ? "bg-espresso text-white shadow-xl" : "text-espresso/40 dark:text-white/40 hover:bg-white/40 dark:hover:bg-white/5"
                     )}
                 >
-                    <span className="material-symbols-outlined text-[20px]">broadcast_on_personal</span>
+                    <span className="material-symbols-outlined text-[18px] md:text-[20px]">broadcast_on_personal</span>
                     On-Demand Media
                 </button>
             </div>
@@ -119,27 +119,27 @@ export function ELearning() {
             {/* View Toggle for Schedule */}
             {activeTab === 'schedule' && !loading && schedules.length > 0 && (
                 <div className="flex justify-end">
-                    <div className="bg-[#F5DEB3] dark:bg-white/5 p-1 rounded-2xl border border-espresso/10 flex items-center shadow-lg relative overflow-hidden">
+                    <div className="bg-[#F5DEB3] dark:bg-white/5 p-1 rounded-xl md:rounded-2xl border border-espresso/10 flex items-center shadow-lg relative overflow-hidden">
                         <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/10"></div>
                         <button
                             onClick={() => setViewMode('list')}
                             className={cn(
-                                "p-2.5 rounded-xl transition-all",
+                                "p-2 md:p-2.5 rounded-lg md:rounded-xl transition-all",
                                 viewMode === 'list' ? "bg-espresso text-white shadow-md rotate-3" : "text-espresso/40 dark:text-white/40 hover:bg-white/40 dark:hover:bg-white/5"
                             )}
                             title="List View"
                         >
-                            <span className="material-symbols-outlined text-[20px]">format_list_bulleted</span>
+                            <span className="material-symbols-outlined text-[18px] md:text-[20px]">format_list_bulleted</span>
                         </button>
                         <button
                             onClick={() => setViewMode('calendar')}
                             className={cn(
-                                "p-2.5 rounded-xl transition-all",
+                                "p-2 md:p-2.5 rounded-lg md:rounded-xl transition-all",
                                 viewMode === 'calendar' ? "bg-espresso text-white shadow-md -rotate-3" : "text-espresso/40 dark:text-white/40 hover:bg-white/40 dark:hover:bg-white/5"
                             )}
                             title="Calendar View"
                         >
-                            <span className="material-symbols-outlined text-[20px]">calendar_apps_script</span>
+                            <span className="material-symbols-outlined text-[18px] md:text-[20px]">calendar_apps_script</span>
                         </button>
                     </div>
                 </div>
@@ -147,40 +147,40 @@ export function ELearning() {
 
             {loading ? (
                 <div className="flex justify-center py-12">
-                    <span className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></span>
+                    <span className="material-symbols-outlined animate-spin text-3xl text-primary">progress_activity</span>
                 </div>
             ) : activeTab === 'schedule' ? (
                 /* Schedules */
                 schedules.length === 0 ? (
-                    <div className="text-center py-20 bg-[#F5DEB3] dark:bg-white/5 rounded-3xl border border-espresso/10 shadow-xl relative overflow-hidden group">
-                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                        <span className="material-symbols-outlined text-6xl text-espresso/20 dark:text-white/20 mb-4 block group-hover:scale-110 transition-transform">event_busy</span>
-                        <p className="text-espresso/40 dark:text-white/40 font-black uppercase tracking-widest text-sm">Silence in the schedule. No masterclasses pending.</p>
+                    <div className="text-center py-16 md:py-20 bg-[#F5DEB3] dark:bg-white/5 rounded-[1.5rem] md:rounded-3xl border border-espresso/10 shadow-xl relative overflow-hidden group">
+                        <div className="absolute left-0 top-0 bottom-0 w-1 md:w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                        <span className="material-symbols-outlined text-5xl md:text-6xl text-espresso/20 dark:text-white/20 mb-4 block group-hover:scale-110 transition-transform">event_busy</span>
+                        <p className="text-espresso/40 dark:text-white/40 font-black uppercase tracking-widest text-[10px] md:text-xs">Silence in the schedule. No masterclasses pending.</p>
                     </div>
                 ) : viewMode === 'list' ? (
-                    <div className="grid gap-6">
+                    <div className="grid gap-4 md:gap-6">
                         {schedules.map(s => (
-                            <div key={s.id} className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl p-6 shadow-xl border border-espresso/10 flex flex-col md:flex-row md:items-center gap-6 group hover:-translate-y-1 transition-all relative overflow-hidden">
-                                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                            <div key={s.id} className="bg-[#F5DEB3] dark:bg-white/5 rounded-[1.5rem] md:rounded-3xl p-5 md:p-6 shadow-xl border border-espresso/10 flex flex-col md:flex-row md:items-center gap-5 md:gap-6 group hover:-translate-y-1 transition-all relative overflow-hidden">
+                                <div className="absolute left-0 top-0 bottom-0 w-1 md:w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                                 <div className="flex-1 relative z-10">
-                                    <h3 className="font-serif font-bold text-xl text-espresso dark:text-white mb-2">{s.title || 'Zoom Masterclass'}</h3>
-                                    <div className="flex flex-wrap gap-4">
-                                        <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40 flex items-center gap-2">
+                                    <h3 className="font-serif font-bold text-lg md:text-xl text-espresso dark:text-white mb-2">{s.title || 'Zoom Masterclass'}</h3>
+                                    <div className="flex flex-wrap gap-3 md:gap-4">
+                                        <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40 flex items-center gap-2">
                                             {s.isRecurring ? (
                                                 <>
-                                                    <span className="material-symbols-outlined text-[16px]">sync</span>
-                                                    Spectral Frequency: Every {s.repeatDays?.join(', ')}
+                                                    <span className="material-symbols-outlined text-[14px] md:text-[16px]">sync</span>
+                                                    <span>Frequency: Every {s.repeatDays?.join(', ')}</span>
                                                 </>
                                             ) : (
                                                 <>
-                                                    <span className="material-symbols-outlined text-[16px]">event</span>
-                                                    Extraction Date: {s.dateTime ? new Date(s.dateTime.seconds ? s.dateTime.toDate() : s.dateTime).toLocaleDateString() : 'Pending'}
+                                                    <span className="material-symbols-outlined text-[14px] md:text-[16px]">event</span>
+                                                    <span>Date: {s.dateTime ? new Date(s.dateTime.seconds ? s.dateTime.toDate() : s.dateTime).toLocaleDateString() : 'Pending'}</span>
                                                 </>
                                             )}
                                         </p>
-                                        <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40 flex items-center gap-2">
-                                            <span className="material-symbols-outlined text-[16px]">schedule</span>
-                                            Operational Time: {s.dateTime ? format(s.dateTime.toDate ? s.dateTime.toDate() : new Date(s.dateTime), 'HH:mm') : 'TBD'}
+                                        <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40 flex items-center gap-2">
+                                            <span className="material-symbols-outlined text-[14px] md:text-[16px]">schedule</span>
+                                            <span>Time: {s.dateTime ? format(s.dateTime.toDate ? s.dateTime.toDate() : new Date(s.dateTime), 'HH:mm') : 'TBD'}</span>
                                         </p>
                                     </div>
                                 </div>
@@ -189,9 +189,9 @@ export function ELearning() {
                                         href={s.zoomLink}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-3 px-8 py-4 bg-espresso text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:shadow-2xl transition-all shadow-xl active:scale-95 group-hover:scale-105"
+                                        className="w-full md:w-auto inline-flex items-center justify-center gap-2 px-6 md:px-8 py-3 md:py-4 bg-espresso text-white rounded-xl md:rounded-2xl font-black uppercase tracking-widest text-[9px] md:text-[10px] hover:shadow-2xl transition-all shadow-xl active:scale-95"
                                     >
-                                        <span className="material-symbols-outlined text-[20px]">videocam</span>
+                                        <span className="material-symbols-outlined text-[18px] md:text-[20px]">videocam</span>
                                         Commence Uplink
                                     </a>
                                 )}
@@ -200,18 +200,18 @@ export function ELearning() {
                     </div>
                 ) : (
                     /* CALENDAR VIEW */
-                    <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-2xl border border-espresso/10 overflow-hidden animate-fade-in relative group">
-                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                        <div className="flex items-center justify-between p-6 border-b border-espresso/10 relative z-10">
-                            <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))} className="h-10 w-10 flex items-center justify-center rounded-xl bg-white/40 hover:bg-white text-espresso transition-all shadow-sm active:scale-90">
-                                <span className="material-symbols-outlined">chevron_left</span>
+                    <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-[1.5rem] md:rounded-3xl shadow-2xl border border-espresso/10 overflow-hidden animate-fade-in relative group">
+                        <div className="absolute left-0 top-0 bottom-0 w-1 md:w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                        <div className="flex items-center justify-between p-4 md:p-6 border-b border-espresso/10 relative z-10">
+                            <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))} className="size-9 shadow-md flex items-center justify-center rounded-xl bg-white/40 hover:bg-white text-espresso transition-all active:scale-90">
+                                <span className="material-symbols-outlined text-xl">chevron_left</span>
                             </button>
-                            <h2 className="font-serif font-bold text-xl text-espresso dark:text-white">{format(currentMonth, 'MMMM yyyy')}</h2>
-                            <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))} className="h-10 w-10 flex items-center justify-center rounded-xl bg-white/40 hover:bg-white text-espresso transition-all shadow-sm active:scale-90">
-                                <span className="material-symbols-outlined">chevron_right</span>
+                            <h2 className="font-serif font-bold text-lg md:text-xl text-espresso dark:text-white">{format(currentMonth, 'MMMM yyyy')}</h2>
+                            <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))} className="size-9 shadow-md flex items-center justify-center rounded-xl bg-white/40 hover:bg-white text-espresso transition-all active:scale-90">
+                                <span className="material-symbols-outlined text-xl">chevron_right</span>
                             </button>
                         </div>
-                        <div className="grid grid-cols-7 text-center py-4 bg-white/20 dark:bg-black/20 text-[10px] font-black uppercase tracking-[0.2em] text-espresso/50 dark:text-white/50 relative z-10">
+                        <div className="grid grid-cols-7 text-center py-3 md:py-4 bg-white/20 dark:bg-black/20 text-[8px] md:text-[10px] font-black uppercase tracking-[0.1em] md:tracking-[0.2em] text-espresso/50 dark:text-white/50 relative z-10">
                             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => <div key={d}>{d}</div>)}
                         </div>
                         <div className="grid grid-cols-7 relative z-10">
@@ -221,12 +221,12 @@ export function ELearning() {
 
                                 return (
                                     <div key={day.toString()} className={cn(
-                                        "min-h-[100px] p-2 border-b border-r border-black/5 dark:border-white/5 relative group cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 transition-colors",
+                                        "min-h-[70px] md:min-h-[100px] p-1 md:p-2 border-b border-r border-black/5 dark:border-white/5 relative group cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 transition-colors",
                                         !isCurrentMonth && "bg-black/[0.02] dark:bg-white/[0.02] text-opacity-30"
                                     )}>
                                         <span className={cn(
-                                            "text-sm font-medium block mb-1",
-                                            isSameDay(day, new Date()) ? "bg-primary text-white w-6 h-6 rounded-full flex items-center justify-center" : "text-espresso dark:text-white"
+                                            "text-xs md:text-sm font-medium block mb-1",
+                                            isSameDay(day, new Date()) ? "bg-espresso text-white size-5 md:size-6 rounded-lg md:rounded-full flex items-center justify-center shadow-lg" : "text-espresso dark:text-white"
                                         )}>
                                             {format(day, 'd')}
                                         </span>
@@ -234,7 +234,7 @@ export function ELearning() {
                                             {daySchedules.map((s, i) => (
                                                 <div
                                                     key={s.id + i}
-                                                    className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded truncate font-medium hover:bg-primary hover:text-white transition-colors cursor-pointer"
+                                                    className="text-[8px] md:text-[10px] bg-espresso/10 text-espresso px-1 md:px-1.5 py-0.5 rounded truncate font-black uppercase tracking-tight hover:bg-espresso hover:text-white transition-colors cursor-pointer"
                                                     title={s.title}
                                                     onClick={(e) => {
                                                         e.stopPropagation();
@@ -254,36 +254,36 @@ export function ELearning() {
             ) : (
                 /* Videos */
                 videos.length === 0 ? (
-                    <div className="text-center py-20 bg-[#F5DEB3] dark:bg-white/5 rounded-3xl border border-espresso/10 shadow-xl relative overflow-hidden group">
-                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                        <span className="material-symbols-outlined text-6xl text-espresso/20 dark:text-white/20 mb-4 block group-hover:scale-110 transition-transform">video_library</span>
-                        <p className="text-espresso/40 dark:text-white/40 font-black uppercase tracking-widest text-sm">Strategic media vault is empty.</p>
+                    <div className="text-center py-16 md:py-20 bg-[#F5DEB3] dark:bg-white/5 rounded-[1.5rem] md:rounded-3xl border border-espresso/10 shadow-xl relative overflow-hidden group">
+                        <div className="absolute left-0 top-0 bottom-0 w-1 md:w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                        <span className="material-symbols-outlined text-5xl md:text-6xl text-espresso/20 dark:text-white/20 mb-4 block group-hover:scale-110 transition-transform">video_library</span>
+                        <p className="text-espresso/40 dark:text-white/40 font-black uppercase tracking-widest text-[10px] md:text-xs">Strategic media vault is empty.</p>
                     </div>
                 ) : (
-                    <div className="grid gap-8 md:grid-cols-2">
+                    <div className="grid gap-6 md:gap-8 md:grid-cols-2">
                         {videos.map(v => (
-                            <div key={v.id} className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl overflow-hidden shadow-xl border border-espresso/10 group hover:shadow-2xl transition-all relative">
-                                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                            <div key={v.id} className="bg-[#F5DEB3] dark:bg-white/5 rounded-[1.5rem] md:rounded-3xl overflow-hidden shadow-xl border border-espresso/10 group hover:shadow-2xl transition-all relative">
+                                <div className="absolute left-0 top-0 bottom-0 w-1 md:w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                                 <div className="relative z-10">
                                     {v.thumbnailUrl && (
                                         <div className="relative aspect-video overflow-hidden">
                                             <img src={v.thumbnailUrl} alt={v.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                                             <div className="absolute inset-0 bg-espresso/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
-                                                <span className="material-symbols-outlined text-white text-6xl animate-pulse">play_circle</span>
+                                                <span className="material-symbols-outlined text-white text-5xl md:text-6xl animate-pulse">play_circle</span>
                                             </div>
                                         </div>
                                     )}
-                                    <div className="p-8">
-                                        <h3 className="font-serif font-bold text-xl text-espresso dark:text-white mb-2 leading-tight">{v.title || 'Instructional Media'}</h3>
-                                        <p className="text-sm font-medium text-espresso/60 dark:text-white/60 line-clamp-2 leading-relaxed">{v.description || ''}</p>
+                                    <div className="p-6 md:p-8">
+                                        <h3 className="font-serif font-bold text-lg md:text-xl text-espresso dark:text-white mb-2 leading-tight">{v.title || 'Instructional Media'}</h3>
+                                        <p className="text-xs md:text-sm font-medium text-espresso/60 dark:text-white/60 line-clamp-2 leading-relaxed">{v.description || ''}</p>
                                         {v.url && (
                                             <a
                                                 href={v.url}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="inline-flex items-center gap-3 mt-6 px-8 py-3 bg-espresso text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:shadow-2xl transition-all shadow-xl active:scale-95"
+                                                className="inline-flex items-center gap-2 md:gap-3 mt-4 md:mt-6 px-6 md:px-8 py-2.5 md:py-3 bg-espresso text-white rounded-xl md:rounded-2xl font-black uppercase tracking-widest text-[9px] md:text-[10px] hover:shadow-2xl transition-all shadow-xl active:scale-95"
                                             >
-                                                <span className="material-symbols-outlined text-[20px]">play_circle</span>
+                                                <span className="material-symbols-outlined text-[18px] md:text-[20px]">play_circle</span>
                                                 Engage Content
                                             </a>
                                         )}

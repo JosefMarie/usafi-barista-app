@@ -184,18 +184,18 @@ export function AdminDashboard() {
             <div className="w-full px-2 py-10 space-y-10">
                 {/* Header */}
                 <div className="relative">
-                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 -ml-10"></div>
+                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 -ml-4 md:-ml-10"></div>
                     <p className="text-espresso/40 dark:text-white/40 font-black text-[10px] uppercase tracking-[0.4em] mb-2">
                         {new Date().toLocaleDateString(i18n.language, { weekday: 'long', month: 'short', day: 'numeric' })}
                     </p>
-                    <h1 className="text-4xl md:text-5xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none">
+                    <h1 className="text-2xl md:text-4xl lg:text-5xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none">
                         {t('admin.dashboard.metrics_analytics').split('&')[0]} & <span className="text-espresso/60">{t('admin.dashboard.metrics_analytics').split('&')[1]}</span>
                     </h1>
                 </div>
 
                 {/* Top Stats Scrollable Row */}
-                <div className="flex overflow-x-auto hide-scrollbar gap-6 pb-4 snap-x">
-                    <div className="flex min-w-[280px] flex-1 snap-center flex-col gap-4 rounded-[2rem] p-8 bg-espresso text-white shadow-2xl shadow-espresso/20 relative overflow-hidden group">
+                <div className="flex overflow-x-auto hide-scrollbar gap-4 md:gap-6 pb-4 snap-x">
+                    <div className="flex min-w-[240px] md:min-w-[280px] flex-1 snap-center flex-col gap-4 rounded-3xl md:rounded-[2rem] p-5 md:p-8 bg-espresso text-white shadow-2xl shadow-espresso/20 relative overflow-hidden group">
                         <div className="absolute left-0 top-0 bottom-0 w-2 bg-white/10 group-hover:bg-white transition-colors"></div>
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
@@ -205,64 +205,64 @@ export function AdminDashboard() {
                             <span className="bg-white/10 text-white text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-tighter self-start">+12.4%</span>
                         </div>
                         <div>
-                            <p className="text-5xl font-serif font-black leading-none">{stats.totalStudents}</p>
+                            <p className="text-3xl md:text-5xl font-serif font-black leading-none">{stats.totalStudents}</p>
                             <p className="text-white/30 text-[9px] font-black mt-4 uppercase tracking-[0.2em]">{t('admin.dashboard.active_participants')}</p>
                         </div>
                     </div>
 
-                    <div className="flex min-w-[280px] flex-1 snap-center flex-col gap-4 rounded-[2rem] p-8 bg-white/40 dark:bg-black/20 text-espresso dark:text-white border border-espresso/10 shadow-xl relative overflow-hidden group">
+                    <div className="flex min-w-[240px] md:min-w-[280px] flex-1 snap-center flex-col gap-4 rounded-3xl md:rounded-[2rem] p-5 md:p-8 bg-white/40 dark:bg-black/20 text-espresso dark:text-white border border-espresso/10 shadow-xl relative overflow-hidden group">
                         <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover:bg-espresso transition-colors"></div>
                         <div className="flex items-center gap-3">
                             <span className="material-symbols-outlined text-espresso/40 dark:text-white/40">local_cafe</span>
                             <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest">{t('admin.dashboard.active_architecture')}</p>
                         </div>
                         <div>
-                            <p className="text-5xl font-serif font-black leading-none">{stats.activeCourses}</p>
+                            <p className="text-3xl md:text-5xl font-serif font-black leading-none">{stats.activeCourses}</p>
                             <p className="text-espresso/30 dark:text-white/30 text-[9px] font-black mt-4 uppercase tracking-[0.2em]">{t('admin.dashboard.validated_nodes')}</p>
                         </div>
                     </div>
 
-                    <div className="flex min-w-[280px] flex-1 snap-center flex-col gap-4 rounded-[2rem] p-8 bg-white/40 dark:bg-black/20 text-espresso dark:text-white border border-espresso/10 shadow-xl relative overflow-hidden group">
+                    <div className="flex min-w-[240px] md:min-w-[280px] flex-1 snap-center flex-col gap-4 rounded-3xl md:rounded-[2rem] p-5 md:p-8 bg-white/40 dark:bg-black/20 text-espresso dark:text-white border border-espresso/10 shadow-xl relative overflow-hidden group">
                         <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover:bg-espresso transition-colors"></div>
                         <div className="flex items-center gap-3">
                             <span className="material-symbols-outlined text-espresso/40 dark:text-white/40">approval_delegation</span>
                             <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest">{t('admin.dashboard.queue_status')}</p>
                         </div>
                         <div>
-                            <p className="text-5xl font-serif font-black leading-none text-amber-600">{stats.pendingApprovals}</p>
+                            <p className="text-3xl md:text-5xl font-serif font-black leading-none text-amber-600">{stats.pendingApprovals}</p>
                             <p className="text-espresso/30 dark:text-white/30 text-[9px] font-black mt-4 uppercase tracking-[0.2em]">{t('admin.dashboard.approvals_required')}</p>
                         </div>
                     </div>
                 </div>
 
                 {/* Revenue & Engagement Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div className="flex items-center gap-8 rounded-[2.5rem] p-10 bg-white/40 dark:bg-black/20 border border-espresso/10 shadow-2xl relative overflow-hidden group/rev">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+                    <div className="flex items-center gap-4 md:gap-8 rounded-3xl md:rounded-[2.5rem] p-6 md:p-10 bg-white/40 dark:bg-black/20 border border-espresso/10 shadow-2xl relative overflow-hidden group/rev">
                         <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover/rev:bg-espresso transition-colors"></div>
-                        <div className="h-20 w-20 rounded-[1.5rem] bg-espresso text-white flex items-center justify-center shadow-xl shadow-espresso/20 shrink-0">
-                            <span className="material-symbols-outlined text-4xl">payments</span>
+                        <div className="h-14 w-14 md:h-20 md:w-20 rounded-2xl md:rounded-[1.5rem] bg-espresso text-white flex items-center justify-center shadow-xl shadow-espresso/20 shrink-0">
+                            <span className="material-symbols-outlined text-2xl md:text-4xl">payments</span>
                         </div>
                         <div>
                             <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-[0.4em] mb-2">{t('admin.dashboard.monthly_revenue')}</p>
-                            <p className="text-4xl font-serif font-black text-espresso dark:text-white leading-tight">
+                            <p className="text-2xl md:text-4xl font-serif font-black text-espresso dark:text-white leading-tight">
                                 {new Intl.NumberFormat(i18n.language === 'rw' ? 'rw-RW' : (i18n.language === 'en' ? 'en-US' : (i18n.language === 'fr' ? 'fr-FR' : 'sw-TZ')), { style: 'currency', currency: 'RWF', maximumFractionDigits: 0 }).format(stats.monthlyRevenue)}
                             </p>
                         </div>
-                        <div className="absolute right-8 top-8">
+                        <div className="absolute right-4 md:right-8 top-4 md:top-8">
                             <span className="text-green-600 text-[10px] font-black uppercase tracking-widest bg-green-50 px-3 py-1 rounded-full">+8.5%</span>
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-8 rounded-[2.5rem] p-10 bg-white/40 dark:bg-black/20 border border-espresso/10 shadow-2xl relative overflow-hidden group/eng">
+                    <div className="flex items-center gap-4 md:gap-8 rounded-3xl md:rounded-[2.5rem] p-6 md:p-10 bg-white/40 dark:bg-black/20 border border-espresso/10 shadow-2xl relative overflow-hidden group/eng">
                         <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover/eng:bg-espresso transition-colors"></div>
-                        <div className="h-20 w-20 rounded-[1.5rem] bg-espresso text-white flex items-center justify-center shadow-xl shadow-espresso/20 shrink-0">
-                            <span className="material-symbols-outlined text-4xl">diversity_3</span>
+                        <div className="h-14 w-14 md:h-20 md:w-20 rounded-2xl md:rounded-[1.5rem] bg-espresso text-white flex items-center justify-center shadow-xl shadow-espresso/20 shrink-0">
+                            <span className="material-symbols-outlined text-2xl md:text-4xl">diversity_3</span>
                         </div>
                         <div>
                             <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-[0.4em] mb-2">{t('admin.dashboard.efficiency_index')}</p>
-                            <p className="text-5xl font-serif font-black text-espresso dark:text-white leading-tight">{stats.studentEngagement}%</p>
+                            <p className="text-3xl md:text-5xl font-serif font-black text-espresso dark:text-white leading-tight">{stats.studentEngagement}%</p>
                         </div>
-                        <div className="absolute right-8 top-8">
+                        <div className="absolute right-4 md:right-8 top-4 md:top-8">
                             <span className="text-green-600 text-[10px] font-black uppercase tracking-widest bg-green-50 px-3 py-1 rounded-full">+4.2%</span>
                         </div>
                     </div>
