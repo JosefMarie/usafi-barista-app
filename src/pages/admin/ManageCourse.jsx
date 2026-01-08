@@ -8,7 +8,7 @@ export function ManageCourse() {
     const { courseId } = useParams();
     const navigate = useNavigate();
     const [course, setCourse] = useState(null);
-    const [lessons, setLessons] = useState([]);
+    const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [editMode, setEditMode] = useState(false);
 
@@ -34,16 +34,48 @@ export function ManageCourse() {
         };
         fetchCourse();
 
-        // Fetch lessons
-        const q = query(
-            collection(db, 'courses', courseId, 'lessons'),
-            orderBy('createdAt', 'asc') // or a 'order' field if we had one
-        );
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            setLessons(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
-        });
+        // Fetch modules AND lessons to ensure everything is visible
+        const fetchContent = () => {
+            // We'll use onSnapshot for both and merge them locally. 
+            // Since onSnapshot is async and continuous, managing merged state is tricky.
+            // Simplified approach: Fetch both collections once on load + real-time listener for just 'modules' (preferred) or both.
+            // Let's use independent listeners.
 
-        return () => unsubscribe();
+            const modulesQ = query(collection(db, 'courses', courseId, 'modules'));
+            const lessonsQ = query(collection(db, 'courses', courseId, 'lessons'));
+
+            let modulesData = [];
+            let lessonsData = [];
+
+            const unsubModules = onSnapshot(modulesQ, (snap) => {
+                modulesData = snap.docs.map(d => ({ id: d.id, ...d.data(), type: 'module' }));
+                updateItems();
+            });
+
+            const unsubLessons = onSnapshot(lessonsQ, (snap) => {
+                lessonsData = snap.docs.map(d => ({ id: d.id, ...d.data(), type: 'lesson' }));
+                updateItems();
+            });
+
+            const updateItems = () => {
+                // Merge and sort? For now just concat or sort by createdAt if available.
+                // We'll assume modules are "newer" but we can mix them.
+                const all = [...modulesData, ...lessonsData].sort((a, b) => {
+                    const tA = a.createdAt?.toMillis() || 0;
+                    const tB = b.createdAt?.toMillis() || 0;
+                    return tA - tB;
+                });
+                setItems(all);
+            };
+
+            return () => {
+                unsubModules();
+                unsubLessons();
+            };
+        };
+
+        const cleanup = fetchContent();
+        return () => cleanup();
     }, [courseId, navigate]);
 
     const handleUpdate = async () => {
@@ -167,14 +199,14 @@ export function ManageCourse() {
                     </div>
                 </div>
 
-                {/* Modules & Lessons */}
+                {/* Modules List */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
                     <h3 className="text-[9px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] flex items-center gap-3">
                         <span className="w-8 h-px bg-espresso/20"></span>
                         Instructional Node Matrix
                     </h3>
                     <button
-                        onClick={() => navigate(`/admin/courses/${courseId}/lessons/new`)}
+                        onClick={() => navigate(`/admin/courses/${courseId}/modules/new`)}
                         className="w-full sm:w-auto flex items-center justify-center gap-3 bg-espresso text-white px-6 py-3 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] shadow-xl hover:shadow-espresso/40 hover:-translate-y-1 transition-all active:scale-95 group"
                     >
                         <span className="material-symbols-outlined text-[18px] md:text-[20px] group-hover:rotate-90 transition-transform">add</span>
@@ -183,16 +215,16 @@ export function ManageCourse() {
                 </div>
 
                 <div className="space-y-4">
-                    {lessons.length === 0 ? (
+                    {items.length === 0 ? (
                         <div className="text-center py-20 bg-white/20 dark:bg-black/10 border-2 border-dashed border-espresso/10 rounded-[2.5rem] flex flex-col items-center justify-center gap-4">
                             <span className="material-symbols-outlined text-5xl text-espresso/20">terminal</span>
                             <p className="text-[10px] font-black uppercase tracking-widest text-espresso/30 italic">No instructional data detected. Initialize first node.</p>
                         </div>
                     ) : (
-                        lessons.map((lesson) => (
+                        items.map((item) => (
                             <div
-                                key={lesson.id}
-                                onClick={() => navigate(`/admin/courses/${courseId}/lessons/${lesson.id}`)}
+                                key={item.id}
+                                onClick={() => navigate(`/admin/courses/${courseId}/${item.type === 'lesson' ? 'lessons' : 'modules'}/${item.id}`)}
                                 className="bg-white/40 dark:bg-black/20 p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-lg border border-espresso/10 hover:shadow-xl hover:border-espresso transition-all cursor-pointer group flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative overflow-hidden"
                             >
                                 <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/5 group-hover:bg-espresso transition-colors"></div>
@@ -201,11 +233,69 @@ export function ManageCourse() {
                                         <span className="material-symbols-outlined text-2xl md:text-3xl">play_circle</span>
                                     </div>
                                     <div>
-                                        <h4 className="font-serif text-lg md:text-xl font-black text-espresso dark:text-white tracking-tight">{lesson.title || 'Untitled Node'}</h4>
-                                        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 md:mt-1.5">
-                                            <p className="text-[8px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest whitespace-nowrap">Module: {lesson.module || 'Root'}</p>
+                                        <h4 className="font-serif text-lg md:text-xl font-black text-espresso dark:text-white tracking-tight leading-none">
+                                            {item.title || 'Untitled Node'}
+                                            {item.type === 'lesson' && <span className="ml-2 text-xs bg-espresso/10 px-2 py-0.5 rounded text-espresso/60">LEGACY</span>}
+                                        </h4>
+                                        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mt-2 md:mt-3">
+                                            {/* MODULE INDICATORS */}
+                                            {item.type === 'module' && (
+                                                <>
+                                                    <div className="flex items-center gap-2" title="Content Slides">
+                                                        <span className="material-symbols-outlined text-[14px] text-espresso/40 dark:text-white/40">auto_stories</span>
+                                                        <span className="text-[9px] font-black text-espresso/60 dark:text-white/60 uppercase tracking-wider">
+                                                            {item.content?.length || 0} Slides
+                                                        </span>
+                                                    </div>
+
+                                                    <div className="flex items-center gap-2" title="Quiz Questions">
+                                                        <span className={cn(
+                                                            "material-symbols-outlined text-[14px]",
+                                                            (item.quiz?.questions?.length > 0) ? "text-espresso/40 dark:text-white/40" : "text-espresso/20"
+                                                        )}>
+                                                            quiz
+                                                        </span>
+                                                        <span className={cn(
+                                                            "text-[9px] font-black uppercase tracking-wider",
+                                                            (item.quiz?.questions?.length > 0) ? "text-espresso/60 dark:text-white/60" : "text-espresso/30"
+                                                        )}>
+                                                            {item.quiz?.questions?.length || 0} Qs
+                                                        </span>
+                                                    </div>
+
+                                                    <div className="flex items-center gap-2" title="Assigned Students">
+                                                        <span className={cn(
+                                                            "material-symbols-outlined text-[14px]",
+                                                            (item.assignedStudents?.length > 0) ? "text-espresso/40 dark:text-white/40" : "text-espresso/20"
+                                                        )}>
+                                                            group
+                                                        </span>
+                                                        <span className={cn(
+                                                            "text-[9px] font-black uppercase tracking-wider",
+                                                            (item.assignedStudents?.length > 0) ? "text-espresso/60 dark:text-white/60" : "text-espresso/30"
+                                                        )}>
+                                                            {item.assignedStudents?.length || 0} Assigned
+                                                        </span>
+                                                    </div>
+                                                </>
+                                            )}
+
+                                            {/* LESSON INDICATORS (Legacy) */}
+                                            {item.type === 'lesson' && (
+                                                <>
+                                                    <div className="flex items-center gap-2" title="Video Content">
+                                                        <span className={cn("material-symbols-outlined text-[14px]", item.videoUrl ? "text-espresso" : "text-espresso/20")}>play_circle</span>
+                                                        <span className="text-[9px] font-black text-espresso/60 uppercase tracking-wider">{item.videoUrl ? 'Video' : 'No Video'}</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-2" title="PDF Files">
+                                                        <span className={cn("material-symbols-outlined text-[14px]", item.pdfFiles?.length ? "text-espresso" : "text-espresso/20")}>description</span>
+                                                        <span className="text-[9px] font-black text-espresso/60 uppercase tracking-wider">{item.pdfFiles?.length || 0} PDFs</span>
+                                                    </div>
+                                                </>
+                                            )}
+
                                             <span className="hidden sm:inline w-1 h-1 rounded-full bg-espresso/20"></span>
-                                            <p className="text-[8px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest whitespace-nowrap">Status: {lesson.status || 'Active'}</p>
+                                            <p className="text-[9px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest whitespace-nowrap">Status: {item.status || 'Active'}</p>
                                         </div>
                                     </div>
                                 </div>

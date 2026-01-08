@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { doc, getDoc, collection, query, orderBy, onSnapshot, addDoc, updateDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, collection, query, orderBy, onSnapshot, addDoc, updateDoc, deleteDoc, serverTimestamp, where, getDocs } from 'firebase/firestore';
 import { db } from '../../../lib/firebase';
 import { GradientButton } from '../../../components/ui/GradientButton';
 import { RichTextEditor } from '../../../components/common/RichTextEditor';
@@ -10,6 +10,7 @@ export function ManageBusinessCourse() {
     const { courseId } = useParams();
     const [course, setCourse] = useState(null);
     const [chapters, setChapters] = useState([]);
+    const [businessStudents, setBusinessStudents] = useState([]);
     const [loading, setLoading] = useState(true);
 
     // Chapter Modal State
@@ -25,9 +26,10 @@ export function ManageBusinessCourse() {
             enabled: false,
             passMark: 70,
             questions: []
-        }
+        },
+        assignedStudents: []
     });
-    const [activeTab, setActiveTab] = useState('content'); // 'content' | 'quiz'
+    const [activeTab, setActiveTab] = useState('content'); // 'content' | 'quiz' | 'assignments'
 
     // Fetch Course & Chapters
     useEffect(() => {
@@ -52,6 +54,14 @@ export function ManageBusinessCourse() {
             setChapters(fetchedChapters);
             setLoading(false);
         });
+
+        // Fetch Business Students
+        const fetchStudents = async () => {
+            const q = query(collection(db, 'users'), where('role', '==', 'business_student'));
+            const snap = await getDocs(q);
+            setBusinessStudents(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+        };
+        fetchStudents();
 
         return () => unsubscribe();
     }, [courseId]);
@@ -91,6 +101,17 @@ export function ManageBusinessCourse() {
         }
     };
 
+    const toggleAssignment = (studentId) => {
+        setChapterForm(prev => {
+            const current = prev.assignedStudents || [];
+            if (current.includes(studentId)) {
+                return { ...prev, assignedStudents: current.filter(id => id !== studentId) };
+            } else {
+                return { ...prev, assignedStudents: [...current, studentId] };
+            }
+        });
+    };
+
     const toggleCourseStatus = async () => {
         if (!course) return;
         const newStatus = course.status === 'published' ? 'draft' : 'published';
@@ -111,7 +132,8 @@ export function ManageBusinessCourse() {
                 imageUrl: chapter.imageUrl || '',
                 status: chapter.status,
                 order: chapter.order || 0,
-                quiz: chapter.quiz || { enabled: false, passMark: 70, questions: [] }
+                quiz: chapter.quiz || { enabled: false, passMark: 70, questions: [] },
+                assignedStudents: chapter.assignedStudents || []
             });
             setActiveTab('content');
         } else {
@@ -122,7 +144,8 @@ export function ManageBusinessCourse() {
                 imageUrl: '',
                 status: 'draft',
                 order: chapters.length + 1,
-                quiz: { enabled: false, passMark: 70, questions: [] }
+                quiz: { enabled: false, passMark: 70, questions: [] },
+                assignedStudents: []
             });
             setActiveTab('content');
         }
@@ -329,6 +352,22 @@ export function ManageBusinessCourse() {
                                 Quiz Assessment
                                 {chapterForm.quiz.enabled && <span className="w-2 h-2 rounded-full bg-green-500 shadow-sm" />}
                             </button>
+                            <button
+                                onClick={() => setActiveTab('assignments')}
+                                className={cn(
+                                    "px-4 sm:px-8 py-4 font-black text-[10px] sm:text-xs uppercase tracking-widest border-b-2 transition-all flex items-center gap-2 whitespace-nowrap",
+                                    activeTab === 'assignments'
+                                        ? "border-primary text-primary"
+                                        : "border-transparent text-espresso/40 dark:text-white/40 hover:text-espresso"
+                                )}
+                            >
+                                Assignments
+                                {(chapterForm.assignedStudents?.length > 0) && (
+                                    <span className="bg-espresso/5 text-espresso text-[9px] px-1.5 py-0.5 rounded-md">
+                                        {chapterForm.assignedStudents.length}
+                                    </span>
+                                )}
+                            </button>
                         </div>
 
                         <div className="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar">
@@ -403,7 +442,7 @@ export function ManageBusinessCourse() {
                                         )}
                                     </div>
                                 </form>
-                            ) : (
+                            ) : activeTab === 'quiz' ? (
                                 <div className="space-y-6 max-w-4xl mx-auto">
                                     <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 md:p-6 bg-espresso/5 dark:bg-white/5 rounded-2xl border border-espresso/10 gap-4">
                                         <div className="flex items-center gap-4">
@@ -599,6 +638,67 @@ export function ManageBusinessCourse() {
                                             </button>
                                         </div>
                                     )}
+                                </div>
+                            ) : (
+                                // ASSIGNMENTS TAB
+                                <div className="space-y-6 max-w-4xl mx-auto">
+                                    <div className="bg-espresso text-white p-6 md:p-8 rounded-[2rem] shadow-xl relative overflow-hidden">
+                                        <div className="relative z-10 flex flex-col sm:flex-row gap-4 items-start">
+                                            <div className="p-3 bg-white/10 rounded-xl">
+                                                <span className="material-symbols-outlined text-3xl">verified_user</span>
+                                            </div>
+                                            <div>
+                                                <h3 className="font-serif font-black text-xl mb-1">Access Control</h3>
+                                                <p className="text-white/60 text-xs font-medium max-w-lg leading-relaxed">
+                                                    By default, business chapters are available to all enrolled business students.
+                                                    Use the protocol below to restrict access to specific individuals if necessary.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-white/40 dark:bg-black/20 rounded-[2rem] border border-espresso/10 overflow-hidden shadow-lg">
+                                        <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
+                                            <table className="w-full text-left">
+                                                <thead className="bg-white/40 dark:bg-black/40 border-b border-espresso/10 sticky top-0 z-10 backdrop-blur-sm">
+                                                    <tr>
+                                                        <th className="px-6 py-4 text-[9px] font-black uppercase tracking-[0.2em] text-espresso/40">Business Partner</th>
+                                                        <th className="px-6 py-4 text-[9px] font-black uppercase tracking-[0.2em] text-espresso/40">Contact Point</th>
+                                                        <th className="px-6 py-4 text-[9px] font-black uppercase tracking-[0.2em] text-espresso/40 text-center">Permit</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y divide-espresso/5">
+                                                    {businessStudents.length === 0 ? (
+                                                        <tr>
+                                                            <td colSpan="3" className="p-8 text-center text-espresso/40 italic text-sm">No business students enrolled.</td>
+                                                        </tr>
+                                                    ) : businessStudents.map(student => (
+                                                        <tr key={student.id} className="hover:bg-white/40 dark:hover:bg-white/5 transition-colors cursor-pointer" onClick={() => toggleAssignment(student.id)}>
+                                                            <td className="px-6 py-4">
+                                                                <div className="flex items-center gap-3">
+                                                                    <div className="w-8 h-8 rounded-full bg-espresso/5 flex items-center justify-center font-bold text-espresso text-xs">
+                                                                        {student.name?.charAt(0) || student.email?.charAt(0)}
+                                                                    </div>
+                                                                    <span className="font-bold text-espresso dark:text-white text-sm">{student.name || 'Unknown'}</span>
+                                                                </div>
+                                                            </td>
+                                                            <td className="px-6 py-4 text-xs font-medium text-espresso/60">{student.email}</td>
+                                                            <td className="px-6 py-4 text-center">
+                                                                <div className={cn(
+                                                                    "w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all mx-auto",
+                                                                    (chapterForm.assignedStudents?.includes(student.id))
+                                                                        ? "bg-espresso border-espresso text-white scale-110"
+                                                                        : "border-espresso/20 text-transparent"
+                                                                )}>
+                                                                    <span className="material-symbols-outlined text-[16px] font-bold">check</span>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
                             )}
                         </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { doc, getDoc, updateDoc, setDoc, serverTimestamp, collection } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, setDoc, deleteDoc, serverTimestamp, collection } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { cn } from '../../lib/utils';
 
@@ -85,6 +85,19 @@ export function ManageLesson() {
         }
     };
 
+    const handleDelete = async () => {
+        if (!confirm("Are you sure you want to delete this legacy lesson? This cannot be undone.")) return;
+        setSaving(true);
+        try {
+            await deleteDoc(doc(db, 'courses', courseId, 'lessons', lessonId));
+            navigate(`/admin/courses/${courseId}`, { replace: true });
+        } catch (error) {
+            console.error("Error deleting lesson:", error);
+            alert("Failed to delete lesson");
+            setSaving(false);
+        }
+    };
+
     const handleFileUpload = (e) => {
         // Mock upload
         const file = e.target.files[0];
@@ -128,9 +141,17 @@ export function ManageLesson() {
                         {isNew ? 'Create Lesson' : 'Modify Lesson'}
                     </h2>
                     <div className="flex size-9 md:size-10 items-center justify-center">
-                        <button className="flex items-center justify-center rounded-xl size-9 md:size-10 active:bg-primary/10 text-primary hover:bg-black/5 dark:hover:bg-white/5 transition-all">
-                            <span className="material-symbols-outlined text-[20px] md:text-[24px]">more_vert</span>
-                        </button>
+                        <div className="flex size-9 md:size-10 items-center justify-center">
+                            {!isNew && (
+                                <button
+                                    onClick={handleDelete}
+                                    className="flex items-center justify-center rounded-xl size-9 md:size-10 active:bg-red-50 text-red-500 hover:bg-red-50 transition-all"
+                                    title="Delete Lesson"
+                                >
+                                    <span className="material-symbols-outlined text-[20px] md:text-[24px]">delete</span>
+                                </button>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

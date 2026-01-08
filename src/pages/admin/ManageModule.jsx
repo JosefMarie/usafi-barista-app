@@ -302,20 +302,20 @@ export function ManageModule() {
             </header>
 
             {/* Tabs */}
-            <div className="flex border-b border-espresso/10 px-2 md:px-4 bg-white/20 dark:bg-black/20 backdrop-blur-sm sticky top-[136px] md:top-24 z-40 overflow-x-auto no-scrollbar">
+            {/* Tabs - FORCED VISIBILITY (Removed Sticky) */}
+            <div className="flex items-center justify-center min-h-[60px] border-y border-espresso/10 px-2 md:px-4 bg-white/20 dark:bg-black/20 relative z-10 overflow-x-auto no-scrollbar w-full mb-6 py-4">
                 {['content', 'quiz', 'assignments'].map(tab => (
                     <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}
                         className={cn(
-                            "px-4 md:px-8 py-4 md:py-5 text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] border-b-2 transition-all relative group whitespace-nowrap",
+                            "px-6 md:px-8 py-3 md:py-4 text-[10px] md:text-xs font-black uppercase tracking-[0.2em] rounded-xl transition-all relative group whitespace-nowrap mx-3",
                             activeTab === tab
-                                ? "border-espresso text-espresso"
-                                : "border-transparent text-espresso/40 dark:text-white/40 hover:text-espresso dark:hover:text-white"
+                                ? "bg-espresso text-white shadow-lg scale-100"
+                                : "text-espresso/60 dark:text-white/60 hover:bg-white/40 hover:text-espresso"
                         )}
                     >
                         {tab}
-                        {activeTab === tab && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-espresso animate-in slide-in-from-left"></span>}
                     </button>
                 ))}
             </div>
