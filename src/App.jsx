@@ -83,6 +83,8 @@ import { ManageBusinessCourse } from './pages/admin/business/ManageBusinessCours
 // Instructor Pages (placeholders)
 import { InstructorDashboard } from './pages/instructor/Dashboard';
 import { InstructorCourses } from './pages/instructor/Courses';
+import { InstructorManageCourse } from './pages/instructor/ManageCourse';
+import { InstructorManageModule } from './pages/instructor/ManageModule';
 import { InstructorStudents } from './pages/instructor/Students';
 import { InstructorChat } from './pages/instructor/Chat';
 import { InstructorSchedule } from './pages/instructor/Schedule';
@@ -202,6 +204,8 @@ function App() {
               <Route index element={<Navigate to="/instructor/dashboard" replace />} />
               <Route path="dashboard" element={<InstructorDashboard />} />
               <Route path="courses" element={<InstructorCourses />} />
+              <Route path="courses/:courseId" element={<InstructorManageCourse />} />
+              <Route path="courses/:courseId/modules/:moduleId" element={<InstructorManageModule />} />
               <Route path="students" element={<InstructorStudents />} />
               <Route path="chat" element={<InstructorChat />} />
               <Route path="chat/:recipientId" element={<ChatWindow />} />

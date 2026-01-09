@@ -369,299 +369,387 @@ export function StudentCourseView() {
 
                 {/* QUIZ MODE */}
                 {showQuiz ? (
-                    <div className="animate-fade-in space-y-8">
-                        {!quizResult ? (
-                            !quizStarted ? (
-                                // QUIZ INTRO / GUIDELINES
-                                <div className="w-full bg-[#F5DEB3] dark:bg-white/5 p-6 md:p-12 rounded-[2rem] md:rounded-3xl border border-espresso/10 shadow-2xl text-left space-y-8 md:space-y-10 animate-scale-in relative overflow-hidden group">
-                                    <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                                    <div className="size-16 md:size-24 bg-espresso/5 rounded-2xl md:rounded-3xl flex items-center justify-center mx-auto text-espresso rotate-12 group-hover:rotate-0 transition-transform">
-                                        <span className="material-symbols-outlined text-4xl md:text-5xl">quiz</span>
-                                    </div>
-                                    <div className="text-center md:text-left">
-                                        <h2 className="text-2xl md:text-4xl font-serif font-bold text-espresso dark:text-white mb-3 md:mb-4">{t('student.quiz.title')}</h2>
-                                        <p className="text-[10px] md:text-sm font-medium text-espresso/40 dark:text-white/40 uppercase tracking-widest mb-6 md:mb-8">{t('student.quiz.subtitle')}</p>
-                                        <div className="space-y-3 md:space-y-4 text-left">
-                                            <div className="flex gap-4 md:gap-5 p-4 md:p-6 rounded-[1.5rem] bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm transform transition-all hover:scale-[1.01]">
-                                                <span className="material-symbols-outlined text-espresso shrink-0 text-xl md:text-2xl">timer_10_alt_1</span>
-                                                <div>
-                                                    <p className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-1">{t('student.quiz.rules.timer.title')}</p>
-                                                    <p className="text-[12px] md:text-sm font-medium text-espresso dark:text-white">{t('student.quiz.rules.timer.desc')}</p>
-                                                </div>
-                                            </div>
-                                            <div className="flex gap-4 md:gap-5 p-4 md:p-6 rounded-[1.5rem] bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm transform transition-all hover:scale-[1.01]">
-                                                <span className="material-symbols-outlined text-espresso shrink-0 text-xl md:text-2xl">workspace_premium</span>
-                                                <div>
-                                                    <p className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-1">{t('student.quiz.rules.pass_mark.title')}</p>
-                                                    <p className="text-[12px] md:text-sm font-medium text-espresso dark:text-white" dangerouslySetInnerHTML={{ __html: t('student.quiz.rules.pass_mark.desc', { passMark: module.quiz?.passMark || 70 }) }} />
-                                                </div>
-                                            </div>
-                                            <div className="flex gap-4 md:gap-5 p-4 md:p-6 rounded-[1.5rem] bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm transform transition-all hover:scale-[1.01]">
-                                                <span className="material-symbols-outlined text-red-500 shrink-0 text-xl md:text-2xl">lock_reset</span>
-                                                <div>
-                                                    <p className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-red-500/40 mb-1">{t('student.quiz.rules.anti_cheat.title')}</p>
-                                                    <p className="text-[12px] md:text-sm font-medium text-espresso dark:text-white">{t('student.quiz.rules.anti_cheat.desc')}</p>
-                                                </div>
-                                            </div>
+                    // CHECK QUIZ ACCESS
+                    (module.quizAllowedStudents && !module.quizAllowedStudents.includes(user.uid)) ? (
+                        <div className="animate-fade-in flex flex-col items-center justify-center min-h-[50vh] text-center space-y-6 max-w-2xl mx-auto px-6">
+                            <div className="w-24 h-24 bg-espresso/5 rounded-[2rem] flex items-center justify-center text-espresso/30 mb-4 animate-pulse">
+                                <span className="material-symbols-outlined text-5xl">lock_clock</span>
+                            </div>
+                            <h2 className="text-2xl md:text-4xl font-serif font-black text-espresso dark:text-white">Assessment Protocol Locked</h2>
+                            <p className="text-sm md:text-base font-medium text-espresso/60 dark:text-white/60 leading-relaxed">
+                                Your instructional logic controller has not explicitly granted authorization for this assessment phase.
+                                <br /><br />
+                                <span className="font-bold text-espresso">Status:</span> Pending Review of Progress.
+                            </p>
+                            <button onClick={() => setShowQuiz(false)} className="px-8 py-3 bg-white border border-espresso/10 rounded-xl font-bold text-espresso uppercase tracking-widest text-xs hover:bg-espresso/5 transition-all shadow-sm">
+                                Return to Narrative
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="animate-fade-in space-y-8">
+                            {!quizResult ? (
+                                !quizStarted ? (
+                                    // QUIZ INTRO / GUIDELINES
+                                    <div className="w-full bg-[#F5DEB3] dark:bg-white/5 p-6 md:p-12 rounded-[2rem] md:rounded-3xl border border-espresso/10 shadow-2xl text-left space-y-8 md:space-y-10 animate-scale-in relative overflow-hidden group">
+                                        <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                                        <div className="size-16 md:size-24 bg-espresso/5 rounded-2xl md:rounded-3xl flex items-center justify-center mx-auto text-espresso rotate-12 group-hover:rotate-0 transition-transform">
+                                            <span className="material-symbols-outlined text-4xl md:text-5xl">quiz</span>
                                         </div>
-                                    </div>
-                                    <button
-                                        onClick={startQuiz}
-                                        className="w-full py-4 md:py-5 bg-espresso text-white font-black uppercase tracking-[0.2em] text-[10px] rounded-xl md:rounded-2xl shadow-2xl shadow-espresso/30 hover:shadow-espresso/40 transition-all active:scale-95"
-                                    >
-                                        {t('student.quiz.start_btn')}
-                                    </button>
-                                </div>
-                            ) : (
-                                // QUIZ IN-PROGRESS
-                                <div className="space-y-6">
-                                    {/* Question Progress & Timer */}
-                                    <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-[#F5DEB3]/80 dark:bg-[#2c2825]/80 p-4 md:p-5 rounded-2xl border border-espresso/10 shadow-xl sticky top-[4.5rem] md:top-28 z-20 backdrop-blur-md relative overflow-hidden group">
-                                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                                        <div className="flex items-center gap-4 md:gap-6 w-full md:w-auto overflow-x-hidden">
-                                            <div className="text-[8px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.1em] md:tracking-[0.2em] shrink-0">{t('student.quiz.objective')}</div>
-                                            <div className="flex gap-1 md:gap-1.5 flex-1 min-w-0">
-                                                {module.quiz?.questions?.map((_, i) => (
-                                                    <div
-                                                        key={i}
-                                                        className={cn(
-                                                            "h-1.5 md:h-2 rounded-full transition-all duration-500 shadow-inner",
-                                                            i < currentQuestionIndex ? "bg-espresso w-4 md:w-8" : i === currentQuestionIndex ? "bg-espresso w-10 md:w-12 animate-pulse" : "bg-espresso/10 dark:bg-white/10 w-3 md:w-6"
-                                                        )}
-                                                    />
-                                                ))}
-                                            </div>
-                                            <div className="text-xs md:text-sm font-black text-espresso tracking-tight shrink-0">{currentQuestionIndex + 1}/{module.quiz?.questions?.length}</div>
-                                        </div>
-                                        <div className={cn(
-                                            "flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl border-2 font-mono font-black text-base md:text-lg transition-all shadow-sm w-full md:w-auto justify-center",
-                                            timeLeft < 10 ? "text-red-600 border-red-600/30 bg-red-600/5 animate-pulse" : "text-espresso dark:text-white border-espresso/10 bg-white/20"
-                                        )}>
-                                            <span className="material-symbols-outlined text-lg md:text-xl">timer</span>
-                                            {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
-                                        </div>
-                                    </div>
-
-                                    {/* Question Card */}
-                                    <div className="bg-[#F5DEB3] dark:bg-white/5 p-6 md:p-10 rounded-[2rem] md:rounded-3xl border border-espresso/10 shadow-2xl animate-scale-in relative group overflow-hidden">
-                                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                                        <div className="mb-6 md:mb-10 relative z-10">
-                                            <div className="flex items-center gap-3 mb-4 md:mb-6">
-                                                <span className="px-3 md:px-4 py-1.5 bg-espresso text-white text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg">
-                                                    {module.quiz?.questions[currentQuestionIndex].type.replace('_', ' ')}
-                                                </span>
-                                            </div>
-                                            <h2 className="text-xl md:text-3xl font-serif font-bold text-espresso dark:text-white leading-snug">
-                                                {module.quiz?.questions[currentQuestionIndex].question}
-                                            </h2>
-                                        </div>
-
-                                        {/* QUESTION RENDERERS */}
-                                        <div className="space-y-4 md:space-y-5 relative z-10">
-                                            {/* 1. Multiple Choice */}
-                                            {module.quiz?.questions[currentQuestionIndex].type === 'multiple_choice' && (
-                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
-                                                    {module.quiz?.questions[currentQuestionIndex].options.map((opt, optIdx) => (
-                                                        <button
-                                                            key={optIdx}
-                                                            onClick={() => handleAnswer(currentQuestionIndex, optIdx)}
-                                                            className={cn(
-                                                                "p-4 md:p-6 rounded-xl md:rounded-2xl border-2 text-left transition-all group relative overflow-hidden shadow-sm active:scale-[0.98]",
-                                                                userAnswers[currentQuestionIndex] === optIdx
-                                                                    ? "bg-espresso text-white border-espresso shadow-lg"
-                                                                    : "bg-white/40 dark:bg-white/5 border-espresso/5 hover:border-espresso/30"
-                                                            )}
-                                                        >
-                                                            <div className="flex items-center gap-4 md:gap-5">
-                                                                <span className={cn(
-                                                                    "size-8 md:size-10 rounded-lg md:rounded-xl border-2 flex items-center justify-center font-black text-xs md:text-sm transition-colors",
-                                                                    userAnswers[currentQuestionIndex] === optIdx ? "border-white bg-white/20" : "border-espresso/10 bg-white/20 text-espresso/40"
-                                                                )}>
-                                                                    {String.fromCharCode(65 + optIdx)}
-                                                                </span>
-                                                                <span className="font-bold tracking-tight text-sm md:text-base">{opt}</span>
-                                                            </div>
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            )}
-
-                                            {/* 2. True / False */}
-                                            {module.quiz?.questions[currentQuestionIndex].type === 'true_false' && (
-                                                <div className="flex flex-col sm:flex-row gap-4 md:gap-6">
-                                                    {[true, false].map((val) => (
-                                                        <button
-                                                            key={val ? 't' : 'f'}
-                                                            onClick={() => handleAnswer(currentQuestionIndex, val)}
-                                                            className={cn(
-                                                                "flex-1 py-6 md:py-10 rounded-2xl md:rounded-3xl border-2 font-bold text-base md:text-xl transition-all flex items-center justify-center sm:flex-col gap-3 active:scale-[0.98]",
-                                                                userAnswers[currentQuestionIndex] === val
-                                                                    ? (val ? "bg-green-600 text-white border-green-600 shadow-lg" : "bg-red-600 text-white border-red-600 shadow-lg")
-                                                                    : "bg-white/40 dark:bg-white/5 border-espresso/5 opacity-60 hover:opacity-100"
-                                                            )}
-                                                        >
-                                                            <span className="material-symbols-outlined text-2xl md:text-4xl">
-                                                                {val ? 'check_circle' : 'cancel'}
-                                                            </span>
-                                                            {val ? 'TRUE' : 'FALSE'}
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            )}
-
-                                            {/* 3. Fill in the blanks */}
-                                            {module.quiz?.questions[currentQuestionIndex].type === 'fill_in' && (
-                                                <input
-                                                    autoFocus
-                                                    className="w-full p-4 md:p-6 bg-white/40 dark:bg-white/5 border-2 border-espresso/10 focus:border-espresso rounded-2xl md:rounded-3xl text-lg md:text-2xl font-bold text-center outline-none transition-all placeholder:text-espresso/10"
-                                                    placeholder={t('student.quiz.fill_in_placeholder')}
-                                                    value={userAnswers[currentQuestionIndex] || ''}
-                                                    onChange={(e) => handleAnswer(currentQuestionIndex, e.target.value)}
-                                                />
-                                            )}
-
-                                            {/* 4. Matching */}
-                                            {module.quiz?.questions[currentQuestionIndex].type === 'matching' && (
-                                                <div className="space-y-4">
-                                                    <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.2em] mb-2">{t('student.quiz.matching_instruction')}</p>
-                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
-                                                        <div className="space-y-2 md:space-y-3">
-                                                            {module.quiz?.questions[currentQuestionIndex].pairs.map((p, i) => (
-                                                                <div key={i} className="p-3 md:p-4 bg-white/30 dark:bg-white/5 border border-espresso/10 rounded-xl md:rounded-2xl font-bold text-sm md:text-base text-espresso/60 dark:text-white/60">
-                                                                    {p.key}
-                                                                </div>
-                                                            ))}
-                                                        </div>
-                                                        <div className="space-y-2">
-                                                            {(matchingOrder || []).map((matchedIdx, i) => (
-                                                                <div key={i} className="flex gap-2">
-                                                                    <div className="flex-1 p-3 md:p-4 bg-espresso/5 border-2 border-espresso/20 rounded-xl md:rounded-2xl flex items-center justify-between font-bold text-xs md:text-sm text-espresso">
-                                                                        <span className="truncate">{module.quiz?.questions[currentQuestionIndex].pairs[matchedIdx].value}</span>
-                                                                        <div className="flex items-center gap-2 shrink-0">
-                                                                            <button
-                                                                                disabled={i === 0}
-                                                                                onClick={() => {
-                                                                                    const newOrder = [...matchingOrder];
-                                                                                    [newOrder[i], newOrder[i - 1]] = [newOrder[i - 1], newOrder[i]];
-                                                                                    setMatchingOrder(newOrder);
-                                                                                    handleAnswer(currentQuestionIndex, newOrder);
-                                                                                }}
-                                                                                className="hover:text-primary disabled:opacity-20 active:scale-90"
-                                                                            >
-                                                                                <span className="material-symbols-outlined text-lg md:text-xl">expand_less</span>
-                                                                            </button>
-                                                                            <button
-                                                                                disabled={i === matchingOrder.length - 1}
-                                                                                onClick={() => {
-                                                                                    const newOrder = [...matchingOrder];
-                                                                                    [newOrder[i], newOrder[i + 1]] = [newOrder[i + 1], newOrder[i]];
-                                                                                    setMatchingOrder(newOrder);
-                                                                                    handleAnswer(currentQuestionIndex, newOrder);
-                                                                                }}
-                                                                                className="hover:text-primary disabled:opacity-20 active:scale-90"
-                                                                            >
-                                                                                <span className="material-symbols-outlined text-lg md:text-xl">expand_more</span>
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            ))}
-                                                        </div>
+                                        <div className="text-center md:text-left">
+                                            <h2 className="text-2xl md:text-4xl font-serif font-bold text-espresso dark:text-white mb-3 md:mb-4">{t('student.quiz.title')}</h2>
+                                            <p className="text-[10px] md:text-sm font-medium text-espresso/40 dark:text-white/40 uppercase tracking-widest mb-6 md:mb-8">{t('student.quiz.subtitle')}</p>
+                                            <div className="space-y-3 md:space-y-4 text-left">
+                                                <div className="flex gap-4 md:gap-5 p-4 md:p-6 rounded-[1.5rem] bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm transform transition-all hover:scale-[1.01]">
+                                                    <span className="material-symbols-outlined text-espresso shrink-0 text-xl md:text-2xl">timer_10_alt_1</span>
+                                                    <div>
+                                                        <p className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-1">{t('student.quiz.rules.timer.title')}</p>
+                                                        <p className="text-[12px] md:text-sm font-medium text-espresso dark:text-white">{t('student.quiz.rules.timer.desc')}</p>
                                                     </div>
                                                 </div>
-                                            )}
+                                                <div className="flex gap-4 md:gap-5 p-4 md:p-6 rounded-[1.5rem] bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm transform transition-all hover:scale-[1.01]">
+                                                    <span className="material-symbols-outlined text-espresso shrink-0 text-xl md:text-2xl">workspace_premium</span>
+                                                    <div>
+                                                        <p className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-1">{t('student.quiz.rules.pass_mark.title')}</p>
+                                                        <p className="text-[12px] md:text-sm font-medium text-espresso dark:text-white" dangerouslySetInnerHTML={{ __html: t('student.quiz.rules.pass_mark.desc', { passMark: module.quiz?.passMark || 70 }) }} />
+                                                    </div>
+                                                </div>
+                                                <div className="flex gap-4 md:gap-5 p-4 md:p-6 rounded-[1.5rem] bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm transform transition-all hover:scale-[1.01]">
+                                                    <span className="material-symbols-outlined text-red-500 shrink-0 text-xl md:text-2xl">lock_reset</span>
+                                                    <div>
+                                                        <p className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-red-500/40 mb-1">{t('student.quiz.rules.anti_cheat.title')}</p>
+                                                        <p className="text-[12px] md:text-sm font-medium text-espresso dark:text-white">{t('student.quiz.rules.anti_cheat.desc')}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-
-                                        <div className="mt-10 md:mt-16 flex flex-col sm:flex-row justify-between items-center gap-4 relative z-10">
-                                            <p className="text-[9px] md:text-[10px] font-black text-espresso/20 dark:text-white/20 uppercase tracking-[0.2em] text-center sm:text-left">
-                                                {t('student.quiz.footer_note')}
-                                            </p>
-                                            <button
-                                                onClick={handleNextQuestion}
-                                                className="w-full sm:w-auto px-8 md:px-10 py-3.5 md:py-4 bg-espresso text-white font-black uppercase tracking-widest text-[9px] md:text-[10px] rounded-xl md:rounded-2xl shadow-xl hover:shadow-espresso/40 transition-all flex items-center justify-center gap-3 active:scale-95"
-                                            >
-                                                {currentQuestionIndex === (module.quiz?.questions?.length || 0) - 1 ? t('student.quiz.finalize_btn') : t('student.quiz.next_btn')}
-                                                <span className="material-symbols-outlined text-[18px] md:text-[20px]">arrow_forward</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            )
-                        ) : (
-                            // QUIZ RESULTS
-                            <div className="text-left py-10 md:py-16 animate-scale-in w-full bg-[#F5DEB3] dark:bg-white/5 p-6 md:p-12 rounded-[2rem] md:rounded-3xl border border-espresso/10 shadow-2xl relative overflow-hidden group">
-                                <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                                <div className={cn(
-                                    "inline-flex items-center justify-center size-20 md:size-28 rounded-2xl md:rounded-3xl mb-6 md:mb-8 shadow-2xl text-4xl md:text-6xl rotate-3 group-hover:rotate-0 transition-transform shrink-0",
-                                    quizResult.passed ? "bg-green-500 text-white" : "bg-red-500 text-white"
-                                )}>
-                                    <span className="material-symbols-outlined text-4xl md:text-6xl">
-                                        {quizResult.passed ? 'auto_awesome' : 'warning'}
-                                    </span>
-                                </div>
-                                <h1 className="text-2xl md:text-4xl font-serif font-bold text-espresso dark:text-white mb-2 md:mb-3">
-                                    {quizResult.passed ? t('student.quiz.results.passed.title') : t('student.quiz.results.failed.title')}
-                                </h1>
-                                <p className="text-lg md:text-xl font-medium text-espresso/40 dark:text-white/40 mb-8 md:mb-10">
-                                    {t('student.quiz.results.score_label')} <span className={quizResult.passed ? "text-green-600 font-black" : "text-red-600 font-black"}>{quizResult.score.toFixed(0)}%</span>
-                                </p>
-
-                                {quizResult.passed ? (
-                                    <div className="space-y-6 relative z-10">
-                                        <p className="text-[13px] md:text-sm font-medium text-espresso/60 dark:text-white/60 leading-relaxed">
-                                            {t('student.quiz.results.passed.desc')}
-                                        </p>
                                         <button
-                                            onClick={() => navigate('/student/courses')}
-                                            className="w-full sm:w-auto px-8 md:px-10 py-4 md:py-5 bg-green-600 text-white font-black uppercase tracking-widest text-[9px] md:text-[10px] rounded-xl md:rounded-2xl shadow-xl hover:bg-green-700 transition-all flex items-center justify-center gap-3 active:scale-95"
+                                            onClick={startQuiz}
+                                            className="w-full py-4 md:py-5 bg-espresso text-white font-black uppercase tracking-[0.2em] text-[10px] rounded-xl md:rounded-2xl shadow-2xl shadow-espresso/30 hover:shadow-espresso/40 transition-all active:scale-95"
                                         >
-                                            {t('student.quiz.results.passed.btn')} <span className="material-symbols-outlined text-[18px] md:text-[20px]">map</span>
+                                            {t('student.quiz.start_btn')}
                                         </button>
                                     </div>
                                 ) : (
-                                    <div className="space-y-6 relative z-10">
-                                        <p className="text-[13px] md:text-sm font-medium text-espresso/60 dark:text-white/60 leading-relaxed">
-                                            {t('student.quiz.results.failed.desc')}
-                                        </p>
-                                        <button
-                                            onClick={retakeModule}
-                                            className="w-full sm:w-auto px-8 md:px-10 py-4 md:py-5 bg-espresso text-white font-black uppercase tracking-widest text-[9px] md:text-[10px] rounded-xl md:rounded-2xl shadow-xl hover:bg-black transition-all flex items-center justify-center gap-3 active:scale-95"
-                                        >
-                                            <span className="material-symbols-outlined text-[18px] md:text-[20px]">refresh</span> {t('student.quiz.results.failed.btn')}
-                                        </button>
+                                    // QUIZ IN-PROGRESS
+                                    <div className="space-y-6">
+                                        {/* Question Progress & Timer */}
+                                        <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-[#F5DEB3]/80 dark:bg-[#2c2825]/80 p-4 md:p-5 rounded-2xl border border-espresso/10 shadow-xl sticky top-[4.5rem] md:top-28 z-20 backdrop-blur-md relative overflow-hidden group">
+                                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                                            <div className="flex items-center gap-4 md:gap-6 w-full md:w-auto overflow-x-hidden">
+                                                <div className="text-[8px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.1em] md:tracking-[0.2em] shrink-0">{t('student.quiz.objective')}</div>
+                                                <div className="flex gap-1 md:gap-1.5 flex-1 min-w-0">
+                                                    {module.quiz?.questions?.map((_, i) => (
+                                                        <div
+                                                            key={i}
+                                                            className={cn(
+                                                                "h-1.5 md:h-2 rounded-full transition-all duration-500 shadow-inner",
+                                                                i < currentQuestionIndex ? "bg-espresso w-4 md:w-8" : i === currentQuestionIndex ? "bg-espresso w-10 md:w-12 animate-pulse" : "bg-espresso/10 dark:bg-white/10 w-3 md:w-6"
+                                                            )}
+                                                        />
+                                                    ))}
+                                                </div>
+                                                <div className="text-xs md:text-sm font-black text-espresso tracking-tight shrink-0">{currentQuestionIndex + 1}/{module.quiz?.questions?.length}</div>
+                                            </div>
+                                            <div className={cn(
+                                                "flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl border-2 font-mono font-black text-base md:text-lg transition-all shadow-sm w-full md:w-auto justify-center",
+                                                timeLeft < 10 ? "text-red-600 border-red-600/30 bg-red-600/5 animate-pulse" : "text-espresso dark:text-white border-espresso/10 bg-white/20"
+                                            )}>
+                                                <span className="material-symbols-outlined text-lg md:text-xl">timer</span>
+                                                {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
+                                            </div>
+                                        </div>
+
+                                        {/* Question Card */}
+                                        <div className="bg-[#F5DEB3] dark:bg-white/5 p-6 md:p-10 rounded-[2rem] md:rounded-3xl border border-espresso/10 shadow-2xl animate-scale-in relative group overflow-hidden">
+                                            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                                            <div className="mb-6 md:mb-10 relative z-10">
+                                                <div className="flex items-center gap-3 mb-4 md:mb-6">
+                                                    <span className="px-3 md:px-4 py-1.5 bg-espresso text-white text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg">
+                                                        {module.quiz?.questions[currentQuestionIndex].type.replace('_', ' ')}
+                                                    </span>
+                                                </div>
+                                                <h2 className="text-xl md:text-3xl font-serif font-bold text-espresso dark:text-white leading-snug">
+                                                    {module.quiz?.questions[currentQuestionIndex].question}
+                                                </h2>
+                                            </div>
+
+                                            {/* QUESTION RENDERERS */}
+                                            <div className="space-y-4 md:space-y-5 relative z-10">
+                                                {/* 1. Multiple Choice */}
+                                                {module.quiz?.questions[currentQuestionIndex].type === 'multiple_choice' && (
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+                                                        {module.quiz?.questions[currentQuestionIndex].options.map((opt, optIdx) => (
+                                                            <button
+                                                                key={optIdx}
+                                                                onClick={() => handleAnswer(currentQuestionIndex, optIdx)}
+                                                                className={cn(
+                                                                    "p-4 md:p-6 rounded-xl md:rounded-2xl border-2 text-left transition-all group relative overflow-hidden shadow-sm active:scale-[0.98]",
+                                                                    userAnswers[currentQuestionIndex] === optIdx
+                                                                        ? "bg-espresso text-white border-espresso shadow-lg"
+                                                                        : "bg-white/40 dark:bg-white/5 border-espresso/5 hover:border-espresso/30"
+                                                                )}
+                                                            >
+                                                                <div className="flex items-center gap-4 md:gap-5">
+                                                                    <span className={cn(
+                                                                        "size-8 md:size-10 rounded-lg md:rounded-xl border-2 flex items-center justify-center font-black text-xs md:text-sm transition-colors",
+                                                                        userAnswers[currentQuestionIndex] === optIdx ? "border-white bg-white/20" : "border-espresso/10 bg-white/20 text-espresso/40"
+                                                                    )}>
+                                                                        {String.fromCharCode(65 + optIdx)}
+                                                                    </span>
+                                                                    <span className="font-bold tracking-tight text-sm md:text-base">{opt}</span>
+                                                                </div>
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                )}
+
+                                                {/* 2. True / False */}
+                                                {module.quiz?.questions[currentQuestionIndex].type === 'true_false' && (
+                                                    <div className="flex flex-col sm:flex-row gap-4 md:gap-6">
+                                                        {[true, false].map((val) => (
+                                                            <button
+                                                                key={val ? 't' : 'f'}
+                                                                onClick={() => handleAnswer(currentQuestionIndex, val)}
+                                                                className={cn(
+                                                                    "flex-1 py-6 md:py-10 rounded-2xl md:rounded-3xl border-2 font-bold text-base md:text-xl transition-all flex items-center justify-center sm:flex-col gap-3 active:scale-[0.98]",
+                                                                    userAnswers[currentQuestionIndex] === val
+                                                                        ? (val ? "bg-green-600 text-white border-green-600 shadow-lg" : "bg-red-600 text-white border-red-600 shadow-lg")
+                                                                        : "bg-white/40 dark:bg-white/5 border-espresso/5 opacity-60 hover:opacity-100"
+                                                                )}
+                                                            >
+                                                                <span className="material-symbols-outlined text-2xl md:text-4xl">
+                                                                    {val ? 'check_circle' : 'cancel'}
+                                                                </span>
+                                                                {val ? 'TRUE' : 'FALSE'}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                )}
+
+                                                {/* 3. Fill in the blanks */}
+                                                {module.quiz?.questions[currentQuestionIndex].type === 'fill_in' && (
+                                                    <input
+                                                        autoFocus
+                                                        className="w-full p-4 md:p-6 bg-white/40 dark:bg-white/5 border-2 border-espresso/10 focus:border-espresso rounded-2xl md:rounded-3xl text-lg md:text-2xl font-bold text-center outline-none transition-all placeholder:text-espresso/10"
+                                                        placeholder={t('student.quiz.fill_in_placeholder')}
+                                                        value={userAnswers[currentQuestionIndex] || ''}
+                                                        onChange={(e) => handleAnswer(currentQuestionIndex, e.target.value)}
+                                                    />
+                                                )}
+
+                                                {/* 4. Matching */}
+                                                {module.quiz?.questions[currentQuestionIndex].type === 'matching' && (
+                                                    <div className="space-y-4">
+                                                        <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.2em] mb-2">{t('student.quiz.matching_instruction')}</p>
+                                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+                                                            <div className="space-y-2 md:space-y-3">
+                                                                {module.quiz?.questions[currentQuestionIndex].pairs.map((p, i) => (
+                                                                    <div key={i} className="p-3 md:p-4 bg-white/30 dark:bg-white/5 border border-espresso/10 rounded-xl md:rounded-2xl font-bold text-sm md:text-base text-espresso/60 dark:text-white/60">
+                                                                        {p.key}
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                            <div className="space-y-2">
+                                                                {(matchingOrder || []).map((matchedIdx, i) => (
+                                                                    <div key={i} className="flex gap-2">
+                                                                        <div className="flex-1 p-3 md:p-4 bg-espresso/5 border-2 border-espresso/20 rounded-xl md:rounded-2xl flex items-center justify-between font-bold text-xs md:text-sm text-espresso">
+                                                                            <span className="truncate">{module.quiz?.questions[currentQuestionIndex].pairs[matchedIdx].value}</span>
+                                                                            <div className="flex items-center gap-2 shrink-0">
+                                                                                <button
+                                                                                    disabled={i === 0}
+                                                                                    onClick={() => {
+                                                                                        const newOrder = [...matchingOrder];
+                                                                                        [newOrder[i], newOrder[i - 1]] = [newOrder[i - 1], newOrder[i]];
+                                                                                        setMatchingOrder(newOrder);
+                                                                                        handleAnswer(currentQuestionIndex, newOrder);
+                                                                                    }}
+                                                                                    className="hover:text-primary disabled:opacity-20 active:scale-90"
+                                                                                >
+                                                                                    <span className="material-symbols-outlined text-lg md:text-xl">expand_less</span>
+                                                                                </button>
+                                                                                <button
+                                                                                    disabled={i === matchingOrder.length - 1}
+                                                                                    onClick={() => {
+                                                                                        const newOrder = [...matchingOrder];
+                                                                                        [newOrder[i], newOrder[i + 1]] = [newOrder[i + 1], newOrder[i]];
+                                                                                        setMatchingOrder(newOrder);
+                                                                                        handleAnswer(currentQuestionIndex, newOrder);
+                                                                                    }}
+                                                                                    className="hover:text-primary disabled:opacity-20 active:scale-90"
+                                                                                >
+                                                                                    <span className="material-symbols-outlined text-lg md:text-xl">expand_more</span>
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            <div className="mt-10 md:mt-16 flex flex-col sm:flex-row justify-between items-center gap-4 relative z-10">
+                                                <p className="text-[9px] md:text-[10px] font-black text-espresso/20 dark:text-white/20 uppercase tracking-[0.2em] text-center sm:text-left">
+                                                    {t('student.quiz.footer_note')}
+                                                </p>
+                                                <button
+                                                    onClick={handleNextQuestion}
+                                                    className="w-full sm:w-auto px-8 md:px-10 py-3.5 md:py-4 bg-espresso text-white font-black uppercase tracking-widest text-[9px] md:text-[10px] rounded-xl md:rounded-2xl shadow-xl hover:shadow-espresso/40 transition-all flex items-center justify-center gap-3 active:scale-95"
+                                                >
+                                                    {currentQuestionIndex === (module.quiz?.questions?.length || 0) - 1 ? t('student.quiz.finalize_btn') : t('student.quiz.next_btn')}
+                                                    <span className="material-symbols-outlined text-[18px] md:text-[20px]">arrow_forward</span>
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
-                                )}
-                            </div>
-                        )}
-                    </div>
+                                )
+                            ) : (
+                                // QUIZ RESULTS
+                                <div className="text-left py-10 md:py-16 animate-scale-in w-full bg-[#F5DEB3] dark:bg-white/5 p-6 md:p-12 rounded-[2rem] md:rounded-3xl border border-espresso/10 shadow-2xl relative overflow-hidden group">
+                                    <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                                    <div className={cn(
+                                        "inline-flex items-center justify-center size-20 md:size-28 rounded-2xl md:rounded-3xl mb-6 md:mb-8 shadow-2xl text-4xl md:text-6xl rotate-3 group-hover:rotate-0 transition-transform shrink-0",
+                                        quizResult.passed ? "bg-green-500 text-white" : "bg-red-500 text-white"
+                                    )}>
+                                        <span className="material-symbols-outlined text-4xl md:text-6xl">
+                                            {quizResult.passed ? 'auto_awesome' : 'warning'}
+                                        </span>
+                                    </div>
+                                    <h1 className="text-2xl md:text-4xl font-serif font-bold text-espresso dark:text-white mb-2 md:mb-3">
+                                        {quizResult.passed ? t('student.quiz.results.passed.title') : t('student.quiz.results.failed.title')}
+                                    </h1>
+                                    <p className="text-lg md:text-xl font-medium text-espresso/40 dark:text-white/40 mb-8 md:mb-10">
+                                        {t('student.quiz.results.score_label')} <span className={quizResult.passed ? "text-green-600 font-black" : "text-red-600 font-black"}>{quizResult.score.toFixed(0)}%</span>
+                                    </p>
+
+                                    {quizResult.passed ? (
+                                        <div className="space-y-6 relative z-10">
+                                            <p className="text-[13px] md:text-sm font-medium text-espresso/60 dark:text-white/60 leading-relaxed">
+                                                {t('student.quiz.results.passed.desc')}
+                                            </p>
+                                            <button
+                                                onClick={() => navigate('/student/courses')}
+                                                className="w-full sm:w-auto px-8 md:px-10 py-4 md:py-5 bg-green-600 text-white font-black uppercase tracking-widest text-[9px] md:text-[10px] rounded-xl md:rounded-2xl shadow-xl hover:bg-green-700 transition-all flex items-center justify-center gap-3 active:scale-95"
+                                            >
+                                                {t('student.quiz.results.passed.btn')} <span className="material-symbols-outlined text-[18px] md:text-[20px]">map</span>
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-6 relative z-10">
+                                            <p className="text-[13px] md:text-sm font-medium text-espresso/60 dark:text-white/60 leading-relaxed">
+                                                {t('student.quiz.results.failed.desc')}
+                                            </p>
+                                            <button
+                                                onClick={retakeModule}
+                                                className="w-full sm:w-auto px-8 md:px-10 py-4 md:py-5 bg-espresso text-white font-black uppercase tracking-widest text-[9px] md:text-[10px] rounded-xl md:rounded-2xl shadow-xl hover:bg-black transition-all flex items-center justify-center gap-3 active:scale-95"
+                                            >
+                                                <span className="material-symbols-outlined text-[18px] md:text-[20px]">refresh</span> {t('student.quiz.results.failed.btn')}
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    )
                 ) : (
                     // SLIDE CONTENT MODE
-                    <div className="animate-fade-in max-w-4xl mx-auto">
+                    <div className="animate-fade-in max-w-6xl mx-auto w-full">
                         {content && content[currentSlide] ? (
-                            <div className="space-y-6">
-                                {/* Slide Image */}
-                                {content[currentSlide].image && (
-                                    <div className="w-full aspect-video bg-white/40 dark:bg-white/5 rounded-2xl overflow-hidden shadow-xl border border-espresso/5">
-                                        <img
-                                            src={content[currentSlide].image}
-                                            alt="Slide visual"
-                                            className="w-full h-full object-cover"
-                                        />
-                                    </div>
-                                )}
+                            (() => {
+                                const slide = content[currentSlide];
+                                const media = slide.media || (slide.image ? [{ url: slide.image, caption: '' }] : []);
+                                const isMediaLayout = slide.type === 'media';
 
-                                {/* Slide Text */}
-                                <div className="bg-white/40 dark:bg-[#2c2825] p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-espresso/10 shadow-2xl min-h-[350px] md:min-h-[450px] flex flex-col justify-center text-center relative overflow-hidden group">
-                                    <div className="absolute left-0 top-0 bottom-0 w-1 md:w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                                    <h2 className="text-2xl md:text-4xl font-serif font-bold text-espresso dark:text-white mb-6 md:mb-10 group-hover:translate-y-[-4px] transition-transform">
-                                        {content[currentSlide].title}
-                                    </h2>
-                                    <div
-                                        className="text-base md:text-xl leading-relaxed text-espresso/70 dark:text-white/70 prose prose-espresso dark:prose-invert max-w-none text-left font-medium"
-                                        dangerouslySetInnerHTML={{ __html: content[currentSlide].text }}
-                                    />
-                                </div>
-                            </div>
+                                if (isMediaLayout) {
+                                    // MEDIA LAYOUT: Split View
+                                    return (
+                                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start h-full min-h-[500px]">
+                                            {/* Text Section */}
+                                            <div className="bg-white/40 dark:bg-[#2c2825] p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] border border-espresso/10 shadow-2xl flex flex-col justify-center relative overflow-hidden group h-full">
+                                                <div className="absolute left-0 top-0 bottom-0 w-1 md:w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                                                <div className="relative z-10">
+                                                    <h2 className="text-2xl md:text-3xl font-serif font-bold text-espresso dark:text-white mb-6 md:mb-8 group-hover:translate-x-2 transition-transform">
+                                                        {slide.title}
+                                                    </h2>
+                                                    <div
+                                                        className="text-base md:text-lg leading-relaxed text-espresso/70 dark:text-white/70 prose prose-espresso dark:prose-invert max-w-none font-medium custom-prose"
+                                                        dangerouslySetInnerHTML={{ __html: slide.text }}
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            {/* Gallery Section */}
+                                            <div className="space-y-6">
+                                                <div className="grid grid-cols-1 gap-6">
+                                                    {media.map((item, idx) => (
+                                                        <div key={idx} className="bg-white/40 dark:bg-white/5 p-4 rounded-[2rem] border border-espresso/5 shadow-xl">
+                                                            <div className="w-full aspect-video bg-black/5 rounded-2xl overflow-hidden mb-3 relative group/img">
+                                                                <img
+                                                                    src={item.url}
+                                                                    alt={item.caption || "Slide visual"}
+                                                                    className="w-full h-full object-cover transition-transform duration-700 group-hover/img:scale-105"
+                                                                />
+                                                            </div>
+                                                            {item.caption && (
+                                                                <p className="text-center text-[10px] md:text-xs font-bold text-espresso/60 dark:text-white/60 uppercase tracking-widest px-4 pb-2">
+                                                                    {item.caption}
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                    ))}
+                                                    {media.length === 0 && (
+                                                        <div className="aspect-video flex items-center justify-center bg-espresso/5 rounded-[2rem] border-2 border-dashed border-espresso/10">
+                                                            <p className="text-espresso/20 font-black uppercase tracking-widest text-xs">Visuals Pending</p>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                } else {
+                                    // STANDARD LAYOUT: Vertical Stack
+                                    return (
+                                        <div className="space-y-8 md:space-y-12 max-w-4xl mx-auto">
+                                            <div className="bg-white/40 dark:bg-[#2c2825] p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-espresso/10 shadow-2xl relative overflow-hidden group">
+                                                <div className="absolute left-0 top-0 bottom-0 w-1 md:w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                                                <h2 className="text-2xl md:text-4xl font-serif font-bold text-espresso dark:text-white mb-6 md:mb-10 group-hover:translate-y-[-4px] transition-transform">
+                                                    {slide.title}
+                                                </h2>
+                                                <div
+                                                    className="text-base md:text-xl leading-relaxed text-espresso/70 dark:text-white/70 prose prose-espresso dark:prose-invert max-w-none text-left font-medium"
+                                                    dangerouslySetInnerHTML={{ __html: slide.text }}
+                                                />
+                                            </div>
+
+                                            {/* Media Gallery */}
+                                            {media.length > 0 && (
+                                                <div className={cn(
+                                                    "grid gap-6",
+                                                    media.length === 1 ? "grid-cols-1" : "grid-cols-1 md:grid-cols-2"
+                                                )}>
+                                                    {media.map((item, idx) => (
+                                                        <div key={idx} className="bg-white/40 dark:bg-white/5 p-4 rounded-[2rem] border border-espresso/5 shadow-lg group/media hover:shadow-xl transition-all">
+                                                            <div className="w-full aspect-video bg-black/5 rounded-2xl overflow-hidden shadow-sm relative mb-3">
+                                                                <img
+                                                                    src={item.url}
+                                                                    alt={item.caption}
+                                                                    className="w-full h-full object-cover group-hover/media:scale-105 transition-transform duration-700"
+                                                                />
+                                                            </div>
+                                                            {item.caption && (
+                                                                <p className="text-center text-[10px] md:text-xs font-bold text-espresso/60 dark:text-white/60 uppercase tracking-widest py-2">
+                                                                    {item.caption}
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                }
+                            })()
                         ) : (
                             <div className="flex flex-col items-center justify-center h-64 text-center">
                                 <p className="text-espresso/50 font-medium">{t('student.course_view.empty_slides')}</p>

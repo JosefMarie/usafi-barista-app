@@ -262,6 +262,7 @@ export function ManageModule() {
     // Assignments State
     const [students, setStudents] = useState([]);
     const [assignedStudents, setAssignedStudents] = useState([]);
+    const [quizAllowedStudents, setQuizAllowedStudents] = useState([]);
 
     // DnD Sensors
     const sensors = useSensors(
@@ -304,6 +305,7 @@ export function ManageModule() {
                     setSummarySlides(data.summaryContent || []);
                     setQuiz(data.quiz || { questions: [], passMark: 70 });
                     setAssignedStudents(data.assignedStudents || []);
+                    setQuizAllowedStudents(data.quizAllowedStudents || []);
                     setDuration(data.duration || 0);
                 } else {
                     // Create if not exists (fallback) or redirect
@@ -497,15 +499,38 @@ export function ManageModule() {
         }
     };
 
+    const toggleQuizAccess = (e, studentId) => {
+        e.stopPropagation(); // Prevent row click
+        if (quizAllowedStudents.includes(studentId)) {
+            setQuizAllowedStudents(prev => prev.filter(id => id !== studentId));
+        } else {
+            setQuizAllowedStudents(prev => [...prev, studentId]);
+        }
+    };
+
+    const grantQuizAccessToCompleted = () => {
+        const completedStudentIds = students.filter(student => {
+            const progress = studentProgress[student.id];
+            // Check if they have reached the last slide (Assuming content length > 0)
+            const lastSlideIndex = progress?.lastSlideIndex || -1;
+            const contentLen = (contentType === 'full' ? slides : summarySlides).length;
+            // Consider completed if they are at the last slide or have a 'completed' status
+            return (contentLen > 0 && lastSlideIndex >= contentLen - 1) || progress?.status === 'completed';
+        }).map(s => s.id);
+
+        setQuizAllowedStudents(prev => [...new Set([...prev, ...completedStudentIds])]);
+        alert(`Granted quiz access to ${completedStudentIds.length} students who finished content.`);
+    };
+
     // --- Save Handler ---
     const handleSave = async () => {
         try {
             setLoading(true);
             const modRef = doc(db, 'courses', courseId, 'modules', moduleId);
 
-            // Clean slides before saving to remove legacy 'image' field if mapped to 'media' already? 
-            // Actually, we can keep it optional for safety or just save 'media'. 
-            // Let's save both for now or just trust new structure. 
+            // Clean slides before saving to remove legacy 'image' field if mapped to 'media' already?
+            // Actually, we can keep it optional for safety or just save 'media'.
+            // Let's save both for now or just trust new structure.
             // To be clean, let's just save the new structure.
 
             await updateDoc(modRef, {
@@ -514,6 +539,7 @@ export function ManageModule() {
                 summaryContent: summarySlides,
                 quiz: quiz,
                 assignedStudents: assignedStudents,
+                quizAllowedStudents: quizAllowedStudents,
                 duration: parseInt(duration),
                 updatedAt: serverTimestamp()
             });
@@ -922,6 +948,13 @@ export function ManageModule() {
                                 </div>
                             </div>
                         </div>
+                        <button
+                            onClick={grantQuizAccessToCompleted}
+                            className="px-6 py-3 bg-white text-espresso font-black uppercase tracking-[0.2em] text-[10px] rounded-xl hover:bg-espresso hover:text-white transition-all shadow-xl active:scale-95 flex items-center gap-2"
+                        >
+                            <span className="material-symbols-outlined text-[18px]">auto_fix</span>
+                            Grant Quiz Access to Completed
+                        </button>
 
                         <div className="bg-white/40 dark:bg-black/20 rounded-[2.5rem] border border-espresso/10 overflow-hidden shadow-xl">
                             <div className="max-h-[600px] overflow-y-auto custom-scrollbar">
@@ -930,7 +963,8 @@ export function ManageModule() {
                                         <tr>
                                             <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-espresso/40">Student Identity</th>
                                             <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-espresso/40">Contact Point</th>
-                                            <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-espresso/40 text-center">Permit</th>
+                                            <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-espresso/40 text-center">Module Permit</th>
+                                            <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-espresso/40 text-center">Quiz Permit</th>
                                             <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-espresso/40 text-center">Progress</th>
                                             <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-espresso/40 text-center">Score</th>
                                         </tr>
@@ -938,8 +972,11 @@ export function ManageModule() {
                                     <tbody className="divide-y divide-espresso/5">
                                         {students.map(student => {
                                             const progress = studentProgress[student.id];
-                                            const completed = progress?.completed || false;
-                                            const score = progress?.quizScore !== undefined ? `${progress.quizScore}%` : '-';
+                                            const status = progress?.status;
+                                            const lastSlide = progress?.lastSlideIndex ?? -1;
+                                            const totalSlides = (contentType === 'full' ? slides : summarySlides).length;
+                                            const percentRead = totalSlides > 0 ? Math.min(100, Math.round(((lastSlide + 1) / totalSlides) * 100)) : 0;
+                                            const score = progress?.score !== undefined ? `${progress.score.toFixed(0)}%` : '-';
 
                                             return (
                                                 <tr key={student.id} className="hover:bg-white/40 dark:hover:bg-white/5 transition-colors cursor-pointer group" onClick={() => toggleAssignment(student.id)}>
@@ -963,14 +1000,27 @@ export function ManageModule() {
                                                         </div>
                                                     </td>
                                                     <td className="px-8 py-5 text-center">
-                                                        {completed ? (
-                                                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-green-100/50 text-green-700 text-[9px] font-black uppercase tracking-widest border border-green-200">
-                                                                <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                                                                Complete
+                                                        <div onClick={(e) => toggleQuizAccess(e, student.id)} className={cn(
+                                                            "w-8 h-8 rounded-xl border-2 flex items-center justify-center transition-all mx-auto z-20 relative hover:scale-110",
+                                                            quizAllowedStudents.includes(student.id)
+                                                                ? "bg-green-600 border-green-600 text-white scale-110 shadow-lg"
+                                                                : "border-espresso/20 text-transparent opacity-50 hover:opacity-100 hover:text-espresso/40"
+                                                        )}>
+                                                            <span className="material-symbols-outlined text-[20px] font-bold">lock_open</span>
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-8 py-5 text-center">
+                                                        <div className="flex flex-col items-center gap-1">
+                                                            <div className="w-24 h-1.5 bg-espresso/5 rounded-full overflow-hidden shadow-inner">
+                                                                <div className={cn(
+                                                                    "h-full transition-all duration-1000",
+                                                                    percentRead === 100 ? "bg-green-500" : "bg-espresso"
+                                                                )} style={{ width: `${percentRead}%` }} />
+                                                            </div>
+                                                            <span className="text-[8px] font-black uppercase tracking-widest text-espresso/40">
+                                                                {percentRead}% {status === 'completed' && '• Cert'}
                                                             </span>
-                                                        ) : (
-                                                            <span className="text-[9px] font-black uppercase tracking-widest text-espresso/20">Pending</span>
-                                                        )}
+                                                        </div>
                                                     </td>
                                                     <td className="px-8 py-5 text-center font-black text-espresso">{score}</td>
                                                 </tr>
@@ -982,8 +1032,7 @@ export function ManageModule() {
                         </div>
                     </div>
                 )}
-
-            </main>
-        </div>
+            </main >
+        </div >
     );
 }
