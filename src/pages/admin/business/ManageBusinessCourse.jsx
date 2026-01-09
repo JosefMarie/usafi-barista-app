@@ -1,10 +1,68 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { doc, getDoc, collection, query, orderBy, onSnapshot, addDoc, updateDoc, deleteDoc, serverTimestamp, where, getDocs } from 'firebase/firestore';
-import { db } from '../../../lib/firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { db, storage } from '../../../lib/firebase';
 import { GradientButton } from '../../../components/ui/GradientButton';
 import { RichTextEditor } from '../../../components/common/RichTextEditor';
 import { cn } from '../../../lib/utils';
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import imageCompression from 'browser-image-compression';
+
+function SortableChapterItem({ chapter, openModal, handleDeleteChapter }) {
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+        id: chapter.id,
+    });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+        zIndex: isDragging ? 10 : 1,
+        position: 'relative',
+        opacity: isDragging ? 0.8 : 1
+    };
+
+    return (
+        <div ref={setNodeRef} style={style} className={`bg-white/50 dark:bg-white/5 p-4 md:p-5 rounded-2xl md:rounded-[1.5rem] border border-espresso/5 dark:border-white/5 flex flex-col sm:flex-row sm:items-center gap-4 group hover:shadow-xl hover:bg-white/80 transition-all ${isDragging ? "shadow-2xl ring-2 ring-primary bg-white dark:bg-black/40" : ""}`}>
+            <div className="flex items-center gap-4 flex-1">
+                {/* Drag Handle */}
+                <div {...attributes} {...listeners} className="h-10 w-10 shrink-0 bg-gray-100 dark:bg-white/10 rounded-xl flex items-center justify-center font-black text-espresso/50 dark:text-white/50 text-sm cursor-grab active:cursor-grabbing hover:bg-espresso/10">
+                    <span className="material-symbols-outlined">drag_indicator</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-espresso dark:text-white truncate text-sm md:text-base">{chapter.title}</h3>
+                    <p className="text-[10px] md:text-xs text-espresso/50 dark:text-white/50 truncate font-medium">
+                        {chapter.content?.replace(/<[^>]*>/g, '').substring(0, 60)}...
+                    </p>
+                </div>
+            </div>
+            <div className="flex items-center justify-between sm:justify-end gap-3 pt-3 sm:pt-0 border-t sm:border-t-0 border-espresso/5 sm:border-none">
+                <span className={`px-2.5 py-1 rounded-lg text-[8px] md:text-[9px] font-black uppercase tracking-[0.15em] shadow-sm ${chapter.status === 'published' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
+                    }`}>
+                    {chapter.status}
+                </span>
+                <div className="flex items-center gap-1.5">
+                    <button
+                        onClick={() => openModal(chapter)}
+                        className="p-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-xl transition-colors active:scale-95"
+                        title="Edit"
+                    >
+                        <span className="material-symbols-outlined text-[20px] md:text-[24px]">edit_note</span>
+                    </button>
+                    <button
+                        onClick={() => handleDeleteChapter(chapter.id)}
+                        className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors active:scale-95"
+                        title="Delete"
+                    >
+                        <span className="material-symbols-outlined text-[20px] md:text-[24px]">delete</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
 
 export function ManageBusinessCourse() {
     const { courseId } = useParams();
@@ -19,7 +77,8 @@ export function ManageBusinessCourse() {
     const [chapterForm, setChapterForm] = useState({
         title: '',
         content: '',
-        imageUrl: '',
+        imageUrl: '', // Deprecated in UI but kept for state shape compat if needed temp
+        media: [], // Array of { url, caption }
         status: 'draft',
         order: 0,
         quiz: {
@@ -30,6 +89,12 @@ export function ManageBusinessCourse() {
         assignedStudents: []
     });
     const [activeTab, setActiveTab] = useState('content'); // 'content' | 'quiz' | 'assignments'
+
+    // DnD Sensors
+    const sensors = useSensors(
+        useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+        useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+    );
 
     // Fetch Course & Chapters
     useEffect(() => {
@@ -65,6 +130,26 @@ export function ManageBusinessCourse() {
 
         return () => unsubscribe();
     }, [courseId]);
+
+    const handleDragEnd = async (event) => {
+        const { active, over } = event;
+        if (active.id !== over.id) {
+            setChapters((items) => {
+                const oldIndex = items.findIndex((i) => i.id === active.id);
+                const newIndex = items.findIndex((i) => i.id === over.id);
+                const newOrder = arrayMove(items, oldIndex, newIndex);
+
+                // Update orders in DB
+                newOrder.forEach((chapter, index) => {
+                    updateDoc(doc(db, 'business_courses', courseId, 'chapters', chapter.id), {
+                        order: index + 1
+                    });
+                });
+
+                return newOrder;
+            });
+        }
+    };
 
     const handleSaveChapter = async (e) => {
         e.preventDefault();
@@ -126,10 +211,17 @@ export function ManageBusinessCourse() {
     const openModal = (chapter = null) => {
         if (chapter) {
             setEditingChapter(chapter);
+            // Migrate legacy image to media array if needed
+            let initialMedia = chapter.media || [];
+            if (initialMedia.length === 0 && chapter.imageUrl) {
+                initialMedia = [{ url: chapter.imageUrl, caption: '' }];
+            }
+
             setChapterForm({
                 title: chapter.title,
                 content: chapter.content,
                 imageUrl: chapter.imageUrl || '',
+                media: initialMedia,
                 status: chapter.status,
                 order: chapter.order || 0,
                 quiz: chapter.quiz || { enabled: false, passMark: 70, questions: [] },
@@ -142,6 +234,7 @@ export function ManageBusinessCourse() {
                 title: '',
                 content: '',
                 imageUrl: '',
+                media: [],
                 status: 'draft',
                 order: chapters.length + 1,
                 quiz: { enabled: false, passMark: 70, questions: [] },
@@ -155,6 +248,45 @@ export function ManageBusinessCourse() {
     const closeModal = () => {
         setIsChapterModalOpen(false);
         setEditingChapter(null);
+    };
+
+    // --- MEDIA HANDLERS ---
+    const handleImageUpload = async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        try {
+            const options = {
+                maxSizeMB: 1,
+                maxWidthOrHeight: 1920,
+                useWebWorker: true,
+            };
+            const compressedFile = await imageCompression(file, options);
+            const storageRef = ref(storage, `business_courses/${Date.now()}_${file.name}`);
+            await uploadBytes(storageRef, compressedFile);
+            const url = await getDownloadURL(storageRef);
+
+            setChapterForm(prev => ({
+                ...prev,
+                media: [...prev.media, { url: url, caption: '' }]
+            }));
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            alert('Failed to upload image');
+        }
+    };
+
+    const handleRemoveMedia = (index) => {
+        setChapterForm(prev => ({
+            ...prev,
+            media: prev.media.filter((_, i) => i !== index)
+        }));
+    };
+
+    const handleCaptionChange = (index, val) => {
+        const updated = [...chapterForm.media];
+        updated[index].caption = val;
+        setChapterForm(prev => ({ ...prev, media: updated }));
     };
 
     // --- QUIZ HANDLERS ---
@@ -269,45 +401,27 @@ export function ManageBusinessCourse() {
                         <button onClick={() => openModal()} className="text-primary font-black uppercase tracking-widest text-xs hover:underline">Add your first chapter</button>
                     </div>
                 ) : (
-                    <div className="space-y-3">
-                        {chapters.map((chapter) => (
-                            <div key={chapter.id} className="bg-white/50 dark:bg-white/5 p-4 md:p-5 rounded-2xl md:rounded-[1.5rem] border border-espresso/5 dark:border-white/5 flex flex-col sm:flex-row sm:items-center gap-4 group hover:shadow-xl hover:bg-white/80 transition-all">
-                                <div className="flex items-center gap-4 flex-1">
-                                    <div className="h-10 w-10 shrink-0 bg-gray-100 dark:bg-white/10 rounded-xl flex items-center justify-center font-black text-espresso/50 dark:text-white/50 text-sm">
-                                        {chapter.order}
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                        <h3 className="font-bold text-espresso dark:text-white truncate text-sm md:text-base">{chapter.title}</h3>
-                                        <p className="text-[10px] md:text-xs text-espresso/50 dark:text-white/50 truncate font-medium">
-                                            {chapter.content?.replace(/<[^>]*>/g, '').substring(0, 60)}...
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between sm:justify-end gap-3 pt-3 sm:pt-0 border-t sm:border-t-0 border-espresso/5 sm:border-none">
-                                    <span className={`px-2.5 py-1 rounded-lg text-[8px] md:text-[9px] font-black uppercase tracking-[0.15em] shadow-sm ${chapter.status === 'published' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'
-                                        }`}>
-                                        {chapter.status}
-                                    </span>
-                                    <div className="flex items-center gap-1.5">
-                                        <button
-                                            onClick={() => openModal(chapter)}
-                                            className="p-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-xl transition-colors active:scale-95"
-                                            title="Edit"
-                                        >
-                                            <span className="material-symbols-outlined text-[20px] md:text-[24px]">edit_note</span>
-                                        </button>
-                                        <button
-                                            onClick={() => handleDeleteChapter(chapter.id)}
-                                            className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors active:scale-95"
-                                            title="Delete"
-                                        >
-                                            <span className="material-symbols-outlined text-[20px] md:text-[24px]">delete</span>
-                                        </button>
-                                    </div>
-                                </div>
+                    <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragEnd={handleDragEnd}
+                    >
+                        <SortableContext
+                            items={chapters.map(c => c.id)}
+                            strategy={verticalListSortingStrategy}
+                        >
+                            <div className="space-y-3">
+                                {chapters.map((chapter) => (
+                                    <SortableChapterItem
+                                        key={chapter.id}
+                                        chapter={chapter}
+                                        openModal={openModal}
+                                        handleDeleteChapter={handleDeleteChapter}
+                                    />
+                                ))}
                             </div>
-                        ))}
-                    </div>
+                        </SortableContext>
+                    </DndContext>
                 )}
             </div>
 
@@ -426,18 +540,48 @@ export function ManageBusinessCourse() {
                                         </div>
                                     </div>
 
-                                    <div>
-                                        <label className="block text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-2 ml-1">Visual Asset URL (Optional)</label>
-                                        <input
-                                            type="url"
-                                            className="w-full px-4 md:px-5 py-3 md:py-4 rounded-xl md:rounded-2xl border border-espresso/10 bg-white/40 dark:bg-black/20 focus:outline-none focus:ring-2 focus:ring-espresso transition-all shadow-sm text-sm"
-                                            value={chapterForm.imageUrl}
-                                            onChange={e => setChapterForm({ ...chapterForm, imageUrl: e.target.value })}
-                                            placeholder="https://example.com/asset.jpg"
-                                        />
-                                        {chapterForm.imageUrl && (
-                                            <div className="mt-4 p-2 border border-espresso/10 rounded-2xl inline-block bg-white/40 shadow-xl max-w-full">
-                                                <img src={chapterForm.imageUrl} alt="Asset Preview" className="h-32 sm:h-40 object-cover rounded-xl" />
+                                    {/* MEDIA GALLERY */}
+                                    <div className="p-6 bg-white/40 dark:bg-black/10 rounded-3xl border border-espresso/10 space-y-4">
+                                        <div className="flex items-center justify-between">
+                                            <h3 className="text-xs font-black uppercase tracking-widest text-espresso/60 flex items-center gap-2">
+                                                <span className="material-symbols-outlined text-[18px]">collections</span>
+                                                Media Gallery
+                                            </h3>
+                                            <label className="cursor-pointer px-4 py-2 bg-espresso text-white text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-espresso/80 transition-all flex items-center gap-2">
+                                                <span className="material-symbols-outlined text-[16px]">add_photo_alternate</span>
+                                                Add Media
+                                                <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+                                            </label>
+                                        </div>
+
+                                        {chapterForm.media.length === 0 ? (
+                                            <div className="py-8 text-center text-espresso/30 text-xs italic border-2 border-dashed border-espresso/10 rounded-2xl">
+                                                No media assets attached.
+                                            </div>
+                                        ) : (
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                {chapterForm.media.map((item, index) => (
+                                                    <div key={index} className="group relative bg-white dark:bg-white/5 rounded-2xl overflow-hidden border border-espresso/10 shadow-sm">
+                                                        <div className="aspect-video bg-gray-100 dark:bg-black/30 w-full relative">
+                                                            <img src={item.url} alt="" className="w-full h-full object-cover" />
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => handleRemoveMedia(index)}
+                                                                className="absolute top-2 right-2 w-8 h-8 rounded-lg bg-red-500/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-red-600"
+                                                            >
+                                                                <span className="material-symbols-outlined text-[18px]">delete</span>
+                                                            </button>
+                                                        </div>
+                                                        <div className="p-3">
+                                                            <input
+                                                                className="w-full bg-transparent border-b border-espresso/10 text-xs font-medium placeholder:text-espresso/30 focus:outline-none focus:border-espresso py-1 transition-all"
+                                                                placeholder="Enter caption..."
+                                                                value={item.caption}
+                                                                onChange={(e) => handleCaptionChange(index, e.target.value)}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                ))}
                                             </div>
                                         )}
                                     </div>
@@ -725,4 +869,3 @@ export function ManageBusinessCourse() {
         </div>
     );
 }
-
