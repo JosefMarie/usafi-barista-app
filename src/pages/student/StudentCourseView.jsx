@@ -506,12 +506,38 @@ export function StudentCourseView() {
 
                                         if (!slideUrl) return <div className="text-espresso/20 italic">Media Unavailable</div>;
 
+                                        // Mobile Detection & Google Docs Viewer Fallback
+                                        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                                        const finalUrl = isPdf && isMobile
+                                            ? `https://docs.google.com/viewer?url=${encodeURIComponent(slideUrl)}&embedded=true`
+                                            : isPdf ? `${slideUrl}#toolbar=0` : slideUrl;
+
                                         return isPdf ? (
-                                            <iframe
-                                                src={`${slideUrl}#toolbar=0`}
-                                                className="w-full h-full border-none bg-white"
-                                                title={`Page ${currentSlide + 1}`}
-                                            />
+                                            <div
+                                                className="w-full h-full relative"
+                                                onDoubleClick={() => window.open(slideUrl, '_blank')}
+                                            >
+                                                <iframe
+                                                    src={finalUrl}
+                                                    className="w-full h-full border-none bg-white"
+                                                    title={`Page ${currentSlide + 1}`}
+                                                />
+                                                {/* Interaction Layer */}
+                                                <div className="absolute top-4 left-4 flex gap-2 pointer-events-auto">
+                                                    <button
+                                                        onClick={(e) => { e.stopPropagation(); window.open(slideUrl, '_blank'); }}
+                                                        className="size-10 bg-espresso/60 hover:bg-espresso text-white rounded-xl flex items-center justify-center backdrop-blur-md shadow-lg transition-all active:scale-90"
+                                                        title="Open in Full Screen"
+                                                    >
+                                                        <span className="material-symbols-outlined text-xl">open_in_new</span>
+                                                    </button>
+                                                </div>
+                                                {isMobile && (
+                                                    <div className="absolute bottom-4 left-4 right-4 pointer-events-none">
+                                                        <p className="text-[7px] font-black text-espresso/30 dark:text-white/30 uppercase tracking-[0.2em] text-center">Double tap to view full screen</p>
+                                                    </div>
+                                                )}
+                                            </div>
                                         ) : (
                                             <img
                                                 src={slideUrl}
