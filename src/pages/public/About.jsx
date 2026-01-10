@@ -118,7 +118,7 @@ export function About() {
                         {/* Image 1: Circular Headshot */}
                         <div className="shrink-0 w-64 h-64 rounded-full overflow-hidden border-4 border-primary shadow-lg">
                             <img
-                                src="./Ebene.png"
+                                src="/image/Gasarasi.jpeg"
                                 alt="Sandrine Gasarasi"
                                 className="w-full h-full object-cover"
                             />
@@ -137,7 +137,7 @@ export function About() {
                         {/* Image 2: Circular Headshot/Action shot */}
                         <div className="shrink-0 w-64 h-64 rounded-full overflow-hidden border-4 border-primary shadow-lg">
                             <img
-                                src="./Ebene.png" // Placeholder using the Latte Art Specialist image
+                                src="/image/Eben.jpeg" // Lead Mentorship image
                                 alt="Ishimwe Ebenezer"
                                 className="w-full h-full object-cover"
                             />

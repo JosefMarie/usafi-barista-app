@@ -78,7 +78,7 @@ export function RichTextEditor({ value, onChange, placeholder, className, minHei
                 style={{ minHeight }}
             />
 
-            <style jsx>{`
+            <style>{`
                 [contentEditable]:empty:before {
                     content: attr(placeholder);
                     color: rgba(50, 28, 0, 0.3);

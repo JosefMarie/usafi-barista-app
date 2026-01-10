@@ -28,14 +28,13 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 
 // --- Sortable Slide Item Component ---
-function SortableSlideItem({ slide, index, contentType, updateSlide, removeSlide, handleImageUpload, activeId }) {
+function SortableSlideItem({ slide, index, updateSlide, removeSlide, handleFileUpload, isDragging }) {
     const {
         attributes,
         listeners,
         setNodeRef,
         transform,
         transition,
-        isDragging,
     } = useSortable({ id: slide.id || `slide-${index}` });
 
     const style = {
@@ -45,192 +44,62 @@ function SortableSlideItem({ slide, index, contentType, updateSlide, removeSlide
         opacity: isDragging ? 0.3 : 1,
     };
 
-    // Helper to update specific media item
-    const updateMediaCaption = (mIndex, val) => {
-        const newMedia = [...(slide.media || [])];
-        newMedia[mIndex].caption = val;
-        updateSlide(index, 'media', newMedia);
-    };
-
-    const removeMediaItem = (mIndex) => {
-        const newMedia = (slide.media || []).filter((_, i) => i !== mIndex);
-        updateSlide(index, 'media', newMedia);
-    };
-
-    // --- Renders for different Slide Types ---
-
-    // 1. STANDARD TYPE (Title + Text + Multi-Media Gallery)
-    const renderStandard = () => (
-        <div className="space-y-6 md:space-y-8">
-            <div className="flex flex-col sm:flex-row gap-4 md:gap-6 items-start sm:items-center">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-espresso text-white flex items-center justify-center font-black text-base md:text-lg shadow-xl shadow-espresso/20 font-serif shrink-0 cursor-grab active:cursor-grabbing" {...attributes} {...listeners}>
-                    {index + 1}
-                </div>
-                <div className="flex-1 w-full">
-                    <label className="block text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-espresso/40 mb-1 md:mb-2 ml-1">Slide Identification (Standard)</label>
-                    <input
-                        className="w-full text-lg md:text-2xl font-serif font-black bg-transparent border-b-2 border-espresso/5 focus:border-espresso outline-none px-1 py-1.5 md:py-2 text-espresso dark:text-white transition-all"
-                        placeholder="Initialize title..."
-                        value={slide.title}
-                        onChange={(e) => updateSlide(index, 'title', e.target.value)}
-                    />
-                </div>
-            </div>
-            <div className="space-y-2 md:space-y-3">
-                <label className="block text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-espresso/40 ml-1">Rich Narrative Content</label>
-                <div className="rounded-[1.5rem] md:rounded-[2rem] overflow-hidden border border-espresso/10 bg-white/20 dark:bg-black/20 shadow-inner">
-                    <RichTextEditor
-                        value={slide.text}
-                        onChange={(val) => updateSlide(index, 'text', val)}
-                        placeholder="Synthesize slide narrative..."
-                        className="border-none"
-                        minHeight="150px"
-                    />
-                </div>
-            </div>
-
-            {/* Multi-Media Gallery */}
-            <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                    <label className="block text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-espresso/40 ml-1">Visual Assets</label>
-                    <label className="cursor-pointer px-4 py-2 bg-espresso text-white text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-espresso/80 transition-all flex items-center gap-2 shadow-lg">
-                        <span className="material-symbols-outlined text-[16px]">add_photo_alternate</span>
-                        Add Media
-                        <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(index, e)} />
-                    </label>
-                </div>
-
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {(slide.media || []).map((item, mIndex) => (
-                        <div key={mIndex} className="group relative bg-white dark:bg-black/20 rounded-2xl overflow-hidden border border-espresso/10 shadow-sm hover:shadow-md transition-all">
-                            <div className="aspect-square bg-gray-100 dark:bg-white/5 relative">
-                                <img src={item.url} alt="" className="w-full h-full object-cover" />
-                                <button
-                                    onClick={() => removeMediaItem(mIndex)}
-                                    className="absolute top-2 right-2 w-8 h-8 rounded-lg bg-red-500/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-red-600 shadow-sm"
-                                >
-                                    <span className="material-symbols-outlined text-[18px]">delete</span>
-                                </button>
-                            </div>
-                            <div className="p-2">
-                                <input
-                                    className="w-full bg-transparent border-b border-transparent focus:border-espresso/20 text-[10px] font-medium placeholder:text-espresso/30 focus:outline-none py-1 transition-all text-center"
-                                    placeholder="Caption..."
-                                    value={item.caption || ''}
-                                    onChange={(e) => updateMediaCaption(mIndex, e.target.value)}
-                                />
-                            </div>
-                        </div>
-                    ))}
-                    {(slide.media || []).length === 0 && (
-                        <div className="col-span-full py-8 text-center border-2 border-dashed border-espresso/10 rounded-2xl text-espresso/30 text-xs italic">
-                            No visual assets appended.
-                        </div>
-                    )}
-                </div>
-            </div>
-        </div>
-    );
-
-    // 2. MEDIA TYPE (Title, Text on Left, Media Gallery on Right)
-    const renderMedia = () => (
-        <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row gap-4 md:gap-6 items-start sm:items-center">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-espresso text-white flex items-center justify-center font-black text-base md:text-lg shadow-xl shadow-espresso/20 font-serif shrink-0 cursor-grab active:cursor-grabbing" {...attributes} {...listeners}>
-                    {index + 1}
-                </div>
-                <div className="flex-1 w-full">
-                    <label className="block text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-espresso/40 mb-1 md:mb-2 ml-1">Slide Identification (Media Layout)</label>
-                    <input
-                        className="w-full text-lg md:text-2xl font-serif font-black bg-transparent border-b-2 border-espresso/5 focus:border-espresso outline-none px-1 py-1.5 md:py-2 text-espresso dark:text-white transition-all"
-                        placeholder="Initialize title..."
-                        value={slide.title}
-                        onChange={(e) => updateSlide(index, 'title', e.target.value)}
-                    />
-                </div>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full">
-                {/* Left: Text Content */}
-                <div className="space-y-2 md:space-y-3 flex flex-col">
-                    <label className="block text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-espresso/40 ml-1">Contextual Narrative</label>
-                    <div className="rounded-[1.5rem] md:rounded-[2rem] overflow-hidden border border-espresso/10 bg-white/20 dark:bg-black/20 shadow-inner flex-1 min-h-[300px]">
-                        <RichTextEditor
-                            value={slide.text}
-                            onChange={(val) => updateSlide(index, 'text', val)}
-                            placeholder="Add slide context..."
-                            className="border-none h-full"
-                            minHeight="100%"
-                        />
-                    </div>
-                </div>
-
-                {/* Right: Multi-Media Gallery */}
-                <div className="space-y-2 md:space-y-3 flex flex-col">
-                    <div className="flex items-center justify-between">
-                        <label className="block text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-espresso/40 ml-1">Media Canvas</label>
-                        <label className="cursor-pointer px-3 py-1.5 bg-espresso text-white text-[8px] font-black uppercase tracking-widest rounded-lg hover:bg-espresso/80 transition-all flex items-center gap-1.5 shadow-md">
-                            <span className="material-symbols-outlined text-[14px]">add_photo_alternate</span>
-                            Add
-                            <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(index, e)} />
-                        </label>
-                    </div>
-
-                    <div className="flex-1 min-h-[300px] bg-white/40 dark:bg-black/10 rounded-[2rem] border border-espresso/10 p-4 space-y-4">
-                        {(slide.media || []).length === 0 ? (
-                            <div className="h-full flex flex-col items-center justify-center text-espresso/30 border-2 border-dashed border-espresso/10 rounded-2xl">
-                                <span className="material-symbols-outlined text-4xl mb-2">perm_media</span>
-                                <p className="text-[10px] font-black uppercase tracking-[0.2em] italic">Canvas Empty</p>
-                            </div>
-                        ) : (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {(slide.media || []).map((item, mIndex) => (
-                                    <div key={mIndex} className="group relative bg-white dark:bg-white/5 rounded-xl overflow-hidden shadow-sm border border-espresso/5">
-                                        <div className="aspect-video bg-black/10 relative">
-                                            <img src={item.url} alt="" className="w-full h-full object-cover" />
-                                            <button
-                                                onClick={() => removeMediaItem(mIndex)}
-                                                className="absolute top-2 right-2 w-7 h-7 rounded-lg bg-red-500/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-red-600"
-                                            >
-                                                <span className="material-symbols-outlined text-[16px]">delete</span>
-                                            </button>
-                                        </div>
-                                        <div className="p-2">
-                                            <input
-                                                className="w-full bg-transparent border-b border-transparent focus:border-espresso/20 text-[10px] font-medium placeholder:text-espresso/30 focus:outline-none py-1 transition-all"
-                                                placeholder="Caption..."
-                                                value={item.caption || ''}
-                                                onChange={(e) => updateMediaCaption(mIndex, e.target.value)}
-                                            />
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-
+    const slideUrl = slide.url || slide.image || (slide.media && slide.media[0]?.url);
+    const isPdf = slide.type === 'pdf' ||
+        (slideUrl && slideUrl.toLowerCase().split('?')[0].includes('.pdf')) ||
+        (slide.fileName && slide.fileName.toLowerCase().endsWith('.pdf'));
 
     return (
-        <div ref={setNodeRef} style={style} className="bg-white/40 dark:bg-black/20 p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] border border-espresso/10 relative overflow-hidden group/slide shadow-2xl">
-            <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/10 group-hover/slide:bg-espresso transition-colors"></div>
+        <div
+            ref={setNodeRef}
+            style={style}
+            {...attributes}
+            {...listeners}
+            className="bg-white/40 dark:bg-black/20 p-4 md:p-6 rounded-[1.5rem] md:rounded-[2rem] border border-espresso/10 relative overflow-hidden group/slide shadow-lg cursor-grab active:cursor-grabbing hover:border-espresso/40 transition-colors"
+        >
+            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/10 group-hover/slide:bg-espresso transition-colors"></div>
 
-            {/* Delete Button */}
-            <button onClick={() => removeSlide(index)} className="absolute top-4 md:top-8 right-4 md:right-8 text-espresso/20 hover:text-red-500 transition-colors p-2 rounded-xl hover:bg-red-50 z-20">
-                <span className="material-symbols-outlined text-[20px] md:text-[24px]">delete_sweep</span>
-            </button>
+            <div className="flex items-center gap-4 md:gap-6">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-espresso text-white flex items-center justify-center font-black text-lg shadow-lg shrink-0">
+                    {index + 1}
+                </div>
 
-            {/* Type Indicator */}
-            <div className="absolute top-0 right-16 md:right-20 px-4 py-1.5 md:py-2 bg-white/40 rounded-b-xl border-x border-b border-espresso/5 shadow-sm">
-                <span className="text-[8px] font-black uppercase tracking-widest text-espresso/40">
-                    {slide.type === 'media' ? 'Media Layout' : 'Standard Layout'}
-                </span>
+                <div className="flex-1 min-w-0">
+                    <div className="aspect-[3/4] max-w-[200px] bg-white dark:bg-white/5 rounded-xl border border-espresso/5 overflow-hidden relative group/img shadow-inner">
+                        {isPdf ? (
+                            <div className="w-full h-full flex flex-col items-center justify-center text-espresso/40">
+                                <span className="material-symbols-outlined text-4xl">description</span>
+                                <span className="text-[8px] font-black uppercase mt-1">PDF Page</span>
+                            </div>
+                        ) : (
+                            <img src={slideUrl} alt={`Page ${index + 1}`} className="w-full h-full object-cover" />
+                        )}
+                        <a
+                            href={slideUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            draggable="false"
+                            onDragStart={(e) => e.preventDefault()}
+                            onClick={(e) => e.stopPropagation()}
+                            onPointerDown={(e) => e.stopPropagation()}
+                            className="absolute inset-0 bg-espresso/40 flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-opacity backdrop-blur-sm text-white z-20"
+                        >
+                            <span className="material-symbols-outlined text-2xl">visibility</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                    <button
+                        onClick={(e) => { e.stopPropagation(); removeSlide(index); }}
+                        onPointerDown={(e) => e.stopPropagation()}
+                        className="w-10 h-10 rounded-xl bg-white/40 text-espresso/40 hover:text-red-500 hover:bg-red-50 transition-all flex items-center justify-center shadow-sm relative z-30"
+                        title="Remove Page"
+                    >
+                        <span className="material-symbols-outlined text-[20px]">delete</span>
+                    </button>
+                </div>
             </div>
-
-            {slide.type === 'media' ? renderMedia() : renderStandard()}
         </div>
     );
 }
@@ -293,10 +162,15 @@ export function ManageModule() {
                         if (s.image && media.length === 0) {
                             media = [{ url: s.image, caption: '' }];
                         }
+                        const slideUrl = s.url || s.image || (media.length > 0 ? media[0].url : null);
+                        const inferredType = (s.type === 'pdf' ||
+                            (slideUrl && slideUrl.toLowerCase().split('?')[0].includes('.pdf')) ||
+                            (s.fileName && s.fileName.toLowerCase().endsWith('.pdf'))) ? 'pdf' : 'image';
                         return {
                             ...s,
                             id: s.id || `slide-${Date.now()}-${i}`,
-                            type: s.type || 'standard',
+                            url: slideUrl,
+                            type: inferredType,
                             media: media
                         };
                     });
@@ -352,79 +226,70 @@ export function ManageModule() {
 
     // --- Content Handlers ---
     const addSlide = (type = 'standard') => {
-        if (contentType === 'full') {
-            setSlides([...slides, {
-                id: `slide-${Date.now()}`,
-                type: type,
-                title: '',
-                text: '',
-                media: [] // Initialize with empty media array
-            }]);
-        } else {
-            setSummarySlides([...summarySlides, { title: '', text: '', image: '' }]);
-        }
+        // Now just a placeholder, the actual upload will push to slides
     };
 
     const updateSlide = (index, field, value) => {
-        if (contentType === 'full') {
-            const newSlides = [...slides];
-            newSlides[index][field] = value;
-            setSlides(newSlides);
-        } else {
-            const newSlides = [...summarySlides];
-            newSlides[index][field] = value;
-            setSummarySlides(newSlides);
-        }
+        const newSlides = [...slides];
+        newSlides[index][field] = value;
+        setSlides(newSlides);
     };
 
     const removeSlide = (index) => {
-        if (contentType === 'full') {
-            setSlides(slides.filter((_, i) => i !== index));
-        } else {
-            setSummarySlides(summarySlides.filter((_, i) => i !== index));
-        }
+        setSlides(slides.filter((_, i) => i !== index));
     };
 
     const handleDragEnd = (event) => {
         const { active, over } = event;
-        if (active.id !== over.id) {
+        if (active && over && active.id !== over.id) {
             setSlides((items) => {
-                const oldIndex = items.findIndex((i) => i.id === active.id);
-                const newIndex = items.findIndex((i) => i.id === over.id);
+                const oldIndex = items.findIndex((i) => (i.id || `slide-${items.indexOf(i)}`) === active.id);
+                const newIndex = items.findIndex((i) => (i.id || `slide-${items.indexOf(i)}`) === over.id);
                 return arrayMove(items, oldIndex, newIndex);
             });
         }
     };
 
-    // --- Image Upload Handler ---
-    const handleImageUpload = async (index, event) => {
+    // --- File Upload Handler (PDF or Image) ---
+    const handleFileUpload = async (event) => {
         const file = event.target.files[0];
         if (!file) return;
 
         try {
-            // 1. Compress the image
-            const options = {
-                maxSizeMB: 1,
-                maxWidthOrHeight: 1920,
-                useWebWorker: true,
-            };
-            const compressedFile = await imageCompression(file, options);
+            setLoading(true);
+            let fileToUpload = file;
 
-            // 2. Upload to Firebase Storage
-            const storageRef = ref(storage, `module-content/${courseId}/${moduleId}/${Date.now()}_${file.name}`);
-            const snapshot = await uploadBytes(storageRef, compressedFile);
+            // Compress if it's an image
+            if (file.type.startsWith('image/')) {
+                const options = {
+                    maxSizeMB: 1,
+                    maxWidthOrHeight: 1920,
+                    useWebWorker: true,
+                };
+                fileToUpload = await imageCompression(file, options);
+            }
 
-            // 3. Get Download URL
+            // Upload to Firebase Storage
+            const path = `module-content/${courseId}/${moduleId}/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
+            const storageRef = ref(storage, path);
+            const snapshot = await uploadBytes(storageRef, fileToUpload);
+
+            // Get Download URL
             const downloadURL = await getDownloadURL(snapshot.ref);
 
-            // 4. Update Slide State (Append to Media Array)
-            const currentSlide = slides[index];
-            const currentMedia = currentSlide.media || [];
-            updateSlide(index, 'media', [...currentMedia, { url: downloadURL, caption: '' }]);
+            // Append to Slides State
+            setSlides(prev => [...prev, {
+                id: `slide-${Date.now()}`,
+                url: downloadURL,
+                type: (file.type.includes('pdf') || file.name.toLowerCase().endsWith('.pdf')) ? 'pdf' : 'image',
+                fileName: file.name
+            }]);
 
         } catch (error) {
-            console.error("Error uploading image:", error);
-            alert(`Failed to upload image: ${error.message}`);
+            console.error("Error uploading file:", error);
+            alert(`Failed to upload file: ${error.message}`);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -640,38 +505,14 @@ export function ManageModule() {
                                 <div className="flex-1">
                                     <h2 className="text-[9px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] flex items-center gap-3 mb-2">
                                         <span className="w-6 h-px bg-espresso/20"></span>
-                                        Node Attributes
+                                        Module Assets
                                     </h2>
-                                    <p className="text-lg md:text-xl font-serif font-black text-espresso dark:text-white">Instructional Narrative & Media Assets</p>
-                                </div>
-                                <div className="flex gap-2 shrink-0">
-                                    <button
-                                        onClick={() => setContentType('full')}
-                                        className={cn(
-                                            "flex-1 sm:flex-none px-3 md:px-4 py-2 text-[9px] md:text-[10px] font-black uppercase tracking-widest rounded-xl transition-all border whitespace-nowrap",
-                                            contentType === 'full'
-                                                ? "bg-espresso text-white border-espresso shadow-lg"
-                                                : "bg-white/40 text-espresso/60 border-espresso/10 hover:bg-white"
-                                        )}
-                                    >
-                                        Full Notes
-                                    </button>
-                                    <button
-                                        onClick={() => setContentType('summary')}
-                                        className={cn(
-                                            "flex-1 sm:flex-none px-3 md:px-4 py-2 text-[9px] md:text-[10px] font-black uppercase tracking-widest rounded-xl transition-all border whitespace-nowrap",
-                                            contentType === 'summary'
-                                                ? "bg-espresso text-white border-espresso shadow-lg"
-                                                : "bg-white/40 text-espresso/60 border-espresso/10 hover:bg-white"
-                                        )}
-                                    >
-                                        Summary
-                                    </button>
+                                    <p className="text-lg md:text-xl font-serif font-black text-espresso dark:text-white">Page-by-Page Sequence Control</p>
                                 </div>
                             </div>
                             <div className="flex flex-col sm:flex-row items-center gap-4 md:gap-6 w-full xl:w-auto">
                                 <div className="flex items-center justify-between sm:justify-start gap-4 bg-white/40 dark:bg-black/20 px-4 md:px-6 py-3 rounded-xl md:rounded-2xl border border-espresso/5 shadow-inner w-full sm:w-auto">
-                                    <label className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 whitespace-nowrap">Duration:</label>
+                                    <label className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 whitespace-nowrap">Est. Time:</label>
                                     <div className="flex items-center gap-2">
                                         <input
                                             type="number"
@@ -684,14 +525,11 @@ export function ManageModule() {
                                     </div>
                                 </div>
                                 <div className="flex gap-2 w-full sm:w-auto">
-                                    <button onClick={() => addSlide('standard')} className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-espresso text-white px-4 py-3 md:py-3.5 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-[0.1em] shadow-xl hover:shadow-espresso/40 active:scale-95 transition-all">
+                                    <label className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-espresso text-white px-6 py-3.5 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-[0.1em] shadow-xl hover:shadow-espresso/40 active:scale-95 transition-all cursor-pointer">
                                         <span className="material-symbols-outlined text-[18px]">add_circle</span>
-                                        Standard Slide
-                                    </button>
-                                    <button onClick={() => addSlide('media')} className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-white text-espresso border border-espresso/10 px-4 py-3 md:py-3.5 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-[0.1em] shadow-lg active:scale-95 transition-all">
-                                        <span className="material-symbols-outlined text-[18px]">image</span>
-                                        Media Slide
-                                    </button>
+                                        Add PDF Page
+                                        <input type="file" accept="application/pdf,image/*" className="hidden" onChange={handleFileUpload} />
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -703,20 +541,21 @@ export function ManageModule() {
                                 onDragEnd={handleDragEnd}
                             >
                                 <SortableContext
-                                    items={slides.map(s => s.id)}
+                                    items={slides.map((s, i) => s.id || `slide-${i}`)}
                                     strategy={verticalListSortingStrategy}
                                 >
-                                    {slides.map((slide, index) => (
-                                        <SortableSlideItem
-                                            key={slide.id}
-                                            slide={slide}
-                                            index={index}
-                                            contentType={contentType}
-                                            updateSlide={updateSlide}
-                                            removeSlide={removeSlide}
-                                            handleImageUpload={handleImageUpload}
-                                        />
-                                    ))}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                        {slides.map((slide, index) => (
+                                            <SortableSlideItem
+                                                key={slide.id || `slide-${index}`}
+                                                slide={slide}
+                                                index={index}
+                                                updateSlide={updateSlide}
+                                                removeSlide={removeSlide}
+                                                handleFileUpload={handleFileUpload}
+                                            />
+                                        ))}
+                                    </div>
                                 </SortableContext>
                             </DndContext>
                         ) : (
@@ -974,9 +813,11 @@ export function ManageModule() {
                                             const progress = studentProgress[student.id];
                                             const status = progress?.status;
                                             const lastSlide = progress?.lastSlideIndex ?? -1;
-                                            const totalSlides = (contentType === 'full' ? slides : summarySlides).length;
+                                            const totalSlides = slides.length;
                                             const percentRead = totalSlides > 0 ? Math.min(100, Math.round(((lastSlide + 1) / totalSlides) * 100)) : 0;
                                             const score = progress?.score !== undefined ? `${progress.score.toFixed(0)}%` : '-';
+                                            const hasRequestedQuiz = progress?.quizRequested;
+                                            const isQuizAllowed = quizAllowedStudents.includes(student.id);
 
                                             return (
                                                 <tr key={student.id} className="hover:bg-white/40 dark:hover:bg-white/5 transition-colors cursor-pointer group" onClick={() => toggleAssignment(student.id)}>
@@ -985,7 +826,12 @@ export function ManageModule() {
                                                             <div className="w-10 h-10 rounded-full bg-espresso/5 flex items-center justify-center font-black text-espresso text-sm">
                                                                 {student.name?.charAt(0) || student.email?.charAt(0)}
                                                             </div>
-                                                            <span className="font-bold text-espresso dark:text-white">{student.name || 'Unknown'}</span>
+                                                            <div className="flex flex-col">
+                                                                <span className="font-bold text-espresso dark:text-white">{student.name || 'Unknown'}</span>
+                                                                {hasRequestedQuiz && !isQuizAllowed && (
+                                                                    <span className="text-[7px] font-black bg-amber-500 text-white px-1.5 py-0.5 rounded uppercase tracking-tighter w-fit mt-0.5">Quiz Requested</span>
+                                                                )}
+                                                            </div>
                                                         </div>
                                                     </td>
                                                     <td className="px-8 py-5 text-sm font-medium text-espresso/60">{student.email}</td>
@@ -1002,11 +848,13 @@ export function ManageModule() {
                                                     <td className="px-8 py-5 text-center">
                                                         <div onClick={(e) => toggleQuizAccess(e, student.id)} className={cn(
                                                             "w-8 h-8 rounded-xl border-2 flex items-center justify-center transition-all mx-auto z-20 relative hover:scale-110",
-                                                            quizAllowedStudents.includes(student.id)
+                                                            isQuizAllowed
                                                                 ? "bg-green-600 border-green-600 text-white scale-110 shadow-lg"
-                                                                : "border-espresso/20 text-transparent opacity-50 hover:opacity-100 hover:text-espresso/40"
+                                                                : hasRequestedQuiz ? "bg-amber-100 border-amber-500 text-amber-600 opacity-100" : "border-espresso/20 text-transparent opacity-50 hover:opacity-100 hover:text-espresso/40"
                                                         )}>
-                                                            <span className="material-symbols-outlined text-[20px] font-bold">lock_open</span>
+                                                            <span className="material-symbols-outlined text-[20px] font-bold">
+                                                                {isQuizAllowed ? 'lock_open' : hasRequestedQuiz ? 'notification_important' : 'lock'}
+                                                            </span>
                                                         </div>
                                                     </td>
                                                     <td className="px-8 py-5 text-center">
