@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, updateDoc, setDoc, arrayUnion, arrayRemove, collection, query, where, getDocs, serverTimestamp } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -133,6 +133,10 @@ export function ManageModule() {
     const [assignedStudents, setAssignedStudents] = useState([]);
     const [quizAllowedStudents, setQuizAllowedStudents] = useState([]);
 
+    // Sort & Filter State
+    const [sortConfig, setSortConfig] = useState({ key: 'progress', direction: 'desc' });
+    const [filterThreshold, setFilterThreshold] = useState(0); // 0, 50, 70, 100
+
     // DnD Sensors
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -213,26 +217,69 @@ export function ManageModule() {
         fetchModuleData();
     }, [courseId, moduleId, navigate]);
 
+    // --- Progress Fetching ---
+    const fetchProgress = useCallback(async () => {
+        if (activeTab === 'assignments' && assignedStudents.length > 0) {
+            const progressMap = {};
+            await Promise.all(assignedStudents.map(async (uid) => {
+                try {
+                    const progDoc = await getDoc(doc(db, 'users', uid, 'progress', moduleId));
+                    if (progDoc.exists()) {
+                        progressMap[uid] = progDoc.data();
+                    }
+                } catch (e) {
+                    console.error("Error loading progress for", uid, e);
+                }
+            }));
+            setStudentProgress(progressMap);
+        }
+    }, [activeTab, assignedStudents, moduleId]);
+
     // Fetch Progress when Assignments tab is active
     useEffect(() => {
-        const fetchProgress = async () => {
-            if (activeTab === 'assignments' && assignedStudents.length > 0) {
-                const progressMap = {};
-                await Promise.all(assignedStudents.map(async (uid) => {
-                    try {
-                        const progDoc = await getDoc(doc(db, 'users', uid, 'progress', moduleId));
-                        if (progDoc.exists()) {
-                            progressMap[uid] = progDoc.data();
-                        }
-                    } catch (e) {
-                        console.error("Error loading progress for", uid, e);
-                    }
-                }));
-                setStudentProgress(progressMap);
-            }
-        };
         fetchProgress();
-    }, [activeTab, assignedStudents, moduleId]);
+    }, [fetchProgress]);
+
+    // Derived State: Filtered & Sorted Students
+    const filteredAndSortedStudents = useMemo(() => {
+        let result = [...students];
+
+        // 1. Filter by assignment (since we are in the assignments tab, we only want to see people we can potentially manage here)
+        // Or do we want to see ALL students? Usually, we want to see assigned students or everyone. 
+        // Let's stick to showing everyone but sorting/filtering them based on their progress in this module.
+
+        const processed = result.map(s => {
+            const prog = studentProgress[s.id];
+            const total = slides.length;
+            const current = (prog?.lastSlideIndex ?? -1) + 1;
+            const percent = total > 0 ? Math.min(100, Math.round((current / total) * 100)) : 0;
+            return { ...s, _percent: percent };
+        });
+
+        // 2. Filter by threshold
+        if (filterThreshold > 0) {
+            result = processed.filter(s => s._percent >= filterThreshold);
+        } else {
+            result = processed;
+        }
+
+        // 3. Sort
+        result.sort((a, b) => {
+            let valA = a._percent;
+            let valB = b._percent;
+
+            if (sortConfig.key === 'name') {
+                valA = (a.fullName || a.name || '').toLowerCase();
+                valB = (b.fullName || b.name || '').toLowerCase();
+            }
+
+            if (valA < valB) return sortConfig.direction === 'asc' ? -1 : 1;
+            if (valA > valB) return sortConfig.direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+
+        return result;
+    }, [students, studentProgress, slides.length, sortConfig, filterThreshold]);
 
 
     // --- Content Handlers ---
@@ -396,6 +443,43 @@ export function ManageModule() {
 
         setQuizAllowedStudents(prev => [...new Set([...prev, ...completedStudentIds])]);
         alert(`Granted quiz access to ${completedStudentIds.length} students who finished content.`);
+    };
+
+    const resetProgressForAll = async () => {
+        if (!window.confirm("WARNING: This will wipe all progress, scores, and quiz permissions for ALL assigned students in this module. This action cannot be undone. Proceed?")) return;
+
+        try {
+            setLoading(true);
+            const batchPromises = assignedStudents.map(async (uid) => {
+                const progressRef = doc(db, 'users', uid, 'progress', moduleId);
+                // Reset progress record
+                await setDoc(progressRef, {
+                    courseId,
+                    moduleId,
+                    lastSlideIndex: -1,
+                    status: 'not-started',
+                    score: 0,
+                    passed: false,
+                    quizRequested: false,
+                    updatedAt: serverTimestamp()
+                }, { merge: true });
+            });
+
+            await Promise.all(batchPromises);
+
+            // Clear quiz allowed list since we are resetting everything
+            setQuizAllowedStudents([]);
+
+            // Refresh local progress state
+            await fetchProgress();
+
+            alert("Protocol Reset Successful: All student progress for this module has been wiped.");
+        } catch (error) {
+            console.error("Reset Error:", error);
+            alert("Failed to reset progress: " + error.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     // --- Save Handler ---
@@ -806,13 +890,57 @@ export function ManageModule() {
                                 </div>
                             </div>
                         </div>
-                        <button
-                            onClick={grantQuizAccessToCompleted}
-                            className="px-6 py-3 bg-white text-espresso font-black uppercase tracking-[0.2em] text-[10px] rounded-xl hover:bg-espresso hover:text-white transition-all shadow-xl active:scale-95 flex items-center gap-2"
-                        >
-                            <span className="material-symbols-outlined text-[18px]">auto_fix</span>
-                            Grant Quiz Access to Completed
-                        </button>
+                        <div className="flex flex-wrap items-center justify-between gap-6 bg-white/40 dark:bg-black/20 p-6 rounded-3xl border border-espresso/10">
+                            <div className="flex flex-wrap items-center gap-4">
+                                <button
+                                    onClick={grantQuizAccessToCompleted}
+                                    className="px-6 py-3 bg-white text-espresso font-black uppercase tracking-[0.2em] text-[10px] rounded-xl hover:bg-espresso hover:text-white transition-all shadow-xl active:scale-95 flex items-center gap-2"
+                                >
+                                    <span className="material-symbols-outlined text-[18px]">auto_fix</span>
+                                    Grant Quiz Access to Completed
+                                </button>
+
+                                <button
+                                    onClick={resetProgressForAll}
+                                    className="px-6 py-3 bg-red-500/10 text-red-600 border border-red-500/20 font-black uppercase tracking-[0.2em] text-[10px] rounded-xl hover:bg-red-600 hover:text-white transition-all shadow-xl active:scale-95 flex items-center gap-2 group/reset"
+                                >
+                                    <span className="material-symbols-outlined text-[18px] group-hover/reset:rotate-180 transition-transform duration-500">restart_alt</span>
+                                    Reset Protocol for All
+                                </button>
+
+                                <div className="h-8 w-px bg-espresso/10 hidden md:block" />
+
+                                <div className="flex items-center gap-2">
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-espresso/40">Filter:</span>
+                                    {[0, 50, 70, 100].map(val => (
+                                        <button
+                                            key={val}
+                                            onClick={() => setFilterThreshold(val)}
+                                            className={cn(
+                                                "px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-tighter transition-all border",
+                                                filterThreshold === val
+                                                    ? "bg-espresso text-white border-espresso"
+                                                    : "bg-white/40 text-espresso/40 border-espresso/5 hover:border-espresso/20"
+                                            )}
+                                        >
+                                            {val === 0 ? 'All' : `${val}%+`}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-3">
+                                <span className="text-[10px] font-black uppercase tracking-widest text-espresso/40">Sort Progress:</span>
+                                <button
+                                    onClick={() => setSortConfig({ key: 'progress', direction: sortConfig.direction === 'asc' ? 'desc' : 'asc' })}
+                                    className="w-10 h-10 rounded-xl bg-white/40 border border-espresso/5 flex items-center justify-center text-espresso/60 hover:border-espresso/20 transition-all shadow-sm active:scale-95"
+                                >
+                                    <span className="material-symbols-outlined text-xl">
+                                        {sortConfig.direction === 'asc' ? 'keyboard_double_arrow_up' : 'keyboard_double_arrow_down'}
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
 
                         <div className="bg-white/40 dark:bg-black/20 rounded-[2.5rem] border border-espresso/10 overflow-hidden shadow-xl">
                             <div className="max-h-[600px] overflow-y-auto custom-scrollbar">
@@ -828,7 +956,7 @@ export function ManageModule() {
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-espresso/5">
-                                        {students.map(student => {
+                                        {filteredAndSortedStudents.map(student => {
                                             const progress = studentProgress[student.id];
                                             const status = progress?.status;
                                             const lastSlide = progress?.lastSlideIndex ?? -1;
@@ -843,10 +971,11 @@ export function ManageModule() {
                                                     <td className="px-8 py-5">
                                                         <div className="flex items-center gap-4">
                                                             <div className="w-10 h-10 rounded-full bg-espresso/5 flex items-center justify-center font-black text-espresso text-sm">
-                                                                {student.name?.charAt(0) || student.email?.charAt(0)}
+                                                                {(student.fullName || student.name || student.email)?.charAt(0)}
                                                             </div>
                                                             <div className="flex flex-col">
-                                                                <span className="font-bold text-espresso dark:text-white">{student.name || 'Unknown'}</span>
+                                                                <span className="font-bold text-espresso dark:text-white">{student.fullName || student.name || 'Unknown'}</span>
+                                                                <span className="text-[8px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest">{student.id}</span>
                                                                 {hasRequestedQuiz && !isQuizAllowed && (
                                                                     <span className="text-[7px] font-black bg-amber-500 text-white px-1.5 py-0.5 rounded uppercase tracking-tighter w-fit mt-0.5">Quiz Requested</span>
                                                                 )}
