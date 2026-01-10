@@ -8,6 +8,8 @@ import { cn } from '../../lib/utils';
 export function Students() {
     const [students, setStudents] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [activeTab, setActiveTab] = useState('all'); // 'all', 'onsite', 'online'
 
     useEffect(() => {
         // Query users where role is 'student'
@@ -44,6 +46,26 @@ export function Students() {
         return <div className="p-8 text-center text-espresso dark:text-white">Loading students...</div>;
     }
 
+    const onsiteCount = students.filter(s => s.studyMethod === 'onsite').length;
+    const onlineCount = students.filter(s => s.studyMethod === 'online').length;
+    const allCount = students.length;
+
+    const filteredStudents = students.filter(student => {
+        const matchesSearch =
+            student.fullName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            student.email?.toLowerCase().includes(searchQuery.toLowerCase());
+
+        const matchesTab = activeTab === 'all' || student.studyMethod === activeTab;
+
+        return matchesSearch && matchesTab;
+    });
+
+    const pendingStudents = students.filter(s => s.status === 'pending');
+    const filteredPending = pendingStudents.filter(s =>
+        s.fullName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        s.email?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     return (
         <div className="flex-1 flex flex-col h-full bg-[#F5DEB3] dark:bg-[#1c1916] overflow-y-auto animate-fade-in pb-20">
             <div className=" w-full px-2 py-10 space-y-10">
@@ -65,19 +87,51 @@ export function Students() {
                     </div>
                 </div>
 
-                {/* Search Bar */}
-                <div className="relative group">
-                    <div className="absolute inset-y-0 left-4 md:left-6 flex items-center pointer-events-none text-espresso/30 group-focus-within:text-espresso transition-colors">
-                        <span className="material-symbols-outlined">search</span>
+                {/* Search & Tabs */}
+                <div className="space-y-6">
+                    <div className="relative group">
+                        <div className="absolute inset-y-0 left-4 md:left-6 flex items-center pointer-events-none text-espresso/30 group-focus-within:text-espresso transition-colors">
+                            <span className="material-symbols-outlined">search</span>
+                        </div>
+                        <input
+                            className="w-full h-14 md:h-16 pl-12 md:pl-16 pr-6 md:pr-8 bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-xl md:rounded-2xl text-espresso dark:text-white font-serif text-base md:text-lg focus:outline-none focus:ring-2 focus:ring-espresso transition-all placeholder:text-espresso/20 placeholder:font-black placeholder:uppercase placeholder:tracking-[0.4em] placeholder:text-[9px] md:text-[10px] shadow-inner"
+                            placeholder="Search Registry..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
                     </div>
-                    <input
-                        className="w-full h-14 md:h-16 pl-12 md:pl-16 pr-6 md:pr-8 bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-xl md:rounded-2xl text-espresso dark:text-white font-serif text-base md:text-lg focus:outline-none focus:ring-2 focus:ring-espresso transition-all placeholder:text-espresso/20 placeholder:font-black placeholder:uppercase placeholder:tracking-[0.4em] placeholder:text-[9px] md:text-[10px] shadow-inner"
-                        placeholder="Search Registry..."
-                    />
+
+                    <div className="flex flex-wrap items-center gap-2 md:gap-4 p-1.5 bg-white/30 dark:bg-black/20 rounded-2xl border border-espresso/5 backdrop-blur-sm self-start">
+                        {[
+                            { id: 'all', label: 'All Clusters', icon: 'groups', count: allCount },
+                            { id: 'onsite', label: 'Onsite Operational', icon: 'location_on', count: onsiteCount },
+                            { id: 'online', label: 'Digital Venture', icon: 'language', count: onlineCount },
+                        ].map((tab) => (
+                            <button
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id)}
+                                className={cn(
+                                    "px-4 md:px-6 py-2.5 md:py-3 rounded-xl md:rounded-2xl flex items-center gap-3 transition-all active:scale-95 group/tab",
+                                    activeTab === tab.id
+                                        ? "bg-espresso text-white shadow-xl shadow-espresso/20 scale-105 z-10"
+                                        : "bg-transparent text-espresso/40 hover:bg-white/40 hover:text-espresso"
+                                )}
+                            >
+                                <span className="material-symbols-outlined text-[18px] md:text-[20px]">{tab.icon}</span>
+                                <div className="text-left">
+                                    <p className="text-[8px] md:text-[9px] font-black uppercase tracking-widest leading-none">{tab.label}</p>
+                                    <p className={cn(
+                                        "text-[10px] md:text-[12px] font-black mt-1",
+                                        activeTab === tab.id ? "text-white" : "text-espresso/20"
+                                    )}>{tab.count.toString().padStart(2, '0')}</p>
+                                </div>
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
                 {/* Pending Approvals Notification */}
-                {students.filter(s => s.status === 'pending').length > 0 && (
+                {filteredPending.length > 0 && (
                     <div className="bg-amber-500 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 shadow-2xl relative overflow-hidden group/pending">
                         <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 group-hover/pending:bg-espresso transition-colors"></div>
                         <div className="flex items-center justify-between mb-6 md:mb-8">
@@ -85,12 +139,12 @@ export function Students() {
                                 <span className="material-symbols-outlined text-2xl md:text-3xl">emergency_home</span>
                                 <div>
                                     <h3 className="font-serif text-xl md:text-2xl uppercase tracking-tight leading-none">Queue Alert</h3>
-                                    <p className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.3em] mt-1 opacity-60">{students.filter(s => s.status === 'pending').length} Participants Awaiting Protocol Verification</p>
+                                    <p className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.3em] mt-1 opacity-60">{filteredPending.length} Participants Awaiting Protocol Verification</p>
                                 </div>
                             </div>
                         </div>
                         <div className="grid gap-3 md:gap-4">
-                            {students.filter(s => s.status === 'pending').map(student => (
+                            {filteredPending.map(student => (
                                 <div key={student.id} className="bg-white/20 backdrop-blur-sm p-4 md:p-6 rounded-2xl md:rounded-3xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-white/20 hover:bg-white/30 transition-all group/card">
                                     <Link to={`/admin/students/${student.id}`} className="flex items-center gap-4 md:gap-6">
                                         <div className="h-12 w-12 md:h-14 md:w-14 rounded-xl md:rounded-2xl border-2 border-espresso/10 overflow-hidden shadow-lg group-hover/card:scale-105 transition-transform shrink-0">
@@ -125,13 +179,13 @@ export function Students() {
                     </div>
 
                     <div className="grid gap-6">
-                        {students.length === 0 ? (
+                        {filteredStudents.length === 0 ? (
                             <div className="text-center py-20 md:py-24 bg-white/20 rounded-[2rem] md:rounded-[3rem] border-2 border-dashed border-espresso/10 flex flex-col items-center gap-4 md:gap-6 opacity-40">
                                 <span className="material-symbols-outlined text-4xl md:text-5xl">person_off</span>
-                                <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.5em] px-4">The registry is vacant</p>
+                                <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.5em] px-4">No nodes match your inquiry</p>
                             </div>
                         ) : (
-                            students.map(student => (
+                            filteredStudents.map(student => (
                                 <Link to={`/admin/students/${student.id}`} key={student.id} className="bg-white/40 dark:bg-black/20 p-5 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-espresso/10 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-6 hover:shadow-2xl hover:-translate-y-1 transition-all group relative overflow-hidden">
                                     <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover:bg-espresso transition-colors"></div>
                                     <div className="flex items-center gap-4 md:gap-8">

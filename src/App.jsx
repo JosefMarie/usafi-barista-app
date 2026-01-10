@@ -207,6 +207,7 @@ function App() {
               <Route path="courses/:courseId" element={<InstructorManageCourse />} />
               <Route path="courses/:courseId/modules/:moduleId" element={<InstructorManageModule />} />
               <Route path="students" element={<InstructorStudents />} />
+              <Route path="students/:id" element={<StudentDetails />} />
               <Route path="chat" element={<InstructorChat />} />
               <Route path="chat/:recipientId" element={<ChatWindow />} />
               <Route path="schedule" element={<InstructorSchedule />} />

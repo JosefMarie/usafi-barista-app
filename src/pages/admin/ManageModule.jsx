@@ -181,10 +181,21 @@ export function ManageModule() {
                     setAssignedStudents(data.assignedStudents || []);
                     setQuizAllowedStudents(data.quizAllowedStudents || []);
                     setDuration(data.duration || 0);
+                } else if (moduleId === 'new') {
+                    // Initialize New Module State
+                    setModule({
+                        title: 'New Instructional Node',
+                        status: 'draft',
+                        courseId: courseId
+                    });
+                    setSlides([]);
+                    setSummarySlides([]);
+                    setQuiz({ questions: [], passMark: 70 });
+                    setAssignedStudents([]);
+                    setQuizAllowedStudents([]);
+                    setDuration(0);
                 } else {
-                    // Create if not exists (fallback) or redirect
-                    console.log("Module not found, creating placeholder in memory");
-                    setModule({ id: moduleId, title: 'New Module', status: 'draft' });
+                    navigate(`/admin/courses/${courseId}`);
                 }
 
                 // Fetch All Students
@@ -391,27 +402,35 @@ export function ManageModule() {
     const handleSave = async () => {
         try {
             setLoading(true);
-            const modRef = doc(db, 'courses', courseId, 'modules', moduleId);
+            const isNew = moduleId === 'new';
+            const modulesRef = collection(db, 'courses', courseId, 'modules');
+            const modRef = isNew ? doc(modulesRef) : doc(db, 'courses', courseId, 'modules', moduleId);
 
-            // Clean slides before saving to remove legacy 'image' field if mapped to 'media' already?
-            // Actually, we can keep it optional for safety or just save 'media'.
-            // Let's save both for now or just trust new structure.
-            // To be clean, let's just save the new structure.
-
-            await updateDoc(modRef, {
-                title: module.title, // Save Title
+            const saveDoc = {
+                title: module.title,
                 content: slides,
                 summaryContent: summarySlides,
                 quiz: quiz,
                 assignedStudents: assignedStudents,
                 quizAllowedStudents: quizAllowedStudents,
-                duration: parseInt(duration),
-                updatedAt: serverTimestamp()
-            });
-            alert('Changes saved successfully!');
+                duration: parseInt(duration) || 0,
+                updatedAt: serverTimestamp(),
+                status: module.status || 'draft',
+                courseId: courseId
+            };
+
+            if (isNew) {
+                saveDoc.createdAt = serverTimestamp();
+                await setDoc(modRef, saveDoc);
+                alert('Module created successfully!');
+                navigate(`/admin/courses/${courseId}/modules/${modRef.id}`, { replace: true });
+            } else {
+                await updateDoc(modRef, saveDoc);
+                alert('Changes saved successfully!');
+            }
         } catch (error) {
             console.error("Error saving module:", error);
-            alert('Error saving changes.');
+            alert(`Error saving changes: ${error.message}`);
         } finally {
             setLoading(false);
         }

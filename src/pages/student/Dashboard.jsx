@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { cn } from '../../lib/utils';
-import { collection, query, where, orderBy, limit, getDocs, doc, getDoc } from 'firebase/firestore';
+import { collection, query, where, orderBy, limit, getDocs, doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 
 const BEAN_TO_BREW_ID = 'bean-to-brew';
@@ -22,6 +22,7 @@ export function Dashboard() {
         { label: t('student.dashboard.stats.certificates'), value: 0, icon: 'workspace_premium', color: 'bg-yellow-500' },
     ]);
     const [nextModule, setNextModule] = useState(null);
+    const [recentActivity, setRecentActivity] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -36,53 +37,72 @@ export function Dashboard() {
                     setCourse(courseData);
                 }
 
-                // 2. Fetch Modules
-                const modQ = query(collection(db, 'courses', BEAN_TO_BREW_ID, 'modules'), orderBy('title')); // Ideally order by an index field
-                const modSnap = await getDocs(modQ);
-                const modules = modSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-                // Sort by title numeric prefix if possible, or assume simple sort for now
-                modules.sort((a, b) => a.title.localeCompare(b.title, undefined, { numeric: true }));
-
-                // 3. Fetch User Progress
-                // We fetch all progress docs for this user to check completion
-                // Since progress is stored in a subcollection under user, we can try to fetch all or loop
-                // Optimally: fetch all progress for this course? user -> progress collection
+                // 2. Fetch Modules & Progress (Real-time)
+                const modQ = query(collection(db, 'courses', BEAN_TO_BREW_ID, 'modules'), orderBy('title'));
                 const progQ = collection(db, 'users', user.uid, 'progress');
-                // We might want to filter by courseId if we stored it in progress doc, which we did!
-                const progSnap = await getDocs(progQ);
-                const progressMap = {};
-                progSnap.forEach(doc => {
-                    const data = doc.data();
-                    if (data.courseId === BEAN_TO_BREW_ID) {
-                        progressMap[data.moduleId] = data;
-                    }
+
+                const unsubModules = onSnapshot(modQ, (modSnap) => {
+                    const modules = modSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                    modules.sort((a, b) => a.title.localeCompare(b.title, undefined, { numeric: true }));
+
+                    const unsubProgress = onSnapshot(progQ, (progSnap) => {
+                        const progressMap = {};
+                        progSnap.forEach(doc => {
+                            const data = doc.data();
+                            if (data.courseId === BEAN_TO_BREW_ID) {
+                                progressMap[data.moduleId] = data;
+                            }
+                        });
+
+                        // Calculate Stats
+                        const totalModules = modules.length;
+                        const completedCount = Object.values(progressMap).filter(p => p.passed).length;
+
+                        // Determine Up Next
+                        let upcoming = null;
+                        for (const mod of modules) {
+                            if (mod.assignedStudents?.includes(user.uid)) {
+                                if (!progressMap[mod.id]?.passed) {
+                                    upcoming = mod;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Update State
+                        setStats([
+                            { label: t('student.dashboard.stats.courses'), value: courseDoc.exists() ? 1 : 0, icon: 'school', color: 'bg-blue-500' },
+                            { label: t('student.dashboard.stats.completed'), value: `${completedCount}/${totalModules}`, icon: 'check_circle', color: 'bg-green-500' },
+                            { label: t('student.dashboard.stats.certificates'), value: completedCount, icon: 'workspace_premium', color: 'bg-yellow-500' },
+                        ]);
+
+                        setNextModule(upcoming);
+                        setLoading(false);
+                    });
+
+                    return () => unsubProgress();
                 });
 
-                // 4. Calculate Stats
-                const totalModules = modules.length;
-                const completedCount = Object.values(progressMap).filter(p => p.passed).length;
+                return () => unsubModules();
 
-                // 5. Determine Up Next
-                let upcoming = null;
-                for (const mod of modules) {
-                    // Check if assigned
-                    if (mod.assignedStudents?.includes(user.uid)) {
-                        // Check if completed
-                        if (!progressMap[mod.id]?.passed) {
-                            upcoming = mod;
-                            break; // Found the first incomplete assigned module
-                        }
-                    }
-                }
+                // 6. Fetch Recent Activity
+                const activityQ = query(
+                    collection(db, 'activity'),
+                    where('userId', '==', user.uid),
+                    limit(20) // Get more to sort in-memory
+                );
+                const activitySnap = await getDocs(activityQ);
+                const activityData = activitySnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-                // Update State
-                setStats([
-                    { label: t('student.dashboard.stats.courses'), value: courseData ? 1 : 0, icon: 'school', color: 'bg-blue-500' },
-                    { label: t('student.dashboard.stats.completed'), value: `${completedCount}/${totalModules}`, icon: 'check_circle', color: 'bg-green-500' },
-                    { label: t('student.dashboard.stats.certificates'), value: completedCount, icon: 'workspace_premium', color: 'bg-yellow-500' },
-                ]);
+                // In-memory sort to avoid index requirement
+                activityData.sort((a, b) => {
+                    const timeA = a.timestamp?.toMillis?.() || 0;
+                    const timeB = b.timestamp?.toMillis?.() || 0;
+                    return timeB - timeA;
+                });
 
-                setNextModule(upcoming);
+                setRecentActivity(activityData.slice(0, 3));
+
                 setLoading(false);
 
             } catch (error) {
@@ -194,79 +214,114 @@ export function Dashboard() {
                     )}
                 </div>
 
-                {/* Right Column: Up Next */}
-                <div className="space-y-6">
-                    <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 uppercase tracking-[0.2em] flex items-center gap-3">
-                        <span className="h-2 w-2 rounded-full bg-espresso"></span>
-                        {t('student.dashboard.next_step.title')}
-                    </h2>
+                {/* Right Column: Up Next & Activity */}
+                <div className="space-y-8">
+                    {/* Up Next */}
+                    <div className="space-y-6">
+                        <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 uppercase tracking-[0.2em] flex items-center gap-3">
+                            <span className="h-2 w-2 rounded-full bg-espresso"></span>
+                            {t('student.dashboard.next_step.title')}
+                        </h2>
 
-                    {nextModule ? (
-                        <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/10 overflow-hidden animate-slide-in relative group">
-                            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                            <div className="relative h-40 overflow-hidden">
-                                <img
-                                    src={nextModule.content?.[0]?.image || 'https://images.unsplash.com/photo-1447933601400-b8a90d437166?q=80&w=2555&auto=format&fit=crop'}
-                                    alt="Module"
-                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-espresso via-espresso/20 to-transparent flex items-end p-6">
-                                    <div className="text-white">
-                                        <p className="text-[10px] font-black uppercase tracking-widest opacity-80 mb-1">
-                                            {t('student.dashboard.next_step.upcoming')}
-                                        </p>
-                                        <h3 className="font-serif font-bold text-xl leading-tight line-clamp-1">{nextModule.title}</h3>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="p-6 space-y-5 relative z-10">
-                                <div className="flex items-center justify-between py-1">
-                                    <div className="flex items-center gap-3">
-                                        <div className="bg-espresso/5 p-2 rounded-xl text-espresso/40">
-                                            <span className="material-symbols-outlined text-xl">timer</span>
-                                        </div>
-                                        <div>
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">
-                                                {t('student.dashboard.next_step.duration')}
+                        {nextModule ? (
+                            <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/10 overflow-hidden animate-slide-in relative group">
+                                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                                <div className="relative h-40 overflow-hidden">
+                                    <img
+                                        src={nextModule.content?.[0]?.image || 'https://images.unsplash.com/photo-1447933601400-b8a90d437166?q=80&w=2555&auto=format&fit=crop'}
+                                        alt="Module"
+                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-espresso via-espresso/20 to-transparent flex items-end p-6">
+                                        <div className="text-white">
+                                            <p className="text-[10px] font-black uppercase tracking-widest opacity-80 mb-1">
+                                                {t('student.dashboard.next_step.upcoming')}
                                             </p>
-                                            <p className="text-sm font-black text-espresso dark:text-white">{nextModule.duration || '30'} {t('student.dashboard.stats.mins', 'mins')}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <div className="bg-espresso/5 p-2 rounded-xl text-espresso/40">
-                                            <span className="material-symbols-outlined text-xl">layers</span>
-                                        </div>
-                                        <div>
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">
-                                                {t('student.dashboard.next_step.units')}
-                                            </p>
-                                            <p className="text-sm font-black text-espresso dark:text-white">
-                                                {nextModule.content?.length || 0} {t('student.dashboard.next_step.slides')}
-                                            </p>
+                                            <h3 className="font-serif font-bold text-xl leading-tight line-clamp-1">{nextModule.title}</h3>
                                         </div>
                                     </div>
                                 </div>
+                                <div className="p-6 space-y-5 relative z-10">
+                                    <div className="flex items-center justify-between py-1">
+                                        <div className="flex items-center gap-3">
+                                            <div className="bg-espresso/5 p-2 rounded-xl text-espresso/40">
+                                                <span className="material-symbols-outlined text-xl">timer</span>
+                                            </div>
+                                            <div>
+                                                <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">
+                                                    {t('student.dashboard.next_step.duration')}
+                                                </p>
+                                                <p className="text-sm font-black text-espresso dark:text-white">{nextModule.duration || '30'} {t('student.dashboard.stats.mins', 'mins')}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <div className="bg-espresso/5 p-2 rounded-xl text-espresso/40">
+                                                <span className="material-symbols-outlined text-xl">layers</span>
+                                            </div>
+                                            <div>
+                                                <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">
+                                                    {t('student.dashboard.next_step.units')}
+                                                </p>
+                                                <p className="text-sm font-black text-espresso dark:text-white">
+                                                    {nextModule.content?.length || 0} {t('student.dashboard.next_step.slides')}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                <button
-                                    onClick={() => navigate(`/student/courses/${BEAN_TO_BREW_ID}?module=${nextModule.id}`)}
-                                    className="w-full py-4 bg-white/40 hover:bg-white text-espresso font-black uppercase tracking-widest text-[10px] rounded-2xl transition-all shadow-sm flex items-center justify-center gap-2 border border-espresso/5 active:scale-95"
-                                >
-                                    {t('student.dashboard.next_step.initiate_btn')} <span className="material-symbols-outlined text-lg">arrow_forward</span>
-                                </button>
+                                    <button
+                                        onClick={() => navigate(`/student/courses/${BEAN_TO_BREW_ID}?module=${nextModule.id}`)}
+                                        className="w-full py-4 bg-white/40 hover:bg-white text-espresso font-black uppercase tracking-widest text-[10px] rounded-2xl transition-all shadow-sm flex items-center justify-center gap-2 border border-espresso/5 active:scale-95"
+                                    >
+                                        {t('student.dashboard.next_step.initiate_btn')} <span className="material-symbols-outlined text-lg">arrow_forward</span>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    ) : (
-                        <div className="bg-espresso/5 dark:bg-white/5 p-8 rounded-3xl border border-espresso/10 dark:border-white/10 text-center relative overflow-hidden group">
+                        ) : (
+                            <div className="bg-espresso/5 dark:bg-white/5 p-8 rounded-3xl border border-espresso/10 dark:border-white/10 text-center relative overflow-hidden group">
+                                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                                <span className="material-symbols-outlined text-5xl text-espresso/20 dark:text-white/20 mb-4 block group-hover:scale-110 transition-transform">auto_awesome</span>
+                                <h3 className="font-serif font-bold text-espresso dark:text-white text-lg">
+                                    {t('student.dashboard.next_step.completed_title')}
+                                </h3>
+                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-espresso/40 dark:text-white/40 mt-2">
+                                    {t('student.dashboard.next_step.completed_subtitle')}
+                                </p>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Recent Activity */}
+                    <div className="space-y-6">
+                        <h2 className="text-[10px] font-black text-espresso/50 dark:text-white/50 uppercase tracking-[0.2em] flex items-center gap-3">
+                            <span className="h-2 w-2 rounded-full bg-espresso"></span>
+                            Recent Activity
+                        </h2>
+                        <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/10 overflow-hidden p-6 relative group">
                             <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                            <span className="material-symbols-outlined text-5xl text-espresso/20 dark:text-white/20 mb-4 block group-hover:scale-110 transition-transform">auto_awesome</span>
-                            <h3 className="font-serif font-bold text-espresso dark:text-white text-lg">
-                                {t('student.dashboard.next_step.completed_title')}
-                            </h3>
-                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-espresso/40 dark:text-white/40 mt-2">
-                                {t('student.dashboard.next_step.completed_subtitle')}
-                            </p>
+                            {recentActivity.length > 0 ? (
+                                <div className="space-y-5">
+                                    {recentActivity.map((act) => (
+                                        <div key={act.id} className="flex items-center gap-4 group/item">
+                                            <div className="w-10 h-10 rounded-xl bg-espresso/5 flex items-center justify-center text-espresso/40 group-hover/item:bg-espresso group-hover/item:text-white transition-all shadow-sm">
+                                                <span className="material-symbols-outlined text-xl">{act.icon || 'history'}</span>
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-xs font-bold text-espresso dark:text-white truncate">{act.action}</p>
+                                                <p className="text-[9px] font-black uppercase tracking-widest text-espresso/40">
+                                                    {act.timestamp?.toDate ? act.timestamp.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Just now'}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="py-6 text-center opacity-30">
+                                    <p className="text-[10px] font-black uppercase tracking-widest">No activity logged yet</p>
+                                </div>
+                            )}
                         </div>
-                    )}
+                    </div>
                 </div>
 
             </div>

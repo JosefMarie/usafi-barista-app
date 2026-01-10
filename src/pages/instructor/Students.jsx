@@ -160,13 +160,20 @@ export function InstructorStudents() {
                                         {student.email}
                                     </p>
                                 </div>
-                                <div className="flex items-center gap-3">
+                                <div className="flex flex-col sm:flex-row items-center gap-3">
                                     <button
                                         onClick={() => navigate(`/instructor/chat/${student.id}`)}
-                                        className="p-4 rounded-2xl bg-white dark:bg-white/5 text-espresso/40 hover:text-espresso hover:bg-white/80 transition-all shadow-md active:scale-95 flex items-center gap-2 font-black text-[10px] uppercase tracking-widest"
+                                        className="w-full sm:w-auto p-4 rounded-2xl bg-white dark:bg-white/5 text-espresso/40 hover:text-espresso hover:bg-white/80 transition-all shadow-md active:scale-95 flex items-center justify-center gap-2 font-black text-[10px] uppercase tracking-widest"
                                     >
                                         <span className="material-symbols-outlined text-xl">chat</span>
                                         Message
+                                    </button>
+                                    <button
+                                        onClick={() => navigate(`/instructor/students/${student.id}`)}
+                                        className="w-full sm:w-auto p-4 rounded-2xl bg-espresso text-white hover:bg-espresso/90 transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 font-black text-[10px] uppercase tracking-widest"
+                                    >
+                                        <span className="material-symbols-outlined text-xl">person_search</span>
+                                        View Dossier
                                     </button>
                                 </div>
                             </div>

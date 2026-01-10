@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { doc, getDoc, setDoc, serverTimestamp, collection, getDocs, updateDoc, arrayUnion, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc, setDoc, serverTimestamp, collection, getDocs, updateDoc, arrayUnion, onSnapshot, addDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { cn } from '../../lib/utils';
 import { useAuth } from '../../context/AuthContext';
@@ -86,13 +86,33 @@ export function StudentCourseView() {
         const saveProgress = async () => {
             if (!user || !moduleId || !module) return;
             try {
-                await setDoc(doc(db, 'users', user.uid, 'progress', moduleId), {
+                const progressRef = doc(db, 'users', user.uid, 'progress', moduleId);
+
+                // Check if this is a new "Start" event
+                const progressSnap = await getDoc(progressRef);
+                const isNewStart = !progressSnap.exists();
+
+                await setDoc(progressRef, {
                     courseId,
                     moduleId,
                     lastSlideIndex: currentSlide,
                     updatedAt: serverTimestamp(),
-                    status: 'in-progress'
+                    status: 'in-progress',
+                    studentName: user.name || user.fullName || user.email // Helpful denormalization for admin logs
                 }, { merge: true });
+
+                if (isNewStart && currentSlide === 0) {
+                    await addDoc(collection(db, 'activity'), {
+                        userId: user.uid,
+                        userName: user.name || user.fullName || user.email,
+                        action: `Started module: ${module.title}`,
+                        type: 'module_start',
+                        icon: 'play_arrow',
+                        timestamp: serverTimestamp(),
+                        moduleId,
+                        courseId
+                    });
+                }
             } catch (error) {
                 console.error("Error saving slide progress:", error);
             }
@@ -254,6 +274,20 @@ export function StudentCourseView() {
                 completedAt: serverTimestamp(),
                 status: passed ? 'completed' : 'failed'
             }, { merge: true });
+
+            // Log completion activity
+            await addDoc(collection(db, 'activity'), {
+                userId: user.uid,
+                userName: user.name || user.fullName || user.email,
+                action: passed ? `Completed module: ${module.title}` : `Attempted quiz: ${module.title}`,
+                status: passed ? 'passed' : 'failed',
+                score,
+                type: 'module_completion',
+                icon: passed ? 'workspace_premium' : 'quiz',
+                timestamp: serverTimestamp(),
+                moduleId,
+                courseId
+            });
 
             if (passed) {
                 try {
