@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { doc, getDoc, setDoc, serverTimestamp, collection, getDocs, updateDoc, arrayUnion } from 'firebase/firestore';
+import { doc, getDoc, setDoc, serverTimestamp, collection, getDocs, updateDoc, arrayUnion, onSnapshot } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { cn } from '../../lib/utils';
 import { useAuth } from '../../context/AuthContext';
@@ -39,45 +39,48 @@ export function StudentCourseView() {
     const [isQuizAllowed, setIsQuizAllowed] = useState(false);
 
     useEffect(() => {
-        const fetchModule = async () => {
-            if (!courseId || !moduleId || !user) return;
+        if (!courseId || !moduleId || !user) return;
 
-            try {
-                const docRef = doc(db, 'courses', courseId, 'modules', moduleId);
-                const docSnap = await getDoc(docRef);
-
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    if (!data.assignedStudents?.includes(user.uid)) {
-                        alert(t('student.course_view.not_assigned'));
-                        navigate('/student/courses');
-                        return;
-                    }
-                    setModule({ id: docSnap.id, ...data });
-                    setIsQuizAllowed(data.quizAllowedStudents?.includes(user.uid) || false);
-
-                    const progressRef = doc(db, 'users', user.uid, 'progress', moduleId);
-                    const progressSnap = await getDoc(progressRef);
-                    if (progressSnap.exists()) {
-                        const progressData = progressSnap.data();
-                        if (progressData.lastSlideIndex !== undefined) {
-                            setCurrentSlide(progressData.lastSlideIndex);
-                        }
-                        setQuizRequested(progressData.quizRequested || false);
-                    }
-                    setIsProgressLoaded(true);
-                } else {
+        const docRef = doc(db, 'courses', courseId, 'modules', moduleId);
+        const unsubscribe = onSnapshot(docRef, async (docSnap) => {
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                if (!data.assignedStudents?.includes(user.uid)) {
+                    alert(t('student.course_view.not_assigned'));
                     navigate('/student/courses');
+                    return;
                 }
-            } catch (error) {
-                console.error("Error fetching module:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
+                setModule({ id: docSnap.id, ...data });
+                setIsQuizAllowed(data.quizAllowedStudents?.includes(user.uid) || false);
 
-        fetchModule();
-    }, [courseId, moduleId, user, navigate, t]);
+                // Progress still fetched once as it's user-specific and changes frequently
+                if (!isProgressLoaded) {
+                    try {
+                        const progressRef = doc(db, 'users', user.uid, 'progress', moduleId);
+                        const progressSnap = await getDoc(progressRef);
+                        if (progressSnap.exists()) {
+                            const progressData = progressSnap.data();
+                            if (progressData.lastSlideIndex !== undefined) {
+                                setCurrentSlide(progressData.lastSlideIndex);
+                            }
+                            setQuizRequested(progressData.quizRequested || false);
+                        }
+                        setIsProgressLoaded(true);
+                    } catch (err) {
+                        console.error("Error fetching progress:", err);
+                    }
+                }
+            } else {
+                navigate('/student/courses');
+            }
+            setLoading(false);
+        }, (error) => {
+            console.error("Error listening to module:", error);
+            setLoading(false);
+        });
+
+        return () => unsubscribe();
+    }, [courseId, moduleId, user, navigate, t, isProgressLoaded]);
 
     useEffect(() => {
         const saveProgress = async () => {
@@ -317,6 +320,7 @@ export function StudentCourseView() {
                             </div>
                             <p className="text-[8px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.1em] md:tracking-[0.2em] truncate">
                                 {showQuiz ? t('student.course_view.assessment_phase') : t('student.course_view.extraction', { percent: progressPercent })}
+                                <span className="ml-2 opacity-50">[{module.id}]</span>
                             </p>
                         </div>
                     </div>

@@ -448,7 +448,7 @@ export function ManageModule() {
                             value={module?.title || ''}
                             onChange={(e) => setModule({ ...module, title: e.target.value })}
                         />
-                        <p className="text-[9px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] mt-1 md:mt-2">Instructional Logic Controller</p>
+                        <p className="text-[9px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] mt-1 md:mt-2">Instructional Logic Controller <span className="ml-2 opacity-50">[{module?.id}]</span></p>
                     </div>
                 </div>
                 <div className="flex flex-wrap gap-3 md:gap-4 w-full md:w-auto">
