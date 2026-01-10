@@ -414,35 +414,61 @@ export function ManageModule() {
     };
 
     // --- Assignment Handlers ---
-    const toggleAssignment = (studentId) => {
-        if (assignedStudents.includes(studentId)) {
-            setAssignedStudents(prev => prev.filter(id => id !== studentId));
-        } else {
-            setAssignedStudents(prev => [...prev, studentId]);
+    const toggleAssignment = async (studentId) => {
+        const newAssigned = assignedStudents.includes(studentId)
+            ? assignedStudents.filter(id => id !== studentId)
+            : [...assignedStudents, studentId];
+
+        setAssignedStudents(newAssigned);
+
+        try {
+            await updateDoc(doc(db, 'courses', courseId, 'modules', moduleId), {
+                assignedStudents: newAssigned
+            });
+        } catch (error) {
+            console.error("Sync Error:", error);
         }
     };
 
-    const toggleQuizAccess = (e, studentId) => {
+    const toggleQuizAccess = async (e, studentId) => {
         e.stopPropagation(); // Prevent row click
-        if (quizAllowedStudents.includes(studentId)) {
-            setQuizAllowedStudents(prev => prev.filter(id => id !== studentId));
-        } else {
-            setQuizAllowedStudents(prev => [...prev, studentId]);
+        const newAllowed = quizAllowedStudents.includes(studentId)
+            ? quizAllowedStudents.filter(id => id !== studentId)
+            : [...quizAllowedStudents, studentId];
+
+        setQuizAllowedStudents(newAllowed);
+
+        try {
+            await updateDoc(doc(db, 'courses', courseId, 'modules', moduleId), {
+                quizAllowedStudents: newAllowed
+            });
+        } catch (error) {
+            console.error("Sync Error:", error);
         }
     };
 
-    const grantQuizAccessToCompleted = () => {
+    const grantQuizAccessToCompleted = async () => {
         const completedStudentIds = students.filter(student => {
             const progress = studentProgress[student.id];
             // Check if they have reached the last slide (Assuming content length > 0)
-            const lastSlideIndex = progress?.lastSlideIndex || -1;
+            const lastSlideIndex = progress?.lastSlideIndex || 0;
             const contentLen = (contentType === 'full' ? slides : summarySlides).length;
             // Consider completed if they are at the last slide or have a 'completed' status
             return (contentLen > 0 && lastSlideIndex >= contentLen - 1) || progress?.status === 'completed';
         }).map(s => s.id);
 
-        setQuizAllowedStudents(prev => [...new Set([...prev, ...completedStudentIds])]);
-        alert(`Granted quiz access to ${completedStudentIds.length} students who finished content.`);
+        const newAllowed = [...new Set([...quizAllowedStudents, ...completedStudentIds])];
+        setQuizAllowedStudents(newAllowed);
+
+        try {
+            await updateDoc(doc(db, 'courses', courseId, 'modules', moduleId), {
+                quizAllowedStudents: newAllowed
+            });
+            alert(`Granted quiz access to ${completedStudentIds.length} students who finished content.`);
+        } catch (error) {
+            console.error("Sync Error:", error);
+            alert("Failed to sync permissions: " + error.message);
+        }
     };
 
     const resetProgressForAll = async () => {
