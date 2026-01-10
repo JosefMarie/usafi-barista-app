@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { db } from '../../lib/firebase';
+import { collection, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc, serverTimestamp, getDocs, where } from 'firebase/firestore';
+import { ref, deleteObject } from 'firebase/storage';
+import { db, storage } from '../../lib/firebase';
 import { GradientButton } from '../../components/ui/GradientButton';
 import { cn } from '../../lib/utils';
 
@@ -9,6 +10,7 @@ export function AdminOpportunities() {
     const [opportunities, setOpportunities] = useState([]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState('pending'); // 'pending', 'approved', 'rejected'
+    const [previewImage, setPreviewImage] = useState(null);
 
     useEffect(() => {
         const q = query(collection(db, 'opportunities'), orderBy('createdAt', 'desc'));
@@ -21,6 +23,40 @@ export function AdminOpportunities() {
             setLoading(false);
         });
 
+        // Auto-purge logic: Identify and delete approved opportunities older than 7 days
+        const purgeExpired = async () => {
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+            const expiredQuery = query(
+                collection(db, 'opportunities'),
+                where('status', '==', 'approved'),
+                where('approvedAt', '<', oneWeekAgo)
+            );
+
+            try {
+                const expiredSnap = await getDocs(expiredQuery);
+                expiredSnap.forEach(async (docSnap) => {
+                    const data = docSnap.data();
+                    // Delete image from storage if exists
+                    if (data.imageUrl) {
+                        try {
+                            const imageRef = ref(storage, data.imageUrl);
+                            await deleteObject(imageRef);
+                        } catch (e) {
+                            console.error("Error deleting image from storage during purge:", e);
+                        }
+                    }
+                    await deleteDoc(docSnap.ref);
+                    console.log(`Purged expired opportunity: ${docSnap.id}`);
+                });
+            } catch (error) {
+                console.error("Purge Error:", error);
+            }
+        };
+
+        purgeExpired();
+
         return () => unsubscribe();
     }, []);
 
@@ -29,9 +65,12 @@ export function AdminOpportunities() {
             const jobRef = doc(db, 'opportunities', job.id);
             const updates = { status: newStatus };
 
-            // If approving and no audience set, default to public
-            if (newStatus === 'approved' && (!job.targetAudience || job.targetAudience.length === 0)) {
-                updates.targetAudience = ['public'];
+            if (newStatus === 'approved') {
+                updates.approvedAt = serverTimestamp();
+                // If approving and no audience set, default to public
+                if (!job.targetAudience || job.targetAudience.length === 0) {
+                    updates.targetAudience = ['public'];
+                }
             }
 
             await updateDoc(jobRef, updates);
@@ -58,10 +97,19 @@ export function AdminOpportunities() {
         }
     };
 
-    const handleDelete = async (id) => {
+    const handleDelete = async (job) => {
         if (!window.confirm("Are you sure you want to delete this opportunity?")) return;
         try {
-            await deleteDoc(doc(db, 'opportunities', id));
+            // Delete image from storage if exists
+            if (job.imageUrl) {
+                try {
+                    const imageRef = ref(storage, job.imageUrl);
+                    await deleteObject(imageRef);
+                } catch (e) {
+                    console.error("Error deleting image from storage:", e);
+                }
+            }
+            await deleteDoc(doc(db, 'opportunities', job.id));
         } catch (error) {
             console.error("Error deleting:", error);
             alert("Failed to delete");
@@ -140,7 +188,28 @@ export function AdminOpportunities() {
                                             <span className="material-symbols-outlined text-[14px] md:text-[16px]">calendar_today</span>
                                             POSTED: {job.createdAt?.toDate().toLocaleDateString().toUpperCase()}
                                         </span>
+                                        {job.approvedAt && (
+                                            <span className="text-[8px] md:text-[9px] font-black text-green-600/60 uppercase tracking-[0.2em] flex items-center gap-2">
+                                                <span className="material-symbols-outlined text-[14px] md:text-[16px]">verified</span>
+                                                APPROVED: {job.approvedAt?.toDate().toLocaleDateString().toUpperCase()}
+                                            </span>
+                                        )}
                                     </div>
+
+                                    {job.imageUrl && (
+                                        <div
+                                            onClick={() => setPreviewImage(job.imageUrl)}
+                                            className="w-full h-48 md:h-64 rounded-2xl overflow-hidden border border-espresso/10 cursor-pointer group/image relative"
+                                        >
+                                            <img src={job.imageUrl} alt="Opportunity Flier" className="w-full h-full object-cover group-hover/image:scale-105 transition-transform duration-500" />
+                                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover/image:opacity-100 transition-opacity">
+                                                <div className="flex flex-col items-center gap-2">
+                                                    <span className="material-symbols-outlined text-white text-3xl">zoom_in</span>
+                                                    <span className="text-white text-[10px] font-black uppercase tracking-[0.2em]">View Full Flier</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
 
                                     <div className="space-y-4">
                                         <h3 className="text-2xl md:text-4xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none group-hover:text-espresso/70 transition-colors break-words">
@@ -284,7 +353,7 @@ export function AdminOpportunities() {
 
                                     <div className="pt-6 md:pt-8 border-t border-espresso/5">
                                         <button
-                                            onClick={() => handleDelete(job.id)}
+                                            onClick={() => handleDelete(job)}
                                             className="w-full h-12 md:h-14 flex items-center justify-center gap-2 md:gap-3 text-red-500 hover:text-white hover:bg-red-600 rounded-xl md:rounded-2xl transition-all text-[9px] md:text-[10px] font-black uppercase tracking-[0.4em] border border-red-100 hover:border-red-600 shadow-sm"
                                         >
                                             <span className="material-symbols-outlined text-[18px] md:text-[20px]">delete_forever</span>
@@ -297,6 +366,38 @@ export function AdminOpportunities() {
                     )}
                 </div>
             </div>
+
+            {/* Image Preview Modal */}
+            {previewImage && (
+                <div
+                    className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-sm flex items-center justify-center p-4 md:p-10 animate-fade-in"
+                    onClick={() => setPreviewImage(null)}
+                >
+                    <button
+                        className="absolute top-6 right-6 text-white/50 hover:text-white transition-colors p-2"
+                        onClick={() => setPreviewImage(null)}
+                    >
+                        <span className="material-symbols-outlined text-4xl">close</span>
+                    </button>
+
+                    <div className="relative max-w-5xl w-full h-full flex items-center justify-center" onClick={e => e.stopPropagation()}>
+                        <img
+                            src={previewImage}
+                            alt="Preview"
+                            className="max-w-full max-h-full object-contain shadow-2xl rounded-lg"
+                        />
+                        <a
+                            href={previewImage}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="absolute bottom-4 right-4 bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl backdrop-blur-md border border-white/10 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all"
+                        >
+                            <span className="material-symbols-outlined text-lg">open_in_new</span>
+                            Open in New Tab
+                        </a>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

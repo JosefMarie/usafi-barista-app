@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../../lib/firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { db, storage } from '../../lib/firebase';
 import { GradientButton } from '../../components/ui/GradientButton';
 
 export function PostOpportunity() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [imageFile, setImageFile] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
     const [formData, setFormData] = useState({
         orgName: '',
         location: '',
@@ -30,13 +33,33 @@ export function PostOpportunity() {
         }));
     };
 
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setImageFile(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
         try {
+            let imageUrl = '';
+            if (imageFile) {
+                const storageRef = ref(storage, `opportunities/${Date.now()}_${imageFile.name}`);
+                const uploadResult = await uploadBytes(storageRef, imageFile);
+                imageUrl = await getDownloadURL(uploadResult.ref);
+            }
+
             await addDoc(collection(db, 'opportunities'), {
                 ...formData,
+                imageUrl,
                 status: 'pending',
                 createdAt: serverTimestamp(),
                 deadline: formData.deadline ? new Date(formData.deadline) : null,
@@ -50,7 +73,7 @@ export function PostOpportunity() {
             }, 3000);
         } catch (error) {
             console.error("Error posting opportunity: ", error);
-            alert("Failed to submit opportunity. Please try again.");
+            alert(`Failed to submit opportunity: ${error.message || 'Unknown error'}`);
         } finally {
             setLoading(false);
         }
@@ -237,8 +260,54 @@ export function PostOpportunity() {
                                         name="deadline"
                                         value={formData.deadline}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary/50 outline-none transition-all"
+                                        className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:ring-2 focus:ring-espresso/50 outline-none transition-all"
                                     />
+                                </div>
+                            </div>
+
+                            {/* Image Upload */}
+                            <div className="pt-4">
+                                <label className="block text-sm font-medium text-espresso dark:text-white mb-4">Opportunity Flier / Image (Optional)</label>
+                                <div className="flex flex-col sm:flex-row items-center gap-6">
+                                    <div
+                                        onClick={() => document.getElementById('image-upload').click()}
+                                        className="w-full sm:w-48 h-48 bg-white/30 dark:bg-black/20 border-2 border-dashed border-espresso/20 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:border-espresso/40 transition-all overflow-hidden relative group"
+                                    >
+                                        {imagePreview ? (
+                                            <>
+                                                <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <span className="text-white text-[10px] font-black uppercase tracking-widest">Change Image</span>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <span className="material-symbols-outlined text-4xl text-espresso/20">add_photo_alternate</span>
+                                                <span className="text-[10px] font-black uppercase tracking-widest text-espresso/40 mt-2">Upload Flier</span>
+                                            </>
+                                        )}
+                                    </div>
+                                    <input
+                                        id="image-upload"
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleImageChange}
+                                        className="hidden"
+                                    />
+                                    <div className="flex-1 space-y-2">
+                                        <p className="text-xs font-medium text-espresso/60 dark:text-white/60 leading-relaxed">
+                                            Add a visual flier or branding to make your opportunity stand out. Supported formats: JPG, PNG, WEBP.
+                                        </p>
+                                        {imageFile && (
+                                            <button
+                                                onClick={() => { setImageFile(null); setImagePreview(null); }}
+                                                className="text-[10px] font-black uppercase tracking-widest text-red-500 hover:text-red-600 flex items-center gap-1"
+                                            >
+                                                <span className="material-symbols-outlined text-base">delete</span>
+                                                Remove Image
+                                            </button>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>

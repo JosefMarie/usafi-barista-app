@@ -11,6 +11,7 @@ export function SeekerDashboard() {
     const { user, logout, loading: authLoading } = useAuth();
     const [jobs, setJobs] = useState([]);
     const [dataLoading, setDataLoading] = useState(true);
+    const [previewImage, setPreviewImage] = useState(null);
 
     useEffect(() => {
         if (!user) return;
@@ -23,10 +24,16 @@ export function SeekerDashboard() {
         );
 
         const unsubscribe = onSnapshot(q, (snapshot) => {
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
             const fetchedJobs = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
-            }));
+            })).filter(job => {
+                if (!job.approvedAt) return true;
+                return job.approvedAt.toDate() > oneWeekAgo;
+            });
             setJobs(fetchedJobs);
             setDataLoading(false);
         }, (error) => {
@@ -158,6 +165,21 @@ export function SeekerDashboard() {
                                             </span>
                                         </div>
 
+                                        {job.imageUrl && (
+                                            <div
+                                                onClick={() => setPreviewImage(job.imageUrl)}
+                                                className="w-full h-48 md:h-64 rounded-2xl overflow-hidden border border-espresso/10 cursor-pointer group/image relative"
+                                            >
+                                                <img src={job.imageUrl} alt="Opportunity Flier" className="w-full h-full object-cover group-hover/image:scale-105 transition-transform duration-500" />
+                                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover/image:opacity-100 transition-opacity">
+                                                    <div className="flex flex-col items-center gap-2">
+                                                        <span className="material-symbols-outlined text-white text-3xl">zoom_in</span>
+                                                        <span className="text-white text-[10px] font-black uppercase tracking-[0.2em]">View Full Flier</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+
                                         <div className="space-y-3 md:space-y-4">
                                             <div>
                                                 <h3 className="text-2xl md:text-3xl lg:text-4xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none group-hover:text-espresso/80 transition-colors">
@@ -240,6 +262,38 @@ export function SeekerDashboard() {
                     </div>
                 </div>
             </div>
+
+            {/* Image Preview Modal */}
+            {previewImage && (
+                <div
+                    className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-sm flex items-center justify-center p-4 md:p-10 animate-fade-in"
+                    onClick={() => setPreviewImage(null)}
+                >
+                    <button
+                        className="absolute top-6 right-6 text-white/50 hover:text-white transition-colors p-2"
+                        onClick={() => setPreviewImage(null)}
+                    >
+                        <span className="material-symbols-outlined text-4xl">close</span>
+                    </button>
+
+                    <div className="relative max-w-5xl w-full h-full flex items-center justify-center" onClick={e => e.stopPropagation()}>
+                        <img
+                            src={previewImage}
+                            alt="Preview"
+                            className="max-w-full max-h-full object-contain shadow-2xl rounded-lg"
+                        />
+                        <a
+                            href={previewImage}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="absolute bottom-4 right-4 bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl backdrop-blur-md border border-white/10 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all"
+                        >
+                            <span className="material-symbols-outlined text-lg">open_in_new</span>
+                            Open in New Tab
+                        </a>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
