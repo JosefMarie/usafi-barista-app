@@ -61,7 +61,7 @@ export function StudentCourseView() {
                         if (progressSnap.exists()) {
                             const progressData = progressSnap.data();
                             if (progressData.lastSlideIndex !== undefined) {
-                                setCurrentSlide(progressData.lastSlideIndex);
+                                setCurrentSlide(Math.max(0, progressData.lastSlideIndex));
                             }
                             setQuizRequested(progressData.quizRequested || false);
                         }

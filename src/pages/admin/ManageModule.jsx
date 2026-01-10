@@ -456,7 +456,7 @@ export function ManageModule() {
                 await setDoc(progressRef, {
                     courseId,
                     moduleId,
-                    lastSlideIndex: -1,
+                    lastSlideIndex: 0,
                     status: 'not-started',
                     score: 0,
                     passed: false,
