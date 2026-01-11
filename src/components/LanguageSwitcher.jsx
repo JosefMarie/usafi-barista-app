@@ -39,7 +39,7 @@ export function LanguageSwitcher({ className, isScrolled, isLightHero }) {
                     "flex items-center gap-2 px-3 py-1.5 rounded-full transition-all text-sm font-medium",
                     isLightHero && !isScrolled
                         ? "text-white/90 hover:bg-white/10 hover:text-white"
-                        : "text-espresso dark:text-white hover:bg-black/5 dark:hover:bg-white/10"
+                        : "text-[#00008B] dark:text-white hover:bg-black/5 dark:hover:bg-white/10"
                 )}
             >
                 <div className={cn(
@@ -48,7 +48,7 @@ export function LanguageSwitcher({ className, isScrolled, isLightHero }) {
                 )}>
                     <span className={cn(
                         "material-symbols-outlined text-[20px]",
-                        isLightHero && !isScrolled ? "text-white" : "text-primary"
+                        isLightHero && !isScrolled ? "text-white" : "text-[#00008B]"
                     )}>language</span>
                 </div>
                 <span>{currentLanguage.name}</span>

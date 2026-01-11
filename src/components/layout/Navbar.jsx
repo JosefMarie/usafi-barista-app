@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
 import { LanguageSwitcher } from '../LanguageSwitcher';
-import { ThemeToggle } from '../common/ThemeToggle';
+
 import { GlobalSearch } from '../common/GlobalSearch';
 import { GradientButton } from '../ui/GradientButton';
 
@@ -168,11 +168,7 @@ export function Navbar() {
                         <span className="material-symbols-outlined text-[20px]">search</span>
                     </button>
 
-                    {/* Theme Toggle */}
-                    <ThemeToggle className={cn(
-                        "hover:bg-primary/10 transition-colors",
-                        !isScrolled && isDarkHeader ? "text-white/90 hover:bg-white/10" : "text-espresso dark:text-white"
-                    )} />
+
 
                     {/* Language Switcher */}
                     <div className="h-6 w-[1px] bg-espresso/10 dark:bg-white/10 mx-1"></div>
@@ -238,7 +234,7 @@ export function Navbar() {
                         </div>
                     ))}
                     <div className="flex items-center gap-4 p-2">
-                        <ThemeToggle className="flex-1" />
+
                         <Link
                             to="/login"
                             className="flex-[2] text-lg font-medium p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors block text-espresso dark:text-white border border-black/5 dark:border-white/5 text-center"

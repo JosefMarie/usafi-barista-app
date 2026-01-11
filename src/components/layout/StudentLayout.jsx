@@ -8,6 +8,7 @@ import { cn } from '../../lib/utils';
 import { ThemeToggle } from '../common/ThemeToggle';
 import { PortalTopBar } from './PortalTopBar';
 import { PendingApproval } from '../../pages/student/PendingApproval';
+import { Footer } from './Footer';
 
 // ...
 
@@ -162,7 +163,7 @@ export function StudentLayout() {
                                 "flex items-center gap-4 px-4 py-3.5 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all duration-300 relative group/nav overflow-hidden shrink-0",
                                 location.pathname === item.path
                                     ? "bg-espresso text-white shadow-xl translate-x-1"
-                                    : "bg-[#088F8F] text-white hover:bg-white/40 dark:hover:bg-white/5 hover:text-espresso dark:hover:text-primary hover:translate-x-1 shadow-sm border border-transparent hover:border-espresso/10"
+                                    : "bg-[#7B3F00] text-white hover:bg-white/40 dark:hover:bg-white/5 hover:text-espresso dark:hover:text-primary hover:translate-x-1 shadow-sm border border-transparent hover:border-espresso/10"
                             )}
                         >
                             {/* Individual Nav Item Accent */}
@@ -201,7 +202,7 @@ export function StudentLayout() {
             </aside>
 
             {/* Main Content Area */}
-            <div className="flex-1 flex flex-col h-full min-w-0 w-full items-start transition-colors duration-300">
+            <div className="flex-1 flex flex-col h-full min-w-0 w-full transition-colors duration-300">
 
                 <PortalTopBar
                     user={user}
@@ -230,7 +231,7 @@ export function StudentLayout() {
                                             "flex items-center gap-4 px-4 py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all relative overflow-hidden",
                                             location.pathname === item.path
                                                 ? "bg-espresso text-white shadow-lg"
-                                                : "bg-[#088F8F] text-white hover:bg-white/40 dark:hover:bg-white/5"
+                                                : "bg-[#7B3F00] text-white hover:bg-white/40 dark:hover:bg-white/5"
                                         )}
                                     >
                                         <div className={cn(
@@ -263,8 +264,12 @@ export function StudentLayout() {
                 )}
 
                 {/* Page Content */}
-                <main className="flex-1 overflow-y-auto overflow-x-hidden relative flex flex-col w-full p-6 items-start">
-                    <Outlet />
+                {/* Page Content */}
+                <main className="flex-1 overflow-y-auto overflow-x-hidden relative flex flex-col w-full custom-scrollbar">
+                    <div className="flex-grow p-6 flex flex-col items-start w-full">
+                        <Outlet />
+                    </div>
+                    <Footer />
                 </main>
             </div>
         </div>

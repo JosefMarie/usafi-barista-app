@@ -128,10 +128,10 @@ export function Dashboard() {
                         {t('student.dashboard.subtitle')}
                     </p>
                 </div>
-                <div className="bg-[#F5DEB3] dark:bg-white/5 px-4 py-3 md:px-6 md:py-3 rounded-2xl shadow-xl border border-espresso/10 relative overflow-hidden group self-start md:self-auto">
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                    <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">{t('student.dashboard.current_expedition')}</p>
-                    <p className="text-xs md:text-sm font-serif font-bold text-espresso dark:text-white">
+                <div className="bg-espresso dark:bg-white/5 px-4 py-3 md:px-6 md:py-3 rounded-2xl shadow-xl border border-espresso/10 relative overflow-hidden group self-start md:self-auto">
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-white/20 group-hover:bg-white transition-colors"></div>
+                    <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-white/40">{t('student.dashboard.current_expedition')}</p>
+                    <p className="text-xs md:text-sm font-serif font-bold text-white">
                         {new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}
                     </p>
                 </div>
@@ -140,14 +140,14 @@ export function Dashboard() {
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
                 {stats.map((stat) => (
-                    <div key={stat.label} className="bg-[#F5DEB3] dark:bg-white/5 p-4 md:p-6 rounded-3xl shadow-xl border border-espresso/10 flex items-center gap-4 md:gap-5 transition-all hover:-translate-y-1 relative overflow-hidden group">
-                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                    <div key={stat.label} className="bg-espresso dark:bg-white/5 p-4 md:p-6 rounded-3xl shadow-xl border border-espresso/10 flex items-center gap-4 md:gap-5 transition-all hover:-translate-y-1 relative overflow-hidden group">
+                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-white/20 group-hover:bg-white transition-colors"></div>
                         <div className={cn("h-12 w-12 md:h-14 md:w-14 rounded-2xl flex items-center justify-center text-white shadow-2xl relative z-10 rotate-3 group-hover:rotate-0 transition-transform", stat.color.replace('bg-', 'bg-espresso/80 '))}>
                             <span className="material-symbols-outlined text-xl md:text-2xl">{stat.icon}</span>
                         </div>
                         <div className="relative z-10">
-                            <p className="text-xl md:text-2xl font-black text-espresso dark:text-white tracking-tight">{stat.value}</p>
-                            <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">{stat.label}</p>
+                            <p className="text-xl md:text-2xl font-black text-white tracking-tight">{stat.value}</p>
+                            <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-white/60">{stat.label}</p>
                         </div>
                     </div>
                 ))}
@@ -169,8 +169,8 @@ export function Dashboard() {
                     </div>
 
                     {course ? (
-                        <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/10 overflow-hidden flex flex-col md:flex-row group cursor-pointer hover:shadow-2xl transition-all relative">
-                            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                        <div className="bg-espresso dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/10 overflow-hidden flex flex-col md:flex-row group cursor-pointer hover:shadow-2xl transition-all relative">
+                            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-white/20 group-hover:bg-white transition-colors"></div>
                             <div className="md:w-2/5 h-56 md:h-auto overflow-hidden relative">
                                 <div
                                     className="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-700"
@@ -181,24 +181,24 @@ export function Dashboard() {
                             <div className="p-8 md:w-3/5 flex flex-col justify-between relative z-10">
                                 <div>
                                     <div className="flex items-center justify-between mb-4">
-                                        <span className="text-[10px] font-black text-white bg-espresso px-3 py-1 rounded-full uppercase tracking-widest shadow-lg">
+                                        <span className="text-[10px] font-black text-espresso bg-white px-3 py-1 rounded-full uppercase tracking-widest shadow-lg">
                                             {t('student.dashboard.curriculum.status_active')}
                                         </span>
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-white/40">
                                             {t('student.dashboard.curriculum.sync')}: {course.updatedAt?.toDate ? new Date(course.updatedAt.toDate()).toLocaleDateString() : 'Active'}
                                         </span>
                                     </div>
-                                    <h3 className="text-2xl font-serif font-bold text-espresso dark:text-white mb-3 group-hover:translate-x-1 transition-transform">
+                                    <h3 className="text-2xl font-serif font-bold text-white mb-3 group-hover:translate-x-1 transition-transform">
                                         {course.title}
                                     </h3>
-                                    <p className="text-sm font-medium text-espresso/60 dark:text-white/60 line-clamp-2 mb-6 leading-relaxed">
+                                    <p className="text-sm font-medium text-white/60 line-clamp-2 mb-6 leading-relaxed">
                                         {course.description || 'Master the art of coffee with this comprehensive guide.'}
                                     </p>
                                 </div>
 
                                 <button
                                     onClick={() => navigate('/student/courses')}
-                                    className="w-full py-4 bg-espresso text-white rounded-2xl font-black uppercase tracking-widest text-[10px] hover:shadow-2xl transition-all shadow-xl active:scale-95"
+                                    className="w-full py-4 bg-white text-espresso rounded-2xl font-black uppercase tracking-widest text-[10px] hover:shadow-2xl transition-all shadow-xl active:scale-95"
                                 >
                                     {t('student.dashboard.curriculum.resume_btn')}
                                 </button>
@@ -224,8 +224,8 @@ export function Dashboard() {
                         </h2>
 
                         {nextModule ? (
-                            <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/10 overflow-hidden animate-slide-in relative group">
-                                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                            <div className="bg-espresso dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/10 overflow-hidden animate-slide-in relative group">
+                                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-white/20 group-hover:bg-white transition-colors"></div>
                                 <div className="relative h-40 overflow-hidden">
                                     <img
                                         src={nextModule.content?.[0]?.image || 'https://images.unsplash.com/photo-1447933601400-b8a90d437166?q=80&w=2555&auto=format&fit=crop'}
@@ -244,25 +244,25 @@ export function Dashboard() {
                                 <div className="p-6 space-y-5 relative z-10">
                                     <div className="flex items-center justify-between py-1">
                                         <div className="flex items-center gap-3">
-                                            <div className="bg-espresso/5 p-2 rounded-xl text-espresso/40">
+                                            <div className="bg-white/5 p-2 rounded-xl text-white/40">
                                                 <span className="material-symbols-outlined text-xl">timer</span>
                                             </div>
                                             <div>
-                                                <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">
+                                                <p className="text-[10px] font-black uppercase tracking-widest text-white/40">
                                                     {t('student.dashboard.next_step.duration')}
                                                 </p>
-                                                <p className="text-sm font-black text-espresso dark:text-white">{nextModule.duration || '30'} {t('student.dashboard.stats.mins', 'mins')}</p>
+                                                <p className="text-sm font-black text-white">{nextModule.duration || '30'} {t('student.dashboard.stats.mins', 'mins')}</p>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-3">
-                                            <div className="bg-espresso/5 p-2 rounded-xl text-espresso/40">
+                                            <div className="bg-white/5 p-2 rounded-xl text-white/40">
                                                 <span className="material-symbols-outlined text-xl">layers</span>
                                             </div>
                                             <div>
-                                                <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">
+                                                <p className="text-[10px] font-black uppercase tracking-widest text-white/40">
                                                     {t('student.dashboard.next_step.units')}
                                                 </p>
-                                                <p className="text-sm font-black text-espresso dark:text-white">
+                                                <p className="text-sm font-black text-white">
                                                     {nextModule.content?.length || 0} {t('student.dashboard.next_step.slides')}
                                                 </p>
                                             </div>
@@ -297,18 +297,18 @@ export function Dashboard() {
                             <span className="h-2 w-2 rounded-full bg-espresso"></span>
                             Recent Activity
                         </h2>
-                        <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/10 overflow-hidden p-6 relative group">
-                            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                        <div className="bg-espresso dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/10 overflow-hidden p-6 relative group">
+                            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-white/20 group-hover:bg-white transition-colors"></div>
                             {recentActivity.length > 0 ? (
                                 <div className="space-y-5">
                                     {recentActivity.map((act) => (
                                         <div key={act.id} className="flex items-center gap-4 group/item">
-                                            <div className="w-10 h-10 rounded-xl bg-espresso/5 flex items-center justify-center text-espresso/40 group-hover/item:bg-espresso group-hover/item:text-white transition-all shadow-sm">
+                                            <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white/40 group-hover/item:bg-white group-hover/item:text-espresso transition-all shadow-sm">
                                                 <span className="material-symbols-outlined text-xl">{act.icon || 'history'}</span>
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <p className="text-xs font-bold text-espresso dark:text-white truncate">{act.action}</p>
-                                                <p className="text-[9px] font-black uppercase tracking-widest text-espresso/40">
+                                                <p className="text-xs font-bold text-white truncate">{act.action}</p>
+                                                <p className="text-[9px] font-black uppercase tracking-widest text-white/40">
                                                     {act.timestamp?.toDate ? act.timestamp.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Just now'}
                                                 </p>
                                             </div>
@@ -316,7 +316,7 @@ export function Dashboard() {
                                     ))}
                                 </div>
                             ) : (
-                                <div className="py-6 text-center opacity-30">
+                                <div className="py-6 text-center opacity-30 text-white">
                                     <p className="text-[10px] font-black uppercase tracking-widest">No activity logged yet</p>
                                 </div>
                             )}

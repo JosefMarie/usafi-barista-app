@@ -7,6 +7,8 @@ import { cn } from '../../lib/utils';
 import { ThemeToggle } from '../common/ThemeToggle';
 import { PortalTopBar } from './PortalTopBar';
 import { useAuth } from '../../context/AuthContext';
+import { Footer } from './Footer';
+
 
 export function AdminLayout() {
     const { t } = useTranslation();
@@ -127,7 +129,7 @@ export function AdminLayout() {
                                 "flex items-center gap-4 px-4 py-3.5 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all duration-300 relative group/nav overflow-hidden shrink-0",
                                 location.pathname === item.path
                                     ? "bg-espresso text-white shadow-xl translate-x-1"
-                                    : "bg-[#088F8F] text-white hover:bg-white/40 dark:hover:bg-white/5 hover:text-espresso dark:hover:text-primary hover:translate-x-1 shadow-sm border border-transparent hover:border-espresso/10"
+                                    : "bg-[#7B3F00] text-white hover:bg-white/40 dark:hover:bg-white/5 hover:text-espresso dark:hover:text-primary hover:translate-x-1 shadow-sm border border-transparent hover:border-espresso/10"
                             )}
                         >
                             {/* Individual Nav Item Accent */}
@@ -219,7 +221,7 @@ export function AdminLayout() {
                                         "flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors",
                                         location.pathname === item.path
                                             ? "bg-primary text-white shadow-md shadow-primary/20"
-                                            : "bg-[#088F8F] text-white hover:bg-black/5 dark:hover:bg-white/5"
+                                            : "bg-[#7B3F00] text-white hover:bg-black/5 dark:hover:bg-white/5"
                                     )}
                                 >
                                     <span className="material-symbols-outlined text-[24px]">{item.icon}</span>
@@ -237,8 +239,11 @@ export function AdminLayout() {
                     </div>
                 )}
 
-                <main className="flex-1 relative overflow-hidden flex flex-col">
-                    <Outlet />
+                <main className="flex-1 relative overflow-y-auto custom-scrollbar flex flex-col">
+                    <div className="flex-grow">
+                        <Outlet />
+                    </div>
+                    <Footer />
                 </main>
             </div>
         </div>

@@ -6,6 +6,7 @@ import { db } from '../../lib/firebase';
 import { cn } from '../../lib/utils';
 import { PortalTopBar } from './PortalTopBar';
 import { useAuth } from '../../context/AuthContext';
+import { Footer } from './Footer';
 
 export function CEOLayout() {
     const { t } = useTranslation();
@@ -87,7 +88,7 @@ export function CEOLayout() {
                                 "flex items-center gap-4 px-4 py-4 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all duration-300 relative group/nav overflow-hidden shrink-0",
                                 location.pathname === item.path
                                     ? "bg-[#D4Af37] text-[#4B3832] shadow-lg shadow-[#D4Af37]/20 translate-x-1"
-                                    : "text-[#F5DEB3]/60 hover:bg-[#D4Af37]/10 hover:text-[#D4Af37] hover:translate-x-1 border border-transparent hover:border-[#D4Af37]/20"
+                                    : "bg-[#7B3F00] text-[#F5DEB3] hover:bg-[#D4Af37]/10 hover:text-[#D4Af37] hover:translate-x-1 border border-transparent hover:border-[#D4Af37]/20"
                             )}
                         >
                             {/* Active/Hover Indicator */}
@@ -176,7 +177,7 @@ export function CEOLayout() {
                                         "flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors",
                                         location.pathname === item.path
                                             ? "bg-[#D4Af37] text-[#4B3832] shadow-md shadow-[#D4Af37]/20"
-                                            : "text-[#F5DEB3] hover:bg-[#D4Af37]/10"
+                                            : "bg-[#7B3F00] text-[#F5DEB3] hover:bg-[#D4Af37]/10"
                                     )}
                                 >
                                     <span className="material-symbols-outlined text-[24px]">{item.icon}</span>
@@ -194,8 +195,11 @@ export function CEOLayout() {
                     </div>
                 )}
 
-                <main className="flex-1 relative overflow-hidden flex flex-col p-6 overflow-y-auto">
-                    <Outlet />
+                <main className="flex-1 relative overflow-y-auto custom-scrollbar flex flex-col">
+                    <div className="flex-grow p-6">
+                        <Outlet />
+                    </div>
+                    <Footer />
                 </main>
             </div>
         </div>

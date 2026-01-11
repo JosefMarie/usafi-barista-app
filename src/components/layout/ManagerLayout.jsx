@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
-import { ThemeToggle } from '../common/ThemeToggle';
 import { PortalTopBar } from './PortalTopBar';
 import { useAuth } from '../../context/AuthContext';
+import { Footer } from './Footer';
 
 export function ManagerLayout() {
     const { t } = useTranslation();
@@ -39,7 +39,7 @@ export function ManagerLayout() {
     ];
 
     return (
-        <div className="min-h-screen bg-background-light dark:bg-background-dark flex">
+        <div className="h-screen bg-background-light dark:bg-background-dark flex overflow-hidden">
             {/* Desktop Sidebar */}
             <aside className="hidden md:flex w-64 flex-col fixed inset-y-0 left-0 bg-[#F5DEB3] dark:bg-[#1c1916] border-r border-espresso/10 z-20 shadow-xl">
                 <div className="p-6 border-b border-espresso/10 flex items-center justify-between">
@@ -62,7 +62,7 @@ export function ManagerLayout() {
                                 "relative flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-bold transition-all overflow-hidden group",
                                 location.pathname === item.path
                                     ? "bg-espresso text-white shadow-lg translate-x-1"
-                                    : "text-espresso/70 dark:text-white/70 hover:bg-white/40 dark:hover:bg-white/5"
+                                    : "bg-[#7B3F00] text-white hover:bg-white/40 dark:hover:bg-white/5"
                             )}
                         >
                             {location.pathname === item.path && (
@@ -117,7 +117,7 @@ export function ManagerLayout() {
                                         "flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors",
                                         location.pathname === item.path
                                             ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
-                                            : "text-espresso dark:text-white hover:bg-black/5 dark:hover:bg-white/5"
+                                            : "bg-[#7B3F00] text-white hover:bg-black/5 dark:hover:bg-white/5"
                                     )}
                                 >
                                     <span className="material-symbols-outlined text-[24px]">{item.icon}</span>
@@ -135,8 +135,11 @@ export function ManagerLayout() {
                     </div>
                 )}
 
-                <main className="flex-1 p-4 md:p-8">
-                    <Outlet />
+                <main className="flex-1 relative overflow-y-auto custom-scrollbar flex flex-col">
+                    <div className="flex-grow p-4 md:p-8">
+                        <Outlet />
+                    </div>
+                    <Footer />
                 </main>
             </div>
         </div>

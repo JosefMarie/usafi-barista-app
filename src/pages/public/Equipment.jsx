@@ -1,10 +1,13 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
 import { GradientButton } from '../../components/ui/GradientButton';
 import { Newsletter } from '../../components/ui/Newsletter';
 
 export function Equipment() {
     const { t } = useTranslation();
+    const [selectedImage, setSelectedImage] = useState(null);
+
     return (
         <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark font-display text-espresso dark:text-white pb-20 pt-24">
 
@@ -31,11 +34,14 @@ export function Equipment() {
                     {/* Espresso Machine Card */}
                     <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl overflow-hidden shadow-xl border border-espresso/10 flex flex-col relative group">
                         <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors z-10"></div>
-                        <div className="h-64 bg-gray-200 relative">
+                        <div className="h-64 bg-gray-200 relative cursor-pointer" onClick={() => setSelectedImage("/image/espresso-machine.jpeg")}>
                             <div
-                                className="absolute inset-0 bg-cover bg-center"
-                                style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1570554807185-5c202029b3fd?q=80&w=2699&auto=format&fit=crop")' }}
+                                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                                style={{ backgroundImage: 'url("/image/espresso-machine.jpeg")' }}
                             ></div>
+                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                                <span className="material-symbols-outlined text-white text-4xl drop-shadow-lg">zoom_in</span>
+                            </div>
                         </div>
                         <div className="p-8 flex-1">
                             <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-2">{t('equipment.machinery.espresso.title')}</h3>
@@ -57,11 +63,14 @@ export function Equipment() {
                     {/* Grinder Card */}
                     <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl overflow-hidden shadow-xl border border-espresso/10 flex flex-col relative group">
                         <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors z-10"></div>
-                        <div className="h-64 bg-gray-200 relative">
+                        <div className="h-64 bg-gray-200 relative cursor-pointer" onClick={() => setSelectedImage("/image/coffee-grinder.jpeg")}>
                             <div
-                                className="absolute inset-0 bg-cover bg-center"
-                                style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1598516086280-9759368d447a?q=80&w=2574&auto=format&fit=crop")' }}
+                                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                                style={{ backgroundImage: 'url("/image/coffee-grinder.jpeg")' }}
                             ></div>
+                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                                <span className="material-symbols-outlined text-white text-4xl drop-shadow-lg">zoom_in</span>
+                            </div>
                         </div>
                         <div className="p-8 flex-1">
                             <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-2">{t('equipment.machinery.grinder.title')}</h3>
@@ -84,61 +93,69 @@ export function Equipment() {
             </section>
 
             {/* Section 2: Essential Barista Tools */}
-            <section className="bg-[#F5DEB3] dark:bg-white/5 py-20 px-6 border-y border-espresso/10">
-                <div className="container mx-auto px-6">
-                    <h2 className="font-serif text-3xl font-bold text-espresso dark:text-white mb-8 border-b-2 border-primary/20 pb-2 inline-block">
+            <section className="bg-[#F5DEB3] dark:bg-white/5 py-20 border-y border-espresso/10 overflow-hidden">
+                <div className="container mx-auto px-6 mb-10">
+                    <h2 className="font-serif text-3xl font-bold text-espresso dark:text-white mb-2 border-b-2 border-primary/20 pb-2 inline-block">
                         {t('equipment.smallwares.title')}
                     </h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                </div>
 
-                        {/* Tool 1 */}
-                        <div className="bg-[#F5DEB3] dark:bg-white/5 p-6 rounded-2xl shadow-xl border border-espresso/5 hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group">
-                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/10 group-hover:bg-espresso transition-colors"></div>
-                            <div className="w-12 h-12 rounded-2xl bg-espresso text-white flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform">
-                                <span className="material-symbols-outlined text-2xl">hardware</span>
-                            </div>
-                            <h3 className="font-bold text-lg text-espresso dark:text-white mb-2">{t('equipment.smallwares.tamper.title')}</h3>
-                            <p className="text-sm text-espresso/70 dark:text-white/70">
-                                {t('equipment.smallwares.tamper.description')}
-                            </p>
-                        </div>
-
-                        {/* Tool 2 */}
-                        <div className="bg-[#F5DEB3] dark:bg-white/5 p-6 rounded-2xl shadow-xl border border-espresso/5 hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group">
-                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/10 group-hover:bg-espresso transition-colors"></div>
-                            <div className="w-12 h-12 rounded-2xl bg-espresso text-white flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform">
-                                <span className="material-symbols-outlined text-2xl">local_cafe</span>
-                            </div>
-                            <h3 className="font-bold text-lg text-espresso dark:text-white mb-2">{t('equipment.smallwares.pitcher.title')}</h3>
-                            <p className="text-sm text-espresso/70 dark:text-white/70">
-                                {t('equipment.smallwares.pitcher.description')}
-                            </p>
-                        </div>
-
-                        {/* Tool 3 */}
-                        <div className="bg-[#F5DEB3] dark:bg-white/5 p-6 rounded-2xl shadow-xl border border-espresso/5 hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group">
-                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/10 group-hover:bg-espresso transition-colors"></div>
-                            <div className="w-12 h-12 rounded-2xl bg-espresso text-white flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform">
-                                <span className="material-symbols-outlined text-2xl">delete</span>
-                            </div>
-                            <h3 className="font-bold text-lg text-espresso dark:text-white mb-2">{t('equipment.smallwares.knock.title')}</h3>
-                            <p className="text-sm text-espresso/70 dark:text-white/70">
-                                {t('equipment.smallwares.knock.description')}
-                            </p>
-                        </div>
-
-                        {/* Tool 4 */}
-                        <div className="bg-[#F5DEB3] dark:bg-white/5 p-6 rounded-2xl shadow-xl border border-espresso/5 hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group">
-                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/10 group-hover:bg-espresso transition-colors"></div>
-                            <div className="w-12 h-12 rounded-2xl bg-espresso text-white flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform">
-                                <span className="material-symbols-outlined text-2xl">scale</span>
-                            </div>
-                            <h3 className="font-bold text-lg text-espresso dark:text-white mb-2">{t('equipment.smallwares.scales.title')}</h3>
-                            <p className="text-sm text-espresso/70 dark:text-white/70">
-                                {t('equipment.smallwares.scales.description')}
-                            </p>
-                        </div>
-
+                {/* Marquee Container */}
+                <div className="relative w-full">
+                    <style>{`
+                        @keyframes marquee {
+                            0% { transform: translateX(0); }
+                            100% { transform: translateX(-50%); }
+                        }
+                        .animate-marquee {
+                            animation: marquee 30s linear infinite;
+                        }
+                        .animate-marquee:hover {
+                            animation-play-state: paused;
+                        }
+                    `}</style>
+                    <div className="flex animate-marquee gap-8 w-max px-6">
+                        {/* Double the items for seamless loop */}
+                        {[...Array(2)].map((_, i) => (
+                            <>
+                                {[
+                                    { id: 'tamper', image: '/image/tamper.jpeg', icon: 'hardware', key: 'tamper' },
+                                    { id: 'pitcher', image: '/image/pitcher.jpeg', icon: 'local_cafe', key: 'pitcher' },
+                                    { id: 'knock', image: '/image/knock-box.jpeg', icon: 'delete', key: 'knock' },
+                                    { id: 'scales', image: '/image/scale.jpeg', icon: 'scale', key: 'scales' }
+                                ].map((tool) => (
+                                    <div
+                                        key={`${i}-${tool.id}`}
+                                        className="w-[300px] md:w-[350px] bg-[#F5DEB3] dark:bg-white/5 rounded-2xl shadow-xl border border-espresso/5 overflow-hidden group shrink-0"
+                                    >
+                                        <div 
+                                            className="h-48 relative cursor-pointer overflow-hidden"
+                                            onClick={() => setSelectedImage(tool.image)}
+                                        >
+                                            <div 
+                                                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                                                style={{ backgroundImage: `url("${tool.image}")` }}
+                                            ></div>
+                                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                                                <span className="material-symbols-outlined text-white text-4xl drop-shadow-lg">zoom_in</span>
+                                            </div>
+                                        </div>
+                                        <div className="p-6 relative">
+                                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/10 group-hover:bg-espresso transition-colors"></div>
+                                            <div className="w-10 h-10 rounded-xl bg-espresso text-white flex items-center justify-center mb-3 shadow-md">
+                                                <span className="material-symbols-outlined text-xl">{tool.icon}</span>
+                                            </div>
+                                            <h3 className="font-bold text-lg text-espresso dark:text-white mb-2">
+                                                {t(`equipment.smallwares.${tool.key}.title`)}
+                                            </h3>
+                                            <p className="text-sm text-espresso/70 dark:text-white/70">
+                                                {t(`equipment.smallwares.${tool.key}.description`)}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </>
+                        ))}
                     </div>
                 </div>
             </section>
@@ -264,6 +281,26 @@ export function Equipment() {
             {/* Newsletter Section */}
             <Newsletter />
 
+            {/* Lightbox Modal */}
+            {selectedImage && (
+                <div
+                    className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 md:p-10 animate-in fade-in duration-200"
+                    onClick={() => setSelectedImage(null)}
+                >
+                    <button
+                        className="absolute top-4 right-4 md:top-8 md:right-8 text-white/50 hover:text-white transition-colors bg-black/20 p-2 rounded-full backdrop-blur-md"
+                        onClick={() => setSelectedImage(null)}
+                    >
+                        <span className="material-symbols-outlined text-3xl">close</span>
+                    </button>
+                    <img
+                        src={selectedImage}
+                        alt="Equipment Full View"
+                        className="max-w-full max-h-full object-contain rounded-lg shadow-2xl animate-in zoom-in-95 duration-300"
+                        onClick={(e) => e.stopPropagation()}
+                    />
+                </div>
+            )}
         </div>
     );
 }

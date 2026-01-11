@@ -75,26 +75,26 @@ export function MyCourses() {
     return (
         <div className="space-y-8 animate-fade-in w-full">
             {/* Header / Hero */}
-            <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl p-6 md:p-10 shadow-xl border border-espresso/10 flex flex-col md:flex-row gap-8 md:gap-10 items-start relative overflow-hidden group">
-                <div className="absolute left-0 top-0 bottom-0 w-1 md:w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+            <div className="bg-espresso dark:bg-white/5 rounded-3xl p-6 md:p-10 shadow-xl border border-espresso/10 flex flex-col md:flex-row gap-8 md:gap-10 items-start relative overflow-hidden group">
+                <div className="absolute left-0 top-0 bottom-0 w-1 md:w-1.5 bg-white/20 group-hover:bg-white transition-colors"></div>
                 <div className="w-full md:w-2/5 aspect-video rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl relative z-10 rotate-1 group-hover:rotate-0 transition-transform duration-500">
                     <img
                         src={course.thumbnail}
                         alt={course.title}
                         className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     />
-                    <div className="absolute inset-0 bg-espresso/10 hover:bg-transparent transition-colors" />
+                    <div className="absolute inset-0 bg-white/10 hover:bg-transparent transition-colors" />
                 </div>
                 <div className="flex-1 space-y-4 md:space-y-6 text-left relative z-10">
-                    <h1 className="text-2xl md:text-4xl font-serif font-bold text-espresso dark:text-white leading-tight">{course.title}</h1>
-                    <p className="text-xs md:text-sm font-medium text-espresso/60 dark:text-white/60 leading-relaxed">{course.description}</p>
+                    <h1 className="text-2xl md:text-4xl font-serif font-bold text-white leading-tight">{course.title}</h1>
+                    <p className="text-xs md:text-sm font-medium text-white/60 leading-relaxed">{course.description}</p>
 
                     <div className="flex flex-wrap gap-2 md:gap-4 justify-start pt-2">
-                        <div className="flex items-center gap-2 md:gap-3 px-4 md:px-5 py-2 bg-espresso text-white rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest shadow-lg">
+                        <div className="flex items-center gap-2 md:gap-3 px-4 md:px-5 py-2 bg-white text-espresso rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest shadow-lg">
                             <span className="material-symbols-outlined text-base md:text-lg">verified</span>
                             {t('student.courses.academic_standard')}
                         </div>
-                        <div className="flex items-center gap-2 md:gap-3 px-4 md:px-5 py-2 bg-white/40 dark:bg-white/10 text-espresso dark:text-white rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest shadow-sm border border-espresso/5">
+                        <div className="flex items-center gap-2 md:gap-3 px-4 md:px-5 py-2 bg-white/10 text-white rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest shadow-sm border border-white/5">
                             <span className="material-symbols-outlined text-base md:text-lg">view_module</span>
                             {t('student.courses.units_count', { count: modules.length })}
                         </div>
