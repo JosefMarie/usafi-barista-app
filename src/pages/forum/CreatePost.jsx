@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../../lib/firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { db, storage } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 
@@ -16,6 +17,8 @@ export function CreatePost() {
         topic: 'Coffee Talk',
         content: ''
     });
+    const [imageFile, setImageFile] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
 
     const topics = [
         { id: "coffee_talk", label: t('forum.topics.coffee_talk') },
@@ -27,18 +30,56 @@ export function CreatePost() {
         { id: "barista_life", label: t('forum.topics.barista_life') }
     ];
 
+    const handleImageSelect = (e) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                alert(t('forum.invalid_image') || 'Please select a valid image file');
+                return;
+            }
+            // Validate file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert(t('forum.image_too_large') || 'Image size must be less than 5MB');
+                return;
+            }
+            setImageFile(file);
+            // Create preview
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleRemoveImage = () => {
+        setImageFile(null);
+        setImagePreview(null);
+    };
+
     const handleSubmit = async () => {
         if (!formData.title.trim() || !formData.content.trim()) return;
 
         setLoading(true);
         try {
+            let imageUrl = null;
+
+            // Upload image if selected
+            if (imageFile) {
+                const imageRef = ref(storage, `forum_images/${Date.now()}_${imageFile.name}`);
+                await uploadBytes(imageRef, imageFile);
+                imageUrl = await getDownloadURL(imageRef);
+            }
+
             await addDoc(collection(db, 'forum_posts'), {
                 title: formData.title,
                 topic: formData.topic,
                 content: formData.content,
                 authorId: user.uid,
-                authorName: user.fullName || user.email,
+                authorName: user.fullName || user.name || user.email,
                 authorAvatar: user.avatar || null,
+                imageUrl: imageUrl,
                 createdAt: serverTimestamp(),
                 likes: 0,
                 commentCount: 0
@@ -72,7 +113,7 @@ export function CreatePost() {
                 </div>
             </header>
 
-            <main className="flex-1 flex flex-col w-full max-w-4xl mx-auto relative z-10 p-4 md:p-6 lg:p-8">
+            <main className="flex-1 w-full max-w-4xl mx-auto relative z-10 p-4 md:p-6 lg:p-8 overflow-y-auto pb-32 md:pb-36">
 
                 <div className="bg-white/40 dark:bg-black/40 backdrop-blur-xl rounded-[2rem] md:rounded-[2.5rem] shadow-2xl border border-white/20 dark:border-white/5 p-5 md:p-8 flex-1 flex flex-col">
                     {/* Post Title Input */}
@@ -124,13 +165,36 @@ export function CreatePost() {
                         ></textarea>
                     </div>
 
-                    {/* Image Upload Preview (Static Placeholder for V1) */}
+                    {/* Image Upload */}
                     <div className="py-6 px-2">
                         <div className="flex items-center gap-3 overflow-x-auto hide-scrollbar">
-                            <button className="shrink-0 flex items-center justify-center h-20 w-20 rounded-2xl border-2 border-dashed border-espresso/20 dark:border-white/20 text-espresso/40 hover:bg-espresso/5 transition-colors active:scale-95 group">
-                                <span className="material-symbols-outlined text-3xl group-hover:scale-110 transition-transform">add_a_photo</span>
-                            </button>
+                            {!imagePreview ? (
+                                <label className="shrink-0 flex items-center justify-center h-20 w-20 rounded-2xl border-2 border-dashed border-espresso/20 dark:border-white/20 text-espresso/40 hover:bg-espresso/5 transition-colors cursor-pointer group">
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleImageSelect}
+                                        className="hidden"
+                                    />
+                                    <span className="material-symbols-outlined text-3xl group-hover:scale-110 transition-transform">add_a_photo</span>
+                                </label>
+                            ) : (
+                                <div className="relative shrink-0 h-32 w-32 rounded-2xl overflow-hidden border-2 border-espresso/20 dark:border-white/20 shadow-lg">
+                                    <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                                    <button
+                                        onClick={handleRemoveImage}
+                                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors shadow-lg"
+                                    >
+                                        <span className="material-symbols-outlined text-[18px]">close</span>
+                                    </button>
+                                </div>
+                            )}
                         </div>
+                        {imagePreview && (
+                            <p className="text-xs text-espresso/60 dark:text-white/60 mt-2 px-2">
+                                {t('forum.image_attached') || 'Image attached (optional)'}
+                            </p>
+                        )}
                     </div>
                 </div>
             </main>

@@ -17,6 +17,8 @@ export function PostDetails() {
     const [newComment, setNewComment] = useState('');
     const [loading, setLoading] = useState(true);
     const [sending, setSending] = useState(false);
+    const [hasLiked, setHasLiked] = useState(false);
+    const [imageModalOpen, setImageModalOpen] = useState(false);
 
     // Fetch Post
     useEffect(() => {
@@ -38,6 +40,13 @@ export function PostDetails() {
         };
         fetchPost();
     }, [id, navigate, t]);
+
+    // Check if user has liked the post
+    useEffect(() => {
+        if (post && user) {
+            setHasLiked(post.likedBy?.includes(user.uid) || false);
+        }
+    }, [post, user]);
 
     // Fetch Comments Real-time
     useEffect(() => {
@@ -75,6 +84,43 @@ export function PostDetails() {
         }
     };
 
+    const handleLike = async () => {
+        if (!user || !post) return;
+
+        try {
+            const postRef = doc(db, 'forum_posts', id);
+            const likedBy = post.likedBy || [];
+
+            if (hasLiked) {
+                // Unlike
+                await updateDoc(postRef, {
+                    likes: increment(-1),
+                    likedBy: likedBy.filter(uid => uid !== user.uid)
+                });
+                setHasLiked(false);
+                setPost(prev => ({
+                    ...prev,
+                    likes: (prev.likes || 1) - 1,
+                    likedBy: likedBy.filter(uid => uid !== user.uid)
+                }));
+            } else {
+                // Like
+                await updateDoc(postRef, {
+                    likes: increment(1),
+                    likedBy: [...likedBy, user.uid]
+                });
+                setHasLiked(true);
+                setPost(prev => ({
+                    ...prev,
+                    likes: (prev.likes || 0) + 1,
+                    likedBy: [...likedBy, user.uid]
+                }));
+            }
+        } catch (error) {
+            console.error("Error liking post:", error);
+        }
+    };
+
     if (loading) return (
         <div className="flex items-center justify-center min-h-[50vh] bg-[#F5DEB3] dark:bg-[#1c1916]">
             <div className="flex flex-col items-center gap-4">
@@ -107,7 +153,7 @@ export function PostDetails() {
                 </div>
             </header>
 
-            <main className="flex-1 w-full max-w-4xl mx-auto relative z-10 p-3 md:p-4 lg:p-8 space-y-5 md:space-y-6">
+            <main className="flex-1 overflow-y-auto p-3 md:p-4 lg:p-8 space-y-5 md:space-y-6 pb-32 md:pb-36">
 
                 {/* Main Post Card */}
                 <article className="bg-white/60 dark:bg-black/40 backdrop-blur-xl p-5 md:p-8 rounded-[2rem] md:rounded-[2.5rem] shadow-xl border border-white/20 dark:border-white/5">
@@ -137,11 +183,57 @@ export function PostDetails() {
                         {post.content}
                     </div>
 
+                    {/* Post Image */}
+                    {post.imageUrl && (
+                        <>
+                            <div
+                                onClick={() => setImageModalOpen(true)}
+                                className="mt-6 md:mt-8 rounded-2xl md:rounded-3xl overflow-hidden border border-espresso/10 dark:border-white/10 shadow-lg cursor-pointer hover:shadow-2xl transition-shadow group relative"
+                            >
+                                <img
+                                    src={post.imageUrl}
+                                    alt="Post attachment"
+                                    className="w-full h-auto object-cover max-h-[300px] md:max-h-[400px] group-hover:scale-105 transition-transform duration-300"
+                                />
+                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                                    <span className="material-symbols-outlined text-white text-4xl opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-lg">zoom_in</span>
+                                </div>
+                            </div>
+                            <p className="text-xs text-espresso/50 dark:text-white/50 text-center mt-2">Click to view full size</p>
+                            {imageModalOpen && (
+                                <div
+                                    onClick={() => setImageModalOpen(false)}
+                                    className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200"
+                                >
+                                    <button
+                                        className="absolute top-4 right-4 h-12 w-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors"
+                                        onClick={() => setImageModalOpen(false)}
+                                    >
+                                        <span className="material-symbols-outlined text-2xl">close</span>
+                                    </button>
+                                    <img
+                                        src={post.imageUrl}
+                                        alt="Post attachment full size"
+                                        className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+                                        onClick={(e) => e.stopPropagation()}
+                                    />
+                                </div>
+                            )}
+                        </>
+                    )}
+
                     {/* Stats Bar */}
                     <div className="flex items-center justify-between mt-6 md:mt-8 pt-5 md:pt-6 border-t border-espresso/5 dark:border-white/5">
                         <div className="flex gap-6 md:gap-8">
-                            <button className="flex items-center gap-1.5 md:gap-2 text-espresso/40 hover:text-espresso transition-colors group">
-                                <span className="material-symbols-outlined group-active:scale-110 transition-transform text-[20px] md:text-[22px]">thumb_up</span>
+                            <button
+                                onClick={handleLike}
+                                className={`flex items-center gap-1.5 md:gap-2 transition-colors group ${hasLiked
+                                    ? 'text-espresso dark:text-white'
+                                    : 'text-espresso/40 hover:text-espresso'
+                                    }`}
+                            >
+                                <span className={`material-symbols-outlined group-active:scale-110 transition-transform text-[20px] md:text-[22px] ${hasLiked ? 'fill-current' : ''
+                                    }`}>thumb_up</span>
                                 <span className="font-black text-xs md:text-sm uppercase tracking-wide">{post.likes || 0} Likes</span>
                             </button>
                             <div className="flex items-center gap-1.5 md:gap-2 text-espresso/40 dark:text-[#FAF5E8]/40">

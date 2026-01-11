@@ -88,7 +88,7 @@ export function ChatWindow() {
 
     if (!recipient) return null; // Changed from loading div to null
 
-    const recipientAvatar = recipient.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(recipient.fullName || 'User')}&background=random`;
+    const recipientAvatar = recipient.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(recipient.fullName || recipient.name || 'User')}&background=random`;
 
     return (
         <div className="bg-[#FAF5E8] dark:bg-[#1c1916] h-[calc(100vh-theme(spacing.16))] md:h-[calc(100vh-80px)] flex flex-col font-sans overflow-hidden">
@@ -108,7 +108,7 @@ export function ChatWindow() {
                             <div className="absolute bottom-0 right-0 size-3 md:size-4 bg-green-500 border-2 border-[#F5DEB3] dark:border-[#1c1916] rounded-full shadow-sm animate-pulse"></div>
                         </div>
                         <div className="flex flex-col min-w-0">
-                            <h2 className="text-espresso dark:text-white text-base md:text-xl font-serif font-black leading-tight truncate">{recipient.fullName}</h2>
+                            <h2 className="text-espresso dark:text-white text-base md:text-xl font-serif font-black leading-tight truncate">{recipient.fullName || recipient.name || recipient.email}</h2>
                             <span className="text-espresso/40 dark:text-white/40 text-[9px] md:text-[10px] font-black uppercase tracking-widest">{t('chat.active_now')}</span>
                         </div>
                     </div>
@@ -122,7 +122,7 @@ export function ChatWindow() {
                     <div className="flex flex-col items-center justify-center py-20 opacity-40">
                         <span className="material-symbols-outlined text-6xl md:text-8xl mb-4 text-espresso/20">chat_bubble</span>
                         <p className="text-center text-espresso font-serif italic text-sm md:text-lg px-10">
-                            {t('chat.start_convo', { name: recipient.fullName.split(' ')[0] })}
+                            {t('chat.start_convo', { name: (recipient.fullName || recipient.name || recipient.email).split(' ')[0] })}
                         </p>
                     </div>
                 )}

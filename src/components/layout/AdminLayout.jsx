@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, orderBy } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { cn } from '../../lib/utils';
 import { ThemeToggle } from '../common/ThemeToggle';
@@ -12,6 +12,7 @@ export function AdminLayout() {
     const { t } = useTranslation();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [unreadCount, setUnreadCount] = useState(0);
+    const [newForumPosts, setNewForumPosts] = useState(0);
     const location = useLocation();
     const navigate = useNavigate();
     const { user, logout } = useAuth();
@@ -30,6 +31,26 @@ export function AdminLayout() {
 
         const unsubscribe = onSnapshot(q, (snapshot) => {
             setUnreadCount(snapshot.size);
+        });
+
+        return () => unsubscribe();
+    }, [user]);
+
+    // Forum New Posts Listener
+    React.useEffect(() => {
+        if (!user) return;
+
+        const lastVisited = user.lastVisitedForum?.toDate?.() || new Date(0);
+
+        const q = query(
+            collection(db, 'forum_posts'),
+            where('createdAt', '>', lastVisited),
+            orderBy('createdAt', 'desc')
+        );
+
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const newPosts = snapshot.docs.filter(doc => doc.data().authorId !== user.uid);
+            setNewForumPosts(newPosts.length);
         });
 
         return () => unsubscribe();
@@ -62,7 +83,7 @@ export function AdminLayout() {
     const navItems = [
         { icon: 'dashboard', label: t('admin.nav.dashboard'), path: '/admin/dashboard' },
         { icon: 'menu_book', label: t('admin.nav.courses'), path: '/admin/courses' },
-        { icon: 'forum', label: t('admin.nav.forum'), path: '/admin/forum' },
+        { icon: 'forum', label: t('admin.nav.forum'), path: '/admin/forum', badge: newForumPosts },
         { icon: 'groups', label: t('admin.nav.instructors'), path: '/admin/instructors' },
         { icon: 'school', label: t('admin.nav.students'), path: '/admin/students' },
         { icon: 'quiz', label: t('admin.nav.quizzes'), path: '/admin/quizzes' },
@@ -121,14 +142,14 @@ export function AdminLayout() {
                             )}>{item.icon}</span>
                             <span className="relative z-10">{item.label}</span>
 
-                            {item.path === '/admin/notifications' && unreadCount > 0 && (
+                            {(item.path === '/admin/notifications' && unreadCount > 0) || (item.badge && item.badge > 0) ? (
                                 <span className={cn(
                                     "ml-auto text-[10px] font-black h-5 min-w-[20px] px-1.5 rounded-full flex items-center justify-center shadow-sm",
                                     location.pathname === item.path ? "bg-white text-espresso" : "bg-espresso text-white"
                                 )}>
-                                    {unreadCount > 99 ? '99+' : unreadCount}
+                                    {item.path === '/admin/notifications' ? (unreadCount > 99 ? '99+' : unreadCount) : (item.badge > 99 ? '99+' : item.badge)}
                                 </span>
-                            )}
+                            ) : null}
                         </Link>
                     ))}
                 </nav>

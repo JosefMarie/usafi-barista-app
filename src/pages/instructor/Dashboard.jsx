@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, orderBy, limit, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { cn } from '../../lib/utils';
 import { Link } from 'react-router-dom';
@@ -17,22 +17,8 @@ export function InstructorDashboard() {
     });
     const [loading, setLoading] = useState(true);
 
-    // Mock data for charts since we don't have real historical quiz data yet
-    const studentProgressData = [
-        { name: 'Module 1', value: 85 },
-        { name: 'Module 2', value: 72 },
-        { name: 'Module 3', value: 64 },
-        { name: 'Module 4', value: 45 },
-        { name: 'Module 5', value: 20 },
-        { name: 'Module 6', value: 10 },
-    ];
-
-    const recentActivity = [
-        { id: 1, student: 'Alice Johnson', action: 'Completed Quiz: Espresso Basics', time: '2 hours ago', score: '92%' },
-        { id: 2, student: 'Bob Smith', action: 'Joined Session: Latte Art 101', time: '5 hours ago', score: null },
-        { id: 3, student: 'Charlie Brown', action: 'Uploaded Assignment: Pour Over', time: '1 day ago', score: 'Pending' },
-        { id: 4, student: 'Diana Prince', action: 'Completed Module: Introduction', time: '2 days ago', score: '100%' },
-    ];
+    const [studentProgressData, setStudentProgressData] = useState([]);
+    const [recentActivity, setRecentActivity] = useState([]);
 
     useEffect(() => {
         if (user) fetchStats();
@@ -40,22 +26,95 @@ export function InstructorDashboard() {
 
     const fetchStats = async () => {
         try {
-            // Students count
-            const studentsQuery = query(collection(db, 'users'), where('instructorId', '==', user.uid));
-            const studentsSnap = await getDocs(studentsQuery);
+            // 1. Students count: Priority to assignedStudentIds array consistency
+            let studentIds = user.assignedStudentIds || [];
+            let studentCount = studentIds.length;
 
-            // Upcoming sessions
+            if (studentCount === 0) {
+                const studentsQuery = query(collection(db, 'users'), where('instructorId', '==', user.uid));
+                const studentsSnap = await getDocs(studentsQuery);
+                studentIds = studentsSnap.docs.map(d => d.id);
+                studentCount = studentIds.length;
+            }
+
+            // 2. Upcoming sessions
             const sessionsQuery = query(collection(db, 'schedules'), where('instructorId', '==', user.uid));
             const sessionsSnap = await getDocs(sessionsQuery);
             const now = new Date();
             const upcoming = sessionsSnap.docs.filter(doc => new Date(doc.data().dateTime?.toDate?.() || doc.data().dateTime) > now).length;
 
             setStats({
-                totalStudents: studentsSnap.size,
+                totalStudents: studentCount,
                 assignedCourses: (user.assignedCourseIds || []).length,
                 upcomingSessions: upcoming,
                 averageRating: 4.8 // Mock rating
             });
+
+            // 3. Activity Hub (Live Student Pulse)
+            if (studentIds.length > 0) {
+                // Firebase 'in' query limited to 30 items. We have 17, so it works.
+                const activityQ = query(
+                    collection(db, 'activity'),
+                    where('userId', 'in', studentIds.slice(0, 30)),
+                    orderBy('timestamp', 'desc'),
+                    limit(10)
+                );
+                const activitySnap = await getDocs(activityQ);
+                const activities = activitySnap.docs.map(docSnap => {
+                    const data = docSnap.data();
+                    let relativeTime = 'Recently';
+                    if (data.timestamp?.toDate) {
+                        const date = data.timestamp.toDate();
+                        const diff = (new Date() - date) / 1000;
+                        if (diff < 3600) relativeTime = `${Math.floor(diff / 60)}m ago`;
+                        else if (diff < 86400) relativeTime = `${Math.floor(diff / 3600)}h ago`;
+                        else relativeTime = `${Math.floor(diff / 86400)}d ago`;
+                    }
+                    return {
+                        id: docSnap.id,
+                        student: data.userName || 'Student',
+                        action: data.action || 'Activity',
+                        time: relativeTime,
+                        score: data.score || null,
+                        type: data.type
+                    };
+                });
+                setRecentActivity(activities);
+            }
+
+            // 4. Progress Analytics (Course Completion Performance)
+            // Fetch modules for assigned courses to aggregate
+            const moduleAggr = {};
+            const courseIds = user.assignedCourseIds || [];
+
+            for (const cid of courseIds) {
+                const modSnap = await getDocs(collection(db, 'courses', cid, 'modules'));
+                modSnap.docs.forEach(d => {
+                    moduleAggr[d.id] = { title: d.data().title, completedCount: 0 };
+                });
+            }
+
+            // For each student, check their progress collection
+            if (studentIds.length > 0) {
+                await Promise.all(studentIds.map(async (sid) => {
+                    const progSnap = await getDocs(collection(db, 'users', sid, 'progress'));
+                    progSnap.docs.forEach(d => {
+                        if (moduleAggr[d.id] && d.data().status === 'completed') {
+                            moduleAggr[d.id].completedCount += 1;
+                        }
+                    });
+                }));
+            }
+
+            const chartData = Object.values(moduleAggr).map(m => ({
+                name: m.title.length > 10 ? m.title.substring(0, 8) + '..' : m.title,
+                value: studentCount > 0 ? Math.round((m.completedCount / studentCount) * 100) : 0
+            })).slice(0, 6); // Keep it clean UI-wise
+
+            setStudentProgressData(chartData.length > 0 ? chartData : [
+                { name: 'No Data', value: 0 }
+            ]);
+
         } catch (err) {
             console.error('Error fetching dashboard stats:', err);
         } finally {

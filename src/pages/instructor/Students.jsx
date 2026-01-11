@@ -21,14 +21,27 @@ export function InstructorStudents() {
     const fetchStudents = async () => {
         setLoading(true);
         try {
-            // Fetch students assigned to this instructor
-            const q = query(
-                collection(db, 'users'),
-                where('instructorId', '==', user.uid),
-                where('role', '==', 'student')
-            );
-            const snapshot = await getDocs(q);
-            const studentList = snapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
+            // 1. Primary: Fetch students by IDs in assignedStudentIds array (Matches Admin View)
+            let studentList = [];
+            if (user.assignedStudentIds && user.assignedStudentIds.length > 0) {
+                const studentDocs = await Promise.all(
+                    user.assignedStudentIds.map(sid => getDoc(doc(db, 'users', sid)))
+                );
+                studentList = studentDocs
+                    .filter(d => d.exists())
+                    .map(d => ({ id: d.id, ...d.data() }));
+            }
+
+            // 2. Fallback: If list is still empty, search by instructorId field
+            if (studentList.length === 0) {
+                const q = query(
+                    collection(db, 'users'),
+                    where('instructorId', '==', user.uid)
+                );
+                const snapshot = await getDocs(q);
+                studentList = snapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
+            }
+
             setStudents(studentList);
 
             // Fetch progress for each student
@@ -83,7 +96,7 @@ export function InstructorStudents() {
     };
 
     const filteredStudents = students.filter(student =>
-        (student.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (student.fullName || student.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
         (student.email || '').toLowerCase().includes(searchTerm.toLowerCase())
     );
 
@@ -133,13 +146,13 @@ export function InstructorStudents() {
                                 <div
                                     className="bg-center bg-no-repeat bg-cover rounded-[1.5rem] size-20 border-4 border-white dark:border-white/10 shadow-xl shrink-0"
                                     style={{
-                                        backgroundImage: `url("${student.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(student.name || 'S')}&background=random`}")`
+                                        backgroundImage: `url("${student.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(student.fullName || student.name || 'S')}&background=random`}")`
                                     }}
                                 />
                                 <div className="flex-1 min-w-0">
                                     <div className="flex flex-wrap items-center gap-3 mb-2">
                                         <h3 className="text-xl md:text-2xl font-serif font-black text-espresso dark:text-white truncate leading-none">
-                                            {student.name || student.email}
+                                            {student.fullName || student.name || student.email}
                                         </h3>
                                         <div className="flex items-center gap-2">
                                             {student.studyMethod && (

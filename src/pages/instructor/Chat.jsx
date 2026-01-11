@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, where, getDocs, onSnapshot, orderBy } from 'firebase/firestore';
+import { collection, query, where, getDocs, onSnapshot, orderBy, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
@@ -21,14 +21,28 @@ export function InstructorChat() {
 
     const fetchAssignedStudents = async () => {
         try {
-            const q = query(
-                collection(db, 'users'),
-                where('instructorId', '==', user.uid),
-                where('role', '==', 'student')
-            );
-            const snapshot = await getDocs(q);
-            const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            setAssignedStudents(data);
+            // 1. Primary: Fetch students by IDs in assignedStudentIds array (Matches Admin View)
+            let studentList = [];
+            if (user.assignedStudentIds && user.assignedStudentIds.length > 0) {
+                const studentDocs = await Promise.all(
+                    user.assignedStudentIds.map(sid => getDoc(doc(db, 'users', sid)))
+                );
+                studentList = studentDocs
+                    .filter(d => d.exists())
+                    .map(d => ({ id: d.id, ...d.data() }));
+            }
+
+            // 2. Fallback: If list is still empty, search by instructorId field
+            if (studentList.length === 0) {
+                const q = query(
+                    collection(db, 'users'),
+                    where('instructorId', '==', user.uid)
+                );
+                const snapshot = await getDocs(q);
+                studentList = snapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
+            }
+
+            setAssignedStudents(studentList);
         } catch (err) {
             console.error('Error fetching assigned students:', err);
         }
@@ -107,7 +121,7 @@ export function InstructorChat() {
                                     <div
                                         className="bg-center bg-no-repeat bg-cover rounded-2xl size-12 md:size-14 border-2 border-white/50 dark:border-white/10 shadow-md group-hover/item:scale-105 transition-transform"
                                         style={{
-                                            backgroundImage: `url("${otherUser.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(otherUser.name || 'S')}&background=random`}")`
+                                            backgroundImage: `url("${otherUser.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(otherUser.fullName || otherUser.name || 'S')}&background=random`}")`
                                         }}
                                     />
                                     {otherUser.status === 'active' && (
@@ -117,7 +131,7 @@ export function InstructorChat() {
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-center justify-between mb-1 md:mb-1.5">
                                         <h3 className="font-serif font-black text-base md:text-lg text-espresso dark:text-white truncate leading-none">
-                                            {otherUser.name || otherUser.email}
+                                            {otherUser.fullName || otherUser.name || otherUser.email}
                                         </h3>
                                         {lastMessageTime && (
                                             <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40 whitespace-nowrap pl-2">
@@ -160,11 +174,11 @@ export function InstructorChat() {
                                 <div
                                     className="bg-center bg-no-repeat bg-cover rounded-2xl size-12 md:size-14 border-2 border-white/50 dark:border-white/10 shadow-md group-hover:scale-105 transition-transform shrink-0"
                                     style={{
-                                        backgroundImage: `url("${student.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(student.name || 'S')}&background=random`}")`
+                                        backgroundImage: `url("${student.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(student.fullName || student.name || 'S')}&background=random`}")`
                                     }}
                                 />
                                 <div className="flex-1 min-w-0 relative z-10 pr-2">
-                                    <h3 className="font-serif font-black text-base md:text-lg text-espresso dark:text-white truncate mb-1 leading-none">{student.name || student.email}</h3>
+                                    <h3 className="font-serif font-black text-base md:text-lg text-espresso dark:text-white truncate mb-1 leading-none">{student.fullName || student.name || student.email}</h3>
                                     <p className="text-[8px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest truncate">{student.email}</p>
                                 </div>
                                 <div className="p-2.5 md:p-3 rounded-full bg-white/50 dark:bg-white/5 text-espresso/40 group-hover:text-espresso transition-all shadow-sm">

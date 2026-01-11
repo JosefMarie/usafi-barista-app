@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Outlet, useLocation, useNavigate, Navigate } from 'react-router-dom';
-import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, orderBy, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -18,6 +18,7 @@ export function StudentLayout() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [totalUnread, setTotalUnread] = useState(0);
     const [unreadNotifications, setUnreadNotifications] = useState(0);
+    const [newForumPosts, setNewForumPosts] = useState(0);
 
     // Global Unread Listener for Sidebar Badge (Chat)
     useEffect(() => {
@@ -58,6 +59,27 @@ export function StudentLayout() {
         return () => unsubscribe();
     }, [user]);
 
+    // Forum New Posts Listener
+    useEffect(() => {
+        if (!user) return;
+
+        const lastVisited = user.lastVisitedForum?.toDate?.() || new Date(0);
+
+        const q = query(
+            collection(db, 'forum_posts'),
+            where('createdAt', '>', lastVisited),
+            orderBy('createdAt', 'desc')
+        );
+
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            // Don't count posts created by the current user
+            const newPosts = snapshot.docs.filter(doc => doc.data().authorId !== user.uid);
+            setNewForumPosts(newPosts.length);
+        });
+
+        return () => unsubscribe();
+    }, [user]);
+
     const handleLogout = async () => {
         await logout();
         navigate('/login');
@@ -73,7 +95,7 @@ export function StudentLayout() {
         { name: 'E-Learning', path: '/student/e-learning', icon: 'video_library' },
         { name: 'CV Builder', path: '/student/cv-builder', icon: 'description' },
         { name: 'Certificates', path: '/student/certificates', icon: 'workspace_premium' },
-        { name: 'Forum', path: '/student/forum', icon: 'forum' },
+        { name: 'Forum', path: '/student/forum', icon: 'forum', badge: newForumPosts },
         { name: 'Class Chat', path: '/student/chat', icon: 'chat', badge: totalUnread },
         { name: 'Notifications', path: '/student/notifications', icon: 'notifications', badge: unreadNotifications },
         { name: 'Profile', path: '/student/profile', icon: 'person' },

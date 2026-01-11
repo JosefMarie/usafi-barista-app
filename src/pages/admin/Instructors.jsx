@@ -39,8 +39,8 @@ export function Instructors() {
             const instructorData = instructorSnap.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
             setInstructors(instructorData);
 
-            // Fetch students for assignment
-            const studentQuery = query(collection(db, 'users'), where('role', '==', 'student'));
+            // Fetch students for assignment (both regular and business)
+            const studentQuery = query(collection(db, 'users'), where('role', 'in', ['student', 'business_student']));
             const studentSnap = await getDocs(studentQuery);
             const studentData = studentSnap.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
             setStudents(studentData);
@@ -463,7 +463,7 @@ function AssignStudentsModal({ instructor, students, onClose, onAssign, loading 
     };
 
     const filteredStudents = students.filter(s =>
-        (s.name || '').toLowerCase().includes(filter.toLowerCase()) ||
+        (s.fullName || s.name || '').toLowerCase().includes(filter.toLowerCase()) ||
         (s.email || '').toLowerCase().includes(filter.toLowerCase())
     );
 
@@ -495,7 +495,7 @@ function AssignStudentsModal({ instructor, students, onClose, onAssign, loading 
                                 className="h-5 w-5 md:h-6 md:w-6 rounded-md md:rounded-lg border-espresso/20 text-espresso focus:ring-espresso bg-white/40"
                             />
                             <div className="flex-1 min-w-0">
-                                <p className="font-serif font-black text-espresso leading-none truncate">{student.name || student.email}</p>
+                                <p className="font-serif font-black text-espresso leading-none truncate">{student.fullName || student.name || student.email}</p>
                                 <p className="text-[8px] md:text-[9px] font-black text-espresso/40 uppercase tracking-widest mt-1 truncate">{student.email}</p>
                             </div>
                         </label>

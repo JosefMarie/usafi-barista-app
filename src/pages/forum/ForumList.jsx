@@ -1,16 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, doc, updateDoc, serverTimestamp, deleteDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '../../lib/utils';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../context/AuthContext';
 
 
 export function ForumList() {
     const { t } = useTranslation();
+    const { user } = useAuth();
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    // Update lastVisitedForum timestamp
+    useEffect(() => {
+        if (user) {
+            const userRef = doc(db, 'users', user.uid);
+            updateDoc(userRef, {
+                lastVisitedForum: serverTimestamp()
+            }).catch(err => console.error('Error updating lastVisitedForum:', err));
+        }
+    }, [user]);
+
+    // Delete post (admin only)
+    const handleDelete = async (postId) => {
+        if (!window.confirm('Are you sure you want to delete this post?')) return;
+        try {
+            await deleteDoc(doc(db, 'forum_posts', postId));
+        } catch (err) {
+            console.error('Error deleting post:', err);
+        }
+    };
 
     useEffect(() => {
         const q = query(collection(db, 'forum_posts'), orderBy('createdAt', 'desc'));
@@ -31,7 +53,7 @@ export function ForumList() {
     );
 
     return (
-        <div className="w-full pb-20 space-y-6 md:space-y-8 relative">
+        <div className="w-full pb-20 space-y-6 md:space-y-8 relative overflow-y-auto max-h-screen">
             {/* Header Section */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 md:gap-4 relative z-10">
                 <div>
@@ -68,9 +90,17 @@ export function ForumList() {
                     <div className="grid grid-cols-1 gap-4 md:gap-6">
                         {posts.map(post => (
                             <Link to={`${post.id}`} key={post.id} className="block group">
-                                <article className="bg-white/40 dark:bg-black/40 backdrop-blur-xl p-5 md:p-8 rounded-[2rem] md:rounded-[2.5rem] shadow-lg border border-white/20 dark:border-white/5 hover:border-espresso/20 dark:hover:border-white/20 transition-all hover:shadow-2xl hover:shadow-espresso/10 hover:-translate-y-1 relative overflow-hidden">
+                                <article className="relative bg-white/40 dark:bg-black/40 backdrop-blur-xl p-5 md:p-8 rounded-[2rem] md:rounded-[2.5rem] shadow-lg border border-white/20 dark:border-white/5 hover:border-espresso/20 dark:hover:border-white/20 transition-all hover:shadow-2xl hover:shadow-espresso/10 hover:-translate-y-1 overflow-hidden">
                                     <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-espresso/0 group-hover:bg-espresso transition-colors"></div>
-
+                                    {user?.role === 'admin' && (
+                                        <button
+                                            onClick={(e) => { e.preventDefault(); handleDelete(post.id); }}
+                                            className="absolute top-2 right-2 text-espresso/60 hover:text-espresso"
+                                            title="Delete post"
+                                        >
+                                            <span className="material-symbols-outlined text-xl">more_vert</span>
+                                        </button>
+                                    )}
                                     <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-6">
                                         {/* Avatar Column */}
                                         <div className="shrink-0">
@@ -99,6 +129,17 @@ export function ForumList() {
                                             <p className="text-sm font-medium text-espresso/70 dark:text-white/70 line-clamp-2 mb-4 md:mb-6 leading-relaxed max-w-3xl">
                                                 {post.content}
                                             </p>
+
+                                            {/* Image Thumbnail */}
+                                            {post.imageUrl && (
+                                                <div className="mb-4 md:mb-6 rounded-xl overflow-hidden border border-espresso/10 dark:border-white/10 shadow-md">
+                                                    <img
+                                                        src={post.imageUrl}
+                                                        alt="Post preview"
+                                                        className="w-full h-40 md:h-48 object-cover"
+                                                    />
+                                                </div>
+                                            )}
 
                                             <div className="flex items-center justify-between border-t border-espresso/5 dark:border-white/5 pt-3 md:pt-4 mt-auto">
                                                 <div className="flex items-center gap-2">

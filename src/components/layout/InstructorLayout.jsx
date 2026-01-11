@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, orderBy } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { cn } from '../../lib/utils';
 import { ThemeToggle } from '../common/ThemeToggle';
@@ -12,6 +12,7 @@ export function InstructorLayout() {
     const { t } = useTranslation();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [unreadCount, setUnreadCount] = useState(0);
+    const [newForumPosts, setNewForumPosts] = useState(0);
     const location = useLocation();
     const navigate = useNavigate();
     const { user, logout } = useAuth();
@@ -27,6 +28,26 @@ export function InstructorLayout() {
         const unsubscribe = onSnapshot(q, (snapshot) => {
             setUnreadCount(snapshot.size);
         });
+        return () => unsubscribe();
+    }, [user]);
+
+    // Forum New Posts Listener
+    React.useEffect(() => {
+        if (!user) return;
+
+        const lastVisited = user.lastVisitedForum?.toDate?.() || new Date(0);
+
+        const q = query(
+            collection(db, 'forum_posts'),
+            where('createdAt', '>', lastVisited),
+            orderBy('createdAt', 'desc')
+        );
+
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const newPosts = snapshot.docs.filter(doc => doc.data().authorId !== user.uid);
+            setNewForumPosts(newPosts.length);
+        });
+
         return () => unsubscribe();
     }, [user]);
 
@@ -54,7 +75,7 @@ export function InstructorLayout() {
         { icon: 'chat', label: t('instructor.nav.chat'), path: '/instructor/chat' },
         { icon: 'schedule', label: t('instructor.nav.schedule'), path: '/instructor/schedule' },
         { icon: 'video_library', label: t('instructor.nav.share_video'), path: '/instructor/share-video' },
-        { icon: 'forum', label: 'Forum', path: '/instructor/forum' },
+        { icon: 'forum', label: 'Forum', path: '/instructor/forum', badge: newForumPosts },
         { icon: 'person', label: t('instructor.nav.my_profile'), path: '/instructor/profile' },
     ];
 
@@ -87,9 +108,9 @@ export function InstructorLayout() {
                             )}
                             <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
                             {item.label}
-                            {item.path === '/instructor/chat' && unreadCount > 0 && (
+                            {((item.path === '/instructor/chat' && unreadCount > 0) || (item.badge && item.badge > 0)) && (
                                 <span className="ml-auto flex items-center justify-center w-5 h-5 text-[10px] font-black text-white bg-primary rounded-full shadow-sm">
-                                    {unreadCount > 99 ? '99+' : unreadCount}
+                                    {item.path === '/instructor/chat' ? (unreadCount > 99 ? '99+' : unreadCount) : (item.badge > 99 ? '99+' : item.badge)}
                                 </span>
                             )}
                         </Link>
