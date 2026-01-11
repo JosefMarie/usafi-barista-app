@@ -100,7 +100,7 @@ export function InstructorLayout() {
                                 "relative flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-bold transition-all overflow-hidden group",
                                 location.pathname === item.path
                                     ? "bg-espresso text-white shadow-lg translate-x-1"
-                                    : "text-espresso/70 dark:text-white/70 hover:bg-white/40 dark:hover:bg-white/5"
+                                    : "bg-[#088F8F] text-white hover:bg-white/40 dark:hover:bg-white/5 hover:text-espresso"
                             )}
                         >
                             {location.pathname === item.path && (
@@ -169,7 +169,7 @@ export function InstructorLayout() {
                                         "flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors",
                                         location.pathname === item.path
                                             ? "bg-primary text-white shadow-md shadow-primary/20"
-                                            : "text-espresso dark:text-white hover:bg-black/5 dark:hover:bg-white/5"
+                                            : "bg-[#088F8F] text-white hover:bg-black/5 dark:hover:bg-white/5"
                                     )}
                                 >
                                     <span className="material-symbols-outlined text-[24px]">{item.icon}</span>

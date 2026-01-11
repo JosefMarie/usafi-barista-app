@@ -162,18 +162,18 @@ export function StudentLayout() {
                                 "flex items-center gap-4 px-4 py-3.5 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all duration-300 relative group/nav overflow-hidden shrink-0",
                                 location.pathname === item.path
                                     ? "bg-espresso text-white shadow-xl translate-x-1"
-                                    : "text-espresso/60 dark:text-white/60 hover:bg-white/40 dark:hover:bg-white/5 hover:text-espresso dark:hover:text-primary hover:translate-x-1 shadow-sm border border-transparent hover:border-espresso/10"
+                                    : "bg-[#088F8F] text-white hover:bg-white/40 dark:hover:bg-white/5 hover:text-espresso dark:hover:text-primary hover:translate-x-1 shadow-sm border border-transparent hover:border-espresso/10"
                             )}
                         >
                             {/* Individual Nav Item Accent */}
                             <div className={cn(
                                 "absolute left-0 top-0 bottom-0 w-1 transition-all duration-300",
-                                location.pathname === item.path ? "bg-white/40" : "bg-espresso/10 group-hover/nav:bg-espresso"
+                                location.pathname === item.path ? "bg-white/40" : "bg-white/20 group-hover/nav:bg-espresso"
                             )}></div>
 
                             <span className={cn(
                                 "material-symbols-outlined text-[20px] transition-transform group-hover/nav:scale-110",
-                                location.pathname === item.path ? "text-white" : "text-espresso/40"
+                                location.pathname === item.path ? "text-white" : "text-white group-hover/nav:text-espresso"
                             )}>{item.icon}</span>
                             <span className="relative z-10">{item.name}</span>
 
@@ -230,12 +230,12 @@ export function StudentLayout() {
                                             "flex items-center gap-4 px-4 py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all relative overflow-hidden",
                                             location.pathname === item.path
                                                 ? "bg-espresso text-white shadow-lg"
-                                                : "text-espresso/70 dark:text-white/70 hover:bg-white/40 dark:hover:bg-white/5"
+                                                : "bg-[#088F8F] text-white hover:bg-white/40 dark:hover:bg-white/5"
                                         )}
                                     >
                                         <div className={cn(
                                             "absolute left-0 top-0 bottom-0 w-1",
-                                            location.pathname === item.path ? "bg-white/40" : "bg-espresso/10"
+                                            location.pathname === item.path ? "bg-white/40" : "bg-white/20"
                                         )}></div>
                                         <span className="material-symbols-outlined text-xl">{item.icon}</span>
                                         {item.name}
