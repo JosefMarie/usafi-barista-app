@@ -382,35 +382,37 @@ export function StudentCourseView() {
 
     return (
         <div className="min-h-screen bg-[#F5DEB3] dark:bg-background-dark flex flex-col select-none" onContextMenu={(e) => e.preventDefault()}>
-            <header className="bg-[#F5DEB3]/80 dark:bg-[#1e1e1e]/80 backdrop-blur-md border-b border-espresso/10 sticky top-0 z-30 px-4 md:px-6 py-4 md:py-5 flex items-center justify-between">
+            <header className="bg-[#F5DEB3]/80 dark:bg-[#1e1e1e]/80 backdrop-blur-md border-b border-espresso/10 sticky top-0 z-30 px-3 md:px-6 py-3 md:py-5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 md:gap-6">
                 <div className="flex items-center gap-3 md:gap-6">
-                    <button onClick={() => navigate('/student/courses')} className="size-10 md:size-12 flex items-center justify-center bg-white/40 hover:bg-white text-espresso rounded-xl md:rounded-2xl transition-all shadow-sm active:scale-95 shrink-0">
-                        <span className="material-symbols-outlined text-[20px] md:text-[24px]">arrow_back</span>
+                    <button onClick={() => navigate('/student/courses')} className="size-9 md:size-12 flex items-center justify-center bg-white/40 hover:bg-white text-espresso rounded-lg md:rounded-2xl transition-all shadow-sm active:scale-95 shrink-0">
+                        <span className="material-symbols-outlined text-[18px] md:text-[24px]">arrow_back</span>
                     </button>
-                    <div className="min-w-0">
-                        <h1 className="font-serif font-bold text-espresso dark:text-white text-base md:text-xl leading-tight truncate">{module.title}</h1>
-                        <div className="flex items-center gap-3 md:gap-4 mt-1">
-                            <div className="w-16 md:w-32 h-1.5 md:h-2 bg-espresso/10 dark:bg-white/10 rounded-full overflow-hidden shadow-inner">
+                    <div className="min-w-0 flex-1">
+                        <h1 className="font-serif font-bold text-espresso dark:text-white text-sm md:text-xl leading-tight truncate">{module.title}</h1>
+                        <div className="flex items-center gap-2 md:gap-4 mt-1">
+                            <div className="w-12 md:w-32 h-1 md:h-2 bg-espresso/10 dark:bg-white/10 rounded-full overflow-hidden shadow-inner">
                                 <div className="h-full bg-espresso transition-all duration-1000 ease-out" style={{ width: `${showQuiz ? 100 : progressPercent}%` }} />
                             </div>
-                            <p className="text-[8px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.1em] md:tracking-[0.2em] truncate">
+                            <p className="text-[7px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-tighter md:tracking-[0.2em] truncate">
                                 {showQuiz ? t('student.course_view.assessment_phase') : t('student.course_view.extraction', { percent: progressPercent })}
-                                <span className="ml-2 opacity-50">[{module.id}]</span>
                             </p>
                         </div>
                     </div>
+                    <button onClick={() => setShowNotes(!showNotes)} className={cn("sm:hidden size-9 flex items-center justify-center rounded-lg font-black transition-all shadow-sm active:scale-95", showNotes ? "bg-espresso text-white" : "bg-white/40 text-espresso")}>
+                        <span className="material-symbols-outlined text-[18px]">{showNotes ? 'book_2' : 'edit_note'}</span>
+                    </button>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center justify-between gap-2 md:gap-4 overflow-x-auto no-scrollbar pb-1 sm:pb-0">
                     {/* Mode Toggle & Language Selector */}
-                    <div className="flex flex-wrap items-center gap-4 bg-white/40 dark:bg-black/20 p-2 rounded-2xl border border-espresso/10 backdrop-blur-md shadow-sm">
+                    <div className="flex items-center gap-2 md:gap-4 bg-white/40 dark:bg-black/20 p-1.5 md:p-2 rounded-xl md:rounded-2xl border border-espresso/10 backdrop-blur-md shrink-0">
                         {/* Mode Toggle */}
                         {((module.summaryContent && module.summaryContent.length > 0) || (module.languages?.[studyLanguage]?.summaryContent?.length > 0)) && (
-                            <div className="flex bg-espresso/5 dark:bg-white/5 rounded-xl p-1 shrink-0">
+                            <div className="flex bg-espresso/5 dark:bg-white/5 rounded-lg md:rounded-xl p-0.5 md:p-1 shrink-0">
                                 <button
                                     onClick={() => handleModeToggle('full')}
                                     className={cn(
-                                        "px-3 md:px-5 py-2 md:py-2 text-[8px] md:text-[10px] font-black rounded-lg transition-all uppercase tracking-widest",
-                                        studyMode === 'full' ? "bg-espresso text-white shadow-md" : "text-espresso/40 hover:text-espresso"
+                                        "px-2 md:px-5 py-1.5 md:py-2 text-[7px] md:text-[10px] font-black rounded-md md:rounded-lg transition-all uppercase tracking-tighter md:tracking-widest",
+                                        studyMode === 'full' ? "bg-espresso text-white shadow-md font-black" : "text-espresso/40 hover:text-espresso"
                                     )}
                                 >
                                     {t('student.course_view.full_notes')}
@@ -418,8 +420,8 @@ export function StudentCourseView() {
                                 <button
                                     onClick={() => handleModeToggle('summary')}
                                     className={cn(
-                                        "px-3 md:px-5 py-2 md:py-2 text-[8px] md:text-[10px] font-black rounded-lg transition-all uppercase tracking-widest",
-                                        studyMode === 'summary' ? "bg-espresso text-white shadow-md" : "text-espresso/40 hover:text-espresso"
+                                        "px-2 md:px-5 py-1.5 md:py-2 text-[7px] md:text-[10px] font-black rounded-md md:rounded-lg transition-all uppercase tracking-tighter md:tracking-widest",
+                                        studyMode === 'summary' ? "bg-espresso text-white shadow-md font-black" : "text-espresso/40 hover:text-espresso"
                                     )}
                                 >
                                     {t('student.course_view.summary')}
@@ -427,10 +429,10 @@ export function StudentCourseView() {
                             </div>
                         )}
 
-                        <div className="w-px h-6 bg-espresso/10 hidden lg:block"></div>
+                        <div className="w-px h-5 bg-espresso/10 hidden sm:block"></div>
 
                         {/* Language Selector */}
-                        <div className="flex gap-1.5 overflow-x-auto no-scrollbar py-1 max-w-[200px] md:max-w-none">
+                        <div className="flex gap-1 md:gap-1.5 overflow-x-auto no-scrollbar shrink-0">
                             {languages.map(lang => {
                                 const hasContent = module.languages?.[lang.code]?.content?.length > 0 || (lang.code === 'en' && module.content?.length > 0);
                                 if (!hasContent && lang.code !== 'en') return null;
@@ -439,23 +441,23 @@ export function StudentCourseView() {
                                         key={lang.code}
                                         onClick={() => handleLanguageToggle(lang.code)}
                                         className={cn(
-                                            "px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all whitespace-nowrap",
+                                            "px-2 py-1.5 rounded-md md:rounded-lg text-[7px] md:text-[9px] font-black uppercase tracking-tighter md:tracking-widest transition-all whitespace-nowrap",
                                             studyLanguage === lang.code
                                                 ? "bg-espresso text-white shadow-sm"
                                                 : "text-espresso/60 hover:bg-espresso/5 hover:text-espresso"
                                         )}
                                     >
-                                        {lang.name}
+                                        {lang.name.charAt(0).toUpperCase() + lang.name.slice(1, 2)}
+                                        <span className="hidden md:inline">{lang.name.slice(2)}</span>
                                     </button>
                                 );
                             })}
                         </div>
                     </div>
 
-                    <button onClick={() => setShowNotes(!showNotes)} className={cn("flex items-center justify-center gap-2 md:gap-3 px-3 md:px-6 py-2.5 md:py-3 rounded-xl md:rounded-2xl font-black uppercase tracking-widest text-[9px] md:text-[10px] transition-all shadow-xl active:scale-95", showNotes ? "bg-espresso text-white shadow-espresso/20" : "bg-white/40 text-espresso hover:bg-white border border-espresso/5 shadow-sm")}>
+                    <button onClick={() => setShowNotes(!showNotes)} className={cn("hidden sm:flex items-center justify-center gap-2 md:gap-3 px-4 md:px-6 py-2.5 md:py-3 rounded-xl md:rounded-2xl font-black uppercase tracking-widest text-[9px] md:text-[10px] transition-all shadow-xl active:scale-95 shrink-0", showNotes ? "bg-espresso text-white shadow-espresso/20" : "bg-white/40 text-espresso hover:bg-white border border-espresso/5 shadow-sm")}>
                         <span className="material-symbols-outlined text-[18px] md:text-[20px]">{showNotes ? 'book_2' : 'edit_note'}</span>
-                        <span className="hidden sm:inline">{showNotes ? t('student.course_view.stow_ledger') : t('student.course_view.strategic_notes')}</span>
-                        <span className="sm:hidden">NOTES</span>
+                        <span>{showNotes ? t('student.course_view.stow_ledger') : t('student.course_view.strategic_notes')}</span>
                     </button>
                 </div>
             </header>
@@ -488,26 +490,26 @@ export function StudentCourseView() {
                                             <span className="material-symbols-outlined text-4xl md:text-5xl">quiz</span>
                                         </div>
                                         <div className="text-center md:text-left">
-                                            <h2 className="text-2xl md:text-4xl font-serif font-bold text-espresso dark:text-white mb-3 md:mb-4">{t('student.quiz.title')}</h2>
-                                            <p className="text-[10px] md:text-sm font-medium text-espresso/40 dark:text-white/40 uppercase tracking-widest mb-6 md:mb-8">{t('student.quiz.subtitle')}</p>
+                                            <h2 className="text-xl md:text-4xl font-serif font-bold text-espresso dark:text-white mb-2 md:mb-4">{t('student.quiz.title')}</h2>
+                                            <p className="text-[9px] md:text-sm font-medium text-espresso/40 dark:text-white/40 uppercase tracking-widest mb-4 md:mb-8">{t('student.quiz.subtitle')}</p>
                                             <div className="space-y-3 md:space-y-4 text-left">
-                                                <div className="flex gap-4 md:gap-5 p-4 md:p-6 rounded-[1.5rem] bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
+                                                <div className="flex gap-3 md:gap-5 p-3 md:p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
                                                     <span className="material-symbols-outlined text-espresso shrink-0 text-xl md:text-2xl">timer_10_alt_1</span>
                                                     <div>
-                                                        <p className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-1">{t('student.quiz.rules.timer.title')}</p>
-                                                        <p className="text-[12px] md:text-sm font-medium text-espresso dark:text-white">{t('student.quiz.rules.timer.desc')}</p>
+                                                        <p className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-0.5">{t('student.quiz.rules.timer.title')}</p>
+                                                        <p className="text-[11px] md:text-sm font-medium text-espresso dark:text-white">{t('student.quiz.rules.timer.desc')}</p>
                                                     </div>
                                                 </div>
-                                                <div className="flex gap-4 md:gap-5 p-4 md:p-6 rounded-[1.5rem] bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
+                                                <div className="flex gap-3 md:gap-5 p-3 md:p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
                                                     <span className="material-symbols-outlined text-espresso shrink-0 text-xl md:text-2xl">workspace_premium</span>
                                                     <div>
-                                                        <p className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-1">{t('student.quiz.rules.pass_mark.title')}</p>
-                                                        <p className="text-[12px] md:text-sm font-medium text-espresso dark:text-white" dangerouslySetInnerHTML={{ __html: t('student.quiz.rules.pass_mark.desc', { passMark: activeQuiz?.passMark || 70 }) }} />
+                                                        <p className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-0.5">{t('student.quiz.rules.pass_mark.title')}</p>
+                                                        <p className="text-[11px] md:text-sm font-medium text-espresso dark:text-white" dangerouslySetInnerHTML={{ __html: t('student.quiz.rules.pass_mark.desc', { passMark: activeQuiz?.passMark || 70 }) }} />
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <button onClick={startQuiz} className="w-full py-4 md:py-5 bg-espresso text-white font-black uppercase tracking-[0.2em] text-[10px] rounded-xl md:rounded-2xl shadow-2xl shadow-espresso/30 hover:shadow-espresso/40 transition-all active:scale-95">{t('student.quiz.start_btn')}</button>
+                                        <button onClick={startQuiz} className="w-full py-3.5 md:py-5 bg-espresso text-white font-black uppercase tracking-[0.2em] text-[9px] md:text-[10px] rounded-xl md:rounded-2xl shadow-xl active:scale-95">{t('student.quiz.start_btn')}</button>
                                     </div>
                                 ) : (
                                     <div className="space-y-6">
@@ -595,22 +597,22 @@ export function StudentCourseView() {
                                     </div>
                                 )
                             ) : (
-                                <div className="text-left py-10 md:py-16 animate-scale-in w-full bg-[#F5DEB3] dark:bg-white/5 p-6 md:p-12 rounded-[2rem] md:rounded-3xl border border-espresso/10 shadow-2xl relative overflow-hidden group">
+                                <div className="text-left py-6 md:py-16 animate-scale-in w-full bg-[#F5DEB3] dark:bg-white/5 p-6 md:p-12 rounded-[2rem] md:rounded-3xl border border-espresso/10 shadow-2xl relative overflow-hidden group">
                                     <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                                    <div className={cn("inline-flex items-center justify-center size-20 md:size-28 rounded-2xl md:rounded-3xl mb-6 md:mb-8 shadow-2xl text-4xl md:text-6xl", quizResult.passed ? "bg-green-500 text-white" : "bg-red-500 text-white")}>
-                                        <span className="material-symbols-outlined text-4xl md:text-6xl">{quizResult.passed ? 'auto_awesome' : 'warning'}</span>
+                                    <div className={cn("inline-flex items-center justify-center size-16 md:size-28 rounded-2xl md:rounded-3xl mb-4 md:mb-8 shadow-2xl", quizResult.passed ? "bg-green-500 text-white" : "bg-red-500 text-white")}>
+                                        <span className="material-symbols-outlined text-3xl md:text-6xl">{quizResult.passed ? 'auto_awesome' : 'warning'}</span>
                                     </div>
-                                    <h1 className="text-2xl md:text-4xl font-serif font-bold text-espresso dark:text-white mb-2 md:mb-3">{quizResult.passed ? t('student.quiz.results.passed.title') : t('student.quiz.results.failed.title')}</h1>
-                                    <p className="text-lg md:text-xl font-medium text-espresso/40 dark:text-white/40 mb-8 md:mb-10">{t('student.quiz.results.score_label')} <span className={quizResult.passed ? "text-green-600 font-black" : "text-red-600 font-black"}>{quizResult.score.toFixed(0)}%</span></p>
+                                    <h1 className="text-xl md:text-4xl font-serif font-bold text-espresso dark:text-white mb-2 md:mb-3">{quizResult.passed ? t('student.quiz.results.passed.title') : t('student.quiz.results.failed.title')}</h1>
+                                    <p className="text-base md:text-xl font-medium text-espresso/40 dark:text-white/40 mb-6 md:mb-10">{t('student.quiz.results.score_label')} <span className={quizResult.passed ? "text-green-600 font-black" : "text-red-600 font-black"}>{quizResult.score.toFixed(0)}%</span></p>
                                     {quizResult.passed ? (
-                                        <div className="space-y-6">
-                                            <p className="text-[13px] md:text-sm font-medium text-espresso/60 dark:text-white/60 leading-relaxed">{t('student.quiz.results.passed.desc')}</p>
-                                            <button onClick={() => navigate('/student/courses')} className="w-full sm:w-auto px-8 md:px-10 py-4 md:py-5 bg-green-600 text-white font-black uppercase tracking-widest text-[9px] md:text-[10px] rounded-xl md:rounded-2xl shadow-xl hover:bg-green-700 transition-all flex items-center justify-center gap-3">{t('student.quiz.results.passed.btn')} <span className="material-symbols-outlined text-[18px]">map</span></button>
+                                        <div className="space-y-4 md:space-y-6">
+                                            <p className="text-xs md:text-sm font-medium text-espresso/60 dark:text-white/60 leading-relaxed">{t('student.quiz.results.passed.desc')}</p>
+                                            <button onClick={() => navigate('/student/courses')} className="w-full sm:w-auto px-8 md:px-10 py-3.5 md:py-5 bg-green-600 text-white font-black uppercase tracking-widest text-[9px] md:text-[10px] rounded-xl md:rounded-2xl shadow-xl hover:bg-green-700 transition-all flex items-center justify-center gap-3">{t('student.quiz.results.passed.btn')} <span className="material-symbols-outlined text-[18px]">map</span></button>
                                         </div>
                                     ) : (
-                                        <div className="space-y-6">
-                                            <p className="text-[13px] md:text-sm font-medium text-espresso/60 dark:text-white/60 leading-relaxed">{t('student.quiz.results.failed.desc')}</p>
-                                            <button onClick={retakeModule} className="w-full sm:w-auto px-8 md:px-10 py-4 md:py-5 bg-espresso text-white font-black uppercase tracking-widest text-[9px] md:text-[10px] rounded-xl md:rounded-2xl shadow-xl hover:bg-black transition-all flex items-center justify-center gap-3"><span className="material-symbols-outlined text-[18px]">refresh</span> {t('student.quiz.results.failed.btn')}</button>
+                                        <div className="space-y-4 md:space-y-6">
+                                            <p className="text-xs md:text-sm font-medium text-espresso/60 dark:text-white/60 leading-relaxed">{t('student.quiz.results.failed.desc')}</p>
+                                            <button onClick={retakeModule} className="w-full sm:w-auto px-8 md:px-10 py-3.5 md:py-5 bg-espresso text-white font-black uppercase tracking-widest text-[9px] md:text-[10px] rounded-xl md:rounded-2xl shadow-xl hover:bg-black transition-all flex items-center justify-center gap-3"><span className="material-symbols-outlined text-[18px]">refresh</span> {t('student.quiz.results.failed.btn')}</button>
                                         </div>
                                     )}
                                 </div>
@@ -622,12 +624,12 @@ export function StudentCourseView() {
                         {activeContent[currentSlide] ? (
                             <div className="flex-1 bg-white/40 dark:bg-[#2c2825] p-2 md:p-4 rounded-[2rem] border border-espresso/10 shadow-2xl flex flex-col overflow-hidden relative group">
                                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                                <div className="flex-1 min-h-[60vh] md:min-h-[80vh] w-full rounded-2xl overflow-hidden bg-espresso/5 shadow-inner flex items-center justify-center relative">
+                                <div className="flex-1 min-h-[50vh] md:min-h-[80vh] w-full rounded-2xl overflow-hidden bg-espresso/5 shadow-inner flex items-center justify-center relative">
                                     {activeContent[currentSlide].text ? (
-                                        <div className="w-full h-full p-8 md:p-12 overflow-y-auto bg-white/80 dark:bg-black/40 custom-scrollbar">
-                                            <div className="prose dark:prose-invert max-w-none">
+                                        <div className="w-full h-full p-4 md:p-12 overflow-y-auto bg-white/80 dark:bg-black/40 custom-scrollbar">
+                                            <div className="prose prose-sm md:prose-base dark:prose-invert max-w-none">
                                                 <div
-                                                    className="text-espresso dark:text-white/90 text-lg leading-relaxed"
+                                                    className="text-espresso dark:text-white/90 text-sm md:text-lg leading-relaxed"
                                                     dangerouslySetInnerHTML={{ __html: activeContent[currentSlide].text }}
                                                 />
                                             </div>
@@ -640,7 +642,7 @@ export function StudentCourseView() {
                                                 (slideUrl && slideUrl.toLowerCase().split('?')[0].includes('.pdf')) ||
                                                 (cur.fileName && cur.fileName.toLowerCase().endsWith('.pdf'));
 
-                                            if (!slideUrl) return <div className="text-espresso/20 italic">Media Unavailable</div>;
+                                            if (!slideUrl) return <div className="text-espresso/20 italic text-xs">Media Unavailable</div>;
 
                                             // Mobile Detection & Google Docs Viewer Fallback
                                             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -650,7 +652,7 @@ export function StudentCourseView() {
 
                                             return isPdf ? (
                                                 <div
-                                                    className="w-full h-full relative"
+                                                    className="w-full h-[50vh] md:h-full relative"
                                                     onDoubleClick={() => window.open(slideUrl, '_blank')}
                                                 >
                                                     <iframe
@@ -659,18 +661,18 @@ export function StudentCourseView() {
                                                         title={`Page ${currentSlide + 1}`}
                                                     />
                                                     {/* Interaction Layer */}
-                                                    <div className="absolute top-4 left-4 flex gap-2 pointer-events-auto">
+                                                    <div className="absolute top-2 left-2 flex gap-2 pointer-events-auto">
                                                         <button
                                                             onClick={(e) => { e.stopPropagation(); window.open(slideUrl, '_blank'); }}
-                                                            className="size-10 bg-espresso/60 hover:bg-espresso text-white rounded-xl flex items-center justify-center backdrop-blur-md shadow-lg transition-all active:scale-90"
+                                                            className="size-8 md:size-10 bg-espresso/60 hover:bg-espresso text-white rounded-lg md:rounded-xl flex items-center justify-center backdrop-blur-md shadow-lg transition-all active:scale-90"
                                                             title="Open in Full Screen"
                                                         >
-                                                            <span className="material-symbols-outlined text-xl">open_in_new</span>
+                                                            <span className="material-symbols-outlined text-lg">open_in_new</span>
                                                         </button>
                                                     </div>
                                                     {isMobile && (
-                                                        <div className="absolute bottom-4 left-4 right-4 pointer-events-none">
-                                                            <p className="text-[7px] font-black text-espresso/30 dark:text-white/30 uppercase tracking-[0.2em] text-center">Double tap to view full screen</p>
+                                                        <div className="absolute bottom-2 left-2 right-2 pointer-events-none">
+                                                            <p className="text-[6px] font-black text-espresso/30 dark:text-white/30 uppercase tracking-[0.2em] text-center">Double tap to view full screen</p>
                                                         </div>
                                                     )}
                                                 </div>
@@ -700,15 +702,18 @@ export function StudentCourseView() {
 
             {
                 !showQuiz && (
-                    <footer className="fixed bottom-0 left-0 right-0 bg-[#F5DEB3]/80 dark:bg-[#1e1e1e]/80 backdrop-blur-md border-t border-espresso/10 p-4 md:p-6 z-30">
-                        <div className="w-full max-w-6xl mx-auto flex justify-between items-center gap-4">
-                            <button onClick={handlePrev} disabled={currentSlide === 0} className="h-10 md:h-12 px-4 md:px-8 rounded-xl md:rounded-2xl border border-espresso/10 bg-white/40 hover:bg-white text-espresso font-black uppercase tracking-widest text-[8px] md:text-[10px] disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm active:scale-95 shrink-0"><span className="hidden sm:inline">{t('student.course_view.prev_btn')}</span><span className="sm:hidden">PREV</span></button>
-                            <div className="flex gap-1.5 md:gap-2 overflow-x-auto no-scrollbar py-2">
+                    <footer className="fixed bottom-0 left-0 right-0 bg-[#F5DEB3]/90 dark:bg-[#1e1e1e]/90 backdrop-blur-md border-t border-espresso/10 px-3 md:px-6 py-3 md:py-6 z-30">
+                        <div className="w-full max-w-6xl mx-auto flex justify-between items-center gap-2 md:gap-4">
+                            <button onClick={handlePrev} disabled={currentSlide === 0} className="h-9 md:h-12 px-3 md:px-8 rounded-lg md:rounded-2xl border border-espresso/10 bg-white/40 hover:bg-white text-espresso font-black uppercase tracking-widest text-[7px] md:text-[10px] disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm active:scale-95 shrink-0">
+                                <span className="hidden sm:inline">{t('student.course_view.prev_btn')}</span>
+                                <span className="sm:hidden">PREV</span>
+                            </button>
+                            <div className="flex gap-1 md:gap-2 overflow-x-auto no-scrollbar py-1">
                                 {activeContent.map((_, idx) => (
-                                    <div key={idx} className={cn("h-1.5 md:h-2 rounded-full transition-all duration-500 shadow-inner shrink-0", idx === currentSlide ? "bg-espresso w-6 md:w-10 shadow-lg" : "bg-espresso/10 dark:bg-white/20 w-1.5 md:w-4")} />
+                                    <div key={idx} className={cn("h-1 md:h-2 rounded-full transition-all duration-500 shadow-inner shrink-0", idx === currentSlide ? "bg-espresso w-4 md:w-10 shadow-lg" : "bg-espresso/10 dark:bg-white/20 w-1 md:w-4")} />
                                 ))}
                             </div>
-                            <button onClick={handleNext} className="h-10 md:h-12 px-4 md:px-8 rounded-xl md:rounded-2xl bg-espresso text-white font-black uppercase tracking-widest text-[8px] md:text-[10px] hover:shadow-2xl transition-all shadow-xl flex items-center gap-2 md:gap-3 active:scale-95 shrink-0">
+                            <button onClick={handleNext} className="h-9 md:h-12 px-3 md:px-8 rounded-lg md:rounded-2xl bg-espresso text-white font-black uppercase tracking-widest text-[7px] md:text-[10px] hover:shadow-2xl transition-all shadow-xl flex items-center gap-1.5 md:gap-3 active:scale-95 shrink-0">
                                 <span className="hidden sm:inline">{currentSlide === (activeContent.length || 0) - 1 ? t('student.course_view.begin_eval_btn') : t('student.course_view.next_btn')}</span>
                                 <span className="sm:hidden">{currentSlide === (activeContent.length || 0) - 1 ? 'EVAL' : 'NEXT'}</span>
                                 <span className="material-symbols-outlined text-[16px] md:text-[20px]">{currentSlide === (activeContent.length || 0) - 1 ? 'school' : 'arrow_forward'}</span>

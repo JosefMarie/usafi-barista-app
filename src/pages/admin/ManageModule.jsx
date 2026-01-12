@@ -731,79 +731,69 @@ export function ManageModule() {
     if (loading) return <div className="p-10 text-center">Loading Module...</div>;
 
     return (
-        <div className="flex flex-col h-full bg-[#F5DEB3] dark:bg-[#1c1916] overflow-y-auto animate-fade-in">
+        <div className="flex flex-col h-full bg-[#F5DEB3] dark:bg-[#1c1916] overflow-y-auto animate-fade-in relative">
             {/* Header */}
-            <header className="sticky top-0 z-50 bg-[#F5DEB3]/90 dark:bg-[#1c1916]/90 backdrop-blur-md border-b border-espresso/10 px-4 md:px-8 py-4 md:py-6 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6">
-                <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20"></div>
-                <div className="flex items-center gap-4 md:gap-6 w-full md:w-auto">
-                    <button
-                        onClick={() => navigate(`/admin/courses/${courseId}`)}
-                        className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-white/40 hover:bg-espresso hover:text-white transition-all flex items-center justify-center active:scale-95 shadow-sm group shrink-0"
-                    >
-                        <span className="material-symbols-outlined text-[20px] md:text-[24px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
+            <header className="bg-[#F5DEB3]/90 dark:bg-[#1e1e1e]/90 backdrop-blur-md border-b border-espresso/10 sticky top-0 z-50 px-3 md:px-10 py-3 md:py-6 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 md:gap-8 shadow-sm">
+                <div className="flex items-center gap-3 md:gap-8 flex-1">
+                    <button onClick={() => navigate(`/admin/courses/${courseId}`)} className="size-10 md:size-14 flex items-center justify-center bg-white/40 hover:bg-white text-espresso rounded-xl md:rounded-[1.5rem] transition-all shadow-sm active:scale-95 shrink-0 border border-espresso/5">
+                        <span className="material-symbols-outlined text-[20px] md:text-[28px]">arrow_back</span>
                     </button>
-                    <div className="flex-1 w-full">
-                        {/* Editable Title */}
+                    <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2 md:gap-4 mb-0.5 md:mb-1">
+                            <span className="px-2 py-0.5 bg-espresso/5 text-espresso/40 text-[7px] md:text-[9px] font-black uppercase tracking-widest rounded-lg border border-espresso/10">Module Engineering</span>
+                            <span className="text-espresso/20">•</span>
+                            <span className="text-[7px] md:text-[9px] font-black text-espresso/40 uppercase tracking-widest">{module.id}</span>
+                        </div>
                         <input
-                            className="w-full text-xl md:text-3xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none bg-transparent outline-none border-b border-transparent focus:border-espresso/20 transition-colors"
-                            value={module?.title || ''}
+                            className="w-full bg-transparent font-serif font-black text-espresso dark:text-white text-base md:text-3xl outline-none placeholder:text-espresso/10"
+                            value={module.title}
                             onChange={(e) => setModule({ ...module, title: e.target.value })}
+                            placeholder="Designate Module Title..."
                         />
-                        <p className="text-[9px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] mt-1 md:mt-2">Instructional Logic Controller <span className="ml-2 opacity-50">[{module?.id}]</span></p>
                     </div>
                 </div>
-                <div className="flex flex-wrap gap-3 md:gap-4 w-full md:w-auto">
-                    <button
-                        onClick={togglePublish}
-                        className={cn(
-                            "flex-1 md:flex-none px-4 md:px-8 py-2.5 md:py-3.5 font-black text-[9px] md:text-[10px] uppercase tracking-[0.2em] rounded-xl md:rounded-2xl transition-all border shadow-sm active:scale-95 flex items-center justify-center gap-2",
-                            module?.status === 'published'
-                                ? "bg-white text-green-600 border-green-200 hover:bg-green-50"
-                                : "bg-white text-amber-600 border-amber-200 hover:bg-amber-50"
-                        )}
-                    >
-                        <span className="material-symbols-outlined text-[16px] md:text-[18px]">
-                            {module?.status === 'published' ? 'verified' : 'pending'}
-                        </span>
-                        {module?.status === 'published' ? 'PRODUCTION LIVE' : 'DRAFT PROTOCOL'}
-                    </button>
-                    <button
-                        onClick={handleSave}
-                        className="flex-1 md:flex-none px-4 md:px-8 py-2.5 md:py-3.5 bg-espresso text-white text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] rounded-xl md:rounded-2xl shadow-xl hover:shadow-espresso/40 active:scale-95 transition-all flex items-center justify-center gap-2"
-                    >
-                        <span className="material-symbols-outlined text-[16px] md:text-[18px]">synchronized</span>
-                        Sync State
-                    </button>
+
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 md:gap-6 bg-white/40 dark:bg-black/20 p-1.5 md:p-3 rounded-xl md:rounded-[2rem] border border-espresso/5 shadow-inner">
+                    <div className="flex gap-2 w-full sm:w-auto overflow-x-auto no-scrollbar py-1">
+                        {languages.map((lang) => (
+                            <button
+                                key={lang.code}
+                                onClick={() => changeLanguage(lang.code)}
+                                className={cn(
+                                    "px-3 md:px-6 py-2 md:py-3 text-[8px] md:text-[10px] font-black rounded-xl transition-all uppercase tracking-widest whitespace-nowrap",
+                                    selectedLang === lang.code
+                                        ? "bg-espresso text-white shadow-xl scale-105"
+                                        : "text-espresso/40 hover:text-espresso hover:bg-white/60"
+                                )}
+                            >
+                                {lang.name.charAt(0).toUpperCase() + lang.name.slice(1, 2)}
+                                <span className="hidden md:inline">{lang.name.slice(2)}</span>
+                            </button>
+                        ))}
+                    </div>
+                    <div className="w-px h-8 bg-espresso/10 hidden lg:block"></div>
+                    <div className="flex gap-2 w-full sm:w-auto">
+                        <button onClick={handleSave} disabled={saving} className="flex-1 sm:flex-none flex items-center justify-center gap-2 md:gap-3 bg-espresso text-white px-4 md:px-10 py-2.5 md:py-5 rounded-xl md:rounded-[1.5rem] font-black uppercase tracking-[0.2em] text-[8px] md:text-[11px] shadow-2xl shadow-espresso/30 hover:shadow-espresso/50 transition-all active:scale-95 disabled:opacity-50">
+                            <span className="material-symbols-outlined text-[18px] md:text-[22px]">{saving ? 'sync' : 'database'}</span>
+                            {saving ? 'Syncing...' : 'Sync State'}
+                        </button>
+                        <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 md:gap-3 bg-green-600 text-white px-4 md:px-8 py-2.5 md:py-5 rounded-xl md:rounded-[1.5rem] font-black uppercase tracking-[0.2em] text-[8px] md:text-[11px] shadow-2xl shadow-green-600/20 hover:bg-green-700 transition-all active:scale-95">
+                            <span className="material-symbols-outlined text-[18px] md:text-[22px]">rocket_launch</span>
+                            Production
+                        </button>
+                    </div>
                 </div>
             </header>
 
             {/* Language Switcher & Tabs */}
             <div className="flex flex-col border-y border-espresso/10 bg-white/20 dark:bg-black/20 relative z-10 w-full">
-                {/* Language bar */}
-                <div className="flex items-center justify-center px-4 py-3 gap-2 bg-espresso/5 border-b border-espresso/5 overflow-x-auto no-scrollbar">
-                    {languages.map(lang => (
-                        <button
-                            key={lang.code}
-                            onClick={() => changeLanguage(lang.code)}
-                            className={cn(
-                                "px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest transition-all",
-                                selectedLang === lang.code
-                                    ? "bg-espresso text-white shadow-md scale-105"
-                                    : "text-espresso/40 hover:bg-espresso/10 hover:text-espresso"
-                            )}
-                        >
-                            {lang.name}
-                        </button>
-                    ))}
-                </div>
-
-                <div className="flex items-center justify-center min-h-[60px] px-2 md:px-4 overflow-x-auto no-scrollbar w-full py-4">
+                <div className="flex items-center justify-center min-h-[50px] md:min-h-[60px] px-2 md:px-4 overflow-x-auto no-scrollbar w-full py-2 md:py-4">
                     {['content', 'quiz', 'assignments'].map(tab => (
                         <button
                             key={tab}
                             onClick={() => setActiveTab(tab)}
                             className={cn(
-                                "px-6 md:px-8 py-3 md:py-4 text-[10px] md:text-xs font-black uppercase tracking-[0.2em] rounded-xl transition-all relative group whitespace-nowrap mx-3",
+                                "px-4 md:px-8 py-2.5 md:py-4 text-[9px] md:text-xs font-black uppercase tracking-[0.2em] rounded-lg md:rounded-xl transition-all relative group whitespace-nowrap mx-1.5 md:mx-3",
                                 activeTab === tab
                                     ? "bg-espresso text-white shadow-lg scale-100"
                                     : "text-espresso/60 dark:text-white/60 hover:bg-white/40 hover:text-espresso"
@@ -815,7 +805,7 @@ export function ManageModule() {
                 </div>
             </div>
 
-            <main className="p-10  w-full pb-32">
+            <main className="p-4 md:p-10 w-full pb-32 max-w-7xl mx-auto">
 
                 {/* CONTENT TAB */}
                 {activeTab === 'content' && (
@@ -824,70 +814,70 @@ export function ManageModule() {
                             <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/10 group-hover/meta:bg-espresso transition-colors"></div>
                             <div className="flex flex-col sm:flex-row sm:items-center xl:items-start gap-4 md:gap-6 w-full xl:w-auto">
                                 <div className="flex-1">
-                                    <h2 className="text-[9px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] flex items-center gap-3 mb-2">
-                                        <span className="w-6 h-px bg-espresso/20"></span>
+                                    <h2 className="text-[7px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.2em] md:tracking-[0.3em] flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
+                                        <span className="w-4 md:w-6 h-px bg-espresso/20"></span>
                                         Module Assets
                                     </h2>
-                                    <div className="flex items-center gap-4">
-                                        <div className="flex bg-espresso/5 p-1 rounded-xl">
+                                    <div className="flex items-center gap-3">
+                                        <div className="flex bg-espresso/5 p-1 rounded-lg md:rounded-xl">
                                             <button
                                                 onClick={() => setContentType('full')}
                                                 className={cn(
-                                                    "px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all",
-                                                    contentType === 'full' ? "bg-espresso text-white shadow-lg" : "text-espresso/40 hover:text-espresso"
+                                                    "px-3 md:px-4 py-1.5 md:py-2 rounded-md md:rounded-lg text-[7px] md:text-[9px] font-black uppercase tracking-widest transition-all",
+                                                    contentType === 'full' ? "bg-espresso text-white shadow-md" : "text-espresso/40 hover:text-espresso"
                                                 )}
                                             >
-                                                Full Content
+                                                Full
                                             </button>
                                             <button
                                                 onClick={() => setContentType('summary')}
                                                 className={cn(
-                                                    "px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all",
+                                                    "px-3 md:px-4 py-1.5 md:py-2 rounded-md md:rounded-lg text-[7px] md:text-[9px] font-black uppercase tracking-widest transition-all",
                                                     contentType === 'summary' ? "bg-espresso text-white shadow-lg" : "text-espresso/40 hover:text-espresso"
                                                 )}
                                             >
                                                 Summary
                                             </button>
                                         </div>
-                                        <p className="text-lg md:text-xl font-serif font-black text-espresso dark:text-white">
-                                            {contentType === 'full' ? 'Full Slide Sequence' : 'Summary Notes Protocol'}
+                                        <p className="text-sm md:text-xl font-serif font-black text-espresso dark:text-white truncate">
+                                            {contentType === 'full' ? 'Sequence' : 'Protocol'}
                                         </p>
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex flex-col sm:flex-row items-center gap-4 md:gap-6 w-full xl:w-auto">
-                                <div className="flex items-center justify-between sm:justify-start gap-4 bg-white/40 dark:bg-black/20 px-4 md:px-6 py-3 rounded-xl md:rounded-2xl border border-espresso/5 shadow-inner w-full sm:w-auto">
-                                    <label className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 whitespace-nowrap">Est. Time:</label>
-                                    <div className="flex items-center gap-2">
+                            <div className="flex flex-col sm:flex-row items-center gap-3 md:gap-6 w-full xl:w-auto">
+                                <div className="flex items-center justify-between sm:justify-start gap-4 bg-white/40 dark:bg-black/20 px-4 md:px-6 py-2.5 md:py-3 rounded-xl md:rounded-2xl border border-espresso/5 shadow-inner w-full sm:w-auto">
+                                    <label className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 whitespace-nowrap">Est. Time:</label>
+                                    <div className="flex items-center gap-1 md:gap-2">
                                         <input
                                             type="number"
                                             min="0"
                                             value={duration}
                                             onChange={(e) => setDuration(e.target.value)}
-                                            className="w-12 md:w-16 bg-transparent text-center font-black text-espresso dark:text-white text-sm outline-none"
+                                            className="w-10 md:w-16 bg-transparent text-center font-black text-espresso dark:text-white text-xs md:text-sm outline-none"
                                         />
-                                        <span className="text-[8px] md:text-[9px] font-black uppercase text-espresso/30">MIN</span>
+                                        <span className="text-[7px] md:text-[9px] font-black uppercase text-espresso/30">MIN</span>
                                     </div>
                                 </div>
                                 <div className="flex gap-2 w-full sm:w-auto">
                                     {contentType === 'full' ? (
-                                        <label className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-espresso text-white px-6 py-3.5 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-[0.1em] shadow-xl hover:shadow-espresso/40 active:scale-95 transition-all cursor-pointer">
-                                            <span className="material-symbols-outlined text-[18px]">add_circle</span>
-                                            Add Page Asset
+                                        <label className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 md:gap-2 bg-espresso text-white px-4 md:px-6 py-2.5 md:py-3.5 rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-black uppercase tracking-[0.1em] shadow-xl hover:shadow-espresso/40 active:scale-95 transition-all cursor-pointer whitespace-nowrap">
+                                            <span className="material-symbols-outlined text-[16px] md:text-[18px]">add_circle</span>
+                                            Asset
                                             <input type="file" accept="application/pdf,image/*" multiple className="hidden" onChange={handleFileUpload} />
                                         </label>
                                     ) : (
                                         <div className="flex gap-2 w-full">
                                             <button
                                                 onClick={addSummaryPoint}
-                                                className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-white/40 text-espresso border border-espresso/10 px-6 py-3.5 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-[0.1em] shadow-sm hover:bg-white active:scale-95 transition-all"
+                                                className="flex-1 flex items-center justify-center gap-1.5 md:gap-2 bg-white/40 text-espresso border border-espresso/10 px-3 md:px-6 py-2.5 md:py-3.5 rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-black uppercase tracking-[0.1em] shadow-sm hover:bg-white active:scale-95 transition-all whitespace-nowrap"
                                             >
-                                                <span className="material-symbols-outlined text-[18px]">add_notes</span>
-                                                Add Text Point
+                                                <span className="material-symbols-outlined text-[16px] md:text-[18px]">add_notes</span>
+                                                Point
                                             </button>
-                                            <label className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-espresso text-white px-6 py-3.5 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-[0.1em] shadow-xl hover:shadow-espresso/40 active:scale-95 transition-all cursor-pointer">
-                                                <span className="material-symbols-outlined text-[18px]">upload_file</span>
-                                                Add Media Asset
+                                            <label className="flex-1 flex items-center justify-center gap-1.5 md:gap-2 bg-espresso text-white px-3 md:px-6 py-2.5 md:py-3.5 rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-black uppercase tracking-[0.1em] shadow-xl hover:shadow-espresso/40 active:scale-95 transition-all cursor-pointer whitespace-nowrap">
+                                                <span className="material-symbols-outlined text-[16px] md:text-[18px]">upload_file</span>
+                                                Media
                                                 <input type="file" accept="application/pdf,image/*" multiple className="hidden" onChange={handleFileUpload} />
                                             </label>
                                         </div>
@@ -960,22 +950,22 @@ export function ManageModule() {
                 {/* QUIZ TAB */}
                 {activeTab === 'quiz' && (
                     <div className="space-y-10">
-                        <div className="flex flex-col sm:flex-row justify-between items-center bg-espresso text-white p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl shadow-espresso/20 relative overflow-hidden group/score gap-6">
+                        <div className="flex flex-col sm:flex-row justify-between items-center bg-espresso text-white p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl shadow-espresso/20 relative overflow-hidden group/score gap-4 md:gap-6">
                             <div className="absolute right-0 top-0 bottom-0 w-32 bg-white/5 skew-x-12 translate-x-16 group-hover/score:translate-x-12 transition-transform duration-700"></div>
                             <div className="text-center sm:text-left z-10">
-                                <h3 className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.4em] mb-2 md:mb-3 text-white/60">Integrity Threshold</h3>
-                                <p className="text-xl md:text-2xl font-serif font-black tracking-tight">Certification Pass Protocol</p>
+                                <h3 className="text-[7px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] mb-1 md:mb-3 text-white/60">Integrity Threshold</h3>
+                                <p className="text-base md:text-2xl font-serif font-black tracking-tight">Certification Pass Protocol</p>
                             </div>
-                            <div className="flex items-center gap-4 bg-white/10 px-6 md:px-8 py-3 md:py-4 rounded-xl md:rounded-2xl border border-white/20 shadow-inner group-hover/score:scale-105 transition-transform z-10">
+                            <div className="flex items-center gap-3 md:gap-4 bg-white/10 px-4 md:px-8 py-2 md:py-4 rounded-xl md:rounded-2xl border border-white/20 shadow-inner group-hover/score:scale-105 transition-transform z-10">
                                 <input
                                     type="number"
                                     min="0"
                                     max="100"
                                     value={quiz.passMark}
                                     onChange={(e) => setQuiz({ ...quiz, passMark: parseInt(e.target.value) })}
-                                    className="w-16 md:w-20 bg-transparent text-center font-black text-2xl md:text-3xl outline-none"
+                                    className="w-12 md:w-20 bg-transparent text-center font-black text-xl md:text-3xl outline-none"
                                 />
-                                <span className="font-serif font-black text-xl md:text-2xl text-white/40">%</span>
+                                <span className="font-serif font-black text-lg md:text-2xl text-white/40">%</span>
                             </div>
                         </div>
 
@@ -1003,26 +993,26 @@ export function ManageModule() {
                         </div>
 
                         {quiz.questions.map((q, qIndex) => (
-                            <div key={qIndex} className="bg-white/40 dark:bg-black/20 p-10 rounded-[2.5rem] border border-espresso/10 relative overflow-hidden shadow-2xl group/q animate-in fade-in slide-in-from-bottom-4">
-                                <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover/q:bg-espresso transition-colors"></div>
-                                <button onClick={() => removeQuestion(qIndex)} className="absolute top-8 right-8 text-espresso/20 hover:text-red-500 transition-colors p-2 rounded-xl hover:bg-red-50">
-                                    <span className="material-symbols-outlined text-[24px]">delete_sweep</span>
+                            <div key={qIndex} className="bg-white/40 dark:bg-black/20 p-5 md:p-10 rounded-[2rem] md:rounded-[2.5rem] border border-espresso/10 relative overflow-hidden shadow-2xl group/q animate-in fade-in slide-in-from-bottom-4">
+                                <div className="absolute left-0 top-0 bottom-0 w-1 md:w-2 bg-espresso/5 group-hover/q:bg-espresso transition-colors"></div>
+                                <button onClick={() => removeQuestion(qIndex)} className="absolute top-4 md:top-8 right-4 md:right-8 text-espresso/20 hover:text-red-500 transition-colors p-2 rounded-xl hover:bg-red-50">
+                                    <span className="material-symbols-outlined text-[18px] md:text-[24px]">delete_sweep</span>
                                 </button>
-                                <div className="mb-8 md:mb-10 grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8">
+                                <div className="mb-6 md:mb-10 grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-8">
                                     <div className="md:col-span-3">
-                                        <label className="block text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-espresso/40 mb-2 md:mb-3 ml-1">Query Designation {qIndex + 1}</label>
+                                        <label className="block text-[7px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] text-espresso/40 mb-1 md:mb-3 ml-1">Query Designation {qIndex + 1}</label>
                                         <input
-                                            className="w-full px-5 md:px-6 py-3.5 md:py-4 text-base md:text-lg font-serif font-black bg-white/20 dark:bg-black/20 border border-espresso/10 rounded-xl md:rounded-2xl outline-none focus:ring-2 focus:ring-espresso shadow-inner text-espresso dark:text-white transition-all"
+                                            className="w-full px-4 md:px-6 py-2.5 md:py-4 text-sm md:text-lg font-serif font-black bg-white/20 dark:bg-black/20 border border-espresso/10 rounded-xl md:rounded-2xl outline-none focus:ring-2 focus:ring-espresso shadow-inner text-espresso dark:text-white transition-all"
                                             placeholder="Specify query protocol..."
                                             value={q.question}
                                             onChange={(e) => updateQuestion(qIndex, 'question', e.target.value)}
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-espresso/40 mb-2 md:mb-3 ml-1">Time Delta (Sec)</label>
+                                        <label className="block text-[7px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] text-espresso/40 mb-1 md:mb-3 ml-1">Time Delta (Sec)</label>
                                         <input
                                             type="number"
-                                            className="w-full px-5 md:px-6 py-3.5 md:py-4 font-black text-center bg-white/20 dark:bg-black/20 border border-espresso/10 rounded-xl md:rounded-2xl outline-none focus:ring-2 focus:ring-espresso shadow-inner text-espresso dark:text-white transition-all"
+                                            className="w-full px-4 md:px-6 py-2.5 md:py-4 font-black text-center bg-white/20 dark:bg-black/20 border border-espresso/10 rounded-xl md:rounded-2xl outline-none focus:ring-2 focus:ring-espresso shadow-inner text-espresso dark:text-white transition-all text-sm md:text-base"
                                             value={q.duration}
                                             onChange={(e) => updateQuestion(qIndex, 'duration', parseInt(e.target.value))}
                                         />
@@ -1138,47 +1128,49 @@ export function ManageModule() {
                 {/* ASSIGNMENTS TAB */}
                 {activeTab === 'assignments' && (
                     <div className="space-y-10">
-                        <div className="bg-espresso text-white p-8 md:p-12 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
-                            <div className="relative z-10 flex flex-col sm:flex-row gap-8 items-start">
-                                <div className="p-4 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/10">
-                                    <span className="material-symbols-outlined text-4xl">verified_user</span>
+                        <div className="bg-espresso text-white p-6 md:p-12 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl relative overflow-hidden">
+                            <div className="relative z-10 flex flex-col md:flex-row gap-4 md:gap-8 items-start">
+                                <div className="p-3 md:p-4 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/10">
+                                    <span className="material-symbols-outlined text-3xl md:text-4xl">verified_user</span>
                                 </div>
-                                <div className="space-y-4">
-                                    <h3 className="font-serif font-black text-2xl md:text-3xl leading-none">Access Control</h3>
-                                    <p className="text-white/60 text-sm font-medium max-w-xl leading-relaxed">
+                                <div className="space-y-2 md:space-y-4">
+                                    <h3 className="font-serif font-black text-xl md:text-3xl leading-none">Access Control</h3>
+                                    <p className="text-white/60 text-[11px] md:text-sm font-medium max-w-xl leading-relaxed">
                                         Configure student access privileges. Authorized personnel will retain access to this logic block indefinitely until revocation.
                                     </p>
                                 </div>
                             </div>
                         </div>
-                        <div className="flex flex-wrap items-center justify-between gap-6 bg-white/40 dark:bg-black/20 p-6 rounded-3xl border border-espresso/10">
-                            <div className="flex flex-wrap items-center gap-4">
-                                <button
-                                    onClick={grantQuizAccessToCompleted}
-                                    className="px-6 py-3 bg-white text-espresso font-black uppercase tracking-[0.2em] text-[10px] rounded-xl hover:bg-espresso hover:text-white transition-all shadow-xl active:scale-95 flex items-center gap-2"
-                                >
-                                    <span className="material-symbols-outlined text-[18px]">auto_fix</span>
-                                    Grant Quiz Access to Completed
-                                </button>
+                        <div className="flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-4 md:gap-6 bg-white/40 dark:bg-black/20 p-4 md:p-6 rounded-3xl border border-espresso/10">
+                            <div className="flex flex-col lg:flex-row items-stretch lg:items-center gap-4">
+                                <div className="flex flex-wrap items-center gap-2">
+                                    <button
+                                        onClick={grantQuizAccessToCompleted}
+                                        className="flex-1 md:flex-none px-4 md:px-6 py-2.5 md:py-3 bg-white text-espresso font-black uppercase tracking-[0.2em] text-[8px] md:text-[10px] rounded-xl hover:bg-espresso hover:text-white transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2"
+                                    >
+                                        <span className="material-symbols-outlined text-[16px] md:text-[18px]">auto_fix</span>
+                                        Grant Quiz Access
+                                    </button>
 
-                                <button
-                                    onClick={resetProgressForAll}
-                                    className="px-6 py-3 bg-red-500/10 text-red-600 border border-red-500/20 font-black uppercase tracking-[0.2em] text-[10px] rounded-xl hover:bg-red-600 hover:text-white transition-all shadow-xl active:scale-95 flex items-center gap-2 group/reset"
-                                >
-                                    <span className="material-symbols-outlined text-[18px] group-hover/reset:rotate-180 transition-transform duration-500">restart_alt</span>
-                                    Reset Protocol for All
-                                </button>
+                                    <button
+                                        onClick={resetProgressForAll}
+                                        className="flex-1 md:flex-none px-4 md:px-6 py-2.5 md:py-3 bg-red-500/10 text-red-600 border border-red-500/20 font-black uppercase tracking-[0.2em] text-[8px] md:text-[10px] rounded-xl hover:bg-red-600 hover:text-white transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 group/reset"
+                                    >
+                                        <span className="material-symbols-outlined text-[16px] md:text-[18px] group-hover/reset:rotate-180 transition-transform duration-500">restart_alt</span>
+                                        Reset All
+                                    </button>
+                                </div>
 
-                                <div className="h-8 w-px bg-espresso/10 hidden md:block" />
+                                <div className="h-8 w-px bg-espresso/10 hidden lg:block" />
 
-                                <div className="flex items-center gap-2">
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-espresso/40">Filter:</span>
+                                <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+                                    <span className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 shrink-0">Filter:</span>
                                     {[0, 50, 70, 100].map(val => (
                                         <button
                                             key={val}
                                             onClick={() => setFilterThreshold(val)}
                                             className={cn(
-                                                "px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-tighter transition-all border",
+                                                "px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-[7px] md:text-[9px] font-black uppercase tracking-tighter transition-all border shrink-0",
                                                 filterThreshold === val
                                                     ? "bg-espresso text-white border-espresso"
                                                     : "bg-white/40 text-espresso/40 border-espresso/5 hover:border-espresso/20"
@@ -1190,30 +1182,30 @@ export function ManageModule() {
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-3">
-                                <span className="text-[10px] font-black uppercase tracking-widest text-espresso/40">Sort Progress:</span>
+                            <div className="flex items-center justify-between md:justify-end gap-3 border-t border-espresso/5 pt-4 xl:border-none xl:pt-0">
+                                <span className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40">Sort Progress:</span>
                                 <button
                                     onClick={() => setSortConfig({ key: 'progress', direction: sortConfig.direction === 'asc' ? 'desc' : 'asc' })}
-                                    className="w-10 h-10 rounded-xl bg-white/40 border border-espresso/5 flex items-center justify-center text-espresso/60 hover:border-espresso/20 transition-all shadow-sm active:scale-95"
+                                    className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-white/40 border border-espresso/5 flex items-center justify-center text-espresso/60 hover:border-espresso/20 transition-all shadow-sm active:scale-95"
                                 >
-                                    <span className="material-symbols-outlined text-xl">
+                                    <span className="material-symbols-outlined text-lg md:text-xl">
                                         {sortConfig.direction === 'asc' ? 'keyboard_double_arrow_up' : 'keyboard_double_arrow_down'}
                                     </span>
                                 </button>
                             </div>
                         </div>
 
-                        <div className="bg-white/40 dark:bg-black/20 rounded-[2.5rem] border border-espresso/10 overflow-hidden shadow-xl">
-                            <div className="max-h-[600px] overflow-y-auto custom-scrollbar">
-                                <table className="w-full text-left border-collapse">
+                        <div className="bg-white/40 dark:bg-black/20 rounded-[2rem] md:rounded-[2.5rem] border border-espresso/10 overflow-hidden shadow-xl">
+                            <div className="max-h-[600px] overflow-auto no-scrollbar custom-scrollbar">
+                                <table className="w-full text-left border-collapse min-w-[800px]">
                                     <thead className="bg-white/40 dark:bg-black/40 border-b border-espresso/10 sticky top-0 z-10 backdrop-blur-md">
                                         <tr>
-                                            <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-espresso/40">Student Identity</th>
-                                            <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-espresso/40">Contact Point</th>
-                                            <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-espresso/40 text-center">Module Permit</th>
-                                            <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-espresso/40 text-center">Quiz Permit</th>
-                                            <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-espresso/40 text-center">Progress</th>
-                                            <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-espresso/40 text-center">Score</th>
+                                            <th className="px-4 md:px-8 py-4 md:py-6 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] text-espresso/40">Student Identity</th>
+                                            <th className="px-4 md:px-8 py-4 md:py-6 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] text-espresso/40">Contact Point</th>
+                                            <th className="px-4 md:px-8 py-4 md:py-6 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] text-espresso/40 text-center">Module Permit</th>
+                                            <th className="px-4 md:px-8 py-4 md:py-6 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] text-espresso/40 text-center">Quiz Permit</th>
+                                            <th className="px-4 md:px-8 py-4 md:py-6 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] text-espresso/40 text-center">Progress</th>
+                                            <th className="px-4 md:px-8 py-4 md:py-6 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] text-espresso/40 text-center">Score</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-espresso/5">
@@ -1229,57 +1221,57 @@ export function ManageModule() {
 
                                             return (
                                                 <tr key={student.id} className="hover:bg-white/40 dark:hover:bg-white/5 transition-colors cursor-pointer group" onClick={() => toggleAssignment(student.id)}>
-                                                    <td className="px-8 py-5">
-                                                        <div className="flex items-center gap-4">
-                                                            <div className="w-10 h-10 rounded-full bg-espresso/5 flex items-center justify-center font-black text-espresso text-sm">
+                                                    <td className="px-4 md:px-8 py-4 md:py-5">
+                                                        <div className="flex items-center gap-3 md:gap-4">
+                                                            <div className="size-8 md:size-10 rounded-full bg-espresso/5 flex items-center justify-center font-black text-espresso text-[11px] md:text-sm">
                                                                 {(student.fullName || student.name || student.email)?.charAt(0)}
                                                             </div>
                                                             <div className="flex flex-col">
-                                                                <span className="font-bold text-espresso dark:text-white">{student.fullName || student.name || 'Unknown'}</span>
-                                                                <span className="text-[8px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest">{student.id}</span>
+                                                                <span className="font-bold text-espresso dark:text-white text-xs md:text-base leading-tight">{student.fullName || student.name || 'Unknown'}</span>
+                                                                <span className="text-[7px] md:text-[8px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest">{student.id}</span>
                                                                 {hasRequestedQuiz && !isQuizAllowed && (
-                                                                    <span className="text-[7px] font-black bg-amber-500 text-white px-1.5 py-0.5 rounded uppercase tracking-tighter w-fit mt-0.5">Quiz Requested</span>
+                                                                    <span className="text-[6px] font-black bg-amber-500 text-white px-1 py-0.5 rounded uppercase tracking-tighter w-fit mt-0.5">Quiz Requested</span>
                                                                 )}
                                                             </div>
                                                         </div>
                                                     </td>
-                                                    <td className="px-8 py-5 text-sm font-medium text-espresso/60">{student.email}</td>
-                                                    <td className="px-8 py-5 text-center">
+                                                    <td className="px-4 md:px-8 py-4 md:py-5 text-[11px] md:text-sm font-medium text-espresso/60">{student.email}</td>
+                                                    <td className="px-4 md:px-8 py-4 md:py-5 text-center">
                                                         <div className={cn(
-                                                            "w-8 h-8 rounded-xl border-2 flex items-center justify-center transition-all mx-auto",
+                                                            "size-6 md:size-8 rounded-lg md:rounded-xl border flex items-center justify-center transition-all mx-auto",
                                                             assignedStudents.includes(student.id)
                                                                 ? "bg-espresso border-espresso text-white scale-110 shadow-lg"
                                                                 : "border-espresso/20 text-transparent opacity-50"
                                                         )}>
-                                                            <span className="material-symbols-outlined text-[20px] font-bold">check</span>
+                                                            <span className="material-symbols-outlined text-[16px] md:text-[20px] font-bold">check</span>
                                                         </div>
                                                     </td>
-                                                    <td className="px-8 py-5 text-center">
+                                                    <td className="px-4 md:px-8 py-4 md:py-5 text-center">
                                                         <div onClick={(e) => toggleQuizAccess(e, student.id)} className={cn(
-                                                            "w-8 h-8 rounded-xl border-2 flex items-center justify-center transition-all mx-auto z-20 relative hover:scale-110",
+                                                            "size-6 md:size-8 rounded-lg md:rounded-xl border flex items-center justify-center transition-all mx-auto z-20 relative hover:scale-110",
                                                             isQuizAllowed
                                                                 ? "bg-green-600 border-green-600 text-white scale-110 shadow-lg"
                                                                 : hasRequestedQuiz ? "bg-amber-100 border-amber-500 text-amber-600 opacity-100" : "border-espresso/20 text-transparent opacity-50 hover:opacity-100 hover:text-espresso/40"
                                                         )}>
-                                                            <span className="material-symbols-outlined text-[20px] font-bold">
+                                                            <span className="material-symbols-outlined text-[16px] md:text-[20px] font-bold">
                                                                 {isQuizAllowed ? 'lock_open' : hasRequestedQuiz ? 'notification_important' : 'lock'}
                                                             </span>
                                                         </div>
                                                     </td>
-                                                    <td className="px-8 py-5 text-center">
+                                                    <td className="px-4 md:px-8 py-4 md:py-5 text-center">
                                                         <div className="flex flex-col items-center gap-1">
-                                                            <div className="w-24 h-1.5 bg-espresso/5 rounded-full overflow-hidden shadow-inner">
+                                                            <div className="w-16 md:w-24 h-1 md:h-1.5 bg-espresso/5 rounded-full overflow-hidden shadow-inner">
                                                                 <div className={cn(
                                                                     "h-full transition-all duration-1000",
                                                                     percentRead === 100 ? "bg-green-500" : "bg-espresso"
                                                                 )} style={{ width: `${percentRead}%` }} />
                                                             </div>
-                                                            <span className="text-[8px] font-black uppercase tracking-widest text-espresso/40">
+                                                            <span className="text-[7px] md:text-[8px] font-black uppercase tracking-widest text-espresso/40">
                                                                 {percentRead}% {status === 'completed' && '• Cert'}
                                                             </span>
                                                         </div>
                                                     </td>
-                                                    <td className="px-8 py-5 text-center font-black text-espresso">{score}</td>
+                                                    <td className="px-4 md:px-8 py-4 md:py-5 text-center font-black text-[11px] md:text-base text-espresso">{score}</td>
                                                 </tr>
                                             );
                                         })}
