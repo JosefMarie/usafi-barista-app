@@ -263,6 +263,21 @@ export function ManageCourse() {
                                                         </span>
                                                     </div>
 
+                                                    <div className="flex items-center gap-2" title="Summary Points">
+                                                        <span className={cn(
+                                                            "material-symbols-outlined text-[14px]",
+                                                            (item.summaryContent?.length > 0) ? "text-espresso/40 dark:text-white/40" : "text-espresso/20"
+                                                        )}>
+                                                            summarize
+                                                        </span>
+                                                        <span className={cn(
+                                                            "text-[9px] font-black uppercase tracking-wider",
+                                                            (item.summaryContent?.length > 0) ? "text-espresso/60 dark:text-white/60" : "text-espresso/30"
+                                                        )}>
+                                                            {item.summaryContent?.length || 0} Sum
+                                                        </span>
+                                                    </div>
+
                                                     <div className="flex items-center gap-2" title="Assigned Students">
                                                         <span className={cn(
                                                             "material-symbols-outlined text-[14px]",

@@ -21,6 +21,21 @@ export function InstructorManageModule() {
     const [studentProgress, setStudentProgress] = useState({});
 
     // Content State
+    const [selectedLang, setSelectedLang] = useState('en');
+    const [langsData, setLangsData] = useState({
+        en: { content: [], summaryContent: [], quiz: { questions: [], passMark: 70 } },
+        fr: { content: [], summaryContent: [], quiz: { questions: [], passMark: 70 } },
+        rw: { content: [], summaryContent: [], quiz: { questions: [], passMark: 70 } },
+        sw: { content: [], summaryContent: [], quiz: { questions: [], passMark: 70 } }
+    });
+
+    const languages = [
+        { code: 'en', name: 'English' },
+        { code: 'fr', name: 'Français' },
+        { code: 'rw', name: 'Kinyarwanda' },
+        { code: 'sw', name: 'Kiswahili' }
+    ];
+
     const [slides, setSlides] = useState([]);
     const [summarySlides, setSummarySlides] = useState([]);
     const [contentType, setContentType] = useState('full'); // full, summary
@@ -41,16 +56,34 @@ export function InstructorManageModule() {
                     const data = modSnap.data();
                     setModule({ id: modSnap.id, ...data });
 
-                    // Normalize slides
-                    const content = (data.content || []).map((s, i) => ({
-                        ...s,
-                        id: s.id || `slide-${Date.now()}-${i}`,
-                        type: s.type || 'standard',
-                        media: s.media || (s.image ? [{ url: s.image, caption: '' }] : [])
-                    }));
-                    setSlides(content);
-                    setSummarySlides(data.summaryContent || []);
-                    setQuiz(data.quiz || { questions: [], passMark: 70 });
+                    // Multi-Language Normalization
+                    const initialLangs = {
+                        en: {
+                            content: data.languages?.en?.content || data.content || [],
+                            summaryContent: data.languages?.en?.summaryContent || data.summaryContent || [],
+                            quiz: data.languages?.en?.quiz || data.quiz || { questions: [], passMark: 70 }
+                        },
+                        fr: {
+                            content: data.languages?.fr?.content || [],
+                            summaryContent: data.languages?.fr?.summaryContent || [],
+                            quiz: data.languages?.fr?.quiz || { questions: [], passMark: 70 }
+                        },
+                        rw: {
+                            content: data.languages?.rw?.content || [],
+                            summaryContent: data.languages?.rw?.summaryContent || [],
+                            quiz: data.languages?.rw?.quiz || { questions: [], passMark: 70 }
+                        },
+                        sw: {
+                            content: data.languages?.sw?.content || [],
+                            summaryContent: data.languages?.sw?.summaryContent || [],
+                            quiz: data.languages?.sw?.quiz || { questions: [], passMark: 70 }
+                        }
+                    };
+
+                    setLangsData(initialLangs);
+                    setSlides(initialLangs.en.content);
+                    setSummarySlides(initialLangs.en.summaryContent);
+                    setQuiz(initialLangs.en.quiz);
                     setAssignedStudents(data.assignedStudents || []);
                     setQuizAllowedStudents(data.quizAllowedStudents || []);
                 } else {
@@ -95,6 +128,26 @@ export function InstructorManageModule() {
         fetchProgress();
     }, [activeTab, assignedStudents, moduleId]);
 
+    // Handle Language Switch
+    const changeLanguage = (newLangCode) => {
+        // 1. Save current content to buffer
+        setLangsData(prev => ({
+            ...prev,
+            [selectedLang]: {
+                content: slides,
+                summaryContent: summarySlides,
+                quiz: quiz
+            }
+        }));
+
+        // 2. Load new content
+        const nextLang = langsData[newLangCode];
+        setSlides(nextLang.content || []);
+        setSummarySlides(nextLang.summaryContent || []);
+        setQuiz(nextLang.quiz || { questions: [], passMark: 70 });
+        setSelectedLang(newLangCode);
+    };
+
     if (loading) return (
         <div className="flex items-center justify-center h-screen bg-[#F5DEB3] dark:bg-[#1c1916]">
             <span className="animate-spin h-8 w-8 border-4 border-espresso border-t-transparent rounded-full"></span>
@@ -128,22 +181,42 @@ export function InstructorManageModule() {
                 </div>
             </header>
 
-            {/* Tabs */}
-            <div className="flex items-center justify-center min-h-[60px] border-y border-espresso/10 px-2 md:px-4 bg-white/20 dark:bg-black/20 relative z-10 overflow-x-auto no-scrollbar w-full mb-6 py-4">
-                {['content', 'quiz', 'assignments'].map(tab => (
-                    <button
-                        key={tab}
-                        onClick={() => setActiveTab(tab)}
-                        className={cn(
-                            "px-6 md:px-8 py-3 md:py-4 text-[10px] md:text-xs font-black uppercase tracking-[0.2em] rounded-xl transition-all relative group whitespace-nowrap mx-3",
-                            activeTab === tab
-                                ? "bg-espresso text-white shadow-lg scale-100"
-                                : "text-espresso/60 dark:text-white/60 hover:bg-white/40 hover:text-espresso"
-                        )}
-                    >
-                        {tab}
-                    </button>
-                ))}
+            {/* Language Switcher & Tabs */}
+            <div className="flex flex-col border-y border-espresso/10 bg-white/20 dark:bg-black/20 relative z-10 w-full mb-6">
+                {/* Language bar */}
+                <div className="flex items-center justify-center px-4 py-3 gap-2 bg-espresso/5 border-b border-espresso/5 overflow-x-auto no-scrollbar">
+                    {languages.map(lang => (
+                        <button
+                            key={lang.code}
+                            onClick={() => changeLanguage(lang.code)}
+                            className={cn(
+                                "px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest transition-all",
+                                selectedLang === lang.code
+                                    ? "bg-espresso text-white shadow-md scale-105"
+                                    : "text-espresso/40 hover:bg-espresso/10 hover:text-espresso"
+                            )}
+                        >
+                            {lang.name}
+                        </button>
+                    ))}
+                </div>
+
+                <div className="flex items-center justify-center min-h-[60px] px-2 md:px-4 overflow-x-auto no-scrollbar w-full py-4">
+                    {['content', 'quiz', 'assignments'].map(tab => (
+                        <button
+                            key={tab}
+                            onClick={() => setActiveTab(tab)}
+                            className={cn(
+                                "px-6 md:px-8 py-3 md:py-4 text-[10px] md:text-xs font-black uppercase tracking-[0.2em] rounded-xl transition-all relative group whitespace-nowrap mx-3",
+                                activeTab === tab
+                                    ? "bg-espresso text-white shadow-lg scale-100"
+                                    : "text-espresso/60 dark:text-white/60 hover:bg-white/40 hover:text-espresso"
+                            )}
+                        >
+                            {tab}
+                        </button>
+                    ))}
+                </div>
             </div>
 
             <main className="p-4 md:p-10 w-full pb-32">
@@ -189,32 +262,53 @@ export function InstructorManageModule() {
                                         {index + 1}
                                     </div>
                                     <div>
-                                        <h3 className="text-lg md:text-2xl font-serif font-black text-espresso dark:text-white mb-1">{slide.title || 'Untitled Slide'}</h3>
+                                        <h3 className="text-lg md:text-2xl font-serif font-black text-espresso dark:text-white mb-1">{slide.title || (slide.url ? (slide.type === 'pdf' ? 'Summary PDF' : 'Summary Image') : 'Untitled Slide')}</h3>
                                         <span className="text-[8px] font-black uppercase tracking-widest text-espresso/40">
-                                            {slide.type === 'media' ? 'Relational Media Perspective' : 'Foundational Narrative'}
+                                            {slide.url ? 'Technical Asset' : (slide.type === 'media' ? 'Relational Media Perspective' : 'Foundational Narrative')}
                                         </span>
                                     </div>
                                 </div>
 
                                 <div className={cn(
                                     "grid gap-8",
-                                    slide.type === 'media' ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1"
+                                    (slide.type === 'media' || slide.url) ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1"
                                 )}>
-                                    <div className="prose prose-sm md:prose-base dark:prose-invert max-w-none text-espresso/80 dark:text-white/70 font-medium" dangerouslySetInnerHTML={{ __html: slide.text }} />
+                                    {slide.text ? (
+                                        <div className="prose prose-sm md:prose-base dark:prose-invert max-w-none text-espresso/80 dark:text-white/70 font-medium" dangerouslySetInnerHTML={{ __html: slide.text }} />
+                                    ) : (
+                                        <div className="flex flex-col justify-center">
+                                            <p className="text-sm font-bold text-espresso/60 mb-2">Attached Asset: {slide.fileName || 'Resource'}</p>
+                                            {slide.type === 'pdf' ? (
+                                                <button onClick={() => window.open(slide.url, '_blank')} className="px-6 py-3 bg-espresso text-white rounded-xl text-[10px] font-black uppercase tracking-widest self-start shadow-lg">View Document</button>
+                                            ) : (
+                                                <p className="text-[10px] font-black uppercase tracking-widest text-espresso/30 italic">Primary visual reference attached</p>
+                                            )}
+                                        </div>
+                                    )}
 
-                                    {slide.media && slide.media.length > 0 && (
+                                    {(slide.url || (slide.media && slide.media.length > 0)) && (
                                         <div className={cn(
                                             "grid gap-4",
-                                            slide.type === 'media' ? "grid-cols-1" : "grid-cols-2 md:grid-cols-4"
+                                            (slide.type === 'media' || slide.type === 'standard' || slide.type === 'pdf') ? "grid-cols-1" : "grid-cols-2 md:grid-cols-4"
                                         )}>
-                                            {slide.media.map((item, mIdx) => (
-                                                <div key={mIdx} className="space-y-2">
-                                                    <div className="aspect-video bg-black/10 rounded-2xl overflow-hidden border border-espresso/5">
-                                                        <img src={item.url} alt="" className="w-full h-full object-cover" />
-                                                    </div>
-                                                    {item.caption && <p className="text-[9px] font-black text-center uppercase tracking-widest text-espresso/40">{item.caption}</p>}
+                                            {slide.url ? (
+                                                <div className="aspect-video bg-black/10 rounded-2xl overflow-hidden border border-espresso/5 flex items-center justify-center">
+                                                    {slide.type === 'pdf' ? (
+                                                        <span className="material-symbols-outlined text-5xl text-espresso/20">picture_as_pdf</span>
+                                                    ) : (
+                                                        <img src={slide.url} alt="" className="w-full h-full object-contain" />
+                                                    )}
                                                 </div>
-                                            ))}
+                                            ) : (
+                                                slide.media.map((item, mIdx) => (
+                                                    <div key={mIdx} className="space-y-2">
+                                                        <div className="aspect-video bg-black/10 rounded-2xl overflow-hidden border border-espresso/5">
+                                                            <img src={item.url} alt="" className="w-full h-full object-cover" />
+                                                        </div>
+                                                        {item.caption && <p className="text-[9px] font-black text-center uppercase tracking-widest text-espresso/40">{item.caption}</p>}
+                                                    </div>
+                                                ))
+                                            )}
                                         </div>
                                     )}
                                 </div>

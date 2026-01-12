@@ -112,6 +112,24 @@
         "skills": "Uwezo wa Kiutendaji",
         "education": "Msingi wa Kitaaluma",
         "experience": "Historia ya Kitaaluma"
+      },
+      "course_view": {
+        "extraction": "Upataji: {{percent}}%",
+        "assessment_phase": "Awamu ya Tathmini",
+        "stow_ledger": "Weka Daftari",
+        "strategic_notes": "Maelezo ya Kimkakati",
+        "not_assigned": "Hujapangiwa moduli hii.",
+        "empty_slides": "Moduli hii haina maelezo bado.",
+        "skip_to_quiz": "Ruka kwenye Chemsha Bongo",
+        "prev_btn": "Chunguza Awali",
+        "begin_eval_btn": "Anza Tathmini",
+        "next_btn": "Maendeleo ya Kimkakati",
+        "full_notes": "Maelezo Kamili",
+        "summary": "Muhtasari",
+        "notes": {
+          "title": "Daftari la Maarifa",
+          "subtitle": "Maelezo ya Kimkakati ya Moduli"
+        }
       }
     }
   },

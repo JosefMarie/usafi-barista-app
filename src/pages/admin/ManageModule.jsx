@@ -27,6 +27,82 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
+// --- Sortable Summary Item Component ---
+function SortableSummaryItem({ slide, index, removeSlide, updateSlide }) {
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+        isDragging
+    } = useSortable({ id: slide.id });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+        zIndex: isDragging ? 50 : 'auto',
+        opacity: isDragging ? 0.3 : 1,
+    };
+
+    return (
+        <div
+            ref={setNodeRef}
+            style={style}
+            {...attributes}
+            {...listeners}
+            className="bg-white/40 dark:bg-black/20 p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] border border-espresso/10 relative overflow-hidden group/slide shadow-2xl cursor-grab active:cursor-grabbing hover:border-espresso/40 transition-colors"
+        >
+            <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/10 group-hover/slide:bg-espresso transition-colors"></div>
+            <button
+                onClick={(e) => { e.stopPropagation(); removeSlide(index); }}
+                onPointerDown={(e) => e.stopPropagation()}
+                className="absolute top-4 md:top-8 right-4 md:right-8 z-10 text-espresso/20 hover:text-red-500 transition-colors p-2 rounded-xl hover:bg-red-50"
+            >
+                <span className="material-symbols-outlined text-[20px] md:text-[24px]">delete_sweep</span>
+            </button>
+            <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-black font-serif text-espresso">{slide.url ? (slide.type === 'pdf' ? 'Summary PDF Asset' : 'Summary Image Asset') : 'Summary Text Point'} {index + 1}</h3>
+                    {slide.url && (
+                        <span className="text-[9px] font-black uppercase tracking-widest text-espresso/40 px-3 py-1 bg-espresso/5 rounded-full">{slide.fileName}</span>
+                    )}
+                </div>
+
+                {slide.url ? (
+                    <div
+                        className="aspect-video bg-white/40 rounded-2xl overflow-hidden border border-espresso/10 flex items-center justify-center relative"
+                        onPointerDown={(e) => e.stopPropagation()}
+                    >
+                        {slide.type === 'pdf' ? (
+                            <div className="flex flex-col items-center gap-4 text-espresso/40">
+                                <span className="material-symbols-outlined text-5xl">picture_as_pdf</span>
+                                <p className="font-black text-[10px] uppercase tracking-widest">PDF Asset Attached</p>
+                                <button
+                                    onClick={() => window.open(slide.url, '_blank')}
+                                    className="px-4 py-2 bg-espresso text-white text-[8px] font-black uppercase tracking-widest rounded-lg shadow-lg hover:shadow-espresso/40 transition-all"
+                                >
+                                    Review Protocol
+                                </button>
+                            </div>
+                        ) : (
+                            <img src={slide.url} alt="Summary Preview" className="w-full h-full object-contain" />
+                        )}
+                    </div>
+                ) : (
+                    <div onPointerDown={(e) => e.stopPropagation()}>
+                        <RichTextEditor
+                            value={slide.text}
+                            onChange={(val) => updateSlide(index, 'text', val)}
+                            placeholder="Summary content..."
+                        />
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
+
 // --- Sortable Slide Item Component ---
 function SortableSlideItem({ slide, index, updateSlide, removeSlide, handleFileUpload, isDragging }) {
     const {
@@ -121,21 +197,32 @@ export function ManageModule() {
     const [studentProgress, setStudentProgress] = useState({});
 
     // Content State
+    // Multi-Language State
+    const [selectedLang, setSelectedLang] = useState('en'); // en, fr, rw, sw
+    const [langsData, setLangsData] = useState({
+        en: { content: [], summaryContent: [], quiz: { questions: [], passMark: 70 } },
+        fr: { content: [], summaryContent: [], quiz: { questions: [], passMark: 70 } },
+        rw: { content: [], summaryContent: [], quiz: { questions: [], passMark: 70 } },
+        sw: { content: [], summaryContent: [], quiz: { questions: [], passMark: 70 } }
+    });
     const [slides, setSlides] = useState([]);
     const [summarySlides, setSummarySlides] = useState([]);
     const [contentType, setContentType] = useState('full'); // full, summary
-
-    // Quiz State
     const [quiz, setQuiz] = useState({ questions: [], passMark: 70 });
 
-    // Assignments State
     const [students, setStudents] = useState([]);
     const [assignedStudents, setAssignedStudents] = useState([]);
     const [quizAllowedStudents, setQuizAllowedStudents] = useState([]);
 
-    // Sort & Filter State
+    const [filterThreshold, setFilterThreshold] = useState(0);
     const [sortConfig, setSortConfig] = useState({ key: 'progress', direction: 'desc' });
-    const [filterThreshold, setFilterThreshold] = useState(0); // 0, 50, 70, 100
+
+    const languages = [
+        { code: 'en', name: 'English' },
+        { code: 'fr', name: 'Français' },
+        { code: 'rw', name: 'Kinyarwanda' },
+        { code: 'sw', name: 'Kiswahili' }
+    ];
 
     // DnD Sensors
     const sensors = useSensors(
@@ -159,29 +246,43 @@ export function ManageModule() {
                     const data = modSnap.data();
                     setModule({ id: modSnap.id, ...data });
 
-                    // Normalize slides to include ID for DnD and migrate legacy Image string to Media array
-                    const content = (data.content || []).map((s, i) => {
-                        let media = s.media || [];
-                        // Migration Logic: If legacy image exists and no media, move it
-                        if (s.image && media.length === 0) {
-                            media = [{ url: s.image, caption: '' }];
+                    // Multi-Language Normalization
+                    const initialLangs = {
+                        en: {
+                            content: data.languages?.en?.content || data.content || [],
+                            summaryContent: data.languages?.en?.summaryContent || data.summaryContent || [],
+                            quiz: data.languages?.en?.quiz || data.quiz || { questions: [], passMark: 70 }
+                        },
+                        fr: {
+                            content: data.languages?.fr?.content || [],
+                            summaryContent: data.languages?.fr?.summaryContent || [],
+                            quiz: data.languages?.fr?.quiz || { questions: [], passMark: 70 }
+                        },
+                        rw: {
+                            content: data.languages?.rw?.content || [],
+                            summaryContent: data.languages?.rw?.summaryContent || [],
+                            quiz: data.languages?.rw?.quiz || { questions: [], passMark: 70 }
+                        },
+                        sw: {
+                            content: data.languages?.sw?.content || [],
+                            summaryContent: data.languages?.sw?.summaryContent || [],
+                            quiz: data.languages?.sw?.quiz || { questions: [], passMark: 70 }
                         }
-                        const slideUrl = s.url || s.image || (media.length > 0 ? media[0].url : null);
-                        const inferredType = (s.type === 'pdf' ||
-                            (slideUrl && slideUrl.toLowerCase().split('?')[0].includes('.pdf')) ||
-                            (s.fileName && s.fileName.toLowerCase().endsWith('.pdf'))) ? 'pdf' : 'image';
-                        return {
-                            ...s,
-                            id: s.id || `slide-${Date.now()}-${i}`,
-                            url: slideUrl,
-                            type: inferredType,
-                            media: media
-                        };
-                    });
-                    setSlides(content);
+                    };
 
-                    setSummarySlides(data.summaryContent || []);
-                    setQuiz(data.quiz || { questions: [], passMark: 70 });
+                    // Normalize IDs for English (Legacy Migration)
+                    initialLangs.en.content = initialLangs.en.content.map((s, i) => {
+                        let media = s.media || [];
+                        if (s.image && media.length === 0) media = [{ url: s.image, caption: '' }];
+                        const slideUrl = s.url || s.image || (media.length > 0 ? media[0].url : null);
+                        const inferredType = (s.type === 'pdf' || (slideUrl && slideUrl.toLowerCase().split('?')[0].includes('.pdf'))) ? 'pdf' : 'image';
+                        return { ...s, id: s.id || `slide-en-${Date.now()}-${i}`, url: slideUrl, type: inferredType, media };
+                    });
+
+                    setLangsData(initialLangs);
+                    setSlides(initialLangs.en.content);
+                    setSummarySlides(initialLangs.en.summaryContent);
+                    setQuiz(initialLangs.en.quiz);
                     setAssignedStudents(data.assignedStudents || []);
                     setQuizAllowedStudents(data.quizAllowedStudents || []);
                     setDuration(data.duration || 0);
@@ -213,9 +314,28 @@ export function ManageModule() {
                 setLoading(false);
             }
         };
-
         fetchModuleData();
     }, [courseId, moduleId, navigate]);
+
+    // Handle Language Switch
+    const changeLanguage = (newLangCode) => {
+        // 1. Save current content to buffer
+        setLangsData(prev => ({
+            ...prev,
+            [selectedLang]: {
+                content: slides,
+                summaryContent: summarySlides,
+                quiz: quiz
+            }
+        }));
+
+        // 2. Load new content
+        const nextLang = langsData[newLangCode];
+        setSlides(nextLang.content || []);
+        setSummarySlides(nextLang.summaryContent || []);
+        setQuiz(nextLang.quiz || { questions: [], passMark: 70 });
+        setSelectedLang(newLangCode);
+    };
 
     // --- Progress Fetching ---
     const fetchProgress = useCallback(async () => {
@@ -288,61 +408,103 @@ export function ManageModule() {
     };
 
     const updateSlide = (index, field, value) => {
-        const newSlides = [...slides];
-        newSlides[index][field] = value;
-        setSlides(newSlides);
+        if (contentType === 'full') {
+            const newSlides = [...slides];
+            newSlides[index][field] = value;
+            setSlides(newSlides);
+        } else {
+            const newSlides = [...summarySlides];
+            newSlides[index][field] = value;
+            setSummarySlides(newSlides);
+        }
     };
 
     const removeSlide = (index) => {
-        setSlides(slides.filter((_, i) => i !== index));
+        if (contentType === 'full') {
+            setSlides(slides.filter((_, i) => i !== index));
+        } else {
+            setSummarySlides(summarySlides.filter((_, i) => i !== index));
+        }
     };
 
     const handleDragEnd = (event) => {
         const { active, over } = event;
         if (active && over && active.id !== over.id) {
-            setSlides((items) => {
-                const oldIndex = items.findIndex((i) => (i.id || `slide-${items.indexOf(i)}`) === active.id);
-                const newIndex = items.findIndex((i) => (i.id || `slide-${items.indexOf(i)}`) === over.id);
-                return arrayMove(items, oldIndex, newIndex);
-            });
+            if (contentType === 'full') {
+                setSlides((items) => {
+                    const oldIndex = items.findIndex((i) => (i.id || `slide-${items.indexOf(i)}`) === active.id);
+                    const newIndex = items.findIndex((i) => (i.id || `slide-${items.indexOf(i)}`) === over.id);
+                    return arrayMove(items, oldIndex, newIndex);
+                });
+            } else {
+                setSummarySlides((items) => {
+                    const oldIndex = items.findIndex((i) => i.id === active.id);
+                    const newIndex = items.findIndex((i) => i.id === over.id);
+                    return arrayMove(items, oldIndex, newIndex);
+                });
+            }
         }
+    };
+
+    // --- Summary Handlers ---
+    const addSummaryPoint = () => {
+        setSummarySlides(prev => [...prev, {
+            id: `summary-${Date.now()}`,
+            text: '',
+            type: 'text'
+        }]);
     };
 
     // --- File Upload Handler (PDF or Image) ---
     const handleFileUpload = async (event) => {
-        const file = event.target.files[0];
-        if (!file) return;
+        const files = Array.from(event.target.files);
+        if (files.length === 0) return;
 
         try {
             setLoading(true);
-            let fileToUpload = file;
+            const newAssets = [];
 
-            // Compress if it's an image
-            if (file.type.startsWith('image/')) {
-                const options = {
-                    maxSizeMB: 1,
-                    maxWidthOrHeight: 1920,
-                    useWebWorker: true,
-                };
-                fileToUpload = await imageCompression(file, options);
+            for (const file of files) {
+                let fileToUpload = file;
+
+                // Compress if it's an image
+                if (file.type.startsWith('image/')) {
+                    const options = {
+                        maxSizeMB: 1,
+                        maxWidthOrHeight: 1920,
+                        useWebWorker: true,
+                    };
+                    try {
+                        fileToUpload = await imageCompression(file, options);
+                    } catch (e) {
+                        console.warn("Compression failed for", file.name, e);
+                    }
+                }
+
+                // Upload to Firebase Storage
+                const path = `module-content/${courseId}/${moduleId}/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
+                const storageRef = ref(storage, path);
+                const snapshot = await uploadBytes(storageRef, fileToUpload);
+
+                // Get Download URL
+                const downloadURL = await getDownloadURL(snapshot.ref);
+
+                newAssets.push({
+                    id: `slide-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+                    title: file.name,
+                    fileName: file.name,
+                    type: (file.type.includes('pdf') || file.name.toLowerCase().endsWith('.pdf')) ? 'pdf' : 'standard', // standard = image
+                    url: downloadURL,
+                    uploadedAt: new Date().toISOString()
+                });
             }
 
-            // Upload to Firebase Storage
-            const path = `module-content/${courseId}/${moduleId}/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
-            const storageRef = ref(storage, path);
-            const snapshot = await uploadBytes(storageRef, fileToUpload);
-
-            // Get Download URL
-            const downloadURL = await getDownloadURL(snapshot.ref);
-
-            // Append to Slides State
-            setSlides(prev => [...prev, {
-                id: `slide-${Date.now()}`,
-                url: downloadURL,
-                type: (file.type.includes('pdf') || file.name.toLowerCase().endsWith('.pdf')) ? 'pdf' : 'image',
-                fileName: file.name
-            }]);
-
+            if (contentType === 'full') {
+                setSlides(prev => [...prev, ...newAssets]);
+            } else {
+                setSummarySlides(prev => [...prev, ...newAssets]);
+            }
+            setLoading(false);
         } catch (error) {
             console.error("Error uploading file:", error);
             alert(`Failed to upload file: ${error.message}`);
@@ -518,9 +680,19 @@ export function ManageModule() {
 
             const saveDoc = {
                 title: module.title,
-                content: slides,
-                summaryContent: summarySlides,
-                quiz: quiz,
+                // Top-level content remains for backward compatibility in some views
+                content: selectedLang === 'en' ? slides : (langsData.en.content || []),
+                summaryContent: selectedLang === 'en' ? summarySlides : (langsData.en.summaryContent || []),
+                quiz: selectedLang === 'en' ? quiz : (langsData.en.quiz || { questions: [], passMark: 70 }),
+                // All languages mapped
+                languages: {
+                    ...langsData,
+                    [selectedLang]: {
+                        content: slides,
+                        summaryContent: summarySlides,
+                        quiz: quiz
+                    }
+                },
                 assignedStudents: assignedStudents,
                 quizAllowedStudents: quizAllowedStudents,
                 duration: parseInt(duration) || 0,
@@ -605,22 +777,42 @@ export function ManageModule() {
                 </div>
             </header>
 
-            {/* Tabs - FORCED VISIBILITY (Removed Sticky) */}
-            <div className="flex items-center justify-center min-h-[60px] border-y border-espresso/10 px-2 md:px-4 bg-white/20 dark:bg-black/20 relative z-10 overflow-x-auto no-scrollbar w-full mb-6 py-4">
-                {['content', 'quiz', 'assignments'].map(tab => (
-                    <button
-                        key={tab}
-                        onClick={() => setActiveTab(tab)}
-                        className={cn(
-                            "px-6 md:px-8 py-3 md:py-4 text-[10px] md:text-xs font-black uppercase tracking-[0.2em] rounded-xl transition-all relative group whitespace-nowrap mx-3",
-                            activeTab === tab
-                                ? "bg-espresso text-white shadow-lg scale-100"
-                                : "text-espresso/60 dark:text-white/60 hover:bg-white/40 hover:text-espresso"
-                        )}
-                    >
-                        {tab}
-                    </button>
-                ))}
+            {/* Language Switcher & Tabs */}
+            <div className="flex flex-col border-y border-espresso/10 bg-white/20 dark:bg-black/20 relative z-10 w-full">
+                {/* Language bar */}
+                <div className="flex items-center justify-center px-4 py-3 gap-2 bg-espresso/5 border-b border-espresso/5 overflow-x-auto no-scrollbar">
+                    {languages.map(lang => (
+                        <button
+                            key={lang.code}
+                            onClick={() => changeLanguage(lang.code)}
+                            className={cn(
+                                "px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest transition-all",
+                                selectedLang === lang.code
+                                    ? "bg-espresso text-white shadow-md scale-105"
+                                    : "text-espresso/40 hover:bg-espresso/10 hover:text-espresso"
+                            )}
+                        >
+                            {lang.name}
+                        </button>
+                    ))}
+                </div>
+
+                <div className="flex items-center justify-center min-h-[60px] px-2 md:px-4 overflow-x-auto no-scrollbar w-full py-4">
+                    {['content', 'quiz', 'assignments'].map(tab => (
+                        <button
+                            key={tab}
+                            onClick={() => setActiveTab(tab)}
+                            className={cn(
+                                "px-6 md:px-8 py-3 md:py-4 text-[10px] md:text-xs font-black uppercase tracking-[0.2em] rounded-xl transition-all relative group whitespace-nowrap mx-3",
+                                activeTab === tab
+                                    ? "bg-espresso text-white shadow-lg scale-100"
+                                    : "text-espresso/60 dark:text-white/60 hover:bg-white/40 hover:text-espresso"
+                            )}
+                        >
+                            {tab}
+                        </button>
+                    ))}
+                </div>
             </div>
 
             <main className="p-10  w-full pb-32">
@@ -636,7 +828,31 @@ export function ManageModule() {
                                         <span className="w-6 h-px bg-espresso/20"></span>
                                         Module Assets
                                     </h2>
-                                    <p className="text-lg md:text-xl font-serif font-black text-espresso dark:text-white">Page-by-Page Sequence Control</p>
+                                    <div className="flex items-center gap-4">
+                                        <div className="flex bg-espresso/5 p-1 rounded-xl">
+                                            <button
+                                                onClick={() => setContentType('full')}
+                                                className={cn(
+                                                    "px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all",
+                                                    contentType === 'full' ? "bg-espresso text-white shadow-lg" : "text-espresso/40 hover:text-espresso"
+                                                )}
+                                            >
+                                                Full Content
+                                            </button>
+                                            <button
+                                                onClick={() => setContentType('summary')}
+                                                className={cn(
+                                                    "px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all",
+                                                    contentType === 'summary' ? "bg-espresso text-white shadow-lg" : "text-espresso/40 hover:text-espresso"
+                                                )}
+                                            >
+                                                Summary
+                                            </button>
+                                        </div>
+                                        <p className="text-lg md:text-xl font-serif font-black text-espresso dark:text-white">
+                                            {contentType === 'full' ? 'Full Slide Sequence' : 'Summary Notes Protocol'}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                             <div className="flex flex-col sm:flex-row items-center gap-4 md:gap-6 w-full xl:w-auto">
@@ -654,11 +870,28 @@ export function ManageModule() {
                                     </div>
                                 </div>
                                 <div className="flex gap-2 w-full sm:w-auto">
-                                    <label className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-espresso text-white px-6 py-3.5 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-[0.1em] shadow-xl hover:shadow-espresso/40 active:scale-95 transition-all cursor-pointer">
-                                        <span className="material-symbols-outlined text-[18px]">add_circle</span>
-                                        Add PDF Page
-                                        <input type="file" accept="application/pdf,image/*" className="hidden" onChange={handleFileUpload} />
-                                    </label>
+                                    {contentType === 'full' ? (
+                                        <label className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-espresso text-white px-6 py-3.5 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-[0.1em] shadow-xl hover:shadow-espresso/40 active:scale-95 transition-all cursor-pointer">
+                                            <span className="material-symbols-outlined text-[18px]">add_circle</span>
+                                            Add Page Asset
+                                            <input type="file" accept="application/pdf,image/*" multiple className="hidden" onChange={handleFileUpload} />
+                                        </label>
+                                    ) : (
+                                        <div className="flex gap-2 w-full">
+                                            <button
+                                                onClick={addSummaryPoint}
+                                                className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-white/40 text-espresso border border-espresso/10 px-6 py-3.5 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-[0.1em] shadow-sm hover:bg-white active:scale-95 transition-all"
+                                            >
+                                                <span className="material-symbols-outlined text-[18px]">add_notes</span>
+                                                Add Text Point
+                                            </button>
+                                            <label className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-espresso text-white px-6 py-3.5 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-[0.1em] shadow-xl hover:shadow-espresso/40 active:scale-95 transition-all cursor-pointer">
+                                                <span className="material-symbols-outlined text-[18px]">upload_file</span>
+                                                Add Media Asset
+                                                <input type="file" accept="application/pdf,image/*" multiple className="hidden" onChange={handleFileUpload} />
+                                            </label>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -688,26 +921,28 @@ export function ManageModule() {
                                 </SortableContext>
                             </DndContext>
                         ) : (
-                            // Summary Slides (Not draggable needed yet, or use same pattern if needed)
-                            <div className="space-y-6">
-                                {summarySlides.map((slide, index) => (
-                                    <div key={index} className="bg-white/40 dark:bg-black/20 p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] border border-espresso/10 relative overflow-hidden group/slide shadow-2xl">
-                                        {/* ... Simplified Summary Render can just be a subset of Standard ... */}
-                                        <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/10 group-hover/slide:bg-espresso transition-colors"></div>
-                                        <button onClick={() => removeSlide(index)} className="absolute top-4 md:top-8 right-4 md:right-8 text-espresso/20 hover:text-red-500 transition-colors p-2 rounded-xl hover:bg-red-50">
-                                            <span className="material-symbols-outlined text-[20px] md:text-[24px]">delete_sweep</span>
-                                        </button>
-                                        <div className="space-y-6">
-                                            <h3 className="text-lg font-black font-serif text-espresso">Summary Point {index + 1}</h3>
-                                            <RichTextEditor
-                                                value={slide.text}
-                                                onChange={(val) => updateSlide(index, 'text', val)}
-                                                placeholder="Summary content..."
+                            <DndContext
+                                sensors={sensors}
+                                collisionDetection={closestCenter}
+                                onDragEnd={handleDragEnd}
+                            >
+                                <SortableContext
+                                    items={summarySlides.map((s) => s.id)}
+                                    strategy={verticalListSortingStrategy}
+                                >
+                                    <div className="space-y-6">
+                                        {summarySlides.map((slide, index) => (
+                                            <SortableSummaryItem
+                                                key={slide.id}
+                                                slide={slide}
+                                                index={index}
+                                                removeSlide={removeSlide}
+                                                updateSlide={updateSlide}
                                             />
-                                        </div>
+                                        ))}
                                     </div>
-                                ))}
-                            </div>
+                                </SortableContext>
+                            </DndContext>
                         )}
 
                         {(contentType === 'full' ? slides : summarySlides).length === 0 && (
