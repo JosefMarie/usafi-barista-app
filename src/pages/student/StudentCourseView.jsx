@@ -484,48 +484,55 @@ export function StudentCourseView() {
                         <div className="animate-fade-in space-y-8">
                             {!quizResult ? (
                                 !quizStarted ? (
-                                    <div className="w-full bg-[#F5DEB3] dark:bg-white/5 p-6 md:p-12 rounded-[2rem] md:rounded-3xl border border-espresso/10 shadow-2xl text-left space-y-8 md:space-y-10 animate-scale-in relative overflow-hidden group">
+                                    <div className="w-full bg-[#F5DEB3] dark:bg-white/5 p-5 md:p-12 rounded-[2rem] md:rounded-3xl border border-espresso/10 shadow-2xl text-left space-y-6 md:space-y-10 animate-scale-in relative overflow-hidden group">
                                         <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                                        <div className="size-16 md:size-24 bg-espresso/5 rounded-2xl md:rounded-3xl flex items-center justify-center mx-auto text-espresso rotate-12 group-hover:rotate-0 transition-transform">
+                                        <div className="size-16 md:size-24 bg-espresso/5 rounded-2xl md:rounded-3xl flex items-center justify-center mx-auto text-espresso rotate-12 group-hover:rotate-0 transition-transform shadow-inner">
                                             <span className="material-symbols-outlined text-4xl md:text-5xl">quiz</span>
                                         </div>
                                         <div className="text-center md:text-left">
-                                            <h2 className="text-xl md:text-4xl font-serif font-bold text-espresso dark:text-white mb-2 md:mb-4">{t('student.quiz.title')}</h2>
-                                            <p className="text-[9px] md:text-sm font-medium text-espresso/40 dark:text-white/40 uppercase tracking-widest mb-4 md:mb-8">{t('student.quiz.subtitle')}</p>
+                                            <h2 className="text-xl md:text-4xl font-serif font-black text-espresso dark:text-white mb-2 md:mb-4">{t('student.quiz.title')}</h2>
+                                            <p className="text-[8px] md:text-sm font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.2em] mb-6 md:mb-8">{t('student.quiz.subtitle')}</p>
                                             <div className="space-y-3 md:space-y-4 text-left">
-                                                <div className="flex gap-3 md:gap-5 p-3 md:p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
-                                                    <span className="material-symbols-outlined text-espresso shrink-0 text-xl md:text-2xl">timer_10_alt_1</span>
+                                                <div className="flex items-center gap-3 md:gap-5 p-3 md:p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
+                                                    <div className="size-8 md:size-12 rounded-xl bg-espresso/5 flex items-center justify-center shrink-0">
+                                                        <span className="material-symbols-outlined text-espresso text-xl md:text-2xl">timer_10_alt_1</span>
+                                                    </div>
                                                     <div>
                                                         <p className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-0.5">{t('student.quiz.rules.timer.title')}</p>
-                                                        <p className="text-[11px] md:text-sm font-medium text-espresso dark:text-white">{t('student.quiz.rules.timer.desc')}</p>
+                                                        <p className="text-[10px] md:text-sm font-bold text-espresso dark:text-white leading-tight">{t('student.quiz.rules.timer.desc')}</p>
                                                     </div>
                                                 </div>
-                                                <div className="flex gap-3 md:gap-5 p-3 md:p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
-                                                    <span className="material-symbols-outlined text-espresso shrink-0 text-xl md:text-2xl">workspace_premium</span>
+                                                <div className="flex items-center gap-3 md:gap-5 p-3 md:p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
+                                                    <div className="size-8 md:size-12 rounded-xl bg-espresso/5 flex items-center justify-center shrink-0">
+                                                        <span className="material-symbols-outlined text-espresso text-xl md:text-2xl">workspace_premium</span>
+                                                    </div>
                                                     <div>
                                                         <p className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-0.5">{t('student.quiz.rules.pass_mark.title')}</p>
-                                                        <p className="text-[11px] md:text-sm font-medium text-espresso dark:text-white" dangerouslySetInnerHTML={{ __html: t('student.quiz.rules.pass_mark.desc', { passMark: activeQuiz?.passMark || 70 }) }} />
+                                                        <p className="text-[10px] md:text-sm font-bold text-espresso dark:text-white leading-tight" dangerouslySetInnerHTML={{ __html: t('student.quiz.rules.pass_mark.desc', { passMark: activeQuiz?.passMark || 70 }) }} />
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <button onClick={startQuiz} className="w-full py-3.5 md:py-5 bg-espresso text-white font-black uppercase tracking-[0.2em] text-[9px] md:text-[10px] rounded-xl md:rounded-2xl shadow-xl active:scale-95">{t('student.quiz.start_btn')}</button>
+                                        <button onClick={startQuiz} className="w-full py-4 md:py-6 bg-espresso text-white font-black uppercase tracking-[0.3em] text-[10px] md:text-sm rounded-2xl shadow-xl active:scale-95 transition-all hover:bg-black hover:shadow-espresso/20 flex items-center justify-center gap-3">
+                                            {t('student.quiz.start_btn')}
+                                            <span className="material-symbols-outlined text-lg">play_arrow</span>
+                                        </button>
                                     </div>
                                 ) : (
                                     <div className="space-y-6">
-                                        <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-[#F5DEB3]/80 dark:bg-[#2c2825]/80 p-4 md:p-5 rounded-2xl border border-espresso/10 shadow-xl sticky top-[4.5rem] md:top-28 z-20 backdrop-blur-md relative overflow-hidden group">
+                                        <div className="flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4 bg-[#F5DEB3]/90 dark:bg-[#2c2825]/90 p-3 md:p-5 rounded-2xl border border-espresso/10 shadow-xl sticky top-[4rem] md:top-28 z-20 backdrop-blur-md relative overflow-hidden group">
                                             <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                                            <div className="flex items-center gap-4 md:gap-6 w-full md:w-auto overflow-x-hidden">
-                                                <div className="text-[8px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.1em] md:tracking-[0.2em] shrink-0">{t('student.quiz.objective')}</div>
-                                                <div className="flex gap-1 md:gap-1.5 flex-1 min-w-0">
+                                            <div className="flex items-center gap-3 md:gap-6 w-full md:w-auto overflow-x-hidden">
+                                                <div className="text-[7px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest shrink-0">{t('student.quiz.objective')}</div>
+                                                <div className="flex gap-1 md:gap-1.5 flex-1 min-w-0 px-2">
                                                     {activeQuiz?.questions?.map((_, i) => (
-                                                        <div key={i} className={cn("h-1.5 md:h-2 rounded-full transition-all duration-500 shadow-inner", i < currentQuestionIndex ? "bg-espresso w-4 md:w-8" : i === currentQuestionIndex ? "bg-espresso w-10 md:w-12 animate-pulse" : "bg-espresso/10 dark:bg-white/10 w-3 md:w-6")} />
+                                                        <div key={i} className={cn("h-1 md:h-1.5 rounded-full transition-all duration-500 shadow-inner", i < currentQuestionIndex ? "bg-espresso w-2 md:w-8" : i === currentQuestionIndex ? "bg-espresso w-6 md:w-12 animate-pulse" : "bg-espresso/10 dark:bg-white/10 w-1 md:w-6")} />
                                                     ))}
                                                 </div>
-                                                <div className="text-xs md:text-sm font-black text-espresso tracking-tight shrink-0">{currentQuestionIndex + 1}/{activeQuiz?.questions?.length}</div>
+                                                <div className="text-[10px] md:text-sm font-black text-espresso tracking-tight shrink-0">{currentQuestionIndex + 1}/{activeQuiz?.questions?.length}</div>
                                             </div>
-                                            <div className={cn("flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl border-2 font-mono font-black text-base md:text-lg transition-all shadow-sm w-full md:w-auto justify-center", timeLeft < 10 ? "text-red-600 border-red-600/30 bg-red-600/5 animate-pulse" : "text-espresso dark:text-white border-espresso/10 bg-white/20")}>
-                                                <span className="material-symbols-outlined text-lg md:text-xl">timer</span>{Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
+                                            <div className={cn("flex items-center gap-1.5 md:gap-3 px-3 md:px-6 py-1.5 md:py-3 rounded-lg md:rounded-2xl border-2 font-mono font-black text-xs md:text-lg transition-all shadow-sm w-full md:w-auto justify-center", timeLeft < 10 ? "text-red-600 border-red-600/30 bg-red-600/5 animate-pulse" : "text-espresso dark:text-white border-espresso/10 bg-white/20")}>
+                                                <span className="material-symbols-outlined text-sm md:text-xl">timer</span>{Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
                                             </div>
                                         </div>
 
@@ -562,21 +569,38 @@ export function StudentCourseView() {
                                                 )}
 
                                                 {activeQuiz?.questions[currentQuestionIndex]?.type === 'matching' && (
-                                                    <div className="space-y-4">
-                                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
-                                                            <div className="space-y-2 md:space-y-3">
+                                                    <div className="space-y-6">
+                                                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10">
+                                                            <div className="space-y-2 md:space-y-4">
+                                                                <p className="text-[10px] font-black text-espresso/30 dark:text-white/30 uppercase tracking-[0.2em] mb-2">{t('student.quiz.matching.static_label') || 'STILL POSITIONS'}</p>
                                                                 {activeQuiz?.questions[currentQuestionIndex]?.pairs.map((p, i) => (
-                                                                    <div key={i} className="p-3 md:p-4 bg-white/30 dark:bg-white/5 border border-espresso/10 rounded-xl md:rounded-2xl font-bold text-sm md:text-base text-espresso/60 dark:text-white/60">{p.key}</div>
+                                                                    <div key={i} className="p-3 md:p-5 bg-white/30 dark:bg-white/5 border border-espresso/10 rounded-xl md:rounded-2xl font-bold text-sm md:text-base text-espresso/60 dark:text-white/60 flex items-center gap-3">
+                                                                        <span className="shrink-0 size-6 md:size-8 rounded-lg bg-espresso/5 flex items-center justify-center text-[10px] md:text-xs">{(i + 1).toString().padStart(2, '0')}</span>
+                                                                        {p.key}
+                                                                    </div>
                                                                 ))}
                                                             </div>
-                                                            <div className="space-y-2">
+                                                            <div className="space-y-2 md:space-y-4">
+                                                                <p className="text-[10px] font-black text-espresso/30 dark:text-white/30 uppercase tracking-[0.2em] mb-2">{t('student.quiz.matching.dynamic_label') || 'MANEUVERABLE TARGETS'}</p>
                                                                 {(matchingOrder || []).map((matchedIdx, i) => (
                                                                     <div key={i} className="flex gap-2">
-                                                                        <div className="flex-1 p-3 md:p-4 bg-espresso/5 border-2 border-espresso/20 rounded-xl md:rounded-2xl flex items-center justify-between font-bold text-xs md:text-sm text-espresso uppercase tracking-widest">
-                                                                            <span className="truncate">{activeQuiz?.questions[currentQuestionIndex]?.pairs[matchedIdx].value}</span>
-                                                                            <div className="flex items-center gap-2">
-                                                                                <button disabled={i === 0} onClick={() => moveMatching(currentQuestionIndex, i, i - 1)} className="hover:text-primary disabled:opacity-20"><span className="material-symbols-outlined text-lg">expand_less</span></button>
-                                                                                <button disabled={i === matchingOrder.length - 1} onClick={() => moveMatching(currentQuestionIndex, i, i + 1)} className="hover:text-primary disabled:opacity-20"><span className="material-symbols-outlined text-lg">expand_more</span></button>
+                                                                        <div className="flex-1 p-3 md:p-5 bg-espresso/5 border-2 border-espresso/20 rounded-xl md:rounded-2xl flex items-center justify-between font-bold text-xs md:text-base text-espresso uppercase tracking-widest shadow-sm">
+                                                                            <span className="truncate pr-2">{activeQuiz?.questions[currentQuestionIndex]?.pairs[matchedIdx].value}</span>
+                                                                            <div className="flex items-center gap-1 md:gap-3 shrink-0">
+                                                                                <button
+                                                                                    disabled={i === 0}
+                                                                                    onClick={() => moveMatching(currentQuestionIndex, i, i - 1)}
+                                                                                    className="size-10 md:size-12 flex items-center justify-center rounded-lg bg-white/50 hover:bg-white hover:text-primary transition-all shadow-sm active:scale-90 disabled:opacity-20 disabled:active:scale-100"
+                                                                                >
+                                                                                    <span className="material-symbols-outlined text-2xl md:text-3xl">expand_less</span>
+                                                                                </button>
+                                                                                <button
+                                                                                    disabled={i === matchingOrder.length - 1}
+                                                                                    onClick={() => moveMatching(currentQuestionIndex, i, i + 1)}
+                                                                                    className="size-10 md:size-12 flex items-center justify-center rounded-lg bg-white/50 hover:bg-white hover:text-primary transition-all shadow-sm active:scale-90 disabled:opacity-20 disabled:active:scale-100"
+                                                                                >
+                                                                                    <span className="material-symbols-outlined text-2xl md:text-3xl">expand_more</span>
+                                                                                </button>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -597,22 +621,25 @@ export function StudentCourseView() {
                                     </div>
                                 )
                             ) : (
-                                <div className="text-left py-6 md:py-16 animate-scale-in w-full bg-[#F5DEB3] dark:bg-white/5 p-6 md:p-12 rounded-[2rem] md:rounded-3xl border border-espresso/10 shadow-2xl relative overflow-hidden group">
+                                <div className="text-center py-10 md:py-16 animate-scale-in w-full bg-[#F5DEB3] dark:bg-white/5 p-6 md:p-12 rounded-[2.5rem] md:rounded-3xl border border-espresso/10 shadow-2xl relative overflow-hidden group">
                                     <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                                    <div className={cn("inline-flex items-center justify-center size-16 md:size-28 rounded-2xl md:rounded-3xl mb-4 md:mb-8 shadow-2xl", quizResult.passed ? "bg-green-500 text-white" : "bg-red-500 text-white")}>
+                                    <div className={cn("inline-flex items-center justify-center size-20 md:size-28 rounded-[2rem] md:rounded-3xl mb-6 md:mb-8 shadow-2xl transition-transform group-hover:scale-110 duration-700", quizResult.passed ? "bg-green-500 text-white" : "bg-red-500 text-white")}>
                                         <span className="material-symbols-outlined text-3xl md:text-6xl">{quizResult.passed ? 'auto_awesome' : 'warning'}</span>
                                     </div>
-                                    <h1 className="text-xl md:text-4xl font-serif font-bold text-espresso dark:text-white mb-2 md:mb-3">{quizResult.passed ? t('student.quiz.results.passed.title') : t('student.quiz.results.failed.title')}</h1>
-                                    <p className="text-base md:text-xl font-medium text-espresso/40 dark:text-white/40 mb-6 md:mb-10">{t('student.quiz.results.score_label')} <span className={quizResult.passed ? "text-green-600 font-black" : "text-red-600 font-black"}>{quizResult.score.toFixed(0)}%</span></p>
+                                    <h1 className="text-2xl md:text-4xl font-serif font-black text-espresso dark:text-white mb-2 md:mb-3">{quizResult.passed ? t('student.quiz.results.passed.title') : t('student.quiz.results.failed.title')}</h1>
+                                    <div className="space-y-1 mb-8 md:mb-12">
+                                        <p className="text-[10px] md:text-xs font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em]">{t('student.quiz.results.score_label')}</p>
+                                        <span className={cn("text-4xl md:text-6xl font-black font-serif italic", quizResult.passed ? "text-green-600" : "text-red-600")}>{quizResult.score.toFixed(0)}%</span>
+                                    </div>
                                     {quizResult.passed ? (
-                                        <div className="space-y-4 md:space-y-6">
-                                            <p className="text-xs md:text-sm font-medium text-espresso/60 dark:text-white/60 leading-relaxed">{t('student.quiz.results.passed.desc')}</p>
-                                            <button onClick={() => navigate('/student/courses')} className="w-full sm:w-auto px-8 md:px-10 py-3.5 md:py-5 bg-green-600 text-white font-black uppercase tracking-widest text-[9px] md:text-[10px] rounded-xl md:rounded-2xl shadow-xl hover:bg-green-700 transition-all flex items-center justify-center gap-3">{t('student.quiz.results.passed.btn')} <span className="material-symbols-outlined text-[18px]">map</span></button>
+                                        <div className="space-y-6 md:space-y-8 max-w-md mx-auto">
+                                            <p className="text-[10px] md:text-sm font-bold text-espresso/60 dark:text-white/60 leading-relaxed uppercase tracking-widest">{t('student.quiz.results.passed.desc')}</p>
+                                            <button onClick={() => navigate('/student/courses')} className="w-full px-8 md:px-10 py-4 md:py-6 bg-green-600 text-white font-black uppercase tracking-[0.3em] text-[10px] md:text-xs rounded-2xl shadow-xl hover:bg-green-700 transition-all flex items-center justify-center gap-3 active:scale-95">{t('student.quiz.results.passed.btn')} <span className="material-symbols-outlined text-[18px]">map</span></button>
                                         </div>
                                     ) : (
-                                        <div className="space-y-4 md:space-y-6">
-                                            <p className="text-xs md:text-sm font-medium text-espresso/60 dark:text-white/60 leading-relaxed">{t('student.quiz.results.failed.desc')}</p>
-                                            <button onClick={retakeModule} className="w-full sm:w-auto px-8 md:px-10 py-3.5 md:py-5 bg-espresso text-white font-black uppercase tracking-widest text-[9px] md:text-[10px] rounded-xl md:rounded-2xl shadow-xl hover:bg-black transition-all flex items-center justify-center gap-3"><span className="material-symbols-outlined text-[18px]">refresh</span> {t('student.quiz.results.failed.btn')}</button>
+                                        <div className="space-y-6 md:space-y-8 max-w-md mx-auto">
+                                            <p className="text-[10px] md:text-sm font-bold text-espresso/60 dark:text-white/60 leading-relaxed uppercase tracking-widest">{t('student.quiz.results.failed.desc')}</p>
+                                            <button onClick={retakeModule} className="w-full px-8 md:px-10 py-4 md:py-6 bg-espresso text-white font-black uppercase tracking-[0.3em] text-[10px] md:text-xs rounded-2xl shadow-xl hover:bg-black transition-all flex items-center justify-center gap-3 active:scale-95"><span className="material-symbols-outlined text-[18px]">refresh</span> {t('student.quiz.results.failed.btn')}</button>
                                         </div>
                                     )}
                                 </div>
