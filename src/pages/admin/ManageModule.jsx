@@ -213,6 +213,7 @@ export function ManageModule() {
     const [students, setStudents] = useState([]);
     const [assignedStudents, setAssignedStudents] = useState([]);
     const [quizAllowedStudents, setQuizAllowedStudents] = useState([]);
+    const [saving, setSaving] = useState(false);
 
     const [filterThreshold, setFilterThreshold] = useState(0);
     const [sortConfig, setSortConfig] = useState({ key: 'progress', direction: 'desc' });
@@ -673,7 +674,7 @@ export function ManageModule() {
     // --- Save Handler ---
     const handleSave = async () => {
         try {
-            setLoading(true);
+            setSaving(true);
             const isNew = moduleId === 'new';
             const modulesRef = collection(db, 'courses', courseId, 'modules');
             const modRef = isNew ? doc(modulesRef) : doc(db, 'courses', courseId, 'modules', moduleId);
@@ -714,7 +715,7 @@ export function ManageModule() {
             console.error("Error saving module:", error);
             alert(`Error saving changes: ${error.message}`);
         } finally {
-            setLoading(false);
+            setSaving(false);
         }
     };
 
@@ -728,8 +729,8 @@ export function ManageModule() {
         }
     };
 
-    if (loading) return <div className="p-10 text-center">Loading Module...</div>;
-
+    if (loading) return <div className="p-10 text-center text-espresso font-black uppercase tracking-widest animate-pulse">Initializing Interface...</div>;
+    if (!module) return null;
     return (
         <div className="flex flex-col h-full bg-[#F5DEB3] dark:bg-[#1c1916] overflow-y-auto animate-fade-in relative">
             {/* Header */}
@@ -746,7 +747,7 @@ export function ManageModule() {
                         </div>
                         <input
                             className="w-full bg-transparent font-serif font-black text-espresso dark:text-white text-base md:text-3xl outline-none placeholder:text-espresso/10"
-                            value={module.title}
+                            value={module.title || ''}
                             onChange={(e) => setModule({ ...module, title: e.target.value })}
                             placeholder="Designate Module Title..."
                         />
