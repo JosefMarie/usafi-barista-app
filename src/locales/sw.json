@@ -75,6 +75,85 @@
       "commence": "Anza",
       "locked_btn": "Imefungwa"
     },
+    "course_view": {
+      "extraction": "Upataji: {{percent}}%",
+      "assessment_phase": "Awamu ya Tathmini",
+      "stow_ledger": "Weka Daftari",
+      "strategic_notes": "Maelezo ya Kimkakati",
+      "not_assigned": "Hujapangiwa moduli hii.",
+      "empty_slides": "Moduli hii haina maelezo bado.",
+      "skip_to_quiz": "Ruka kwenye Chemsha Bongo",
+      "prev_btn": "Chunguza Awali",
+      "begin_eval_btn": "Anza Tathmini",
+      "next_btn": "Maendeleo ya Kimkakati",
+      "curriculum_selection": "Uteuzi wa Mtaala",
+      "choose_path": "Chagua Njia Yako ya Kusoma",
+      "study_path_desc": "Chagua jinsi ungependa kusoma nyenzo za mafunzo za moduli hii.",
+      "full_notes": "Maelezo Kamili",
+      "full_notes_desc": "Maelezo kamili ya mafundisho na media zote na maelezo ya kina ya kiufundi.",
+      "summary": "Muhtasari",
+      "summary_notes": "Maelezo ya Muhtasari",
+      "summary_notes_desc": "Muhtasari wa kiwango cha juu unaozingatia dhana kuu na mambo muhimu ya kukumbukwa kwa upataji wa haraka wa maarifa.",
+      "refining_summary": "KUBORESHA MUHTASARI",
+      "unlock_success": "Hongera! Umefungua: {{title}}",
+      "anti_cheat": {
+        "unload_warning": "Kuondoka kwenye ukurasa huu kutasababisha chemsha bongo yako kutumwa kiotomatiki. Una uhakika?",
+        "visibility_warning": "Onyo la anti-cheat: Chemsha bongo imetumwa kiotomatiki kwa sababu ya kubadilisha ukurasa."
+      },
+      "notes": {
+        "title": "Daftari la Maarifa",
+        "subtitle": "Maelezo ya Kimkakati ya Moduli"
+      }
+    },
+    "quiz": {
+      "title": "Tathmini ya Kimkakati",
+      "subtitle": "Tafadhali zingatia itifaki zifuatazo za kiutendaji",
+      "objective": "Lengo",
+      "footer_note": "Usahihi ndio jambo kuu.",
+      "finalize_btn": "Kamilisha Upataji",
+      "next_btn": "Maendeleo ya Kimkakati",
+      "start_btn": "Idhinisha na Anza Tathmini",
+      "fill_in_placeholder": "Andika jibu lako hapa...",
+      "matching_instruction": "Panga upya vitu vilivyo upande wa kulia ili vilingane na vya kushoto",
+      "rules": {
+        "timer": {
+          "title": "Kizuizi cha Muda",
+          "desc": "Kila swali lina muda maalum wa kuhesabu kurudi nyuma. Kutofanya chochote kutasababisha kutumwa kiotomatiki."
+        },
+        "pass_mark": {
+          "title": "Kiwango cha Ufaulu",
+          "desc": "Alama ya ufaulu ya <strong>{{passMark}}%</strong> ni muhimu kwa maendeleo ya kimkakati."
+        },
+        "anti_cheat": {
+          "title": "Itifaki ya Anti-Bypass",
+          "desc": "Urambazaji wa ukurasa, kubadilisha kichupo, au majaribio ya kuonyesha upya ukurasa yatasababisha ukamilishaji wa dharura wa chemsha bongo."
+        }
+      },
+      "results": {
+        "passed": {
+          "title": "Umahiri Umethibitishwa",
+          "desc": "Utendaji wa kipekee. Uelewa wako wa moduli hii umesimbwa kwa mafanikio. Maendeleo ya juu sasa yameidhinishwa.",
+          "btn": "Endelea kwenye Ramani ya Mtaala"
+        },
+        "failed": {
+          "title": "Sawazisho Imekatizwa",
+          "desc": "Kiwango cha tathmini hakikufikiwa. Marekebisho ya kimkakati yanahitajika kabla ya jaribio lingine la upataji kuidhinishwa.",
+          "btn": "Anza Tena Upataji"
+        },
+        "score_label": "Alama ya Kimkakati:"
+      },
+      "certificate_design": {
+        "title": "Cheti",
+        "achievement": "cha Mafanikio ya Kitaalamu",
+        "certify_text": "Hii ni kuthibitisha kwamba",
+        "completed_course": "Amekamilisha kwa mafanikio kozi ya",
+        "completed_module": "Amekamilisha kwa mafanikio moduli ya",
+        "date_label": "Tarehe ya Kukamilisha",
+        "id_label": "ID ya Cheti",
+        "verified": "Imethibitishwa",
+        "disclaimer": "Cheti hiki kinathibitisha kuwa mwanafunzi ametimiza mahitaji yote ya Kituo cha Mafunzo ya Barista cha Usafi."
+      }
+    },
     "cv_builder": {
       "title": "Mbunifu wa Kazi",
       "saved": "Imehifadhiwa",
@@ -112,24 +191,6 @@
         "skills": "Uwezo wa Kiutendaji",
         "education": "Msingi wa Kitaaluma",
         "experience": "Historia ya Kitaaluma"
-      },
-      "course_view": {
-        "extraction": "Upataji: {{percent}}%",
-        "assessment_phase": "Awamu ya Tathmini",
-        "stow_ledger": "Weka Daftari",
-        "strategic_notes": "Maelezo ya Kimkakati",
-        "not_assigned": "Hujapangiwa moduli hii.",
-        "empty_slides": "Moduli hii haina maelezo bado.",
-        "skip_to_quiz": "Ruka kwenye Chemsha Bongo",
-        "prev_btn": "Chunguza Awali",
-        "begin_eval_btn": "Anza Tathmini",
-        "next_btn": "Maendeleo ya Kimkakati",
-        "full_notes": "Maelezo Kamili",
-        "summary": "Muhtasari",
-        "notes": {
-          "title": "Daftari la Maarifa",
-          "subtitle": "Maelezo ya Kimkakati ya Moduli"
-        }
       }
     }
   },
