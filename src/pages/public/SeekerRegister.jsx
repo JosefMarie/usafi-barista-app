@@ -16,6 +16,7 @@ export function SeekerRegister() {
         password: '',
         confirmPassword: ''
     });
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -150,29 +151,51 @@ export function SeekerRegister() {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div>
+                            <div className="relative group/input">
                                 <label className="block text-[10px] font-black text-espresso/60 dark:text-white/60 uppercase tracking-widest mb-2 pl-2">Password</label>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    required
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                    className="w-full px-5 py-4 rounded-2xl bg-white/50 dark:bg-white/5 border border-espresso/10 focus:ring-2 focus:ring-espresso/20 outline-none transition-all placeholder:text-espresso/20 text-espresso dark:text-white font-medium shadow-sm"
-                                    placeholder="••••••••"
-                                />
+                                <div className="relative">
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        name="password"
+                                        required
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                        className="w-full px-5 py-4 pr-12 rounded-2xl bg-white/50 dark:bg-white/5 border border-espresso/10 focus:ring-2 focus:ring-espresso/20 outline-none transition-all placeholder:text-espresso/20 text-espresso dark:text-white font-medium shadow-sm"
+                                        placeholder="••••••••"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute inset-y-0 right-0 pr-4 flex items-center text-espresso/40 hover:text-espresso transition-colors"
+                                    >
+                                        <span className="material-symbols-outlined text-[20px]">
+                                            {showPassword ? 'visibility_off' : 'visibility'}
+                                        </span>
+                                    </button>
+                                </div>
                             </div>
-                            <div>
+                            <div className="relative group/input">
                                 <label className="block text-[10px] font-black text-espresso/60 dark:text-white/60 uppercase tracking-widest mb-2 pl-2">Confirm</label>
-                                <input
-                                    type="password"
-                                    name="confirmPassword"
-                                    required
-                                    value={formData.confirmPassword}
-                                    onChange={handleChange}
-                                    className="w-full px-5 py-4 rounded-2xl bg-white/50 dark:bg-white/5 border border-espresso/10 focus:ring-2 focus:ring-espresso/20 outline-none transition-all placeholder:text-espresso/20 text-espresso dark:text-white font-medium shadow-sm"
-                                    placeholder="••••••••"
-                                />
+                                <div className="relative">
+                                    <input
+                                        type={showPassword ? "text" : "password"}
+                                        name="confirmPassword"
+                                        required
+                                        value={formData.confirmPassword}
+                                        onChange={handleChange}
+                                        className="w-full px-5 py-4 pr-12 rounded-2xl bg-white/50 dark:bg-white/5 border border-espresso/10 focus:ring-2 focus:ring-espresso/20 outline-none transition-all placeholder:text-espresso/20 text-espresso dark:text-white font-medium shadow-sm"
+                                        placeholder="••••••••"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute inset-y-0 right-0 pr-4 flex items-center text-espresso/40 hover:text-espresso transition-colors"
+                                    >
+                                        <span className="material-symbols-outlined text-[20px]">
+                                            {showPassword ? 'visibility_off' : 'visibility'}
+                                        </span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -746,7 +746,7 @@ export function ManageModule() {
                             <span className="text-[7px] md:text-[9px] font-black text-espresso/40 uppercase tracking-widest">{module.id}</span>
                         </div>
                         <input
-                            className="w-full bg-transparent font-serif font-black text-espresso dark:text-white text-base md:text-3xl outline-none placeholder:text-espresso/10"
+                            className="w-full bg-espresso text-white font-serif font-black text-base md:text-3xl outline-none placeholder:text-white/20 px-3 py-1 md:px-6 md:py-2 rounded-lg md:rounded-2xl shadow-inner transition-all hover:bg-espresso/90 focus:ring-2 focus:ring-espresso focus:ring-offset-2"
                             value={module.title || ''}
                             onChange={(e) => setModule({ ...module, title: e.target.value })}
                             placeholder="Designate Module Title..."

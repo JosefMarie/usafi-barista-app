@@ -186,11 +186,11 @@ export function Students() {
                             </div>
                         ) : (
                             filteredStudents.map(student => (
-                                <Link to={`/admin/students/${student.id}`} key={student.id} className="bg-white/40 dark:bg-black/20 p-5 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-espresso/10 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-6 hover:shadow-2xl hover:-translate-y-1 transition-all group relative overflow-hidden">
-                                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover:bg-espresso transition-colors"></div>
+                                <Link to={`/admin/students/${student.id}`} key={student.id} className="bg-espresso p-5 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-white/10 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-6 hover:shadow-2xl hover:-translate-y-1 transition-all group relative overflow-hidden">
+                                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-white/20 group-hover:bg-white transition-colors"></div>
                                     <div className="flex items-center gap-4 md:gap-8">
                                         <div className="relative shrink-0">
-                                            <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-[1.5rem] overflow-hidden border-2 border-espresso/10 shadow-lg group-hover:scale-105 transition-transform">
+                                            <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-[1.5rem] overflow-hidden border-2 border-white/60 shadow-lg group-hover:scale-105 transition-transform">
                                                 <img
                                                     src={student.avatar || `https://ui-avatars.com/api/?name=${student.fullName}&background=random`}
                                                     alt={student.fullName}
@@ -198,30 +198,30 @@ export function Students() {
                                                 />
                                             </div>
                                             <div className={cn(
-                                                "absolute -bottom-1 -right-1 w-4 h-4 md:w-5 md:h-5 rounded-full border-2 md:border-4 border-[#F5DEB3] dark:border-[#1c1916] shadow-sm",
+                                                "absolute -bottom-1 -right-1 w-4 h-4 md:w-5 md:h-5 rounded-full border-2 md:border-4 border-espresso shadow-sm",
                                                 student.status === 'active' ? "bg-green-500" : "bg-amber-400"
                                             )}></div>
                                         </div>
                                         <div className="space-y-0.5 md:space-y-1">
-                                            <h3 className="font-serif font-black text-xl md:text-2xl text-espresso dark:text-white tracking-tight">
+                                            <h3 className="font-serif font-black text-xl md:text-2xl text-white tracking-tight">
                                                 {student.fullName}
                                             </h3>
-                                            <p className="text-[8px] md:text-[10px] font-black text-espresso/60 dark:text-white/40 uppercase tracking-widest break-all">
+                                            <p className="text-[8px] md:text-[10px] font-black text-white/40 uppercase tracking-widest break-all">
                                                 {student.email} <span className="hidden sm:inline">//</span> <br className="sm:hidden" /> {student.phone}
                                             </p>
                                         </div>
                                     </div>
                                     <div className="flex flex-col items-end gap-3 md:gap-4 pl-16 sm:pl-0">
                                         <div className="flex flex-wrap items-center justify-end gap-2 md:gap-4">
-                                            <div className="flex items-center gap-2 bg-white/60 dark:bg-black/30 px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl border border-espresso/5 shadow-inner">
-                                                <span className="material-symbols-outlined text-[14px] md:text-[16px] text-espresso/60">hub</span>
-                                                <span className="text-[8px] md:text-[9px] font-black text-espresso/60 uppercase tracking-widest">{student.course}</span>
+                                            <div className="flex items-center gap-2 bg-white/10 px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl border border-white/5 shadow-inner">
+                                                <span className="material-symbols-outlined text-[14px] md:text-[16px] text-white/40">hub</span>
+                                                <span className="text-[8px] md:text-[9px] font-black text-white/70 uppercase tracking-widest">{student.course}</span>
                                             </div>
                                             <span className={cn(
                                                 "px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] shadow-sm border",
                                                 student.status === 'active'
-                                                    ? 'bg-green-50/50 border-green-200 text-green-600'
-                                                    : 'bg-amber-50/50 border-amber-200 text-amber-600'
+                                                    ? 'bg-green-400/10 border-green-400/20 text-green-400'
+                                                    : 'bg-amber-400/10 border-amber-400/20 text-amber-400'
                                             )}>
                                                 {student.status}
                                             </span>
@@ -234,7 +234,7 @@ export function Students() {
                                                     e.preventDefault();
                                                     handleApprove(e, student.id);
                                                 }}
-                                                className="w-full sm:w-auto px-4 md:px-6 py-2 bg-espresso text-white text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] rounded-lg md:rounded-xl hover:shadow-lg active:scale-95 transition-all z-10"
+                                                className="w-full sm:w-auto px-4 md:px-6 py-2 bg-white text-espresso text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] rounded-lg md:rounded-xl hover:shadow-lg active:scale-95 transition-all z-10"
                                             >
                                                 Protocol Execute
                                             </button>

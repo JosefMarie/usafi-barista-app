@@ -124,26 +124,26 @@ export function MyCourses() {
                             <div
                                 key={module.id}
                                 className={cn(
-                                    "relative bg-[#F5DEB3] dark:bg-white/5 p-5 md:p-8 rounded-[1.5rem] md:rounded-3xl border transition-all duration-300 group overflow-hidden",
+                                    "relative bg-espresso p-5 md:p-8 rounded-[1.5rem] md:rounded-3xl border transition-all duration-300 group overflow-hidden",
                                     status === 'locked'
-                                        ? "opacity-60 grayscale border-transparent"
-                                        : "border-espresso/10 dark:border-white/5 shadow-xl hover:shadow-2xl hover:-translate-y-1"
+                                        ? "opacity-60 grayscale border-white/10"
+                                        : "border-white/10 shadow-xl hover:shadow-2xl hover:-translate-y-1"
                                 )}
                             >
-                                <div className="absolute left-0 top-0 bottom-0 w-1 md:w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                                <div className="absolute left-0 top-0 bottom-0 w-1 md:w-1.5 bg-white/20 group-hover:bg-white transition-colors"></div>
 
                                 {/* Connector Line (except for last item) */}
                                 {index !== modules.length - 1 && (
-                                    <div className="absolute left-[39px] md:left-[47px] bottom-[-20px] w-0.5 h-[20px] bg-espresso/10 z-0"></div>
+                                    <div className="absolute left-[39px] md:left-[47px] bottom-[-20px] w-0.5 h-[20px] bg-white/10 z-0"></div>
                                 )}
 
                                 <div className="flex flex-col sm:flex-row items-center sm:items-center gap-5 md:gap-8 relative z-10 text-center sm:text-left">
                                     {/* Status Icon */}
                                     <div className={cn(
-                                        "size-12 md:size-14 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 text-lg md:text-xl shadow-xl border border-espresso/5 rotate-3 group-hover:rotate-0 transition-transform",
+                                        "size-12 md:size-14 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 text-lg md:text-xl shadow-xl border border-white/5 rotate-3 group-hover:rotate-0 transition-transform",
                                         status === 'completed' ? "bg-green-500 text-white" :
-                                            status === 'unlocked' ? "bg-espresso text-white shadow-espresso/20" :
-                                                "bg-espresso/5 text-espresso/20 border-espresso/10"
+                                            status === 'unlocked' ? "bg-white text-espresso shadow-white/10" :
+                                                "bg-white/5 text-white/20 border-white/10"
                                     )}>
                                         <span className="material-symbols-outlined">
                                             {status === 'completed' ? 'verified' :
@@ -153,37 +153,37 @@ export function MyCourses() {
 
                                     <div className="flex-1 w-full">
                                         <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 mb-1.5">
-                                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">
+                                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-white/40">
                                                 {t('student.courses.unit_label')} {index + 1}
                                             </span>
                                             {!isAssigned && (
-                                                <span className="text-[9px] md:text-[10px] font-black text-red-500 bg-red-500/10 px-2 md:px-3 py-0.5 md:py-1 rounded-full uppercase tracking-widest shadow-sm">
+                                                <span className="text-[9px] md:text-[10px] font-black text-red-400 bg-red-400/10 px-2 md:px-3 py-0.5 md:py-1 rounded-full uppercase tracking-widest shadow-sm">
                                                     {t('student.courses.auth_required')}
                                                 </span>
                                             )}
                                         </div>
-                                        <h3 className="text-lg md:text-xl font-serif font-bold text-espresso dark:text-white group-hover:translate-x-1 transition-transform">
+                                        <h3 className="text-lg md:text-xl font-serif font-bold text-white group-hover:translate-x-1 transition-transform">
                                             {module.title}
                                         </h3>
                                         {status === 'locked' && (
-                                            <div className="text-[9px] font-black uppercase tracking-widest text-espresso/40 flex items-center justify-center sm:justify-start gap-2 mt-1.5">
+                                            <div className="text-[9px] font-black uppercase tracking-widest text-white/40 flex items-center justify-center sm:justify-start gap-2 mt-1.5">
                                                 <span className="material-symbols-outlined text-[14px]">notification_important</span>
                                                 {t('student.courses.locked_note')}
                                             </div>
                                         )}
                                     </div>
 
-                                    <div className="w-full sm:w-auto pt-4 sm:pt-0 border-t sm:border-none border-espresso/5">
+                                    <div className="w-full sm:w-auto pt-4 sm:pt-0 border-t sm:border-none border-white/5">
                                         {status !== 'locked' && (
                                             <button
                                                 onClick={() => navigate(`/student/courses/${BEAN_TO_BREW_ID}?module=${module.id}`)}
-                                                className="w-full sm:w-auto px-6 md:px-8 py-3 bg-espresso text-white font-black uppercase tracking-widest text-[9px] md:text-[10px] rounded-xl md:rounded-2xl hover:shadow-2xl transition-all shadow-xl active:scale-95"
+                                                className="w-full sm:w-auto px-6 md:px-8 py-3 bg-white text-espresso font-black uppercase tracking-widest text-[9px] md:text-[10px] rounded-xl md:rounded-2xl hover:shadow-2xl transition-all shadow-xl active:scale-95"
                                             >
                                                 {status === 'completed' ? t('student.courses.reexamine') : t('student.courses.commence')}
                                             </button>
                                         )}
                                         {status === 'locked' && (
-                                            <button disabled className="w-full sm:w-auto px-6 md:px-8 py-3 bg-espresso/5 text-espresso/20 font-black uppercase tracking-widest text-[9px] md:text-[10px] rounded-xl md:rounded-2xl cursor-not-allowed border border-espresso/10">
+                                            <button disabled className="w-full sm:w-auto px-6 md:px-8 py-3 bg-white/5 text-white/20 font-black uppercase tracking-widest text-[9px] md:text-[10px] rounded-xl md:rounded-2xl cursor-not-allowed border border-white/10">
                                                 {t('student.courses.locked_btn')}
                                             </button>
                                         )}

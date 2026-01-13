@@ -44,11 +44,13 @@ export function Quizzes() {
             setLoading(true);
             try {
                 // 1. Fetch Students Map (for names)
-                const usersSnap = await getDocs(query(collection(db, 'users'), where('role', '==', 'student')));
+                const usersSnap = await getDocs(collection(db, 'users'));
                 const userMap = {};
                 usersSnap.docs.forEach(doc => {
-                    userMap[doc.id] = doc.data().fullName || 'Unknown Student';
+                    const userData = doc.data();
+                    userMap[doc.id] = userData.fullName || userData.email || 'Unknown User';
                 });
+                console.log("User Map Populated:", Object.keys(userMap).length);
 
                 // 2. Fetch All Regular Modules across all courses
                 const coursesSnap = await getDocs(collection(db, 'courses'));
@@ -86,6 +88,13 @@ export function Quizzes() {
                     const chaptersSnap = await getDocs(collection(db, 'business_courses', courseDoc.id, 'chapters'));
                     chaptersSnap.docs.forEach(chapDoc => {
                         const data = chapDoc.data();
+
+                        modulesList.push({
+                            id: chapDoc.id,
+                            title: data.title,
+                            courseId: courseDoc.id
+                        });
+
                         if (data.quiz && data.quiz.enabled && data.quiz.questions && data.quiz.questions.length > 0) {
                             extractedQuizzes.push({
                                 id: `bus-${chapDoc.id}`,
@@ -100,6 +109,8 @@ export function Quizzes() {
                     });
                 }
 
+                setModules(modulesList);
+
                 setAllQuizzes(extractedQuizzes);
                 if (extractedQuizzes.length > 0) {
                     setSelectedQuizId(extractedQuizzes[0].id);
@@ -107,27 +118,35 @@ export function Quizzes() {
 
                 // 4. Fetch All Progress (Quiz Results)
                 const progressSnap = await getDocs(collectionGroup(db, 'progress'));
-                const quizResults = progressSnap.docs
-                    .map(doc => {
-                        const data = doc.data();
-                        const studentId = doc.ref.parent.parent.id; // path is users/{uid}/progress/{mid}
-                        if (data.score === undefined) return null;
+                const latestResultsMap = new Map(); // Key: studentId-moduleId
 
-                        const moduleInfo = modulesList.find(m => m.id === data.moduleId);
+                progressSnap.docs.forEach(doc => {
+                    const data = doc.data();
+                    const studentId = doc.ref.parent.parent.id; // path is users/{uid}/progress/{mid}
+                    const moduleId = doc.id; // The document ID is the module ID
 
-                        return {
-                            id: doc.id,
-                            studentId,
-                            studentName: userMap[studentId] || 'Deleted Student',
-                            moduleId: data.moduleId,
-                            moduleName: moduleInfo?.title || 'Unknown Module',
-                            score: data.score,
-                            passed: data.passed,
-                            date: data.completedAt?.toDate?.() || new Date(data.updatedAt?.toDate?.() || Date.now()),
-                            status: data.status
-                        };
-                    })
-                    .filter(r => r !== null)
+                    if (data.score === undefined) return;
+
+                    const key = `${studentId}-${moduleId}`;
+                    const currentAttempt = {
+                        id: doc.id,
+                        studentId,
+                        studentName: userMap[studentId] || 'Deleted Student',
+                        moduleId: moduleId,
+                        moduleName: modulesList.find(m => m.id === moduleId)?.title || 'Unknown Module',
+                        score: data.score,
+                        passed: data.passed,
+                        date: data.completedAt?.toDate?.() || new Date(data.updatedAt?.toDate?.() || Date.now()),
+                        status: data.status
+                    };
+
+                    const existingAttempt = latestResultsMap.get(key);
+                    if (!existingAttempt || (currentAttempt.date > existingAttempt.date)) {
+                        latestResultsMap.set(key, currentAttempt);
+                    }
+                });
+
+                const quizResults = Array.from(latestResultsMap.values())
                     .sort((a, b) => b.date - a.date);
 
                 setResults(quizResults);
@@ -143,8 +162,11 @@ export function Quizzes() {
 
     const filteredResults = results.filter(r => {
         const matchesModule = selectedModule === 'all' || r.moduleId === selectedModule;
-        const matchesSearch = r.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            r.moduleName.toLowerCase().includes(searchQuery.toLowerCase());
+        const sName = (r.studentName || '').toLowerCase();
+        const mName = (r.moduleName || '').toLowerCase();
+        const query = (searchQuery || '').toLowerCase();
+
+        const matchesSearch = sName.includes(query) || mName.includes(query);
         return matchesModule && matchesSearch;
     });
 
@@ -355,30 +377,30 @@ export function Quizzes() {
                                     </h3>
                                 </div>
                                 {activeQuiz?.questions?.map((q, idx) => (
-                                    <div key={idx} className="group bg-white/40 dark:bg-black/20 rounded-[1.5rem] md:rounded-[2rem] p-5 md:p-8 border border-espresso/10 hover:shadow-xl hover:-translate-y-1 transition-all relative overflow-hidden">
-                                        <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-espresso/5 group-hover:bg-espresso transition-colors"></div>
+                                    <div key={idx} className="group bg-espresso rounded-[1.5rem] md:rounded-[2rem] p-5 md:p-8 border border-white/10 hover:shadow-xl hover:-translate-y-1 transition-all relative overflow-hidden">
+                                        <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-white/20 group-hover:bg-white transition-colors"></div>
                                         <div className="flex flex-col sm:flex-row gap-4 md:gap-8">
-                                            <div className="w-10 h-10 md:w-12 md:h-12 shrink-0 rounded-xl md:rounded-2xl bg-espresso/5 flex items-center justify-center text-espresso font-black font-serif text-lg md:text-xl border border-espresso/5 group-hover:bg-espresso group-hover:text-white transition-all shadow-inner">
+                                            <div className="w-10 h-10 md:w-12 md:h-12 shrink-0 rounded-xl md:rounded-2xl bg-white/10 flex items-center justify-center text-white/70 font-black font-serif text-lg md:text-xl border border-white/5 group-hover:bg-white group-hover:text-espresso transition-all shadow-inner">
                                                 {String(idx + 1).padStart(2, '0')}
                                             </div>
                                             <div className="flex-1 space-y-3 md:space-y-4">
                                                 <div className="flex justify-between items-start gap-4">
-                                                    <p className="text-lg md:text-xl font-serif font-black text-espresso dark:text-white leading-tight tracking-tight uppercase group-hover:text-espresso/80 transition-colors break-words">
+                                                    <p className="text-lg md:text-xl font-serif font-black text-white leading-tight tracking-tight uppercase group-hover:text-white/80 transition-colors break-words">
                                                         {q.question || q.text}
                                                     </p>
                                                     <button
                                                         onClick={() => handleOpenNodeModal(q, idx)}
-                                                        className="p-2 text-espresso/40 hover:text-espresso transition-colors shrink-0"
+                                                        className="p-2 text-white/40 hover:text-white transition-colors shrink-0"
                                                     >
                                                         <span className="material-symbols-outlined text-[18px] md:text-[20px]">edit</span>
                                                     </button>
                                                 </div>
                                                 <div className="flex flex-wrap items-center gap-3">
-                                                    <span className="px-2 md:px-3 py-1 bg-green-50 text-green-700 text-[8px] md:text-[9px] font-black uppercase tracking-widest rounded-lg border border-green-100 flex items-center gap-2">
+                                                    <span className="px-2 md:px-3 py-1 bg-white/10 text-white/70 text-[8px] md:text-[9px] font-black uppercase tracking-widest rounded-lg border border-white/5 flex items-center gap-2 shadow-inner">
                                                         <span className="material-symbols-outlined text-[12px] md:text-[14px]">task_alt</span>
                                                         Response: <span className="truncate max-w-[150px]">{getCorrectResponse(q)}</span>
                                                     </span>
-                                                    <span className="text-[8px] md:text-[9px] font-black text-espresso/20 uppercase tracking-widest italic font-medium">Type: {q.type?.replace('_', ' ')}</span>
+                                                    <span className="text-[8px] md:text-[9px] font-black text-white/20 uppercase tracking-widest italic font-medium">Type: {q.type?.replace('_', ' ')}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -395,57 +417,57 @@ export function Quizzes() {
                 ) : (
                     <div className="space-y-10 animate-fade-in">
                         {/* Analytics Summary */}
-                        <div className="flex flex-col lg:flex-row gap-4 md:gap-6">
+                        <div className="flex flex-col lg:flex-row gap-4 md:gap-6 relative z-10">
                             <div className="flex-1 relative group">
-                                <span className="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-espresso/30 group-focus-within:text-espresso transition-colors text-[20px]">search</span>
+                                <span className="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-white transition-colors text-[20px]">search</span>
                                 <input
                                     type="text"
                                     placeholder="IDENTIFY PARTICIPANT OR MODULE..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full h-12 md:h-14 pl-12 md:pl-14 pr-6 rounded-xl md:rounded-2xl bg-white/40 dark:bg-black/20 border border-espresso/10 text-[9px] md:text-[10px] font-black uppercase tracking-widest focus:ring-2 focus:ring-espresso focus:outline-none transition-all shadow-inner"
+                                    className="w-full h-12 md:h-14 pl-12 md:pl-14 pr-6 rounded-xl md:rounded-2xl bg-espresso border border-white/10 text-white !text-white font-serif text-[10px] md:text-sm font-black uppercase tracking-widest focus:ring-2 focus:ring-white/20 focus:outline-none transition-all shadow-inner placeholder:text-white/20"
                                 />
                             </div>
                             <div className="relative">
                                 <select
                                     value={selectedModule}
                                     onChange={(e) => setSelectedModule(e.target.value)}
-                                    className="w-full lg:w-auto h-12 md:h-14 pl-6 pr-12 rounded-xl md:rounded-2xl bg-white/40 dark:bg-black/20 border border-espresso/10 text-[9px] md:text-[10px] font-black uppercase tracking-widest focus:ring-2 focus:ring-espresso focus:outline-none min-w-[200px] lg:min-w-[240px] appearance-none cursor-pointer shadow-sm"
+                                    className="w-full lg:w-auto h-12 md:h-14 pl-6 pr-12 rounded-xl md:rounded-2xl bg-espresso border border-white/10 text-white !text-white text-[9px] md:text-[10px] font-black uppercase tracking-widest focus:ring-2 focus:ring-white/20 focus:outline-none min-w-[200px] lg:min-w-[240px] appearance-none cursor-pointer shadow-sm"
                                 >
-                                    <option value="all">Universal View</option>
+                                    <option value="all" className="bg-espresso text-white">Universal View</option>
                                     {modules.map(m => (
-                                        <option key={m.id} value={m.id}>{m.title.toUpperCase()}</option>
+                                        <option key={m.id} value={m.id} className="bg-espresso text-white">{m.title.toUpperCase()}</option>
                                     ))}
                                 </select>
-                                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-espresso/40">expand_more</span>
+                                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/40">expand_more</span>
                             </div>
                         </div>
 
                         {/* Registry Table */}
-                        <div className="bg-white/40 dark:bg-black/20 rounded-[1.5rem] md:rounded-[2.5rem] border border-espresso/10 overflow-hidden shadow-2xl relative">
-                            <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-espresso/10"></div>
+                        <div className="bg-espresso rounded-[1.5rem] md:rounded-[2.5rem] border border-white/10 overflow-hidden shadow-2xl relative animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-white/20"></div>
                             <div className="overflow-x-auto no-scrollbar">
                                 <table className="w-full text-left border-collapse min-w-[800px]">
                                     <thead>
-                                        <tr className="bg-espresso/5 border-b border-espresso/10">
-                                            <th className="px-6 md:px-8 py-4 md:py-6 text-[9px] md:text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em]">Participant</th>
-                                            <th className="px-6 md:px-8 py-4 md:py-6 text-[9px] md:text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em]">Module Schema</th>
-                                            <th className="px-6 md:px-8 py-4 md:py-6 text-[9px] md:text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em] text-center">Score Matrix</th>
-                                            <th className="px-6 md:px-8 py-4 md:py-6 text-[9px] md:text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em]">Completion</th>
-                                            <th className="px-6 md:px-8 py-4 md:py-6 text-[9px] md:text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em] text-right">Status</th>
+                                        <tr className="bg-white/5 border-b border-white/10">
+                                            <th className="px-6 md:px-8 py-4 md:py-6 text-[9px] md:text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Participant</th>
+                                            <th className="px-6 md:px-8 py-4 md:py-6 text-[9px] md:text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Module Schema</th>
+                                            <th className="px-6 md:px-8 py-4 md:py-6 text-[9px] md:text-[10px] font-black text-white/40 uppercase tracking-[0.3em] text-center">Score Matrix</th>
+                                            <th className="px-6 md:px-8 py-4 md:py-6 text-[9px] md:text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Completion</th>
+                                            <th className="px-6 md:px-8 py-4 md:py-6 text-[9px] md:text-[10px] font-black text-white/40 uppercase tracking-[0.3em] text-right">Status</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-espresso/5 font-medium">
+                                    <tbody className="divide-y divide-white/5 font-medium">
                                         {filteredResults.length > 0 ? filteredResults.map((res) => (
-                                            <tr key={res.id} className="hover:bg-white/40 transition-colors group">
+                                            <tr key={res.id} className="hover:bg-white/5 transition-colors group">
                                                 <td className="px-8 py-6">
                                                     <div className="flex flex-col">
-                                                        <span className="text-base font-serif font-black text-espresso dark:text-white uppercase tracking-tight group-hover:text-espresso/70 transition-colors">{res.studentName}</span>
-                                                        <span className="text-[9px] font-black text-espresso/40 uppercase tracking-widest mt-1">ID: {res.studentId.slice(0, 12)}...</span>
+                                                        <span className="text-base font-serif font-black text-white !text-white uppercase tracking-tight group-hover:text-white/70 transition-colors">{res.studentName}</span>
+                                                        <span className="text-[9px] font-black text-white/20 !text-white/20 uppercase tracking-widest mt-1">ID: {res.studentId.slice(0, 12)}...</span>
                                                     </div>
                                                 </td>
                                                 <td className="px-8 py-6">
-                                                    <span className="text-[10px] font-black text-espresso/60 uppercase tracking-widest bg-espresso/5 px-3 py-1 rounded-lg border border-espresso/5 shadow-inner">{res.moduleName}</span>
+                                                    <span className="text-[10px] font-black text-white/60 !text-white/60 uppercase tracking-widest bg-white/10 px-3 py-1 rounded-lg border border-white/5 shadow-inner">{res.moduleName}</span>
                                                 </td>
                                                 <td className="px-8 py-6 text-center">
                                                     <div className={cn(
@@ -456,7 +478,7 @@ export function Quizzes() {
                                                     </div>
                                                 </td>
                                                 <td className="px-8 py-6">
-                                                    <div className="flex items-center gap-2 text-[10px] font-black text-espresso/40 uppercase tracking-widest">
+                                                    <div className="flex items-center gap-2 text-[10px] font-black text-white/40 !text-white/40 uppercase tracking-widest">
                                                         <span className="material-symbols-outlined text-[18px]">calendar_today</span>
                                                         {res.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase()}
                                                     </div>
@@ -474,8 +496,8 @@ export function Quizzes() {
                                             <tr>
                                                 <td colSpan="5" className="px-8 py-24 text-center">
                                                     <div className="flex flex-col items-center gap-4 opacity-20">
-                                                        <span className="material-symbols-outlined text-6xl">database_off</span>
-                                                        <p className="text-[10px] font-black uppercase tracking-[0.5em]">No synchronization data found</p>
+                                                        <span className="material-symbols-outlined text-6xl text-white">database_off</span>
+                                                        <p className="text-[10px] font-black uppercase tracking-[0.5em] text-white">No synchronization data found</p>
                                                     </div>
                                                 </td>
                                             </tr>

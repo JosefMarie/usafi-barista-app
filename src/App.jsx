@@ -50,10 +50,8 @@ import { Students } from './pages/admin/Students';
 import { StudentDetails } from './pages/admin/StudentDetails';
 import { Categories } from './pages/admin/Categories';
 import { Quizzes } from './pages/admin/Quizzes';
-import { Announcements } from './pages/admin/Announcements';
 import { Testimonials as AdminTestimonials } from './pages/admin/Testimonials';
 import { ActivityLog } from './pages/admin/ActivityLog';
-import { Notifications } from './pages/admin/Notifications';
 import { SetupAdmin } from './pages/admin/SetupAdmin';
 import { ForumList } from './pages/forum/ForumList';
 import { CreatePost } from './pages/forum/CreatePost';
@@ -69,7 +67,6 @@ import { ManageModule } from './pages/admin/ManageModule';
 import { ManageLesson } from './pages/admin/ManageLesson';
 import { StudentChatList } from './pages/student/StudentChatList';
 import { ChatWindow } from './pages/student/ChatWindow';
-import { StudentNotifications } from './pages/student/StudentNotifications';
 import { StudentCourseView } from './pages/student/StudentCourseView';
 import { StudentOpportunities } from './pages/student/StudentOpportunities';
 import { CVBuilder } from './pages/student/CVBuilder';
@@ -166,7 +163,6 @@ function App() {
               <Route path="forum/:id" element={<PostDetails />} />
               <Route path="chat" element={<StudentChatList />} />
               <Route path="chat/:recipientId" element={<ChatWindow />} />
-              <Route path="notifications" element={<StudentNotifications />} />
               <Route path="courses/:courseId" element={<StudentCourseView />} />
             </Route>
 
@@ -186,10 +182,8 @@ function App() {
               <Route path="students/:id" element={<StudentDetails />} />
               <Route path="categories" element={<Categories />} />
               <Route path="quizzes" element={<Quizzes />} />
-              <Route path="announcements" element={<Announcements />} />
               <Route path="testimonials" element={<AdminTestimonials />} />
               <Route path="activity-log" element={<ActivityLog />} />
-              <Route path="notifications" element={<Notifications />} />
               <Route path="opportunities" element={<AdminOpportunities />} />
               <Route path="seekers" element={<AdminSeekers />} />
               <Route path="business/users" element={<AdminBusinessUsers />} />

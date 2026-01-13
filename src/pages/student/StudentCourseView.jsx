@@ -388,7 +388,7 @@ export function StudentCourseView() {
                         <span className="material-symbols-outlined text-[18px] md:text-[24px]">arrow_back</span>
                     </button>
                     <div className="min-w-0 flex-1">
-                        <h1 className="font-serif font-bold text-espresso dark:text-white text-sm md:text-xl leading-tight truncate">{module.title}</h1>
+                        <h1 className="inline-block bg-espresso text-white px-3 py-1 md:px-5 md:py-1.5 rounded-lg md:rounded-xl font-serif font-bold text-xs md:text-xl leading-tight truncate max-w-full shadow-sm">{module.title}</h1>
                         <div className="flex items-center gap-2 md:gap-4 mt-1">
                             <div className="w-12 md:w-32 h-1 md:h-2 bg-espresso/10 dark:bg-white/10 rounded-full overflow-hidden shadow-inner">
                                 <div className="h-full bg-espresso transition-all duration-1000 ease-out" style={{ width: `${showQuiz ? 100 : progressPercent}%` }} />

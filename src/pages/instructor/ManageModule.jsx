@@ -169,7 +169,7 @@ export function InstructorManageModule() {
                         <span className="material-symbols-outlined text-[20px] md:text-[24px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
                     </button>
                     <div className="flex-1 w-full">
-                        <h1 className="text-xl md:text-3xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none">{module?.title}</h1>
+                        <h1 className="inline-block bg-espresso text-white px-3 py-1 md:px-6 md:py-2 rounded-lg md:rounded-2xl text-base md:text-3xl font-serif font-black uppercase tracking-tight leading-none shadow-sm">{module?.title}</h1>
                         <p className="text-[9px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] mt-1 md:mt-2">Instructional Data Review</p>
                     </div>
                 </div>

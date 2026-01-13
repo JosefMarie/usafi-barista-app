@@ -148,21 +148,21 @@ export function InstructorManageCourse() {
                             <div
                                 key={item.id}
                                 onClick={() => navigate(`/instructor/courses/${courseId}/modules/${item.id}`)}
-                                className="bg-white/40 dark:bg-black/20 p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-lg border border-espresso/10 hover:shadow-xl hover:border-espresso transition-all cursor-pointer group flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative overflow-hidden"
+                                className="bg-espresso p-4 md:p-6 rounded-2xl md:rounded-3xl shadow-lg border border-white/10 hover:shadow-xl hover:border-white/20 transition-all cursor-pointer group flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative overflow-hidden"
                             >
-                                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/5 group-hover:bg-espresso transition-colors"></div>
+                                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-white/20 group-hover:bg-white transition-colors"></div>
                                 <div className="flex items-center gap-4 md:gap-6 pl-2">
-                                    <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-espresso/5 flex items-center justify-center text-espresso group-hover:bg-espresso group-hover:text-white transition-all shadow-inner border border-espresso/5 shrink-0">
+                                    <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-white/10 flex items-center justify-center text-white group-hover:bg-white group-hover:text-espresso transition-all shadow-inner border border-white/5 shrink-0">
                                         <span className="material-symbols-outlined text-2xl md:text-3xl">play_circle</span>
                                     </div>
                                     <div>
-                                        <h4 className="font-serif text-lg md:text-xl font-black text-espresso dark:text-white tracking-tight leading-none">
+                                        <h4 className="font-serif text-lg md:text-xl font-black text-white tracking-tight leading-none">
                                             {item.title || 'Untitled Node'}
                                         </h4>
                                         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mt-2 md:mt-3">
                                             <div className="flex items-center gap-2" title="Content Slides">
-                                                <span className="material-symbols-outlined text-[14px] text-espresso/40 dark:text-white/40">auto_stories</span>
-                                                <span className="text-[9px] font-black text-espresso/60 dark:text-white/60 uppercase tracking-wider">
+                                                <span className="material-symbols-outlined text-[14px] text-white/40">auto_stories</span>
+                                                <span className="text-[9px] font-black text-white/60 uppercase tracking-wider">
                                                     {item.content?.length || 0} Slides
                                                 </span>
                                             </div>
@@ -170,28 +170,28 @@ export function InstructorManageCourse() {
                                             <div className="flex items-center gap-2" title="Quiz Questions">
                                                 <span className={cn(
                                                     "material-symbols-outlined text-[14px]",
-                                                    (item.quiz?.questions?.length > 0) ? "text-espresso/40 dark:text-white/40" : "text-espresso/20"
+                                                    (item.quiz?.questions?.length > 0) ? "text-white/40" : "text-white/20"
                                                 )}>
                                                     quiz
                                                 </span>
                                                 <span className={cn(
                                                     "text-[9px] font-black uppercase tracking-wider",
-                                                    (item.quiz?.questions?.length > 0) ? "text-espresso/60 dark:text-white/60" : "text-espresso/30"
+                                                    (item.quiz?.questions?.length > 0) ? "text-white/60" : "text-white/30"
                                                 )}>
                                                     {item.quiz?.questions?.length || 0} Qs
                                                 </span>
                                             </div>
 
-                                            <span className="hidden sm:inline w-1 h-1 rounded-full bg-espresso/20"></span>
-                                            <p className="text-[9px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest whitespace-nowrap">Status: {item.status || 'Active'}</p>
+                                            <span className="hidden sm:inline w-1 h-1 rounded-full bg-white/20"></span>
+                                            <p className="text-[9px] font-black text-white/40 uppercase tracking-widest whitespace-nowrap">Status: {item.status || 'Active'}</p>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-between sm:justify-end gap-6 sm:pr-4 pl-16 sm:pl-0">
-                                    <span className="text-[8px] md:text-[10px] font-black text-espresso uppercase tracking-[0.3em] group-hover:opacity-100 transition-all sm:translate-x-4 sm:group-hover:translate-x-0">
+                                    <span className="text-[8px] md:text-[10px] font-black text-white/60 uppercase tracking-[0.3em] group-hover:opacity-100 transition-all sm:translate-x-4 sm:group-hover:translate-x-0">
                                         VIEW NOTES
                                     </span>
-                                    <span className="material-symbols-outlined text-espresso/40 group-hover:text-espresso transition-colors">chevron_right</span>
+                                    <span className="material-symbols-outlined text-white/40 group-hover:text-white transition-colors">chevron_right</span>
                                 </div>
                             </div>
                         ))

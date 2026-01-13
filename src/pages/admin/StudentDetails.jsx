@@ -360,60 +360,64 @@ export function StudentDetails() {
                                 </div>
                                 <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em]">Initialize Comms</span>
                             </button>
-                            <button
-                                onClick={() => setIsEditing(true)}
-                                className="flex flex-col items-center gap-3 md:gap-4 p-6 md:p-8 bg-white/40 dark:bg-black/20 border border-espresso/10 text-espresso dark:text-white rounded-[1.5rem] md:rounded-[2rem] shadow-xl hover:-translate-y-1 transition-all active:scale-95 group/btn"
-                            >
-                                <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-espresso flex items-center justify-center text-white transition-all group-hover/btn:scale-110">
-                                    <span className="material-symbols-outlined text-2xl md:text-3xl">edit_note</span>
-                                </div>
-                                <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em]">Modify Schema</span>
-                            </button>
+                            {isAdmin && (
+                                <button
+                                    onClick={() => setIsEditing(true)}
+                                    className="flex flex-col items-center gap-3 md:gap-4 p-6 md:p-8 bg-white/40 dark:bg-black/20 border border-espresso/10 text-espresso dark:text-white rounded-[1.5rem] md:rounded-[2rem] shadow-xl hover:-translate-y-1 transition-all active:scale-95 group/btn"
+                                >
+                                    <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-espresso flex items-center justify-center text-white transition-all group-hover/btn:scale-110">
+                                        <span className="material-symbols-outlined text-2xl md:text-3xl">edit_note</span>
+                                    </div>
+                                    <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em]">Modify Schema</span>
+                                </button>
+                            )}
                             <div className="flex flex-col gap-3 sm:col-span-2 lg:col-span-1">
-                                {student.status === 'suspended' ? (
-                                    <button
-                                        onClick={async () => {
-                                            if (window.confirm('Resume this student? They will regain access.')) {
-                                                await updateDoc(doc(db, 'users', id), { status: 'active' });
-                                                setStudent(prev => ({ ...prev, status: 'active' }));
+                                {isAdmin && (
+                                    student.status === 'suspended' ? (
+                                        <button
+                                            onClick={async () => {
+                                                if (window.confirm('Resume this student? They will regain access.')) {
+                                                    await updateDoc(doc(db, 'users', id), { status: 'active' });
+                                                    setStudent(prev => ({ ...prev, status: 'active' }));
 
-                                                await addDoc(collection(db, 'activity'), {
-                                                    userId: id,
-                                                    userName: student.fullName || student.name || student.email,
-                                                    action: `Resumed operational node: ${student.fullName}`,
-                                                    type: 'admin_resume',
-                                                    icon: 'play_circle',
-                                                    timestamp: serverTimestamp()
-                                                });
-                                            }
-                                        }}
-                                        className="h-full flex items-center justify-center gap-4 p-4 bg-green-500 text-white rounded-xl md:rounded-[2rem] shadow-xl hover:bg-green-600 active:scale-95 transition-all group/btn min-h-[5rem]"
-                                    >
-                                        <span className="material-symbols-outlined text-3xl">play_circle</span>
-                                        <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em]">Resume Node</span>
-                                    </button>
-                                ) : (
-                                    <button
-                                        onClick={async () => {
-                                            if (window.confirm('Suspend this student for non-payment? They will lose dashboard access.')) {
-                                                await updateDoc(doc(db, 'users', id), { status: 'suspended' });
-                                                setStudent(prev => ({ ...prev, status: 'suspended' }));
+                                                    await addDoc(collection(db, 'activity'), {
+                                                        userId: id,
+                                                        userName: student.fullName || student.name || student.email,
+                                                        action: `Resumed operational node: ${student.fullName}`,
+                                                        type: 'admin_resume',
+                                                        icon: 'play_circle',
+                                                        timestamp: serverTimestamp()
+                                                    });
+                                                }
+                                            }}
+                                            className="h-full flex items-center justify-center gap-4 p-4 bg-green-500 text-white rounded-xl md:rounded-[2rem] shadow-xl hover:bg-green-600 active:scale-95 transition-all group/btn min-h-[5rem]"
+                                        >
+                                            <span className="material-symbols-outlined text-3xl">play_circle</span>
+                                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em]">Resume Node</span>
+                                        </button>
+                                    ) : (
+                                        <button
+                                            onClick={async () => {
+                                                if (window.confirm('Suspend this student for non-payment? They will lose dashboard access.')) {
+                                                    await updateDoc(doc(db, 'users', id), { status: 'suspended' });
+                                                    setStudent(prev => ({ ...prev, status: 'suspended' }));
 
-                                                await addDoc(collection(db, 'activity'), {
-                                                    userId: id,
-                                                    userName: student.fullName || student.name || student.email,
-                                                    action: `Suspended operational node: ${student.fullName}`,
-                                                    type: 'admin_suspend',
-                                                    icon: 'pause_circle',
-                                                    timestamp: serverTimestamp()
-                                                });
-                                            }
-                                        }}
-                                        className="h-full flex items-center justify-center gap-4 p-4 bg-amber-500 text-white rounded-xl md:rounded-[2rem] shadow-xl hover:bg-amber-600 active:scale-95 transition-all group/btn min-h-[5rem]"
-                                    >
-                                        <span className="material-symbols-outlined text-3xl">pause_circle</span>
-                                        <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em]">Suspend Node</span>
-                                    </button>
+                                                    await addDoc(collection(db, 'activity'), {
+                                                        userId: id,
+                                                        userName: student.fullName || student.name || student.email,
+                                                        action: `Suspended operational node: ${student.fullName}`,
+                                                        type: 'admin_suspend',
+                                                        icon: 'pause_circle',
+                                                        timestamp: serverTimestamp()
+                                                    });
+                                                }
+                                            }}
+                                            className="h-full flex items-center justify-center gap-4 p-4 bg-amber-500 text-white rounded-xl md:rounded-[2rem] shadow-xl hover:bg-amber-600 active:scale-95 transition-all group/btn min-h-[5rem]"
+                                        >
+                                            <span className="material-symbols-outlined text-3xl">pause_circle</span>
+                                            <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em]">Suspend Node</span>
+                                        </button>
+                                    )
                                 )}
                             </div>
                         </div>

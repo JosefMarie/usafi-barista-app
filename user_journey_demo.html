@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usafi Barista Training Center - User Journey Demo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --espresso: #3D2817;
+            --cream: #F5DEB3;
+            --primary: #8B4513;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--espresso);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--espresso) 0%, #5D4037 100%);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 900;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .nav-pills {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .nav-pill {
+            padding: 0.75rem 1.5rem;
+            background: var(--cream);
+            border: 2px solid transparent;
+            border-radius: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-pill:hover {
+            background: var(--espresso);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .nav-pill.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--espresso);
+        }
+
+        .section {
+            display: none;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--espresso);
+            border-left: 6px solid var(--primary);
+            padding-left: 1.5rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, var(--cream) 0%, #FAF0E6 100%);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            border: 2px solid #E8D5B7;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: var(--espresso);
+        }
+
+        .feature-desc {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .flow-diagram {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .flow-steps {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .flow-step {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border: 2px solid rgba(255,255,255,0.3);
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .flow-arrow {
+            font-size: 2rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: var(--success);
+            color: white;
+            border-radius: 2rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border-left: 6px solid #d63031;
+            margin: 1.5rem 0;
+        }
+
+        ul {
+            margin: 1rem 0 1rem 2rem;
+        }
+
+        li {
+            margin: 0.5rem 0;
+            color: #555;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.75rem;
+            }
+
+            .nav-pills {
+                flex-direction: column;
+            }
+
+            .flow-steps {
+                flex-direction: column;
+            }
+
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎓 Usafi Barista Training Center</h1>
+            <p class="subtitle">Interactive User Journey Demo - Public & Student Experience</p>
+        </header>
+
+        <div class="nav-pills">
+            <button class="nav-pill active" onclick="showSection('overview')">
+                <span class="material-symbols-outlined">home</span>
+                Overview
+            </button>
+            <button class="nav-pill" onclick="showSection('public')">
+                <span class="material-symbols-outlined">public</span>
+                Public Pages
+            </button>
+            <button class="nav-pill" onclick="showSection('enrollment')">
+                <span class="material-symbols-outlined">edit_note</span>
+                Enrollment
+            </button>
+            <button class="nav-pill" onclick="showSection('student')">
+                <span class="material-symbols-outlined">school</span>
+                Student Portal
+            </button>
+            <button class="nav-pill" onclick="showSection('features')">
+                <span class="material-symbols-outlined">star</span>
+                Key Features
+            </button>
+        </div>
+
+        <!-- Overview Section -->
+        <div id="overview" class="section active">
+            <h2>Welcome to the User Journey Demo</h2>
+            <p style="font-size: 1.1rem; margin-bottom: 2rem;">Explore how regular users interact with the Usafi Barista Training Center platform. This demo focuses on <strong>public-facing pages</strong> and the <strong>student portal experience</strong>.</p>
+
+            <div class="highlight-box">
+                <strong>🎯 What's Covered:</strong> Public website navigation, student registration, learning portal, job opportunities, and certifications.
+            </div>
+
+            <h3><span class="material-symbols-outlined">route</span>Typical Student Journey</h3>
+            <div class="flow-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <strong>1. Discover</strong><br>
+                        Browse site
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <strong>2. Enroll</strong><br>
+                        Apply
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <strong>3. Learn</strong><br>
+                        Take courses
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <strong>4. Graduate</strong><br>
+                        Get certified
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <strong>5. Career</strong><br>
+                        Find job
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <div class="feature-title">Public Website</div>
+                    <div class="feature-desc">Courses, team, equipment, and contact info</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📝</div>
+                    <div class="feature-title">Easy Enrollment</div>
+                    <div class="feature-desc">Simple application with course selection</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <div class="feature-title">Learning Portal</div>
+                    <div class="feature-desc">Modules, quizzes, and live sessions</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎓</div>
+                    <div class="feature-title">Certifications</div>
+                    <div class="feature-desc">Downloadable PDF certificates</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💼</div>
+                    <div class="feature-title">Job Board</div>
+                    <div class="feature-desc">Browse and apply to positions</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <div class="feature-title">CV Builder</div>
+                    <div class="feature-desc">Create professional resumes</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Public Pages Section -->
+        <div id="public" class="section">
+            <h2>Public Website Pages</h2>
+            <p>Accessible to everyone without login:</p>
+
+            <h3><span class="material-symbols-outlined">home</span>Home Page</h3>
+            <p><span class="badge">URL: /</span></p>
+            <ul>
+                <li>Hero section with call-to-action</li>
+                <li>Mission statement</li>
+                <li>Prominent "Apply Now" button</li>
+            </ul>
+
+            <h3><span class="material-symbols-outlined">info</span>About Page</h3>
+            <p><span class="badge">URL: /about</span></p>
+            <ul>
+                <li>Auto-rotating image slider</li>
+                <li>Team member profiles</li>
+                <li>Student testimonials</li>
+            </ul>
+
+            <h3><span class="material-symbols-outlined">menu_book</span>Courses</h3>
+            <p><span class="badge">URL: /courses</span></p>
+            <ul>
+                <li>"Bean to Brew" certification program</li>
+                <li>Course details and duration</li>
+            </ul>
+
+            <h3><span class="material-symbols-outlined">coffee_maker</span>Equipment</h3>
+            <p><span class="badge">URL: /equipment</span></p>
+            <ul>
+                <li>Professional espresso machines gallery</li>
+                <li>Hands-on training information</li>
+            </ul>
+
+            <h3><span class="material-symbols-outlined">work</span>Opportunities</h3>
+            <p><span class="badge">URL: /opportunities</span></p>
+            <ul>
+                <li>Job listings from partner cafés</li>
+                <li>Post opportunities (employers)</li>
+            </ul>
+
+            <h3><span class="material-symbols-outlined">mail</span>Contact</h3>
+            <p><span class="badge">URL: /contact</span></p>
+            <ul>
+                <li>Contact form</li>
+                <li>Address and map</li>
+            </ul>
+        </div>
+
+        <!-- Enrollment Section -->
+        <div id="enrollment" class="section">
+            <h2>Student Enrollment</h2>
+            <p><span class="badge">URL: /enrollment</span></p>
+
+            <div class="highlight-box">
+                <strong>📝 Multi-step registration</strong> for new students
+            </div>
+
+            <h3>Step 1: Personal Info</h3>
+            <ul>
+                <li>Full Name, Email, Phone</li>
+                <li>Date of Birth, Address</li>
+            </ul>
+
+            <h3>Step 2: Course Selection</h3>
+            <ul>
+                <li>Choose course (e.g., "Bean to Brew")</li>
+                <li>Study method: Online or On-site</li>
+            </ul>
+
+            <h3>Step 3: Schedule</h3>
+            <ul>
+                <li>Shift: Morning/Afternoon/Evening</li>
+                <li>Preferred start date</li>
+            </ul>
+
+            <div class="flow-diagram">
+                <h4>After Submission</h4>
+                <div class="flow-steps">
+                    <div class="flow-step">Admin review</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">Approval</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">Account active</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">Login</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Portal Section -->
+        <div id="student" class="section">
+            <h2>Student Portal</h2>
+            <p>Personalized learning environment after login:</p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-title">Dashboard</div>
+                    <div class="feature-desc">Stats, activity feed, quick actions</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <div class="feature-title">My Courses</div>
+                    <div class="feature-desc">Progress, modules, quiz scores</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎥</div>
+                    <div class="feature-title">E-Learning</div>
+                    <div class="feature-desc">Live Zoom, recordings, calendar</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <div class="feature-title">Certificates</div>
+                    <div class="feature-desc">Download earned PDFs</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📄</div>
+                    <div class="feature-title">CV Builder</div>
+                    <div class="feature-desc">Resume creator with export</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💼</div>
+                    <div class="feature-title">Jobs</div>
+                    <div class="feature-desc">Browse, apply, track status</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <div class="feature-title">Forum</div>
+                    <div class="feature-desc">Discuss with peers and instructors</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚙️</div>
+                    <div class="feature-title">Settings</div>
+                    <div class="feature-desc">Profile, language, dark mode</div>
+                </div>
+            </div>
+
+            <h3>Learning Flow</h3>
+            <div class="flow-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">Module</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">Slides</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">Quiz</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">Pass</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">Certificate</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div id="features" class="section">
+            <h2>Key Features</h2>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-title">🎨 Premium Design</div>
+                    <div class="feature-desc">Glassmorphism, gradients, animations</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-title">🌙 Dark Mode</div>
+                    <div class="feature-desc">Eye-friendly theme toggle</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-title">🌍 Multi-language</div>
+                    <div class="feature-desc">English, French, Kinyarwanda</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-title">📱 Responsive</div>
+                    <div class="feature-desc">Mobile, tablet, desktop optimized</div>
+                </div>
+            </div>
+
+            <h3>Interactive Elements</h3>
+            <ul>
+                <li>Auto-rotating image sliders</li>
+                <li>Progress bars and charts</li>
+                <li>Calendar views</li>
+                <li>Search and filters</li>
+                <li>Real-time notifications</li>
+            </ul>
+
+            <div class="highlight-box">
+                <strong>📱 Mobile:</strong> Hamburger menu, touch-friendly buttons, single-column layouts
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>Usafi Barista Training Center</strong></p>
+            <p style="margin-top: 0.5rem; opacity: 0.7;">Interactive User Journey Demo</p>
+        </footer>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            document.querySelectorAll('.nav-pill').forEach(pill => {
+                pill.classList.remove('active');
+            });
+
+            document.getElementById(sectionId).classList.add('active');
+            event.target.closest('.nav-pill').classList.add('active');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

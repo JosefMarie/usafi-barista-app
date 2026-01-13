@@ -17,6 +17,8 @@ export function SetupAdmin() {
         role: 'instructor',
         accessKey: ''
     });
+    const [showPassword, setShowPassword] = useState(false);
+    const [showAccessKey, setShowAccessKey] = useState(false);
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState({ type: '', message: '' });
 
@@ -154,15 +156,26 @@ export function SetupAdmin() {
                             <label className="block text-sm font-bold text-primary mb-1">
                                 Access Key <span className="text-red-500">*</span>
                             </label>
-                            <input
-                                name="accessKey"
-                                type="password"
-                                required
-                                placeholder="Enter Staff Key"
-                                className="block w-full px-3 py-2 border border-gray-300 dark:border-white/10 rounded-lg bg-white dark:bg-black/20 focus:outline-none focus:ring-2 focus:ring-primary"
-                                value={formData.accessKey}
-                                onChange={handleChange}
-                            />
+                            <div className="relative">
+                                <input
+                                    name="accessKey"
+                                    type={showAccessKey ? "text" : "password"}
+                                    required
+                                    placeholder="Enter Staff Key"
+                                    className="block w-full px-3 py-2 pr-10 border border-gray-300 dark:border-white/10 rounded-lg bg-white dark:bg-black/20 focus:outline-none focus:ring-2 focus:ring-primary"
+                                    value={formData.accessKey}
+                                    onChange={handleChange}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowAccessKey(!showAccessKey)}
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-primary/40 hover:text-primary transition-colors"
+                                >
+                                    <span className="material-symbols-outlined text-[20px]">
+                                        {showAccessKey ? 'visibility_off' : 'visibility'}
+                                    </span>
+                                </button>
+                            </div>
                         </div>
                     )}
 
@@ -199,16 +212,27 @@ export function SetupAdmin() {
 
                         <div>
                             <label className="block text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-2 ml-1">Password</label>
-                            <input
-                                name="password"
-                                type="password"
-                                required
-                                minLength="6"
-                                className="block w-full px-4 md:px-5 py-3 md:py-4 border border-espresso/10 rounded-xl md:rounded-2xl bg-white/50 dark:bg-white/5 focus:outline-none focus:ring-2 focus:ring-espresso text-espresso dark:text-white placeholder:text-espresso/20 text-sm"
-                                placeholder="Min. 6 characters"
-                                value={formData.password}
-                                onChange={handleChange}
-                            />
+                            <div className="relative">
+                                <input
+                                    name="password"
+                                    type={showPassword ? "text" : "password"}
+                                    required
+                                    minLength="6"
+                                    className="block w-full px-4 md:px-5 py-3 md:py-4 pr-12 md:pr-14 border border-espresso/10 rounded-xl md:rounded-2xl bg-white/50 dark:bg-white/5 focus:outline-none focus:ring-2 focus:ring-espresso text-espresso dark:text-white placeholder:text-espresso/20 text-sm"
+                                    placeholder="Min. 6 characters"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-espresso/40 hover:text-espresso transition-colors"
+                                >
+                                    <span className="material-symbols-outlined text-[20px]">
+                                        {showPassword ? 'visibility_off' : 'visibility'}
+                                    </span>
+                                </button>
+                            </div>
                         </div>
 
                         {mode === 'register' && (

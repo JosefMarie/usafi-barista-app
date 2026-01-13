@@ -18,7 +18,6 @@ export function StudentLayout() {
     const location = useLocation();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [totalUnread, setTotalUnread] = useState(0);
-    const [unreadNotifications, setUnreadNotifications] = useState(0);
     const [newForumPosts, setNewForumPosts] = useState(0);
 
     // Global Unread Listener for Sidebar Badge (Chat)
@@ -43,22 +42,6 @@ export function StudentLayout() {
         return () => unsubscribe();
     }, [user]);
 
-    // Global Unread Listener for Notifications
-    useEffect(() => {
-        if (!user) return;
-
-        const q = query(
-            collection(db, 'notifications'),
-            where('recipientId', '==', user.uid),
-            where('read', '==', false)
-        );
-
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            setUnreadNotifications(snapshot.size);
-        });
-
-        return () => unsubscribe();
-    }, [user]);
 
     // Forum New Posts Listener
     useEffect(() => {
@@ -98,7 +81,6 @@ export function StudentLayout() {
         { name: 'Certificates', path: '/student/certificates', icon: 'workspace_premium' },
         { name: 'Forum', path: '/student/forum', icon: 'forum', badge: newForumPosts },
         { name: 'Class Chat', path: '/student/chat', icon: 'chat', badge: totalUnread },
-        { name: 'Notifications', path: '/student/notifications', icon: 'notifications', badge: unreadNotifications },
         { name: 'Profile', path: '/student/profile', icon: 'person' },
     ];
 
@@ -206,7 +188,6 @@ export function StudentLayout() {
 
                 <PortalTopBar
                     user={user}
-                    unreadNotifications={unreadNotifications}
                     onLogout={handleLogout}
                     onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 />

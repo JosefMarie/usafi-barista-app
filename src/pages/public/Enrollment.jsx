@@ -17,6 +17,7 @@ export function Enrollment() {
         shift: '',
         referral: ''
     });
+    const [showPassword, setShowPassword] = useState(false);
     const [loadingMessage, setLoadingMessage] = useState(''); // Changed from boolean to string/empty checks
     const [error, setError] = useState('');
 
@@ -208,17 +209,28 @@ export function Enrollment() {
                             <label htmlFor="password" className="block text-espresso dark:text-white font-bold mb-2">
                                 {t('enrollment.form.password.label')} <span className="text-red-500">*</span>
                             </label>
-                            <input
-                                type="password"
-                                id="password"
-                                name="password"
-                                required
-                                minLength="6"
-                                className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:border-espresso focus:ring-1 focus:ring-espresso outline-none transition-all"
-                                placeholder={t('enrollment.form.password.placeholder')}
-                                value={formData.password}
-                                onChange={handleChange}
-                            />
+                            <div className="relative">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    id="password"
+                                    name="password"
+                                    required
+                                    minLength="6"
+                                    className="w-full px-4 py-3 pr-12 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:border-espresso focus:ring-1 focus:ring-espresso outline-none transition-all"
+                                    placeholder={t('enrollment.form.password.placeholder')}
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-espresso/40 hover:text-espresso transition-colors"
+                                >
+                                    <span className="material-symbols-outlined text-[20px]">
+                                        {showPassword ? 'visibility_off' : 'visibility'}
+                                    </span>
+                                </button>
+                            </div>
                             <p className="text-xs text-espresso/50 dark:text-white/50 mt-1">
                                 {t('enrollment.form.password.hint')}
                             </p>

@@ -139,29 +139,29 @@ export function AdminCourses() {
                         <div
                             key={module.id}
                             onClick={() => navigate(`/admin/courses/${BEAN_TO_BREW_ID}/modules/${module.id}`)}
-                            className="bg-white/40 dark:bg-black/20 p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-espresso/10 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all cursor-pointer group relative overflow-hidden"
+                            className="bg-espresso p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-white/10 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all cursor-pointer group relative overflow-hidden"
                         >
-                            <div className="absolute top-0 left-0 bottom-0 w-2 bg-espresso/10 group-hover:bg-espresso transition-colors"></div>
+                            <div className="absolute top-0 left-0 bottom-0 w-2 bg-white/20 group-hover:bg-white transition-colors"></div>
 
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pl-2 md:pl-6">
                                 <div className="flex-1">
-                                    <h3 className="font-serif text-xl md:text-2xl font-black text-espresso dark:text-white mb-3 tracking-tight group-hover:text-espresso/80 transition-colors">
+                                    <h3 className="font-serif text-xl md:text-2xl font-black text-white mb-3 tracking-tight group-hover:text-white/90 transition-colors">
                                         {module.title}
                                     </h3>
                                     <div className="flex flex-wrap items-center gap-2 md:gap-4">
-                                        <div className="flex items-center gap-2 text-[8px] md:text-[10px] text-espresso/60 dark:text-white/60 font-black uppercase tracking-widest bg-white/40 dark:bg-black/20 px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl border border-espresso/5 shadow-inner">
+                                        <div className="flex items-center gap-2 text-[8px] md:text-[10px] text-white/70 font-black uppercase tracking-widest bg-white/10 px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl border border-white/5 shadow-inner">
                                             <span className="material-symbols-outlined text-[14px] md:text-[16px]">layers</span>
                                             {module.content?.length || 0} Assets
                                         </div>
-                                        <div className="flex items-center gap-2 text-[8px] md:text-[10px] text-espresso/60 dark:text-white/60 font-black uppercase tracking-widest bg-white/40 dark:bg-black/20 px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl border border-espresso/5 shadow-inner">
+                                        <div className="flex items-center gap-2 text-[8px] md:text-[10px] text-white/70 font-black uppercase tracking-widest bg-white/10 px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl border border-white/5 shadow-inner">
                                             <span className="material-symbols-outlined text-[14px] md:text-[16px]">groups_2</span>
                                             {module.assignedStudents?.length || 0} Participants
                                         </div>
                                         <div className={cn(
                                             "flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[8px] md:text-[10px] font-black uppercase tracking-widest border shadow-sm",
                                             module.status === 'published'
-                                                ? "text-green-600 bg-green-50/50 border-green-200"
-                                                : "text-amber-600 bg-amber-50/50 border-amber-200"
+                                                ? "text-green-400 bg-green-400/10 border-green-400/20"
+                                                : "text-amber-400 bg-amber-400/10 border-amber-400/20"
                                         )}>
                                             <span className="material-symbols-outlined text-[12px] md:text-[14px]">
                                                 {module.status === 'published' ? 'verified' : 'pending'}
@@ -172,10 +172,10 @@ export function AdminCourses() {
                                 </div>
 
                                 <div className="flex items-center justify-between sm:justify-end gap-6">
-                                    <span className="text-[8px] md:text-[10px] font-black text-espresso uppercase tracking-[0.3em] group-hover:opacity-100 transition-all sm:translate-x-4 sm:group-hover:translate-x-0">
+                                    <span className="text-[8px] md:text-[10px] font-black text-white/40 uppercase tracking-[0.3em] group-hover:opacity-100 transition-all sm:translate-x-4 sm:group-hover:translate-x-0">
                                         CONFIGURE NODE
                                     </span>
-                                    <div className="h-12 w-12 md:h-14 md:w-14 rounded-xl md:rounded-2xl bg-espresso text-white flex items-center justify-center transition-all shadow-xl hover:scale-110 active:scale-95 group-hover:shadow-espresso/40">
+                                    <div className="h-12 w-12 md:h-14 md:w-14 rounded-xl md:rounded-2xl bg-white text-espresso flex items-center justify-center transition-all shadow-xl hover:scale-110 active:scale-95 group-hover:shadow-white/20">
                                         <span className="material-symbols-outlined text-[20px] md:text-[24px]">settings_input_component</span>
                                     </div>
                                 </div>

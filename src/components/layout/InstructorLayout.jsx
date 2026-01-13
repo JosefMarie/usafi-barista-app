@@ -11,25 +11,12 @@ import { Footer } from './Footer';
 export function InstructorLayout() {
     const { t } = useTranslation();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [unreadCount, setUnreadCount] = useState(0);
     const [newForumPosts, setNewForumPosts] = useState(0);
+    const [unreadCount, setUnreadCount] = useState(0);
     const location = useLocation();
     const navigate = useNavigate();
     const { user, logout } = useAuth();
 
-    // Listen for unread notifications for instructor (if any)
-    React.useEffect(() => {
-        if (!user) return;
-        const q = query(
-            collection(db, 'notifications'),
-            where('recipientId', '==', user.uid),
-            where('read', '==', false)
-        );
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            setUnreadCount(snapshot.size);
-        });
-        return () => unsubscribe();
-    }, [user]);
 
     // Forum New Posts Listener
     React.useEffect(() => {
@@ -46,6 +33,23 @@ export function InstructorLayout() {
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const newPosts = snapshot.docs.filter(doc => doc.data().authorId !== user.uid);
             setNewForumPosts(newPosts.length);
+        });
+
+        return () => unsubscribe();
+    }, [user]);
+
+    // Unread Messages Listener
+    React.useEffect(() => {
+        if (!user) return;
+
+        const q = query(
+            collection(db, 'chats'),
+            where('recipientId', '==', user.uid),
+            where('read', '==', false)
+        );
+
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            setUnreadCount(snapshot.size);
         });
 
         return () => unsubscribe();
@@ -130,7 +134,6 @@ export function InstructorLayout() {
             <div className="flex-1 md:ml-64 min-w-0 flex flex-col">
                 <PortalTopBar
                     user={user}
-                    unreadNotifications={unreadCount}
                     onLogout={handleLogout}
                     onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 />

@@ -5,7 +5,7 @@ import { GlobalSearch } from '../common/GlobalSearch';
 
 import { LanguageSwitcher } from '../LanguageSwitcher';
 
-export function PortalTopBar({ user, unreadNotifications = 0, onLogout, onToggleMobileMenu }) {
+export function PortalTopBar({ user, onLogout, onToggleMobileMenu }) {
     const { t, i18n } = useTranslation();
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [currentTime, setCurrentTime] = useState(new Date());

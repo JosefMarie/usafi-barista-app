@@ -23,6 +23,7 @@ export function Instructors() {
 
     // Form states
     const [formData, setFormData] = useState({ name: '', email: '', password: '', status: 'active', tags: '' });
+    const [showPassword, setShowPassword] = useState(false);
     const [formLoading, setFormLoading] = useState(false);
     const [formError, setFormError] = useState('');
 
@@ -276,11 +277,11 @@ export function Instructors() {
                                 <div
                                     key={instructor.id}
                                     className={cn(
-                                        "bg-white/40 dark:bg-black/20 p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-espresso/10 shadow-xl flex flex-col md:flex-row md:items-center justify-between hover:shadow-2xl hover:-translate-y-1 transition-all group relative overflow-hidden gap-6",
+                                        "bg-espresso p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-white/10 shadow-xl flex flex-col md:flex-row md:items-center justify-between hover:shadow-2xl hover:-translate-y-1 transition-all group relative overflow-hidden gap-6",
                                         instructor.status === 'on_leave' && 'opacity-60'
                                     )}
                                 >
-                                    <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-espresso/5 group-hover:bg-espresso transition-colors"></div>
+                                    <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-white/20 group-hover:bg-white transition-colors"></div>
 
                                     <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-6 md:gap-8">
                                         <div className="relative shrink-0">
@@ -292,16 +293,16 @@ export function Instructors() {
                                                 />
                                             </div>
                                             <div className={cn(
-                                                "absolute -bottom-1 -right-1 h-5 w-5 md:h-6 md:w-6 rounded-full border-4 border-[#F5DEB3] dark:border-[#1c1916] shadow-sm",
+                                                "absolute -bottom-1 -right-1 h-5 w-5 md:h-6 md:w-6 rounded-full border-4 border-espresso shadow-sm",
                                                 instructor.status === 'active' ? 'bg-green-500' : 'bg-amber-400'
                                             )} />
                                         </div>
                                         <div className="space-y-1.5 md:space-y-2">
-                                            <h3 className="text-xl md:text-2xl font-serif font-black text-espresso dark:text-white leading-tight tracking-tight break-all uppercase">{instructor.name || instructor.email}</h3>
-                                            <p className="text-[9px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest break-all">{instructor.email}</p>
+                                            <h3 className="text-xl md:text-2xl font-serif font-black text-white leading-tight tracking-tight break-all uppercase">{instructor.name || instructor.email}</h3>
+                                            <p className="text-[9px] md:text-[10px] font-black text-white/40 uppercase tracking-widest break-all">{instructor.email}</p>
                                             <div className="flex flex-wrap justify-center sm:justify-start gap-2 mt-3 md:mt-4">
                                                 {(instructor.tags || []).map(tag => (
-                                                    <span key={tag} className="px-2 md:px-3 py-1 bg-white/60 dark:bg-black/30 text-[8px] md:text-[9px] font-black uppercase tracking-widest text-espresso/60 rounded-lg border border-espresso/5 shadow-inner">{tag}</span>
+                                                    <span key={tag} className="px-2 md:px-3 py-1 bg-white/10 text-[8px] md:text-[9px] font-black uppercase tracking-widest text-white/70 rounded-lg border border-white/5 shadow-inner">{tag}</span>
                                                 ))}
                                                 {instructor.status === 'on_leave' && (
                                                     <span className="px-2 md:px-3 py-1 bg-amber-500 text-white text-[8px] md:text-[9px] font-black uppercase tracking-widest rounded-lg shadow-sm">LEAVE OF ABSENCE</span>
@@ -310,29 +311,29 @@ export function Instructors() {
                                         </div>
                                     </div>
 
-                                    <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-end gap-4 md:gap-6 border-t md:border-t-0 border-espresso/5 pt-4 md:pt-0">
+                                    <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-end gap-4 md:gap-6 border-t md:border-t-0 border-white/5 pt-4 md:pt-0">
                                         <div className="flex gap-3 md:gap-4 items-center">
                                             <div className="flex flex-col items-end">
-                                                <span className="text-[8px] md:text-[9px] font-black text-espresso uppercase tracking-widest">{(instructor.assignedStudentIds || []).length} Participants</span>
-                                                <span className="text-[8px] md:text-[9px] font-black text-espresso/40 uppercase tracking-widest">{(instructor.assignedCourseIds || []).length} Schemata</span>
+                                                <span className="text-[8px] md:text-[9px] font-black text-white/80 uppercase tracking-widest">{(instructor.assignedStudentIds || []).length} Participants</span>
+                                                <span className="text-[8px] md:text-[9px] font-black text-white/40 uppercase tracking-widest">{(instructor.assignedCourseIds || []).length} Schemata</span>
                                             </div>
-                                            <div className="h-6 md:h-8 w-px bg-espresso/10"></div>
+                                            <div className="h-6 md:h-8 w-px bg-white/10"></div>
                                             <div className="flex gap-1.5 md:gap-2">
-                                                <button onClick={() => openCourseAssignModal(instructor)} className="w-9 h-9 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-white/60 hover:bg-espresso hover:text-white transition-all flex items-center justify-center shadow-sm active:scale-90" title="Assign Courses">
+                                                <button onClick={() => openCourseAssignModal(instructor)} className="w-9 h-9 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-white/10 hover:bg-white text-white/70 hover:text-espresso transition-all flex items-center justify-center shadow-sm active:scale-90 border border-white/5" title="Assign Courses">
                                                     <span className="material-symbols-outlined text-[18px] md:text-[20px]">hub</span>
                                                 </button>
-                                                <button onClick={() => openAssignModal(instructor)} className="w-9 h-9 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-white/60 hover:bg-espresso hover:text-white transition-all flex items-center justify-center shadow-sm active:scale-90" title="Assign Participants">
+                                                <button onClick={() => openAssignModal(instructor)} className="w-9 h-9 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-white/10 hover:bg-white text-white/70 hover:text-espresso transition-all flex items-center justify-center shadow-sm active:scale-90 border border-white/5" title="Assign Participants">
                                                     <span className="material-symbols-outlined text-[18px] md:text-[20px]">groups</span>
                                                 </button>
-                                                <button onClick={() => openEditModal(instructor)} className="w-9 h-9 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-white/60 hover:bg-espresso hover:text-white transition-all flex items-center justify-center shadow-sm active:scale-90" title="Modify Node">
+                                                <button onClick={() => openEditModal(instructor)} className="w-9 h-9 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-white/10 hover:bg-white text-white/70 hover:text-espresso transition-all flex items-center justify-center shadow-sm active:scale-90 border border-white/5" title="Modify Node">
                                                     <span className="material-symbols-outlined text-[18px] md:text-[20px]">edit_note</span>
                                                 </button>
-                                                <button onClick={() => openDeleteConfirm(instructor)} className="w-9 h-9 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition-all flex items-center justify-center shadow-sm active:scale-90" title="Decommission">
+                                                <button onClick={() => openDeleteConfirm(instructor)} className="w-9 h-9 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-red-400/20 text-red-400 hover:bg-red-500 hover:text-white transition-all flex items-center justify-center shadow-sm active:scale-90 border border-red-400/10" title="Decommission">
                                                     <span className="material-symbols-outlined text-[18px] md:text-[20px]">delete</span>
                                                 </button>
                                             </div>
                                         </div>
-                                        <span className="hidden sm:inline-block text-[8px] md:text-[9px] font-black text-espresso/20 italic uppercase tracking-widest">Node Verified Protocol 1.2</span>
+                                        <span className="hidden sm:inline-block text-[8px] md:text-[9px] font-black text-white/20 italic uppercase tracking-widest">Node Verified Protocol 1.2</span>
                                     </div>
                                 </div>
                             ))}
@@ -348,7 +349,24 @@ export function Instructors() {
                     <div className="space-y-3 md:space-y-4">
                         <InputGroup label="Identity Tag" placeholder="FULL NAME" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
                         <InputGroup label="Transmission Array" placeholder="EMAIL ADDRESS" type="email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} />
-                        <InputGroup label="Access Cipher" placeholder="PASSWORD" type="password" value={formData.password} onChange={e => setFormData({ ...formData, password: e.target.value })} />
+                        <div className="relative">
+                            <InputGroup
+                                label="Access Cipher"
+                                placeholder="PASSWORD"
+                                type={showPassword ? "text" : "password"}
+                                value={formData.password}
+                                onChange={e => setFormData({ ...formData, password: e.target.value })}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute inset-y-0 right-0 pr-4 flex items-center text-espresso/40 hover:text-espresso transition-colors pt-6"
+                            >
+                                <span className="material-symbols-outlined text-[20px]">
+                                    {showPassword ? 'visibility_off' : 'visibility'}
+                                </span>
+                            </button>
+                        </div>
                         <InputGroup label="Specialization Tags" placeholder="TAGS (COMMA SEPARATED)" value={formData.tags} onChange={e => setFormData({ ...formData, tags: e.target.value })} />
                         <div>
                             <label className="block text-[8px] md:text-[9px] font-black uppercase tracking-[0.3em] text-espresso/40 mb-1.5 md:mb-2 ml-1">DEPLOYMENT STATE</label>

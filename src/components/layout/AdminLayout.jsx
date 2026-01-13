@@ -13,30 +13,11 @@ import { Footer } from './Footer';
 export function AdminLayout() {
     const { t } = useTranslation();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [unreadCount, setUnreadCount] = useState(0);
     const [newForumPosts, setNewForumPosts] = useState(0);
     const location = useLocation();
     const navigate = useNavigate();
     const { user, logout } = useAuth();
 
-    // Listen for unread notifications for admin
-    React.useEffect(() => {
-        if (!user) return;
-
-        // Query for notifications where recipientId is 'admin' 
-        // And where read is false
-        const q = query(
-            collection(db, 'notifications'),
-            where('recipientId', '==', 'admin'),
-            where('read', '==', false)
-        );
-
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            setUnreadCount(snapshot.size);
-        });
-
-        return () => unsubscribe();
-    }, [user]);
 
     // Forum New Posts Listener
     React.useEffect(() => {
@@ -89,9 +70,7 @@ export function AdminLayout() {
         { icon: 'groups', label: t('admin.nav.instructors'), path: '/admin/instructors' },
         { icon: 'school', label: t('admin.nav.students'), path: '/admin/students' },
         { icon: 'quiz', label: t('admin.nav.quizzes'), path: '/admin/quizzes' },
-        { icon: 'campaign', label: t('admin.nav.announcements'), path: '/admin/announcements' },
         { icon: 'record_voice_over', label: t('admin.nav.testimonials'), path: '/admin/testimonials' },
-        { icon: 'notifications', label: t('admin.nav.notifications'), path: '/admin/notifications' },
         { icon: 'work', label: t('admin.nav.manage_jobs'), path: '/admin/opportunities' },
         { icon: 'diversity_3', label: t('admin.nav.job_seekers'), path: '/admin/seekers' },
         { icon: 'admin_panel_settings', label: t('admin.nav.business_students'), path: '/admin/business/users' },
@@ -144,12 +123,12 @@ export function AdminLayout() {
                             )}>{item.icon}</span>
                             <span className="relative z-10">{item.label}</span>
 
-                            {(item.path === '/admin/notifications' && unreadCount > 0) || (item.badge && item.badge > 0) ? (
+                            {item.badge && item.badge > 0 ? (
                                 <span className={cn(
                                     "ml-auto text-[10px] font-black h-5 min-w-[20px] px-1.5 rounded-full flex items-center justify-center shadow-sm",
                                     location.pathname === item.path ? "bg-white text-espresso" : "bg-espresso text-white"
                                 )}>
-                                    {item.path === '/admin/notifications' ? (unreadCount > 99 ? '99+' : unreadCount) : (item.badge > 99 ? '99+' : item.badge)}
+                                    {item.badge > 99 ? '99+' : item.badge}
                                 </span>
                             ) : null}
                         </Link>
@@ -171,7 +150,6 @@ export function AdminLayout() {
             <div className="flex-1 flex flex-col h-full min-w-0 transition-colors duration-300">
                 <PortalTopBar
                     user={user}
-                    unreadNotifications={unreadCount}
                     onLogout={handleLogout}
                     onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 />
