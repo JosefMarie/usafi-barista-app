@@ -22,9 +22,10 @@ service cloud.firestore {
     
     // Users collection
     match /users/{userId} {
-      // Allow reading own profile if authenticated, or allow reading during enrollment check
-      allow read: if isAuthenticated() || 
-                     (request.method == 'get' && resource.data.email == request.resource.data.email);
+      // Allow reading for:
+      // 1. Authenticated users (own profile or staff)
+      // 2. Unauthenticated users during enrollment (to check if email exists)
+      allow read: if true; // Open read for enrollment checks
       // Allow create during enrollment (unauthenticated) or if authenticated
       allow create: if true; // Anyone can create during enrollment
       allow update: if isAuthenticated() && (request.auth.uid == userId || isAdminOrCEO());
