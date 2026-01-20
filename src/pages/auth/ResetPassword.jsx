@@ -71,29 +71,28 @@ export function ResetPassword() {
         }
 
         try {
-            // NOTE: Client-side Firebase Auth CANNOT force-reset a user's password 
-            // without their old password or a special OOB code from Firebase.
-            // Since we built a custom flow, we lack the OOB code.
+            const { httpsCallable } = await import('firebase/functions');
+            const { functions } = await import('../../lib/firebase');
 
-            // WORKAROUND: We will simulate success and notify the user 
-            // that this is a demo of the custom email flow.
-            // To make this work for real, you would need a Firebase Cloud Function.
+            const finalizeReset = httpsCallable(functions, 'finalizePasswordReset');
 
-            // Mark token as used
-            const tokenDocRef = doc(db, 'password_reset_tokens', token);
-            await updateDoc(tokenDocRef, { used: true });
+            const result = await finalizeReset({
+                token: token,
+                newPassword: password
+            });
 
-            // For now, update user document to simulate a change (this doesn't change Auth password)
-            // Ideally call a Cloud Function here: await httpsCallable(functions, 'adminResetPassword')({ email, password });
-
-            setSuccess(true);
-            setTimeout(() => {
-                navigate('/login');
-            }, 3000);
+            if (result.data.success) {
+                setSuccess(true);
+                setTimeout(() => {
+                    navigate('/login');
+                }, 3000);
+            } else {
+                throw new Error(result.data.message || 'Failed to update password');
+            }
 
         } catch (err) {
             console.error('Reset error:', err);
-            setError('Failed to reset password. Please try again.');
+            setError(err.message || 'Failed to reset password. Please try again.');
         } finally {
             setSubmitting(false);
         }
