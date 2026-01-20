@@ -28,15 +28,22 @@ export function Testimonials() {
     useEffect(() => {
         const q = query(
             collection(db, 'testimonials'),
-            where('status', '==', 'approved'),
-            orderBy('createdAt', 'desc')
+            where('status', '==', 'approved')
         );
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const items = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
             }));
-            setDynamicTestimonials(items);
+
+            // Sort by createdAt on client side to avoid composite index requirement
+            const sortedItems = items.sort((a, b) => {
+                const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt);
+                const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt);
+                return dateB - dateA;
+            });
+
+            setDynamicTestimonials(sortedItems);
             setLoading(false);
         });
 
