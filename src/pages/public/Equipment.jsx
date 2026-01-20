@@ -1,12 +1,31 @@
+import React, { useState, useRef, useEffect } from 'react';
+import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
+import { db } from '../../lib/firebase';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
 import { GradientButton } from '../../components/ui/GradientButton';
 import { Newsletter } from '../../components/ui/Newsletter';
+import { SEO } from '../../components/common/SEO';
 
 export function Equipment() {
     const { t } = useTranslation();
     const [selectedImage, setSelectedImage] = useState(null);
+    const [dynamicEquipment, setDynamicEquipment] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const q = query(collection(db, 'equipment'), orderBy('createdAt', 'desc'));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const items = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            setDynamicEquipment(items);
+            setLoading(false);
+        });
+
+        return () => unsubscribe();
+    }, []);
 
     return (
         <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark font-display text-espresso dark:text-white pb-20 pt-24">
@@ -128,11 +147,11 @@ export function Equipment() {
                                         key={`${i}-${tool.id}`}
                                         className="w-[300px] md:w-[350px] bg-[#F5DEB3] dark:bg-white/5 rounded-2xl shadow-xl border border-espresso/5 overflow-hidden group shrink-0"
                                     >
-                                        <div 
+                                        <div
                                             className="h-48 relative cursor-pointer overflow-hidden"
                                             onClick={() => setSelectedImage(tool.image)}
                                         >
-                                            <div 
+                                            <div
                                                 className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
                                                 style={{ backgroundImage: `url("${tool.image}")` }}
                                             ></div>
@@ -159,6 +178,66 @@ export function Equipment() {
                     </div>
                 </div>
             </section>
+
+            {/* Section 2.5: Manager Recommended Tools */}
+            {dynamicEquipment.length > 0 && (
+                <section className="container mx-auto px-6 py-20">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+                        <div>
+                            <h2 className="font-serif text-3xl font-bold text-espresso dark:text-white mb-2 border-b-2 border-primary/20 pb-2 inline-block">
+                                Professional Recommendations
+                            </h2>
+                            <p className="text-espresso/60 dark:text-white/60 text-sm font-bold uppercase tracking-widest mt-2">
+                                Curated Institutional Toolsets & Smallwares
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {dynamicEquipment.map((item) => (
+                            <div key={item.id} className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl overflow-hidden shadow-xl border border-espresso/10 flex flex-col relative group hover:-translate-y-2 transition-all duration-300">
+                                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors z-10"></div>
+                                <div className="h-64 bg-gray-200 relative cursor-pointer" onClick={() => setSelectedImage(item.imageUrl)}>
+                                    <div
+                                        className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                                        style={{ backgroundImage: `url("${item.imageUrl}")` }}
+                                    ></div>
+                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                                        <span className="material-symbols-outlined text-white text-4xl drop-shadow-lg">zoom_in</span>
+                                    </div>
+                                </div>
+                                <div className="p-8 flex-1 flex flex-col justify-between">
+                                    <div>
+                                        <div className="flex justify-between items-start mb-4">
+                                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary bg-primary/10 px-3 py-1 rounded-full">Institutional Pick</span>
+                                            {item.price && (
+                                                <span className="text-sm font-bold text-espresso/60 bg-espresso/5 px-3 py-1 rounded-lg border border-espresso/10">{item.price}</span>
+                                            )}
+                                        </div>
+                                        <p className="text-espresso/80 dark:text-white/80 leading-relaxed mb-6">
+                                            {item.description}
+                                        </p>
+                                    </div>
+
+                                    {item.buyUrl && (
+                                        <div className="pt-6 border-t border-espresso/5">
+                                            <a
+                                                href={item.buyUrl}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                className="inline-flex items-center gap-2 text-primary font-bold hover:gap-3 transition-all text-sm uppercase tracking-widest"
+                                            >
+                                                Where to Purchase
+                                                <span className="material-symbols-outlined text-base">arrow_forward</span>
+                                            </a>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            )}
 
             {/* Section 3 & 4 Grid */}
             <section className="container mx-auto px-6 py-20">

@@ -97,6 +97,25 @@ service cloud.firestore {
       allow write: if isStaff();
     }
     
+    // Equipment tools (public read, staff write)
+    match /equipment/{itemId} {
+      allow read: if true;
+      allow write: if isStaff();
+    }
+    
+    // Gallery assets (public read, staff write)
+    match /gallery/{itemId} {
+      allow read: if true;
+      allow write: if isStaff();
+    }
+    
+    // Testimonials (Public/Student create, staff manage, approved read)
+    match /testimonials/{testimonialId} {
+      allow read: if isStaff() || (resource.data.status == 'approved');
+      allow create: if true; // Public and students can submit
+      allow update, delete: if isStaff();
+    }
+    
     // Forum posts
     match /forum_posts/{postId} {
       allow read: if isAuthenticated();

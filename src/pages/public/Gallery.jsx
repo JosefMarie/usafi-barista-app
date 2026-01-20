@@ -1,4 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
+import { db } from '../../lib/firebase';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Newsletter } from '../../components/ui/Newsletter';
@@ -14,34 +16,51 @@ import hero8 from '../../assets/images/about/hero-image-8.webp';
 
 export function Gallery() {
     const { t } = useTranslation();
+    const [dynamicItems, setDynamicItems] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [selectedMedia, setSelectedMedia] = useState(null); // { url, type }
+
+    useEffect(() => {
+        const q = query(collection(db, 'gallery'), orderBy('createdAt', 'desc'));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const items = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            setDynamicItems(items);
+            setLoading(false);
+        });
+
+        return () => unsubscribe();
+    }, []);
 
     // 15 New local images from /public/image/
     const newPhotos = [
-        { url: "/image/image1.jpeg", category: t('gallery.categories.practice'), desc: t('gallery.photos.grind') },
-        { url: "/image/image2.jpeg", category: t('gallery.categories.mastery'), desc: t('gallery.photos.heart') },
-        { url: "/image/image3.jpeg", category: t('gallery.categories.classroom'), desc: t('gallery.photos.discussion') },
-        { url: "/image/image4.jpeg", category: t('gallery.categories.practice'), desc: t('gallery.photos.tamping') },
-        { url: "/image/image5.jpeg", category: t('gallery.categories.graduation'), desc: t('gallery.photos.class2024') },
-        { url: "/image/image6.jpeg", category: t('gallery.categories.practice'), desc: "Learning the machine" },
-        { url: "/image/image7.jpeg", category: t('gallery.categories.classroom'), desc: "Theoretical foundations" },
-        { url: "/image/image8.jpeg", category: t('gallery.categories.mastery'), desc: "Steam wand control" },
-        { url: "/image/image9.jpeg", category: t('gallery.categories.practice'), desc: "Precision tamping" },
-        { url: "/image/image10.jpeg", category: t('gallery.categories.classroom'), desc: "Tasting session" },
-        { url: "/image/image11.jpeg", category: t('gallery.categories.mastery'), desc: "Latte art practice" },
-        { url: "/image/image12.jpeg", category: t('gallery.categories.practice'), desc: "Workflow optimization" },
-        { url: "/image/image13.jpeg", category: t('gallery.categories.graduation'), desc: "Celebrating success" },
-        { url: "/image/image14.jpeg", category: t('gallery.categories.classroom'), desc: "Bean selection science" },
-        { url: "/image/image15.jpeg", category: t('gallery.categories.practice'), desc: "Center operations" },
+        { url: "/image/image1.jpeg", category: t('gallery.categories.practice'), desc: t('gallery.photos.grind'), type: 'image' },
+        { url: "/image/image2.jpeg", category: t('gallery.categories.mastery'), desc: t('gallery.photos.heart'), type: 'image' },
+        { url: "/image/image3.jpeg", category: t('gallery.categories.classroom'), desc: t('gallery.photos.discussion'), type: 'image' },
+        { url: "/image/image4.jpeg", category: t('gallery.categories.practice'), desc: t('gallery.photos.tamping'), type: 'image' },
+        { url: "/image/image5.jpeg", category: t('gallery.categories.graduation'), desc: t('gallery.photos.class2024'), type: 'image' },
+        { url: "/image/image6.jpeg", category: t('gallery.categories.practice'), desc: "Learning the machine", type: 'image' },
+        { url: "/image/image7.jpeg", category: t('gallery.categories.classroom'), desc: "Theoretical foundations", type: 'image' },
+        { url: "/image/image8.jpeg", category: t('gallery.categories.mastery'), desc: "Steam wand control", type: 'image' },
+        { url: "/image/image9.jpeg", category: t('gallery.categories.practice'), desc: "Precision tamping", type: 'image' },
+        { url: "/image/image10.jpeg", category: t('gallery.categories.classroom'), desc: "Tasting session", type: 'image' },
+        { url: "/image/image11.jpeg", category: t('gallery.categories.mastery'), desc: "Latte art practice", type: 'image' },
+        { url: "/image/image12.jpeg", category: t('gallery.categories.practice'), desc: "Workflow optimization", type: 'image' },
+        { url: "/image/image13.jpeg", category: t('gallery.categories.graduation'), desc: "Celebrating success", type: 'image' },
+        { url: "/image/image14.jpeg", category: t('gallery.categories.classroom'), desc: "Bean selection science", type: 'image' },
+        { url: "/image/image15.jpeg", category: t('gallery.categories.practice'), desc: "Center operations", type: 'image' },
     ];
 
     const localHeroPhotos = [
-        { url: hero1, category: t('gallery.categories.practice'), desc: "Hero 1" },
-        { url: hero2, category: t('gallery.categories.mastery'), desc: "Hero 2" },
-        { url: hero3, category: t('gallery.categories.classroom'), desc: "Hero 3" },
-        { url: hero5, category: t('gallery.categories.graduation'), desc: "Hero 5" },
-        { url: hero6, category: t('gallery.categories.practice'), desc: "Hero 6" },
-        { url: hero7, category: t('gallery.categories.classroom'), desc: "Hero 7" },
-        { url: hero8, category: t('gallery.categories.practice'), desc: "Hero 8" },
+        { url: hero1, category: t('gallery.categories.practice'), desc: "Hero 1", type: 'image' },
+        { url: hero2, category: t('gallery.categories.mastery'), desc: "Hero 2", type: 'image' },
+        { url: hero3, category: t('gallery.categories.classroom'), desc: "Hero 3", type: 'image' },
+        { url: hero5, category: t('gallery.categories.graduation'), desc: "Hero 5", type: 'image' },
+        { url: hero6, category: t('gallery.categories.practice'), desc: "Hero 6", type: 'image' },
+        { url: hero7, category: t('gallery.categories.classroom'), desc: "Hero 7", type: 'image' },
+        { url: hero8, category: t('gallery.categories.practice'), desc: "Hero 8", type: 'image' },
     ];
 
     const allPhotos = [...newPhotos, ...localHeroPhotos];
@@ -70,7 +89,11 @@ export function Gallery() {
             <section className="container mx-auto px-6 mb-20">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {allPhotos.map((photo, index) => (
-                        <div key={index} className="group relative break-inside-avoid overflow-hidden rounded-2xl shadow-xl border border-espresso/10 aspect-square bg-[#F5DEB3] dark:bg-white/5">
+                        <div
+                            key={index}
+                            className="group relative break-inside-avoid overflow-hidden rounded-2xl shadow-xl border border-espresso/10 aspect-square bg-[#F5DEB3] dark:bg-white/5 cursor-pointer"
+                            onClick={() => setSelectedMedia({ url: photo.url, type: 'image' })}
+                        >
                             <div
                                 className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
                                 style={{ backgroundImage: `url("${photo.url}")` }}
@@ -91,11 +114,60 @@ export function Gallery() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {[1, 2, 3, 4, 5, 6, 7, 8].map((id) => (
-                            <VideoCard key={id} id={id} />
+                            <VideoCard key={id} id={id} onOpen={(url) => setSelectedMedia({ url, type: 'video' })} />
                         ))}
                     </div>
                 </div>
             </section>
+
+            {/* 3.5 Section 2.5: Dynamic Institutional Moments */}
+            {dynamicItems.length > 0 && (
+                <section className="container mx-auto px-6 py-20">
+                    <div className="flex flex-col items-center text-center mb-16">
+                        <h2 className="font-serif text-3xl md:text-4xl font-bold text-espresso dark:text-white mb-4 border-b-2 border-primary/20 pb-2">
+                            Recent Institutional Highlights
+                        </h2>
+                        <p className="text-espresso/60 dark:text-white/60 text-sm font-bold uppercase tracking-[0.3em]">
+                            Latest Visual Records & Community Archives
+                        </p>
+                    </div>
+
+                    <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6 space-y-6">
+                        {dynamicItems.map((item) => (
+                            <div
+                                key={item.id}
+                                className="break-inside-avoid group relative overflow-hidden rounded-2xl shadow-xl border border-espresso/10 bg-[#F5DEB3] dark:bg-white/5 transition-all hover:-translate-y-2 duration-300 cursor-pointer"
+                                onClick={() => setSelectedMedia({ url: item.url, type: item.type })}
+                            >
+                                {item.type === 'image' ? (
+                                    <div className="relative overflow-hidden cursor-pointer">
+                                        <img src={item.url} className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-110" alt="Institutional Highlight" />
+                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all"></div>
+                                    </div>
+                                ) : (
+                                    <div className="aspect-video bg-black flex items-center justify-center relative group/vid cursor-pointer overflow-hidden">
+                                        <video className="w-full h-full object-cover">
+                                            <source src={item.url} type="video/mp4" />
+                                        </video>
+                                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center group-hover/vid:bg-black/30 transition-all">
+                                            <span className="material-symbols-outlined text-4xl text-white">play_circle</span>
+                                        </div>
+                                    </div>
+                                )}
+                                <div className="p-5 border-l-4 border-espresso group-hover:border-primary transition-colors">
+                                    <div className="flex justify-between items-center mb-2">
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-primary">{item.type} Archive</span>
+                                        <span className="text-[8px] font-bold text-espresso/40 italic">{item.createdAt?.toDate().toLocaleDateString()}</span>
+                                    </div>
+                                    <p className="text-espresso/80 dark:text-white/80 text-sm font-medium leading-relaxed italic">
+                                        "{item.description}"
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            )}
 
             {/* 4. Section 3: Call to Action */}
             <section className="container mx-auto px-6 py-20 text-center bg-[#F5DEB3] dark:bg-white/5 border-y border-espresso/10 rounded-3xl mt-20 relative overflow-hidden group">
@@ -112,15 +184,54 @@ export function Gallery() {
             </section>
 
             <Newsletter />
+
+            {/* Lightbox Modal */}
+            {selectedMedia && (
+                <div
+                    className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-md flex items-center justify-center p-4 md:p-10 animate-in fade-in duration-300"
+                    onClick={() => setSelectedMedia(null)}
+                >
+                    <button
+                        className="absolute top-6 right-6 text-white/50 hover:text-white transition-all bg-white/10 p-3 rounded-full hover:scale-110"
+                        onClick={() => setSelectedMedia(null)}
+                    >
+                        <span className="material-symbols-outlined text-3xl">close</span>
+                    </button>
+
+                    <div className="max-w-6xl w-full max-h-full flex items-center justify-center animate-in zoom-in-95 duration-500">
+                        {selectedMedia.type === 'image' ? (
+                            <img
+                                src={selectedMedia.url}
+                                className="max-w-full max-h-[85vh] object-contain rounded-xl shadow-2xl border border-white/10"
+                                alt="Full View"
+                                onClick={(e) => e.stopPropagation()}
+                            />
+                        ) : (
+                            <div className="w-full aspect-video max-h-[85vh] relative rounded-xl overflow-hidden shadow-2xl border border-white/10 bg-black" onClick={(e) => e.stopPropagation()}>
+                                <video
+                                    src={selectedMedia.url}
+                                    className="w-full h-full object-contain"
+                                    controls
+                                    autoPlay
+                                />
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
 
-function VideoCard({ id }) {
+function VideoCard({ id, onOpen }) {
     const [isPlaying, setIsPlaying] = useState(false);
     const videoRef = useRef(null);
 
     const togglePlay = () => {
+        if (onOpen) {
+            onOpen(`/Video/${id}.mp4`);
+            return;
+        }
         if (videoRef.current) {
             if (isPlaying) {
                 videoRef.current.pause();

@@ -322,6 +322,14 @@ export function Dashboard() {
                             )}
                         </div>
                     </div>
+                    {/* Share Story CTA */}
+                    <div className="bg-[#F5DEB3] dark:bg-primary/10 p-8 rounded-3xl border border-espresso/10 text-center relative overflow-hidden group hover:shadow-2xl transition-all cursor-pointer" onClick={() => navigate('/testimonials')}>
+                        <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-primary transition-colors"></div>
+                        <span className="material-symbols-outlined text-4xl text-espresso mb-4 group-hover:scale-110 transition-transform">chat_bubble</span>
+                        <h3 className="font-serif font-bold text-espresso dark:text-white text-lg">Share Your USAFFI Story</h3>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-espresso/60 dark:text-white/60 mt-2 leading-relaxed">Your journey can inspire others. Submit a testimonial for the public site.</p>
+                        <button className="mt-6 w-full py-3 bg-espresso text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:shadow-lg transition-all">Submit Feedback</button>
+                    </div>
                 </div>
 
             </div>

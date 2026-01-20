@@ -35,6 +35,10 @@ export function ManagerLayout() {
         { icon: 'contacts', label: t('manager.nav.contacts'), path: '/manager/contacts' },
         { icon: 'mail', label: t('manager.nav.subscribers'), path: '/manager/subscribers' },
         { icon: 'inbox', label: t('manager.nav.messages'), path: '/manager/messages' },
+        { icon: 'work', label: 'Opportunities', path: '/manager/opportunities' },
+        { icon: 'construction', label: 'Equipment', path: '/manager/equipment' },
+        { icon: 'photo_library', label: 'Gallery', path: '/manager/gallery' },
+        { icon: 'reviews', label: 'Testimonials', path: '/manager/testimonials' },
         { icon: 'person', label: t('manager.nav.my_profile'), path: '/manager/profile' },
     ];
 

@@ -60,8 +60,8 @@ import { PostDetails } from './pages/forum/PostDetails';
 
 
 
-import { AdminOpportunities } from './pages/admin/AdminOpportunities';
 import { AdminSeekers } from './pages/admin/AdminSeekers';
+import { ManagerOpportunities } from './pages/manager/ManagerOpportunities';
 import { AdminCourses } from './pages/admin/AdminCourses';
 import { ManageCourse } from './pages/admin/ManageCourse';
 import { ManageModule } from './pages/admin/ManageModule';
@@ -94,6 +94,9 @@ import { ManagerDashboard } from './pages/manager/Dashboard';
 import { ManagerContacts } from './pages/manager/Contacts';
 import { ManagerSubscribers } from './pages/manager/Subscribers';
 import { ManagerMessages } from './pages/manager/Messages';
+import { ManagerEquipment } from './pages/manager/ManagerEquipment';
+import { ManagerGallery } from './pages/manager/ManagerGallery';
+import { ManagerTestimonials } from './pages/manager/ManagerTestimonials';
 
 // CEO Pages
 import { CEOLayout } from './components/layout/CEOLayout';
@@ -186,7 +189,7 @@ function App() {
               <Route path="quizzes" element={<Quizzes />} />
               <Route path="testimonials" element={<AdminTestimonials />} />
               <Route path="activity-log" element={<ActivityLog />} />
-              <Route path="opportunities" element={<AdminOpportunities />} />
+              <Route path="activity-log" element={<ActivityLog />} />
               <Route path="seekers" element={<AdminSeekers />} />
               <Route path="business/users" element={<AdminBusinessUsers />} />
               <Route path="business/courses" element={<AdminBusinessCourses />} />
@@ -222,6 +225,10 @@ function App() {
               <Route path="contacts" element={<ManagerContacts />} />
               <Route path="subscribers" element={<ManagerSubscribers />} />
               <Route path="messages" element={<ManagerMessages />} />
+              <Route path="opportunities" element={<ManagerOpportunities />} />
+              <Route path="equipment" element={<ManagerEquipment />} />
+              <Route path="gallery" element={<ManagerGallery />} />
+              <Route path="testimonials" element={<ManagerTestimonials />} />
               <Route path="profile" element={<CommonProfile />} />
               <Route path="privacy-settings" element={<PrivacySettings />} />
             </Route>
