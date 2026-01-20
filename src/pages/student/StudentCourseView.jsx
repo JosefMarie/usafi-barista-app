@@ -55,8 +55,8 @@ export function StudentCourseView() {
         const unsubscribe = onSnapshot(docRef, async (docSnap) => {
             if (docSnap.exists()) {
                 const data = docSnap.data();
-                if (!data.assignedStudents?.includes(user.uid)) {
-                    alert(t('student.course_view.not_assigned'));
+                if (data.status !== 'published') {
+                    alert(t('student.course_view.not_published') || "This module is not published yet.");
                     navigate('/student/courses');
                     return;
                 }
@@ -102,13 +102,16 @@ export function StudentCourseView() {
                 const progressSnap = await getDoc(progressRef);
                 const isNewStart = !progressSnap.exists();
 
+                const existingData = progressSnap.exists() ? progressSnap.data() : null;
+                const isAlreadyCompleted = existingData?.status === 'completed' || existingData?.passed === true;
+
                 await setDoc(progressRef, {
                     courseId,
                     moduleId,
                     lastSlideIndex: currentSlide,
                     updatedAt: serverTimestamp(),
-                    status: 'in-progress',
-                    studentName: user.name || user.fullName || user.email // Helpful denormalization for admin logs
+                    ...(isAlreadyCompleted ? {} : { status: 'in-progress' }),
+                    studentName: user.name || user.fullName || user.email
                 }, { merge: true });
 
                 if (isNewStart && currentSlide === 0) {
@@ -322,24 +325,6 @@ export function StudentCourseView() {
                 courseId
             });
 
-            if (passed) {
-                try {
-                    const modulesRef = collection(db, 'courses', courseId, 'modules');
-                    const modulesSnap = await getDocs(modulesRef);
-                    const modules = modulesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-                    modules.sort((a, b) => a.title.localeCompare(b.title, undefined, { numeric: true }));
-                    const currentIndex = modules.findIndex(m => m.id === moduleId);
-                    if (currentIndex !== -1 && currentIndex < modules.length - 1) {
-                        const nextModule = modules[currentIndex + 1];
-                        await updateDoc(doc(db, 'courses', courseId, 'modules', nextModule.id), {
-                            assignedStudents: arrayUnion(user.uid)
-                        });
-                        alert(t('student.course_view.unlock_success', { title: nextModule.title }));
-                    }
-                } catch (unlockError) {
-                    console.error("Error unlocking next module:", unlockError);
-                }
-            }
         } catch (error) {
             console.error("Error saving progress:", error);
         }

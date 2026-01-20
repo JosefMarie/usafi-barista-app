@@ -689,6 +689,7 @@
       "auth_required": "Authorization Required",
       "locked_note": "Contact instructor for strategic clearance",
       "reexamine": "Re-examine",
+      "continue": "Continue Studying",
       "commence": "Commence",
       "locked_btn": "Locked"
     },

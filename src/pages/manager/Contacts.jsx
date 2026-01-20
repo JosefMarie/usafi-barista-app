@@ -29,9 +29,10 @@ export function ManagerContacts() {
                 if (!searchTerm) return true;
                 const searchLower = searchTerm.toLowerCase();
                 return (
-                    user.name?.toLowerCase().includes(searchLower) ||
+                    (user.name || user.fullName)?.toLowerCase().includes(searchLower) ||
                     user.email?.toLowerCase().includes(searchLower) ||
-                    user.phone?.includes(searchTerm)
+                    user.phone?.includes(searchTerm) ||
+                    user.id?.toLowerCase().includes(searchLower)
                 );
             });
 
@@ -182,10 +183,13 @@ export function ManagerContacts() {
                                     </td>
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-3">
-                                            <div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-white/10 flex items-center justify-center font-bold text-xs text-espresso dark:text-white">
-                                                {user.name?.[0] || '?'}
+                                            <div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-white/10 flex items-center justify-center font-bold text-xs text-espresso dark:text-white uppercase">
+                                                {(user.name || user.fullName)?.[0] || '?'}
                                             </div>
-                                            <span className="font-medium text-espresso dark:text-white">{user.name || 'N/A'}</span>
+                                            <div className="flex flex-col">
+                                                <span className="font-medium text-espresso dark:text-white">{user.name || user.fullName || 'N/A'}</span>
+                                                <span className="text-[9px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest">ID: {user.id?.slice(0, 8)}</span>
+                                            </div>
                                         </div>
                                     </td>
                                     <td className="px-6 py-4">
@@ -235,11 +239,12 @@ export function ManagerContacts() {
                                         onChange={() => toggleSelectUser(user.id)}
                                         className="rounded border-espresso/20 text-espresso focus:ring-espresso w-4 h-4 mt-0.5 shrink-0"
                                     />
-                                    <div className="size-10 rounded-full bg-gray-200 dark:bg-white/10 flex items-center justify-center font-bold text-xs text-espresso dark:text-white shrink-0">
-                                        {user.name?.[0] || '?'}
+                                    <div className="size-10 rounded-full bg-gray-200 dark:bg-white/10 flex items-center justify-center font-bold text-xs text-espresso dark:text-white shrink-0 uppercase">
+                                        {(user.name || user.fullName)?.[0] || '?'}
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <h3 className="font-black text-sm text-espresso dark:text-white truncate leading-none">{user.name || 'N/A'}</h3>
+                                        <h3 className="font-black text-sm text-espresso dark:text-white truncate leading-none">{user.name || user.fullName || 'N/A'}</h3>
+                                        <p className="text-[8px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest mt-1">ID: {user.id?.slice(0, 8)}</p>
                                         <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold border mt-1.5 ${user.role === 'admin' ? 'bg-red-50 text-red-700 border-red-200' :
                                             user.role === 'instructor' ? 'bg-purple-50 text-purple-700 border-purple-200' :
                                                 user.role === 'student' ? 'bg-orange-50 text-orange-700 border-orange-200' :

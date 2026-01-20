@@ -691,6 +691,7 @@
       "auth_required": "Autorisation Requise",
       "locked_note": "Contactez l'instructeur for une autorisation stratégique",
       "reexamine": "Réexaminer",
+      "continue": "Continuer",
       "commence": "Commencer",
       "locked_btn": "Verrouillé"
     },
