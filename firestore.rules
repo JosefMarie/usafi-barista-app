@@ -181,13 +181,13 @@ service cloud.firestore {
     
     // Password Reset Tokens
     match /password_reset_tokens/{tokenId} {
-      // Allow reading token data to validate it (even if unauthenticated)
+      // Allow reading token data to validate it
       allow read: if true;
-      // Allow creating tokens for password reset flow
+      // Allow creating tokens
       allow create: if true;
-      // Tokens are immutable once created
-      allow update: if false; 
-       // Allow deleting used tokens (handled by client logic after reset)
+      // Allow updating (marking as used)
+      allow update: if true;
+      // Allow deleting
       allow delete: if true;
     }
     
