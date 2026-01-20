@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
-import { sendPasswordResetEmail } from 'firebase/auth';
-import { auth } from '../../lib/firebase';
+import { auth, db } from '../../lib/firebase';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
+import { initEmailJS, createResetToken, sendPasswordResetEmailJS } from '../../lib/emailjs';
 
 export function ForgotPassword() {
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState('');
+
+    // Initialize EmailJS
+    React.useEffect(() => {
+        initEmailJS();
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -16,18 +22,34 @@ export function ForgotPassword() {
         setLoading(true);
 
         try {
-            await sendPasswordResetEmail(auth, email);
+            // 1. Verify email exists in our system first
+            const usersRef = collection(db, 'users');
+            const q = query(usersRef, where('email', '==', email));
+            const querySnapshot = await getDocs(q);
+
+            let userName = 'User';
+
+            if (querySnapshot.empty) {
+                // Check business users too if you have separate collection
+                // For security, we usually shouldn't reveal if email exists, 
+                // but for better UX in this app context, we'll throw error
+                throw new Error('No account found with this email address');
+            } else {
+                userName = querySnapshot.docs[0].data().fullName || 'User';
+            }
+
+            // 2. Generate secure token
+            const token = await createResetToken(email);
+
+            // 3. Send Email via EmailJS
+            await sendPasswordResetEmailJS(email, token, userName);
+
             setSuccess(true);
             setEmail('');
         } catch (err) {
             console.error('Password reset error:', err);
-            if (err.code === 'auth/user-not-found') {
-                setError('No account found with this email address');
-            } else if (err.code === 'auth/invalid-email') {
-                setError('Invalid email address');
-            } else {
-                setError(err.message || 'Failed to send reset email');
-            }
+            console.error('Password reset error:', err);
+            setError(err.message || 'Failed to send reset email. Please try again.');
         } finally {
             setLoading(false);
         }

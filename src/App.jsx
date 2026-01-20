@@ -35,6 +35,7 @@ import { SeekerProfile } from './pages/seeker/SeekerProfile';
 // Auth Pages
 import { Login } from './pages/auth/Login';
 import { ForgotPassword } from './pages/auth/ForgotPassword';
+import { ResetPassword } from './pages/auth/ResetPassword';
 import { PrivacySettings } from './pages/common/PrivacySettings';
 
 // Student Pages
@@ -128,6 +129,7 @@ function App() {
               <Route path="thank-you" element={<ThankYou />} />
               <Route path="login" element={<Login />} />
               <Route path="forgot-password" element={<ForgotPassword />} />
+              <Route path="reset-password/:token" element={<ResetPassword />} />
               <Route path="setup-admin" element={<SetupAdmin />} />
               <Route path="setup-ceo" element={<SetupCEO />} />
               <Route path="opportunities" element={<Opportunities />} />

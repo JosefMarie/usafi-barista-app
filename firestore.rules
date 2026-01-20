@@ -179,6 +179,18 @@ service cloud.firestore {
       allow update, delete: if isStaff();
     }
     
+    // Password Reset Tokens
+    match /password_reset_tokens/{tokenId} {
+      // Allow reading token data to validate it (even if unauthenticated)
+      allow read: if true;
+      // Allow creating tokens for password reset flow
+      allow create: if true;
+      // Tokens are immutable once created
+      allow update: if false; 
+       // Allow deleting used tokens (handled by client logic after reset)
+      allow delete: if true;
+    }
+    
     // Business courses (if separate from main courses)
     match /business_courses/{courseId} {
       allow read: if isAuthenticated();
