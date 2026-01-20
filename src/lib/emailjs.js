@@ -16,9 +16,12 @@ export const initEmailJS = () => {
 export const sendPasswordResetEmailJS = async (email, resetToken, userName = 'User') => {
     const resetLink = `${window.location.origin}/reset-password/${resetToken}`;
 
+    // Normalize email to lowercase for consistency, though EmailJS might not be case-sensitive
+    const normalizedEmail = email.toLowerCase();
+
     const templateParams = {
         user_name: userName,
-        email: email,
+        email: normalizedEmail, // Use normalized email in template
         reset_link: resetLink,
     };
 
@@ -26,8 +29,9 @@ export const sendPasswordResetEmailJS = async (email, resetToken, userName = 'Us
         const response = await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY);
         return response;
     } catch (error) {
-        console.error('EmailJS Error:', error);
-        throw error;
+        console.error('EmailJS Error: Failed to send password reset email.', error);
+        // Re-throw a more descriptive error if needed, or just the original
+        throw new Error(`Failed to send password reset email via EmailJS: ${error.message || error}`);
     }
 };
 
@@ -40,9 +44,11 @@ export const createResetToken = async (email) => {
     const expirationTime = new Date();
     expirationTime.setHours(expirationTime.getHours() + 1);
 
+    const normalizedEmail = email.toLowerCase();
+
     // Store token in Firestore
     await setDoc(doc(db, 'password_reset_tokens', resetToken), {
-        email: email,
+        email: normalizedEmail,
         token: resetToken,
         expiresAt: expirationTime, // Store as Date object, Firestore converts to Timestamp
         used: false,

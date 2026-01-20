@@ -48,7 +48,6 @@ export function ForgotPassword() {
             setEmail('');
         } catch (err) {
             console.error('Password reset error:', err);
-            console.error('Password reset error:', err);
             setError(err.message || 'Failed to send reset email. Please try again.');
         } finally {
             setLoading(false);

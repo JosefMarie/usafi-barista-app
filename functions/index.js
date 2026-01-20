@@ -48,14 +48,25 @@ exports.finalizePasswordReset = functions.https.onCall(async (data, context) => 
             return tokenData.email;
         });
 
-        // 2. Find User by Email
-        const userRecord = await admin.auth().getUserByEmail(email);
+        // 2. Find User by Email (normalize for lookup)
+        let userRecord;
+        try {
+            userRecord = await admin.auth().getUserByEmail(email.toLowerCase());
+        } catch (authError) {
+            console.error('Auth User Lookup Error:', authError);
+            throw new functions.https.HttpsError('not-found', `No user found for email: ${email}`);
+        }
 
         // 3. Update Password
-        await admin.auth().updateUser(userRecord.uid, {
-            password: newPassword,
-            emailVerified: true // verify email since they clicked the link
-        });
+        try {
+            await admin.auth().updateUser(userRecord.uid, {
+                password: newPassword,
+                emailVerified: true
+            });
+        } catch (updateError) {
+            console.error('Auth User Update Error:', updateError);
+            throw new functions.https.HttpsError('internal', `Failed to update password: ${updateError.message}`);
+        }
 
         return { success: true, message: 'Password successfully updated.' };
 
@@ -67,6 +78,6 @@ exports.finalizePasswordReset = functions.https.onCall(async (data, context) => 
             throw error;
         }
 
-        throw new functions.https.HttpsError('internal', 'Internal server error processing reset.');
+        throw new functions.https.HttpsError('internal', error.message || 'Internal server error processing reset.');
     }
 });
