@@ -117,10 +117,36 @@ export function Quizzes() {
                 }
 
                 // 4. Fetch All Progress (Quiz Results)
-                const progressSnap = await getDocs(collectionGroup(db, 'progress'));
+                let progressDocs = [];
+                try {
+                    const progressSnap = await getDocs(collectionGroup(db, 'progress'));
+                    progressDocs = progressSnap.docs;
+
+                    // Fallback if collectionGroup returns nothing (might be blocked/indexed)
+                    if (progressDocs.length === 0) {
+                        console.warn("Quizzes collectionGroup empty, using fallback.");
+                        const usersSnap = await getDocs(collection(db, 'users'));
+                        const fallbackDocs = [];
+                        await Promise.all(usersSnap.docs.map(async (uDoc) => {
+                            const pSnap = await getDocs(collection(db, 'users', uDoc.id, 'progress'));
+                            fallbackDocs.push(...pSnap.docs);
+                        }));
+                        progressDocs = fallbackDocs;
+                    }
+                } catch (e) {
+                    console.warn("Quizzes collectionGroup failed, using fallback:", e);
+                    const usersSnap = await getDocs(collection(db, 'users'));
+                    const fallbackDocs = [];
+                    await Promise.all(usersSnap.docs.map(async (uDoc) => {
+                        const pSnap = await getDocs(collection(db, 'users', uDoc.id, 'progress'));
+                        fallbackDocs.push(...pSnap.docs);
+                    }));
+                    progressDocs = fallbackDocs;
+                }
+
                 const latestResultsMap = new Map(); // Key: studentId-moduleId
 
-                progressSnap.docs.forEach(doc => {
+                progressDocs.forEach(doc => {
                     const data = doc.data();
                     const studentId = doc.ref.parent.parent.id; // path is users/{uid}/progress/{mid}
                     const moduleId = doc.id; // The document ID is the module ID
@@ -136,6 +162,7 @@ export function Quizzes() {
                         moduleName: modulesList.find(m => m.id === moduleId)?.title || 'Unknown Module',
                         score: data.score,
                         passed: data.passed,
+                        attempts: data.attempts || 1, // Default to 1 for older data
                         date: data.completedAt?.toDate?.() || new Date(data.updatedAt?.toDate?.() || Date.now()),
                         status: data.status
                     };
@@ -164,9 +191,14 @@ export function Quizzes() {
         const matchesModule = selectedModule === 'all' || r.moduleId === selectedModule;
         const sName = (r.studentName || '').toLowerCase();
         const mName = (r.moduleName || '').toLowerCase();
-        const query = (searchQuery || '').toLowerCase();
+        const sId = (r.studentId || '').toLowerCase();
+        const qTerm = (searchQuery || '').toLowerCase().trim();
 
-        const matchesSearch = sName.includes(query) || mName.includes(query);
+        const matchesSearch = !qTerm ||
+            sName.includes(qTerm) ||
+            mName.includes(qTerm) ||
+            sId.includes(qTerm);
+
         return matchesModule && matchesSearch;
     });
 
@@ -453,6 +485,7 @@ export function Quizzes() {
                                             <th className="px-6 md:px-8 py-4 md:py-6 text-[9px] md:text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Participant</th>
                                             <th className="px-6 md:px-8 py-4 md:py-6 text-[9px] md:text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Module Schema</th>
                                             <th className="px-6 md:px-8 py-4 md:py-6 text-[9px] md:text-[10px] font-black text-white/40 uppercase tracking-[0.3em] text-center">Score Matrix</th>
+                                            <th className="px-6 md:px-8 py-4 md:py-6 text-[9px] md:text-[10px] font-black text-white/40 uppercase tracking-[0.3em] text-center">Attempts</th>
                                             <th className="px-6 md:px-8 py-4 md:py-6 text-[9px] md:text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Completion</th>
                                             <th className="px-6 md:px-8 py-4 md:py-6 text-[9px] md:text-[10px] font-black text-white/40 uppercase tracking-[0.3em] text-right">Status</th>
                                         </tr>
@@ -477,6 +510,9 @@ export function Quizzes() {
                                                         {Math.round(res.score)}%
                                                     </div>
                                                 </td>
+                                                <td className="px-8 py-6 text-center">
+                                                    <span className="text-white/60 font-black font-serif text-lg">{res.attempts}</span>
+                                                </td>
                                                 <td className="px-8 py-6">
                                                     <div className="flex items-center gap-2 text-[10px] font-black text-white/40 !text-white/40 uppercase tracking-widest">
                                                         <span className="material-symbols-outlined text-[18px]">calendar_today</span>
@@ -494,7 +530,7 @@ export function Quizzes() {
                                             </tr>
                                         )) : (
                                             <tr>
-                                                <td colSpan="5" className="px-8 py-24 text-center">
+                                                <td colSpan="6" className="px-8 py-24 text-center">
                                                     <div className="flex flex-col items-center gap-4 opacity-20">
                                                         <span className="material-symbols-outlined text-6xl text-white">database_off</span>
                                                         <p className="text-[10px] font-black uppercase tracking-[0.5em] text-white">No synchronization data found</p>

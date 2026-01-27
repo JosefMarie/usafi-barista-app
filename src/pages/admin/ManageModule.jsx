@@ -216,6 +216,7 @@ export function ManageModule() {
     const [saving, setSaving] = useState(false);
 
     const [filterThreshold, setFilterThreshold] = useState(0);
+    const [searchTerm, setSearchTerm] = useState('');
     const [sortConfig, setSortConfig] = useState({ key: 'progress', direction: 'desc' });
 
     const languages = [
@@ -378,13 +379,25 @@ export function ManageModule() {
         });
 
         // 2. Filter by threshold
+        let filtered = processed;
         if (filterThreshold > 0) {
-            result = processed.filter(s => s._percent >= filterThreshold);
-        } else {
-            result = processed;
+            filtered = filtered.filter(s => s._percent >= filterThreshold);
         }
 
-        // 3. Sort
+        // 3. Filter by search term
+        if (searchTerm.trim()) {
+            const query = searchTerm.toLowerCase().trim();
+            filtered = filtered.filter(s =>
+                (s.fullName || '').toLowerCase().includes(query) ||
+                (s.name || '').toLowerCase().includes(query) ||
+                (s.email || '').toLowerCase().includes(query) ||
+                (s.id || '').toLowerCase().includes(query)
+            );
+        }
+
+        result = filtered;
+
+        // 4. Sort
         result.sort((a, b) => {
             let valA = a._percent;
             let valB = b._percent;
@@ -400,7 +413,7 @@ export function ManageModule() {
         });
 
         return result;
-    }, [students, studentProgress, slides.length, sortConfig, filterThreshold]);
+    }, [students, studentProgress, slides.length, sortConfig, filterThreshold, searchTerm]);
 
 
     // --- Content Handlers ---
@@ -605,6 +618,12 @@ export function ManageModule() {
             await updateDoc(doc(db, 'courses', courseId, 'modules', moduleId), {
                 quizAllowedStudents: newAllowed
             });
+
+            // If we are allowing access, reset the quizRequested flag in user progress
+            if (newAllowed.includes(studentId)) {
+                const progressRef = doc(db, 'users', studentId, 'progress', moduleId);
+                await updateDoc(progressRef, { quizRequested: false });
+            }
         } catch (error) {
             console.error("Sync Error:", error);
         }
@@ -719,6 +738,13 @@ export function ManageModule() {
         }
     };
 
+    const pendingQuizRequests = useMemo(() => {
+        return students.filter(s => {
+            const prog = studentProgress[s.id];
+            return prog?.quizRequested && !quizAllowedStudents.includes(s.id);
+        });
+    }, [students, studentProgress, quizAllowedStudents]);
+
     const togglePublish = async () => {
         const newStatus = module.status === 'published' ? 'draft' : 'published';
         try {
@@ -778,9 +804,16 @@ export function ManageModule() {
                             <span className="material-symbols-outlined text-[18px] md:text-[22px]">{saving ? 'sync' : 'database'}</span>
                             {saving ? 'Syncing...' : 'Sync State'}
                         </button>
-                        <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 md:gap-3 bg-green-600 text-white px-4 md:px-8 py-2.5 md:py-5 rounded-xl md:rounded-[1.5rem] font-black uppercase tracking-[0.2em] text-[8px] md:text-[11px] shadow-2xl shadow-green-600/20 hover:bg-green-700 transition-all active:scale-95">
-                            <span className="material-symbols-outlined text-[18px] md:text-[22px]">rocket_launch</span>
-                            Production
+                        <button
+                            onClick={togglePublish}
+                            className={cn(
+                                "flex-1 sm:flex-none flex items-center justify-center gap-2 md:gap-3 px-4 md:px-8 py-2.5 md:py-5 rounded-xl md:rounded-[1.5rem] font-black uppercase tracking-[0.2em] text-[8px] md:text-[11px] shadow-2xl transition-all active:scale-95",
+                                module.status === 'published'
+                                    ? "bg-red-500 text-white shadow-red-500/20 hover:bg-red-600"
+                                    : "bg-green-600 text-white shadow-green-600/20 hover:bg-green-700"
+                            )}>
+                            <span className="material-symbols-outlined text-[18px] md:text-[22px]">{module.status === 'published' ? 'block' : 'rocket_launch'}</span>
+                            {module.status === 'published' ? 'Unpublish' : 'Production'}
                         </button>
                     </div>
                 </div>
@@ -801,6 +834,14 @@ export function ManageModule() {
                             )}
                         >
                             {tab}
+                            {tab === 'assignments' && pendingQuizRequests.length > 0 && (
+                                <span className="absolute -top-1 -right-1 flex h-4 w-4">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-4 w-4 bg-amber-500 text-[8px] items-center justify-center text-white border border-white">
+                                        {pendingQuizRequests.length}
+                                    </span>
+                                </span>
+                            )}
                         </button>
                     ))}
                 </div>
@@ -1182,6 +1223,23 @@ export function ManageModule() {
                                     ))}
                                 </div>
                             </div>
+
+                            <div className="h-8 w-px bg-espresso/10 hidden xl:block" />
+
+                            <div className="flex-1 relative group max-w-md">
+                                <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-espresso/30">
+                                    <span className="material-symbols-outlined text-[18px] md:text-[20px]">search</span>
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="SEARCH STUDENT..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="w-full bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-xl px-10 py-2.5 text-[9px] md:text-[11px] font-black uppercase tracking-widest outline-none focus:ring-2 focus:ring-espresso transition-all placeholder:text-espresso/20"
+                                />
+                            </div>
+
+                            <div className="h-8 w-px bg-espresso/10 hidden xl:block" />
 
                             <div className="flex items-center justify-between md:justify-end gap-3 border-t border-espresso/5 pt-4 xl:border-none xl:pt-0">
                                 <span className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40">Sort Progress:</span>

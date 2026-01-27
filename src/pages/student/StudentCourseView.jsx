@@ -33,6 +33,8 @@ export function StudentCourseView() {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [timeLeft, setTimeLeft] = useState(0);
     const [matchingOrder, setMatchingOrder] = useState([]);
+    const [shuffledQuestions, setShuffledQuestions] = useState([]);
+    const [stats, setStats] = useState({ attempts: 0 });
 
     // Study Mode State
     const [studyMode, setStudyMode] = useState('full'); // full, summary
@@ -74,6 +76,14 @@ export function StudentCourseView() {
                                 setCurrentSlide(Math.max(0, progressData.lastSlideIndex));
                             }
                             setQuizRequested(progressData.quizRequested || false);
+                            setStats({
+                                attempts: progressData.attempts || 0,
+                                passed: progressData.passed || false
+                            });
+                            if (progressData.passed) {
+                                setQuizResult({ score: progressData.score, passed: true });
+                                setShowQuiz(true);
+                            }
                         }
                         setIsProgressLoaded(true);
                     } catch (err) {
@@ -189,9 +199,14 @@ export function StudentCourseView() {
     }, [showQuiz, quizStarted, quizResult, timeLeft, currentQuestionIndex]);
 
     const startQuiz = () => {
+        // Shuffle questions
+        const questions = [...(activeQuiz?.questions || [])];
+        const shuffled = questions.sort(() => Math.random() - 0.5);
+        setShuffledQuestions(shuffled);
+
         setQuizStarted(true);
         setCurrentQuestionIndex(0);
-        const firstQ = activeQuiz?.questions[0];
+        const firstQ = shuffled[0];
         setTimeLeft(firstQ?.duration || 30);
         if (firstQ?.type === 'matching') {
             setMatchingOrder(firstQ.pairs.map((_, i) => i).sort(() => Math.random() - 0.5));
@@ -200,9 +215,9 @@ export function StudentCourseView() {
 
     const handleNextQuestion = () => {
         const nextIdx = currentQuestionIndex + 1;
-        if (nextIdx < (activeQuiz?.questions?.length || 0)) {
+        if (nextIdx < (shuffledQuestions?.length || 0)) {
             setCurrentQuestionIndex(nextIdx);
-            const nextQ = activeQuiz.questions[nextIdx];
+            const nextQ = shuffledQuestions[nextIdx];
             setTimeLeft(nextQ.duration || 30);
             if (nextQ.type === 'matching') {
                 setMatchingOrder(nextQ.pairs.map((_, i) => i).sort(() => Math.random() - 0.5));
@@ -273,10 +288,10 @@ export function StudentCourseView() {
     };
 
     const submitQuiz = async () => {
-        if (!activeQuiz?.questions) return;
+        if (!shuffledQuestions || shuffledQuestions.length === 0) return;
 
         let correctCount = 0;
-        activeQuiz.questions.forEach((q, idx) => {
+        shuffledQuestions.forEach((q, idx) => {
             const answer = userAnswers[idx];
             if (q.type === 'multiple_choice') {
                 if (answer === q.correctOption) correctCount++;
@@ -293,7 +308,7 @@ export function StudentCourseView() {
             }
         });
 
-        const total = activeQuiz.questions.length;
+        const total = shuffledQuestions.length;
         const score = (correctCount / total) * 100;
         const passMark = activeQuiz.passMark || 70;
         const passed = score >= passMark;
@@ -302,14 +317,37 @@ export function StudentCourseView() {
         setQuizStarted(false);
 
         try {
-            await setDoc(doc(db, 'users', user.uid, 'progress', moduleId), {
+            const newAttempts = (stats.attempts || 0) + 1;
+            setStats(prev => ({ ...prev, attempts: newAttempts }));
+
+            const updateData = {
                 courseId,
                 moduleId,
                 score,
                 passed,
                 completedAt: serverTimestamp(),
-                status: passed ? 'completed' : 'failed'
-            }, { merge: true });
+                status: passed ? 'completed' : 'failed',
+                attempts: newAttempts
+            };
+
+            // If failed for the 2nd time, lock it
+            if (!passed && newAttempts >= 2) {
+                updateData.quizRequested = false; // Reset so they can request again if needed? Or wait...
+                // The requirement says: "if he failures again then he can request do do it again where admin can grant him access to do it again"
+                // This means we should remove them from quizAllowedStudents on the module doc.
+            }
+
+            await setDoc(doc(db, 'users', user.uid, 'progress', moduleId), updateData, { merge: true });
+
+            if (!passed && newAttempts >= 2) {
+                const modRef = doc(db, 'courses', courseId, 'modules', moduleId);
+                const modSnap = await getDoc(modRef);
+                if (modSnap.exists()) {
+                    const allowed = modSnap.data().quizAllowedStudents || [];
+                    const newAllowed = allowed.filter(id => id !== user.uid);
+                    await updateDoc(modRef, { quizAllowedStudents: newAllowed });
+                }
+            }
 
             // Log completion activity
             await addDoc(collection(db, 'activity'), {
@@ -510,11 +548,11 @@ export function StudentCourseView() {
                                             <div className="flex items-center gap-3 md:gap-6 w-full md:w-auto overflow-x-hidden">
                                                 <div className="text-[7px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest shrink-0">{t('student.quiz.objective')}</div>
                                                 <div className="flex gap-1 md:gap-1.5 flex-1 min-w-0 px-2">
-                                                    {activeQuiz?.questions?.map((_, i) => (
+                                                    {shuffledQuestions?.map((_, i) => (
                                                         <div key={i} className={cn("h-1 md:h-1.5 rounded-full transition-all duration-500 shadow-inner", i < currentQuestionIndex ? "bg-espresso w-2 md:w-8" : i === currentQuestionIndex ? "bg-espresso w-6 md:w-12 animate-pulse" : "bg-espresso/10 dark:bg-white/10 w-1 md:w-6")} />
                                                     ))}
                                                 </div>
-                                                <div className="text-[10px] md:text-sm font-black text-espresso tracking-tight shrink-0">{currentQuestionIndex + 1}/{activeQuiz?.questions?.length}</div>
+                                                <div className="text-[10px] md:text-sm font-black text-espresso tracking-tight shrink-0">{currentQuestionIndex + 1}/{shuffledQuestions?.length}</div>
                                             </div>
                                             <div className={cn("flex items-center gap-1.5 md:gap-3 px-3 md:px-6 py-1.5 md:py-3 rounded-lg md:rounded-2xl border-2 font-mono font-black text-xs md:text-lg transition-all shadow-sm w-full md:w-auto justify-center", timeLeft < 10 ? "text-red-600 border-red-600/30 bg-red-600/5 animate-pulse" : "text-espresso dark:text-white border-espresso/10 bg-white/20")}>
                                                 <span className="material-symbols-outlined text-sm md:text-xl">timer</span>{Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
@@ -524,14 +562,14 @@ export function StudentCourseView() {
                                         <div className="bg-[#F5DEB3] dark:bg-white/5 p-6 md:p-10 rounded-[2rem] md:rounded-3xl border border-espresso/10 shadow-2xl animate-scale-in relative group overflow-hidden">
                                             <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
                                             <div className="mb-6 md:mb-10 relative z-10">
-                                                <div className="flex items-center gap-3 mb-4 md:mb-6"><span className="px-3 md:px-4 py-1.5 bg-espresso text-white text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg">{activeQuiz?.questions[currentQuestionIndex]?.type.replace('_', ' ')}</span></div>
-                                                <h2 className="text-xl md:text-3xl font-serif font-bold text-espresso dark:text-white leading-snug">{activeQuiz?.questions[currentQuestionIndex]?.question}</h2>
+                                                <div className="flex items-center gap-3 mb-4 md:mb-6"><span className="px-3 md:px-4 py-1.5 bg-espresso text-white text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] rounded-full shadow-lg">{shuffledQuestions[currentQuestionIndex]?.type.replace('_', ' ')}</span></div>
+                                                <h2 className="text-xl md:text-3xl font-serif font-bold text-espresso dark:text-white leading-snug">{shuffledQuestions[currentQuestionIndex]?.question}</h2>
                                             </div>
 
                                             <div className="space-y-4 md:space-y-5 relative z-10">
-                                                {activeQuiz?.questions[currentQuestionIndex]?.type === 'multiple_choice' && (
+                                                {shuffledQuestions[currentQuestionIndex]?.type === 'multiple_choice' && (
                                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
-                                                        {activeQuiz?.questions[currentQuestionIndex]?.options.map((opt, optIdx) => (
+                                                        {shuffledQuestions[currentQuestionIndex]?.options.map((opt, optIdx) => (
                                                             <button key={optIdx} onClick={() => handleAnswer(currentQuestionIndex, optIdx)} className={cn("p-4 md:p-6 rounded-xl md:rounded-2xl border-2 text-left transition-all active:scale-[0.98]", userAnswers[currentQuestionIndex] === optIdx ? "bg-espresso text-white border-espresso shadow-lg" : "bg-white/40 dark:bg-white/5 border-espresso/5 hover:border-espresso/30")}>
                                                                 <div className="flex items-center gap-4 md:gap-5"><span className={cn("size-8 md:size-10 rounded-lg md:rounded-xl border-2 flex items-center justify-center font-black text-xs md:text-sm", userAnswers[currentQuestionIndex] === optIdx ? "border-white bg-white/20" : "border-espresso/10 bg-white/20 text-espresso/40")}>{String.fromCharCode(65 + optIdx)}</span><span className="font-bold tracking-tight text-sm md:text-base">{opt}</span></div>
                                                             </button>
@@ -539,7 +577,7 @@ export function StudentCourseView() {
                                                     </div>
                                                 )}
 
-                                                {activeQuiz?.questions[currentQuestionIndex]?.type === 'true_false' && (
+                                                {shuffledQuestions[currentQuestionIndex]?.type === 'true_false' && (
                                                     <div className="flex flex-col sm:flex-row gap-4 md:gap-6">
                                                         {[true, false].map((val) => (
                                                             <button key={val ? 't' : 'f'} onClick={() => handleAnswer(currentQuestionIndex, val)} className={cn("flex-1 py-6 md:py-10 rounded-2xl md:rounded-3xl border-2 font-bold text-base md:text-xl transition-all flex items-center justify-center sm:flex-col gap-3 active:scale-[0.98]", userAnswers[currentQuestionIndex] === val ? (val ? "bg-green-600 text-white border-green-600 shadow-lg" : "bg-red-600 text-white border-red-600 shadow-lg") : "bg-white/40 dark:bg-white/5 border-espresso/5 opacity-60 hover:opacity-100")}>
@@ -549,16 +587,16 @@ export function StudentCourseView() {
                                                     </div>
                                                 )}
 
-                                                {activeQuiz?.questions[currentQuestionIndex]?.type === 'fill_in' && (
+                                                {shuffledQuestions[currentQuestionIndex]?.type === 'fill_in' && (
                                                     <input autoFocus className="w-full p-4 md:p-6 bg-white/40 dark:bg-white/5 border-2 border-espresso/10 focus:border-espresso rounded-2xl md:rounded-3xl text-lg md:text-2xl font-bold text-center outline-none transition-all placeholder:text-espresso/10" placeholder={t('student.quiz.fill_in_placeholder')} value={userAnswers[currentQuestionIndex] || ''} onChange={(e) => handleAnswer(currentQuestionIndex, e.target.value)} />
                                                 )}
 
-                                                {activeQuiz?.questions[currentQuestionIndex]?.type === 'matching' && (
+                                                {shuffledQuestions[currentQuestionIndex]?.type === 'matching' && (
                                                     <div className="space-y-6">
                                                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10">
                                                             <div className="space-y-2 md:space-y-4">
                                                                 <p className="text-[10px] font-black text-espresso/30 dark:text-white/30 uppercase tracking-[0.2em] mb-2">{t('student.quiz.matching.static_label') || 'STILL POSITIONS'}</p>
-                                                                {activeQuiz?.questions[currentQuestionIndex]?.pairs.map((p, i) => (
+                                                                {shuffledQuestions[currentQuestionIndex]?.pairs.map((p, i) => (
                                                                     <div key={i} className="p-3 md:p-5 bg-white/30 dark:bg-white/5 border border-espresso/10 rounded-xl md:rounded-2xl font-bold text-sm md:text-base text-espresso/60 dark:text-white/60 flex items-center gap-3">
                                                                         <span className="shrink-0 size-6 md:size-8 rounded-lg bg-espresso/5 flex items-center justify-center text-[10px] md:text-xs">{(i + 1).toString().padStart(2, '0')}</span>
                                                                         {p.key}
@@ -570,7 +608,7 @@ export function StudentCourseView() {
                                                                 {(matchingOrder || []).map((matchedIdx, i) => (
                                                                     <div key={i} className="flex gap-2">
                                                                         <div className="flex-1 p-3 md:p-5 bg-espresso/5 border-2 border-espresso/20 rounded-xl md:rounded-2xl flex items-center justify-between font-bold text-xs md:text-base text-espresso uppercase tracking-widest shadow-sm">
-                                                                            <span className="truncate pr-2">{activeQuiz?.questions[currentQuestionIndex]?.pairs[matchedIdx].value}</span>
+                                                                            <span className="truncate pr-2">{shuffledQuestions[currentQuestionIndex]?.pairs[matchedIdx].value}</span>
                                                                             <div className="flex items-center gap-1 md:gap-3 shrink-0">
                                                                                 <button
                                                                                     disabled={i === 0}
@@ -599,7 +637,7 @@ export function StudentCourseView() {
                                             <div className="mt-10 md:mt-16 flex flex-col sm:flex-row justify-between items-center gap-4 relative z-10">
                                                 <p className="text-[9px] md:text-[10px] font-black text-espresso/20 dark:text-white/20 uppercase tracking-[0.2em]">{t('student.quiz.footer_note')}</p>
                                                 <button onClick={handleNextQuestion} className="w-full sm:w-auto px-8 md:px-10 py-3.5 md:py-4 bg-espresso text-white font-black uppercase tracking-widest text-[9px] md:text-[10px] rounded-xl md:rounded-2xl shadow-xl hover:shadow-espresso/40 transition-all flex items-center justify-center gap-3 active:scale-95">
-                                                    {currentQuestionIndex === (activeQuiz?.questions?.length || 0) - 1 ? t('student.quiz.finalize_btn') : t('student.quiz.next_btn')}<span className="material-symbols-outlined text-[18px] md:text-[20px]">arrow_forward</span>
+                                                    {currentQuestionIndex === (shuffledQuestions?.length || 0) - 1 ? t('student.quiz.finalize_btn') : t('student.quiz.next_btn')}<span className="material-symbols-outlined text-[18px] md:text-[20px]">arrow_forward</span>
                                                 </button>
                                             </div>
                                         </div>

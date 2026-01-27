@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, where, getDocs, orderBy, limit, getCountFromServer } from 'firebase/firestore';
+import { collection, query, where, getDocs, orderBy, limit, getCountFromServer, collectionGroup } from 'firebase/firestore';
 import { useTranslation } from 'react-i18next';
 import { db } from '../../lib/firebase';
 import { Link } from 'react-router-dom';
@@ -12,6 +12,7 @@ export function AdminDashboard() {
         pendingApprovals: 0,
         activeCourses: 0,
         monthlyRevenue: 0,
+        quizRequests: 0,
         studentEngagement: 94 // Still slightly mock, or could be (active/total)*100
     });
     const [enrollmentData, setEnrollmentData] = useState([]);
@@ -154,16 +155,46 @@ export function AdminDashboard() {
                 });
 
 
+                setEnrollmentData(chartData);
+                setCourseStats(courseStatsData);
+                setRecentEnrollments(recentData);
+
+                // 6. Quiz Requests (Trying collectionGroup first, then fallback to per-student fetch if needed)
+                let quizRequestsCount = 0;
+                try {
+                    const quizRequestsRef = collectionGroup(db, 'progress');
+                    const quizRequestSnap = await getDocs(quizRequestsRef);
+                    if (!quizRequestSnap.empty) {
+                        quizRequestsCount = quizRequestSnap.docs.filter(doc => doc.data().quizRequested === true).length;
+                    }
+
+                    // If still 0 and we have students, use fallback (collectionGroup might be blocked by rules or indexes)
+                    if (quizRequestsCount === 0 && students.length > 0) {
+                        let fallbackCount = 0;
+                        await Promise.all(students.map(async (student) => {
+                            const pSnap = await getDocs(collection(db, 'users', student.id, 'progress'));
+                            fallbackCount += pSnap.docs.filter(d => d.data().quizRequested === true).length;
+                        }));
+                        quizRequestsCount = fallbackCount;
+                    }
+                } catch (e) {
+                    console.warn("Quiz requests collectionGroup failed, using fallback:", e);
+                    let fallbackCount = 0;
+                    await Promise.all(students.map(async (student) => {
+                        const pSnap = await getDocs(collection(db, 'users', student.id, 'progress'));
+                        fallbackCount += pSnap.docs.filter(d => d.data().quizRequested === true).length;
+                    }));
+                    quizRequestsCount = fallbackCount;
+                }
+
                 setStats({
                     totalStudents,
                     pendingApprovals,
                     activeCourses: activeCoursesCount,
                     monthlyRevenue,
-                    studentEngagement: studentEngagement || 94 // fallback to default if 0 to look good? No, let's trust real
+                    quizRequests: quizRequestsCount,
+                    studentEngagement: studentEngagement || 94
                 });
-                setEnrollmentData(chartData);
-                setCourseStats(courseStatsData);
-                setRecentEnrollments(recentData);
 
             } catch (err) {
                 console.error("Error fetching dashboard data:", err);
@@ -231,6 +262,18 @@ export function AdminDashboard() {
                         <div>
                             <p className="text-3xl md:text-5xl font-serif font-black leading-none text-amber-600">{stats.pendingApprovals}</p>
                             <p className="text-espresso/30 dark:text-white/30 text-[9px] font-black mt-4 uppercase tracking-[0.2em]">{t('admin.dashboard.approvals_required')}</p>
+                        </div>
+                    </div>
+
+                    <div className="flex min-w-[240px] md:min-w-[280px] flex-1 snap-center flex-col gap-4 rounded-3xl md:rounded-[2rem] p-5 md:p-8 bg-white/40 dark:bg-black/20 text-espresso dark:text-white border border-espresso/10 shadow-xl relative overflow-hidden group">
+                        <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover:bg-espresso transition-colors"></div>
+                        <div className="flex items-center gap-3">
+                            <span className="material-symbols-outlined text-espresso/40 dark:text-white/40">quiz</span>
+                            <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-widest">Quiz Requests</p>
+                        </div>
+                        <div>
+                            <p className="text-3xl md:text-5xl font-serif font-black leading-none text-amber-500">{stats.quizRequests}</p>
+                            <p className="text-espresso/30 dark:text-white/30 text-[9px] font-black mt-4 uppercase tracking-[0.2em]">Pending Authorization</p>
                         </div>
                     </div>
                 </div>
