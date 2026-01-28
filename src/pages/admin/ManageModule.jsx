@@ -1195,6 +1195,27 @@ export function ManageModule() {
                                     </button>
 
                                     <button
+                                        onClick={async () => {
+                                            if (!window.confirm("Assign this module to ALL fetched students?")) return;
+                                            const allStudentIds = students.map(s => s.id);
+                                            setAssignedStudents(allStudentIds);
+                                            try {
+                                                await updateDoc(doc(db, 'courses', courseId, 'modules', moduleId), {
+                                                    assignedStudents: allStudentIds
+                                                });
+                                                alert(`Successfully assigned module to ${allStudentIds.length} students.`);
+                                            } catch (error) {
+                                                console.error("Sync Error:", error);
+                                                alert("Failed to assign all: " + error.message);
+                                            }
+                                        }}
+                                        className="flex-1 md:flex-none px-4 md:px-6 py-2.5 md:py-3 bg-espresso/10 text-espresso font-black uppercase tracking-[0.2em] text-[8px] md:text-[10px] rounded-xl hover:bg-espresso hover:text-white transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2"
+                                    >
+                                        <span className="material-symbols-outlined text-[16px] md:text-[18px]">group_add</span>
+                                        Assign All
+                                    </button>
+
+                                    <button
                                         onClick={resetProgressForAll}
                                         className="flex-1 md:flex-none px-4 md:px-6 py-2.5 md:py-3 bg-red-500/10 text-red-600 border border-red-500/20 font-black uppercase tracking-[0.2em] text-[8px] md:text-[10px] rounded-xl hover:bg-red-600 hover:text-white transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2 group/reset"
                                     >
