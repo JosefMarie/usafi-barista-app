@@ -65,6 +65,10 @@ export function StudentCourseView() {
                 setModule({ id: docSnap.id, ...data });
                 setIsQuizAllowed(data.quizAllowedStudents?.includes(user.uid) || false);
 
+                if (data.isFinalAssessment) {
+                    setShowQuiz(true);
+                }
+
                 // Progress still fetched once as it's user-specific and changes frequently
                 if (!isProgressLoaded) {
                     try {
@@ -327,14 +331,18 @@ export function StudentCourseView() {
                 passed,
                 completedAt: serverTimestamp(),
                 status: passed ? 'completed' : 'failed',
-                attempts: newAttempts
+                attempts: newAttempts,
+                attemptsHistory: arrayUnion({
+                    score,
+                    passed,
+                    completedAt: new Date().toISOString(), // Use string for easier array storage/retrieval without serverTimestamp issues in arrays
+                    attemptNumber: newAttempts
+                })
             };
 
             // If failed for the 2nd time, lock it
             if (!passed && newAttempts >= 2) {
-                updateData.quizRequested = false; // Reset so they can request again if needed? Or wait...
-                // The requirement says: "if he failures again then he can request do do it again where admin can grant him access to do it again"
-                // This means we should remove them from quizAllowedStudents on the module doc.
+                updateData.quizRequested = false;
             }
 
             await setDoc(doc(db, 'users', user.uid, 'progress', moduleId), updateData, { merge: true });

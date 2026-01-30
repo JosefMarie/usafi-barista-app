@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { doc, getDoc, updateDoc, collection, query, where, onSnapshot, orderBy } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, collection, query, where, onSnapshot, orderBy, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { cn } from '../../lib/utils';
 
@@ -205,13 +205,39 @@ export function ManageCourse() {
                         <span className="w-8 h-px bg-espresso/20"></span>
                         Instructional Node Matrix
                     </h3>
-                    <button
-                        onClick={() => navigate(`/admin/courses/${courseId}/modules/new`)}
-                        className="w-full sm:w-auto flex items-center justify-center gap-3 bg-espresso text-white px-6 py-3 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] shadow-xl hover:shadow-espresso/40 hover:-translate-y-1 transition-all active:scale-95 group"
-                    >
-                        <span className="material-symbols-outlined text-[18px] md:text-[20px] group-hover:rotate-90 transition-transform">add</span>
-                        Insert New Node
-                    </button>
+                    <div className="flex gap-3">
+                        <button
+                            onClick={async () => {
+                                if (!window.confirm("Create Final Assessment Module?")) return;
+                                try {
+                                    await addDoc(collection(db, 'courses', courseId, 'modules'), {
+                                        title: "Final Assessment",
+                                        isFinalAssessment: true,
+                                        status: 'draft',
+                                        createdAt: serverTimestamp(),
+                                        content: [],
+                                        quiz: { questions: [], passMark: 70 },
+                                        assignedStudents: [],
+                                        quizAllowedStudents: []
+                                    });
+                                } catch (e) {
+                                    console.error("Error creating final assessment:", e);
+                                    alert("Failed to create final assessment");
+                                }
+                            }}
+                            className="w-full sm:w-auto flex items-center justify-center gap-3 bg-white/40 text-espresso px-6 py-3 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] shadow-sm border border-espresso/10 hover:bg-espresso hover:text-white transition-all active:scale-95 group"
+                        >
+                            <span className="material-symbols-outlined text-[18px] md:text-[20px] group-hover:scale-110 transition-transform">school</span>
+                            Final Assessment
+                        </button>
+                        <button
+                            onClick={() => navigate(`/admin/courses/${courseId}/modules/new`)}
+                            className="w-full sm:w-auto flex items-center justify-center gap-3 bg-espresso text-white px-6 py-3 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] shadow-xl hover:shadow-espresso/40 hover:-translate-y-1 transition-all active:scale-95 group"
+                        >
+                            <span className="material-symbols-outlined text-[18px] md:text-[20px] group-hover:rotate-90 transition-transform">add</span>
+                            Insert New Node
+                        </button>
+                    </div>
                 </div>
 
                 <div className="space-y-4">

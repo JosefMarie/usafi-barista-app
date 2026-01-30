@@ -53,6 +53,7 @@ import { Categories } from './pages/admin/Categories';
 import { Quizzes } from './pages/admin/Quizzes';
 import { Testimonials as AdminTestimonials } from './pages/admin/Testimonials';
 import { ActivityLog } from './pages/admin/ActivityLog';
+import { AdminReports } from './pages/admin/AdminReports';
 import { SetupAdmin } from './pages/admin/SetupAdmin';
 import { ForumList } from './pages/forum/ForumList';
 import { CreatePost } from './pages/forum/CreatePost';
@@ -190,6 +191,7 @@ function App() {
               <Route path="testimonials" element={<AdminTestimonials />} />
               <Route path="activity-log" element={<ActivityLog />} />
               <Route path="activity-log" element={<ActivityLog />} />
+              <Route path="reports" element={<AdminReports />} />
               <Route path="seekers" element={<AdminSeekers />} />
               <Route path="business/users" element={<AdminBusinessUsers />} />
               <Route path="business/courses" element={<AdminBusinessCourses />} />

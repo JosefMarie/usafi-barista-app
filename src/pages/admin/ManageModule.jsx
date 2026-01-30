@@ -209,6 +209,7 @@ export function ManageModule() {
     const [summarySlides, setSummarySlides] = useState([]);
     const [contentType, setContentType] = useState('full'); // full, summary
     const [quiz, setQuiz] = useState({ questions: [], passMark: 70 });
+    const [isFinalAssessment, setIsFinalAssessment] = useState(false);
 
     const [students, setStudents] = useState([]);
     const [assignedStudents, setAssignedStudents] = useState([]);
@@ -287,7 +288,10 @@ export function ManageModule() {
                     setQuiz(initialLangs.en.quiz);
                     setAssignedStudents(data.assignedStudents || []);
                     setQuizAllowedStudents(data.quizAllowedStudents || []);
+                    setAssignedStudents(data.assignedStudents || []);
+                    setQuizAllowedStudents(data.quizAllowedStudents || []);
                     setDuration(data.duration || 0);
+                    setIsFinalAssessment(data.isFinalAssessment || false);
                 } else if (moduleId === 'new') {
                     // Initialize New Module State
                     setModule({
@@ -300,7 +304,9 @@ export function ManageModule() {
                     setQuiz({ questions: [], passMark: 70 });
                     setAssignedStudents([]);
                     setQuizAllowedStudents([]);
+                    setQuizAllowedStudents([]);
                     setDuration(0);
+                    setIsFinalAssessment(false);
                 } else {
                     navigate(`/admin/courses/${courseId}`);
                 }

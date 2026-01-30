@@ -71,6 +71,7 @@ export function AdminLayout() {
         { icon: 'school', label: t('admin.nav.students'), path: '/admin/students' },
         { icon: 'quiz', label: t('admin.nav.quizzes'), path: '/admin/quizzes' },
         { icon: 'record_voice_over', label: t('admin.nav.testimonials'), path: '/admin/testimonials' },
+        { icon: 'assessment', label: t('admin.nav.reports'), path: '/admin/reports' },
         { icon: 'work', label: t('admin.nav.manage_jobs'), path: '/admin/opportunities' },
         { icon: 'diversity_3', label: t('admin.nav.job_seekers'), path: '/admin/seekers' },
         { icon: 'admin_panel_settings', label: t('admin.nav.business_students'), path: '/admin/business/users' },

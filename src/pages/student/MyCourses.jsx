@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '../../lib/utils';
-import { collection, query, where, orderBy, onSnapshot, doc, getDoc, getDocs } from 'firebase/firestore';
+import { collection, query, where, orderBy, onSnapshot, doc, getDoc, getDocs, addDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
+import { StudentProgressReport } from '../../components/student/StudentProgressReport';
 
 const BEAN_TO_BREW_ID = 'bean-to-brew';
 
@@ -110,7 +111,7 @@ export function MyCourses() {
                 </h2>
 
                 <div className="space-y-4">
-                    {modules.map((module, index) => {
+                    {modules.filter(m => !m.isFinalAssessment).map((module, index) => {
                         const moduleProgress = progress[module.id];
                         const isCompleted = moduleProgress?.status === 'completed' || moduleProgress?.passed === true;
                         const isInProgress = !isCompleted && moduleProgress?.status === 'in-progress';
@@ -132,7 +133,7 @@ export function MyCourses() {
                                 )}></div>
 
                                 {/* Connector Line (except for last item) */}
-                                {index !== modules.length - 1 && (
+                                {index !== modules.filter(m => !m.isFinalAssessment).length - 1 && (
                                     <div className="absolute left-[39px] md:left-[47px] bottom-[-20px] w-0.5 h-[20px] bg-white/10 z-0"></div>
                                 )}
 
@@ -174,8 +175,128 @@ export function MyCourses() {
                             </div>
                         );
                     })}
+
+                    {/* Final Assessment Section */}
+                    {modules.filter(m => m.isFinalAssessment).map((module) => {
+                        const allOtherModules = modules.filter(m => !m.isFinalAssessment);
+                        const allCompleted = allOtherModules.every(m => {
+                            const p = progress[m.id];
+                            return p?.status === 'completed' || p?.passed === true;
+                        });
+
+                        const moduleProgress = progress[module.id];
+                        const isRequested = moduleProgress?.quizRequested;
+                        const isGranted = module.quizAllowedStudents?.includes(user?.uid) || false;
+                        const isPassed = moduleProgress?.passed === true;
+
+                        return (
+                            <div
+                                key={module.id}
+                                className={cn(
+                                    "relative bg-[#1c1916] p-5 md:p-8 rounded-[1.5rem] md:rounded-3xl border-2 transition-all duration-300 group overflow-hidden shadow-2xl mt-8",
+                                    allCompleted ? "border-amber-500/50 hover:border-amber-500" : "border-white/5 opacity-80"
+                                )}
+                            >
+                                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
+                                <div className="absolute left-0 top-0 bottom-0 w-1 md:w-1.5 transition-colors bg-amber-500/30 group-hover:bg-amber-500"></div>
+
+                                <div className="flex flex-col sm:flex-row items-center gap-5 md:gap-8 relative z-10 text-center sm:text-left">
+                                    <div className={cn(
+                                        "size-16 md:size-20 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 text-2xl md:text-3xl shadow-xl border border-white/5 rotate-3 group-hover:rotate-0 transition-transform",
+                                        isPassed ? "bg-green-600 text-white" : "bg-amber-600 text-white"
+                                    )}>
+                                        <span className="material-symbols-outlined">
+                                            {!allCompleted ? 'lock' : (isPassed ? 'workspace_premium' : 'school')}
+                                        </span>
+                                    </div>
+
+                                    <div className="flex-1 w-full">
+                                        <div className="mb-2">
+                                            <span className="px-3 py-1 bg-amber-500/20 text-amber-500 rounded-lg text-[8px] md:text-[9px] font-black uppercase tracking-widest border border-amber-500/20">
+                                                Final Assessment
+                                            </span>
+                                        </div>
+                                        <h3 className="text-xl md:text-2xl font-serif font-bold text-white mb-1">
+                                            {module.title}
+                                        </h3>
+                                        <p className="text-xs text-white/40 font-medium">
+                                            {!allCompleted
+                                                ? "Complete all previous modules to unlock this assessment."
+                                                : "Demonstrate your mastery to earn your certification."}
+                                        </p>
+                                    </div>
+
+                                    <div className="w-full sm:w-auto pt-4 sm:pt-0 border-t sm:border-none border-white/5">
+                                        {!allCompleted ? (
+                                            <button disabled className="w-full sm:w-auto px-6 md:px-8 py-3 bg-white/5 text-white/40 font-black uppercase tracking-widest text-[9px] md:text-[10px] rounded-xl md:rounded-2xl cursor-not-allowed flex items-center justify-center gap-2">
+                                                <span className="material-symbols-outlined text-[16px]">lock</span>
+                                                Locked
+                                            </button>
+                                        ) : (
+                                            isGranted ? (
+                                                <button
+                                                    onClick={() => navigate(`/student/courses/${BEAN_TO_BREW_ID}?module=${module.id}`)}
+                                                    className="w-full sm:w-auto px-6 md:px-8 py-3 bg-amber-500 text-black font-black uppercase tracking-widest text-[9px] md:text-[10px] rounded-xl md:rounded-2xl hover:bg-amber-400 hover:shadow-2xl transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2"
+                                                >
+                                                    <span className="material-symbols-outlined text-[16px]">play_arrow</span>
+                                                    Start Exam
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    disabled={isRequested}
+                                                    onClick={async () => {
+                                                        if (isRequested) return;
+                                                        try {
+                                                            await updateDoc(doc(db, 'users', user.uid, 'progress', module.id), {
+                                                                quizRequested: true,
+                                                                requestedAt: serverTimestamp()
+                                                            });
+                                                            // Optimistic update
+                                                            setProgress(prev => ({
+                                                                ...prev,
+                                                                [module.id]: { ...prev[module.id], quizRequested: true }
+                                                            }));
+                                                            alert("Access requested. Please wait for admin approval.");
+                                                        } catch (e) {
+                                                            console.error(e);
+                                                            // If doc doesn't exist yet
+                                                            try {
+                                                                await import('firebase/firestore').then(mod => mod.setDoc(doc(db, 'users', user.uid, 'progress', module.id), {
+                                                                    quizRequested: true,
+                                                                    requestedAt: serverTimestamp()
+                                                                }));
+                                                                setProgress(prev => ({
+                                                                    ...prev,
+                                                                    [module.id]: { ...prev[module.id], quizRequested: true }
+                                                                }));
+                                                                alert("Access requested. Please wait for admin approval.");
+                                                            } catch (err) {
+                                                                console.error(err);
+                                                                alert("Error requesting access.");
+                                                            }
+                                                        }
+                                                    }}
+                                                    className={cn(
+                                                        "w-full sm:w-auto px-6 md:px-8 py-3 font-black uppercase tracking-widest text-[9px] md:text-[10px] rounded-xl md:rounded-2xl transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2",
+                                                        isRequested ? "bg-white/10 text-white/60 cursor-default" : "bg-white text-espresso hover:bg-amber-50"
+                                                    )}
+                                                >
+                                                    <span className="material-symbols-outlined text-[16px]">{isRequested ? 'pending' : 'vpn_key'}</span>
+                                                    {isRequested ? "Request Pending" : "Request Access"}
+                                                </button>
+                                            )
+                                        )}
+
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
+
+            {/* Student Progress Report */}
+            <StudentProgressReport courseId={BEAN_TO_BREW_ID} />
         </div >
     );
 }
