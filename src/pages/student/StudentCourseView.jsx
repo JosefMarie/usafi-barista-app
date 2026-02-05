@@ -86,7 +86,7 @@ export function StudentCourseView() {
                             });
                             if (progressData.passed) {
                                 setQuizResult({ score: progressData.score, passed: true });
-                                setShowQuiz(true);
+                                // Remove setShowQuiz(true) to allow students to land on slides first
                             }
                         }
                         setIsProgressLoaded(true);
@@ -544,10 +544,18 @@ export function StudentCourseView() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <button onClick={startQuiz} className="w-full py-4 md:py-6 bg-espresso text-white font-black uppercase tracking-[0.3em] text-[10px] md:text-sm rounded-2xl shadow-xl active:scale-95 transition-all hover:bg-black hover:shadow-espresso/20 flex items-center justify-center gap-3">
-                                            {t('student.quiz.start_btn')}
-                                            <span className="material-symbols-outlined text-lg">play_arrow</span>
-                                        </button>
+                                        {!stats.passed ? (
+                                            <button onClick={startQuiz} className="w-full py-4 md:py-6 bg-espresso text-white font-black uppercase tracking-[0.3em] text-[10px] md:text-sm rounded-2xl shadow-xl active:scale-95 transition-all hover:bg-black hover:shadow-espresso/20 flex items-center justify-center gap-3">
+                                                {t('student.quiz.start_btn')}
+                                                <span className="material-symbols-outlined text-lg">play_arrow</span>
+                                            </button>
+                                        ) : (
+                                            <div className="p-6 md:p-8 bg-green-500/10 border border-green-500/20 rounded-2xl text-center">
+                                                <span className="material-symbols-outlined text-4xl text-green-600 mb-2">verified</span>
+                                                <p className="text-green-700 font-bold uppercase tracking-widest text-[10px] md:text-xs">You have already mastered this module.</p>
+                                                <p className="text-green-600/60 text-[9px] md:text-[10px] mt-1 uppercase tracking-tight">Accessing notes is permitted, but evaluation is finalized.</p>
+                                            </div>
+                                        )}
                                     </div>
                                 ) : (
                                     <div className="space-y-6">
