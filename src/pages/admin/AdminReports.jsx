@@ -3,12 +3,15 @@ import { collection, query, getDocs, where } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { cn } from '../../lib/utils';
 import { StudentTranscript } from '../../components/admin/StudentTranscript';
+import { StudentCertificate } from '../../components/admin/StudentCertificate';
+import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
 
 export function AdminReports() {
     const [students, setStudents] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(true);
     const [selectedStudent, setSelectedStudent] = useState(null);
+    const [viewMode, setViewMode] = useState('list'); // 'list', 'transcript', 'certificate'
 
     useEffect(() => {
         const fetchStudents = async () => {
@@ -36,24 +39,52 @@ export function AdminReports() {
     if (selectedStudent) {
         return (
             <div className="flex-1 flex flex-col h-full bg-white dark:bg-[#1c1916] overflow-y-auto p-4 md:p-8">
-                <div className="max-w-5xl mx-auto w-full mb-8 flex justify-between items-center print:hidden">
+                <div className="max-w-6xl mx-auto w-full mb-8 flex justify-between items-center print:hidden">
                     <button
-                        onClick={() => setSelectedStudent(null)}
+                        onClick={() => {
+                            setSelectedStudent(null);
+                            setViewMode('list');
+                        }}
                         className="flex items-center gap-2 px-4 py-2 bg-espresso/10 text-espresso rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-espresso hover:text-white transition-all"
                     >
                         <span className="material-symbols-outlined">arrow_back</span>
                         Back to List
                     </button>
-                    <button
-                        onClick={() => window.print()}
-                        className="flex items-center gap-2 px-6 py-3 bg-espresso text-white rounded-xl font-black uppercase tracking-widest text-[10px] shadow-xl hover:scale-105 active:scale-95 transition-all"
-                    >
-                        <span className="material-symbols-outlined">print</span>
-                        Print Transcript
-                    </button>
+                    {viewMode === 'transcript' ? (
+                        <button
+                            onClick={() => window.print()}
+                            className="flex items-center gap-2 px-6 py-3 bg-espresso text-white rounded-xl font-black uppercase tracking-widest text-[10px] shadow-xl hover:scale-105 active:scale-95 transition-all"
+                        >
+                            <span className="material-symbols-outlined">print</span>
+                            Print Transcript
+                        </button>
+                    ) : (
+                        <PDFDownloadLink
+                            document={<StudentCertificate student={selectedStudent} />}
+                            fileName={`USAFI_Certificate_${selectedStudent.fullName || 'Student'}.pdf`}
+                            className="flex items-center gap-2 px-6 py-3 bg-espresso text-white rounded-xl font-black uppercase tracking-widest text-[10px] shadow-xl hover:scale-105 active:scale-95 transition-all"
+                        >
+                            {({ loading }) => (
+                                <>
+                                    <span className="material-symbols-outlined">{loading ? 'sync' : 'download'}</span>
+                                    {loading ? 'Preparing Certificate...' : 'Download Certificate'}
+                                </>
+                            )}
+                        </PDFDownloadLink>
+                    )}
                 </div>
-                <div className="flex justify-center">
-                    <StudentTranscript student={selectedStudent} />
+                <div className="flex justify-center w-full" style={{ height: 'calc(100vh - 250px)', minHeight: '700px' }}>
+                    {viewMode === 'transcript' ? (
+                        <div className="w-full max-w-5xl">
+                            <StudentTranscript student={selectedStudent} />
+                        </div>
+                    ) : (
+                        <div className="w-full h-full max-w-6xl">
+                            <PDFViewer width="100%" height="100%" className="rounded-2xl border-2 border-espresso/10 shadow-2xl" showToolbar={true}>
+                                <StudentCertificate student={selectedStudent} />
+                            </PDFViewer>
+                        </div>
+                    )}
                 </div>
             </div>
         );
@@ -102,12 +133,26 @@ export function AdminReports() {
                                             <p className="text-xs text-espresso/60">{student.email}</p>
                                         </div>
                                     </div>
-                                    <button
-                                        onClick={() => setSelectedStudent(student)}
-                                        className="px-4 py-2 bg-espresso/5 text-espresso rounded-xl text-[10px] font-black uppercase tracking-widest border border-espresso/10 group-hover:bg-espresso group-hover:text-white transition-all active:scale-95"
-                                    >
-                                        Generate Transcript
-                                    </button>
+                                    <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={() => {
+                                                setSelectedStudent(student);
+                                                setViewMode('transcript');
+                                            }}
+                                            className="px-4 py-2 bg-espresso/5 text-espresso rounded-xl text-[10px] font-black uppercase tracking-widest border border-espresso/10 hover:bg-espresso hover:text-white transition-all active:scale-95"
+                                        >
+                                            Transcript
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                setSelectedStudent(student);
+                                                setViewMode('certificate');
+                                            }}
+                                            className="px-4 py-2 bg-espresso text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg hover:shadow-espresso/20 transition-all active:scale-95"
+                                        >
+                                            Certificate
+                                        </button>
+                                    </div>
                                 </div>
                             ))}
                         </div>
