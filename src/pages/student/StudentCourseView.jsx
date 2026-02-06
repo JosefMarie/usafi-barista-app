@@ -69,7 +69,6 @@ export function StudentCourseView() {
                     setShowQuiz(true);
                 }
 
-                // Progress still fetched once as it's user-specific and changes frequently
                 if (!isProgressLoaded) {
                     try {
                         const progressRef = doc(db, 'users', user.uid, 'progress', moduleId);
@@ -81,12 +80,11 @@ export function StudentCourseView() {
                             }
                             setQuizRequested(progressData.quizRequested || false);
                             setStats({
-                                attempts: progressData.attempts || 0,
+                                attempts: Number(progressData.attempts || 0),
                                 passed: progressData.passed || false
                             });
                             if (progressData.passed) {
                                 setQuizResult({ score: progressData.score, passed: true });
-                                // Remove setShowQuiz(true) to allow students to land on slides first
                             }
                         }
                         setIsProgressLoaded(true);
@@ -104,7 +102,7 @@ export function StudentCourseView() {
         });
 
         return () => unsubscribe();
-    }, [courseId, moduleId, user, navigate, t, isProgressLoaded]);
+    }, [courseId, moduleId, user, navigate, t]);
 
     useEffect(() => {
         const saveProgress = async () => {
@@ -203,6 +201,13 @@ export function StudentCourseView() {
     }, [showQuiz, quizStarted, quizResult, timeLeft, currentQuestionIndex]);
 
     const startQuiz = () => {
+        // Redundant safety check
+        if (!stats.passed && Number(stats.attempts) >= 3 && !isQuizAllowed) {
+            alert("Maximum attempts reached. Please request access.");
+            setShowQuiz(true); // Ensure it shows the lock screen
+            return;
+        }
+
         // Shuffle questions
         const questions = [...(activeQuiz?.questions || [])];
         const shuffled = questions.sort(() => Math.random() - 0.5);
@@ -340,14 +345,14 @@ export function StudentCourseView() {
                 })
             };
 
-            // If failed for the 2nd time, lock it
-            if (!passed && newAttempts >= 2) {
+            // If failed for the 3rd time, lock it
+            if (!passed && newAttempts >= 3) {
                 updateData.quizRequested = false;
             }
 
             await setDoc(doc(db, 'users', user.uid, 'progress', moduleId), updateData, { merge: true });
 
-            if (!passed && newAttempts >= 2) {
+            if (!passed && newAttempts >= 3) {
                 const modRef = doc(db, 'courses', courseId, 'modules', moduleId);
                 const modSnap = await getDoc(modRef);
                 if (modSnap.exists()) {
@@ -495,13 +500,17 @@ export function StudentCourseView() {
 
             <main className="flex-1 w-full p-4 md:p-6 pb-28 md:pb-24 max-w-6xl mx-auto">
                 {showQuiz ? (
-                    (module.quizAllowedStudents && !isQuizAllowed) ? (
+                    (!stats.passed && stats.attempts >= 3 && !isQuizAllowed) ? (
                         <div className="animate-fade-in flex flex-col items-center justify-center min-h-[50vh] text-center space-y-6 max-w-2xl mx-auto px-6">
                             <div className="w-24 h-24 bg-espresso/5 rounded-[2rem] flex items-center justify-center text-espresso/30 mb-4 animate-pulse">
                                 <span className="material-symbols-outlined text-5xl">{quizRequested ? 'pending_actions' : 'lock_clock'}</span>
                             </div>
-                            <h2 className="text-2xl md:text-4xl font-serif font-black text-espresso dark:text-white">{quizRequested ? 'Quiz Access Pending' : 'Assessment Protocol Locked'}</h2>
-                            <p className="text-sm md:text-base font-medium text-espresso/60 dark:text-white/60 leading-relaxed">{quizRequested ? "Your request for assessment authorization is currently under review." : "Authorization has not been granted. You must request access."}</p>
+                            <h2 className="text-2xl md:text-4xl font-serif font-black text-espresso dark:text-white">{quizRequested ? 'Quiz Access Pending' : 'Maximum Attempts Exceeded'}</h2>
+                            <p className="text-sm md:text-base font-medium text-espresso/60 dark:text-white/60 leading-relaxed">
+                                {quizRequested
+                                    ? "Your request for additional assessment attempts is currently under review by the administration."
+                                    : "You have reached the maximum limit of 3 attempts for this module's evaluation. To proceed, you must request special authorization from the administration."}
+                            </p>
                             {!quizRequested ? (
                                 <button onClick={requestQuizAccess} className="px-10 py-4 bg-espresso text-white rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-black transition-all shadow-2xl active:scale-95 flex items-center gap-3">
                                     <span className="material-symbols-outlined">request_quote</span>Request Quiz Access
@@ -678,7 +687,16 @@ export function StudentCourseView() {
                                     ) : (
                                         <div className="space-y-6 md:space-y-8 max-w-md mx-auto">
                                             <p className="text-[10px] md:text-sm font-bold text-espresso/60 dark:text-white/60 leading-relaxed uppercase tracking-widest">{t('student.quiz.results.failed.desc')}</p>
-                                            <button onClick={retakeModule} className="w-full px-8 md:px-10 py-4 md:py-6 bg-espresso text-white font-black uppercase tracking-[0.3em] text-[10px] md:text-xs rounded-2xl shadow-xl hover:bg-black transition-all flex items-center justify-center gap-3 active:scale-95"><span className="material-symbols-outlined text-[18px]">refresh</span> {t('student.quiz.results.failed.btn')}</button>
+                                            {stats.attempts < 3 ? (
+                                                <button onClick={retakeModule} className="w-full px-8 md:px-10 py-4 md:py-6 bg-espresso text-white font-black uppercase tracking-[0.3em] text-[10px] md:text-xs rounded-2xl shadow-xl hover:bg-black transition-all flex items-center justify-center gap-3 active:scale-95"><span className="material-symbols-outlined text-[18px]">refresh</span> {t('student.quiz.results.failed.btn')}</button>
+                                            ) : (
+                                                <div className="bg-espresso/5 p-6 rounded-2xl border border-espresso/10 text-center space-y-4">
+                                                    <span className="material-symbols-outlined text-3xl text-espresso/40">lock</span>
+                                                    <p className="text-[10px] font-black text-espresso/60 uppercase tracking-widest">Assessment Protocol Finalized</p>
+                                                    <p className="text-[9px] font-bold text-espresso/40">You have exhausted the standard attempt limit. Please return to the narrative or request admin assistance.</p>
+                                                    <button onClick={requestQuizAccess} className="w-full mt-2 py-3 bg-espresso text-white rounded-xl text-[9px] font-black uppercase tracking-widest shadow-lg">Request Extra Attempts</button>
+                                                </div>
+                                            )}
                                         </div>
                                     )}
                                 </div>

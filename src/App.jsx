@@ -31,6 +31,7 @@ import { BusinessCourseView } from './pages/business/BusinessCourseView';
 import { PaymentPending } from './pages/seeker/PaymentPending';
 import { SeekerDashboard } from './pages/seeker/SeekerDashboard';
 import { SeekerProfile } from './pages/seeker/SeekerProfile';
+import { VerifyCertificate } from './pages/public/VerifyCertificate';
 
 // Auth Pages
 import { Login } from './pages/auth/Login';
@@ -142,6 +143,7 @@ function App() {
               <Route path="seeker/login" element={<SeekerLogin />} />
               <Route path="business/register" element={<BusinessRegister />} />
               <Route path="business/login" element={<BusinessLogin />} />
+              <Route path="verify/:id" element={<VerifyCertificate />} />
             </Route>
 
             {/* Seeker Routes */}

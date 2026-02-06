@@ -15,10 +15,69 @@ export function Quizzes() {
     ]);
 
     // Results State
-    const [results, setResults] = useState([]);
+    const [results, setResults] = useState([]); // Array of { studentId, studentName, modules: { [moduleId]: { name, attempts, score, passed, date } } }
+    const [expandedStudents, setExpandedStudents] = useState(new Set());
     const [modules, setModules] = useState([]);
     const [selectedModule, setSelectedModule] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
+
+    const toggleStudent = (id) => {
+        const newSet = new Set(expandedStudents);
+        if (newSet.has(id)) newSet.delete(id);
+        else newSet.add(id);
+        setExpandedStudents(newSet);
+    };
+
+    const grantAccess = async (studentId, moduleId) => {
+        try {
+            const progressRef = doc(db, 'users', studentId, 'progress', moduleId);
+            const progSnap = await getDoc(progressRef);
+            if (!progSnap.exists()) {
+                alert("Could not find progress data for this student/module.");
+                return;
+            }
+            const progData = progSnap.data();
+            const cid = progData.courseId;
+            if (!cid) {
+                alert("Course ID missing in progress data.");
+                return;
+            }
+
+            await updateDoc(progressRef, {
+                quizRequested: false,
+                attempts: 0, // Reset attempts to 0 so they get 3 more
+                updatedAt: serverTimestamp()
+            });
+
+            const moduleRef = doc(db, 'courses', cid, 'modules', moduleId);
+            await updateDoc(moduleRef, {
+                quizAllowedStudents: arrayUnion(studentId)
+            });
+
+            // Local update
+            setResults(prev => prev.map(res => {
+                if (res.studentId === studentId) {
+                    return {
+                        ...res,
+                        modules: {
+                            ...res.modules,
+                            [moduleId]: {
+                                ...res.modules[moduleId],
+                                quizRequested: false,
+                                attempts: 0
+                            }
+                        }
+                    };
+                }
+                return res;
+            }));
+
+            alert("Access granted successfully.");
+        } catch (err) {
+            console.error("Error granting access:", err);
+            alert("Failed to grant access.");
+        }
+    };
 
     // Quiz Schema State
     const [allQuizzes, setAllQuizzes] = useState([]);
@@ -144,37 +203,52 @@ export function Quizzes() {
                     progressDocs = fallbackDocs;
                 }
 
-                const latestResultsMap = new Map(); // Key: studentId-moduleId
+                const studentStatsMap = new Map(); // Key: studentId
 
                 progressDocs.forEach(doc => {
                     const data = doc.data();
-                    const studentId = doc.ref.parent.parent.id; // path is users/{uid}/progress/{mid}
-                    const moduleId = doc.id; // The document ID is the module ID
+                    const studentId = doc.ref.parent.parent.id;
+                    const moduleId = doc.id;
 
                     if (data.score === undefined) return;
 
-                    const key = `${studentId}-${moduleId}`;
-                    const currentAttempt = {
-                        id: doc.id,
-                        studentId,
-                        studentName: userMap[studentId] || 'Deleted Student',
-                        moduleId: moduleId,
-                        moduleName: modulesList.find(m => m.id === moduleId)?.title || 'Unknown Module',
-                        score: data.score,
-                        passed: data.passed,
-                        attempts: data.attempts || 1, // Default to 1 for older data
-                        date: data.completedAt?.toDate?.() || new Date(data.updatedAt?.toDate?.() || Date.now()),
-                        status: data.status
-                    };
+                    if (!studentStatsMap.has(studentId)) {
+                        studentStatsMap.set(studentId, {
+                            studentId,
+                            studentName: userMap[studentId] || 'Deleted Student',
+                            modules: {}
+                        });
+                    }
 
-                    const existingAttempt = latestResultsMap.get(key);
-                    if (!existingAttempt || (currentAttempt.date > existingAttempt.date)) {
-                        latestResultsMap.set(key, currentAttempt);
+                    const studentData = studentStatsMap.get(studentId);
+                    const modTitle = modulesList.find(m => m.id === moduleId)?.title || 'Unknown Module';
+
+                    if (!studentData.modules[moduleId]) {
+                        studentData.modules[moduleId] = {
+                            id: moduleId,
+                            name: modTitle,
+                            attempts: data.attempts || 1,
+                            score: data.score,
+                            passed: data.passed,
+                            quizRequested: data.quizRequested || false,
+                            date: data.completedAt?.toDate?.() || new Date(data.updatedAt?.toDate?.() || Date.now())
+                        };
+                    } else {
+                        // Aggregate / Take latest
+                        const modData = studentData.modules[moduleId];
+                        modData.attempts = Math.max(modData.attempts, data.attempts || 1);
+                        if (data.quizRequested) modData.quizRequested = true;
+                        if (data.score > modData.score) {
+                            modData.score = data.score;
+                            modData.passed = data.passed;
+                        }
+                        const currentDate = data.completedAt?.toDate?.() || new Date(data.updatedAt?.toDate?.() || Date.now());
+                        if (currentDate > modData.date) modData.date = currentDate;
                     }
                 });
 
-                const quizResults = Array.from(latestResultsMap.values())
-                    .sort((a, b) => b.date - a.date);
+                const quizResults = Array.from(studentStatsMap.values())
+                    .sort((a, b) => a.studentName.localeCompare(b.studentName));
 
                 setResults(quizResults);
             } catch (err) {
@@ -187,19 +261,18 @@ export function Quizzes() {
         fetchData();
     }, []);
 
-    const filteredResults = results.filter(r => {
-        const matchesModule = selectedModule === 'all' || r.moduleId === selectedModule;
-        const sName = (r.studentName || '').toLowerCase();
-        const mName = (r.moduleName || '').toLowerCase();
-        const sId = (r.studentId || '').toLowerCase();
+    const filteredResults = results.filter(res => {
+        const sName = (res.studentName || '').toLowerCase();
+        const sId = (res.studentId || '').toLowerCase();
         const qTerm = (searchQuery || '').toLowerCase().trim();
 
-        const matchesSearch = !qTerm ||
-            sName.includes(qTerm) ||
-            mName.includes(qTerm) ||
-            sId.includes(qTerm);
+        // 1. Search Query Match
+        const matchesSearch = !qTerm || sName.includes(qTerm) || sId.includes(qTerm);
 
-        return matchesModule && matchesSearch;
+        // 2. Module Filter Match
+        const matchesModule = selectedModule === 'all' || Object.keys(res.modules).includes(selectedModule);
+
+        return matchesSearch && matchesModule;
     });
 
     const activeQuiz = allQuizzes.find(q => q.id === selectedQuizId);
@@ -476,71 +549,117 @@ export function Quizzes() {
                         </div>
 
                         {/* Registry Table */}
-                        <div className="bg-espresso rounded-[1.5rem] md:rounded-[2.5rem] border border-white/10 overflow-hidden shadow-2xl relative animate-in fade-in slide-in-from-bottom-4 duration-500">
-                            <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-white/20"></div>
-                            <div className="overflow-x-auto no-scrollbar">
-                                <table className="w-full text-left border-collapse min-w-[800px]">
-                                    <thead>
-                                        <tr className="bg-white/5 border-b border-white/10">
-                                            <th className="px-6 md:px-8 py-4 md:py-6 text-[9px] md:text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Participant</th>
-                                            <th className="px-6 md:px-8 py-4 md:py-6 text-[9px] md:text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Module Schema</th>
-                                            <th className="px-6 md:px-8 py-4 md:py-6 text-[9px] md:text-[10px] font-black text-white/40 uppercase tracking-[0.3em] text-center">Score Matrix</th>
-                                            <th className="px-6 md:px-8 py-4 md:py-6 text-[9px] md:text-[10px] font-black text-white/40 uppercase tracking-[0.3em] text-center">Attempts</th>
-                                            <th className="px-6 md:px-8 py-4 md:py-6 text-[9px] md:text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Completion</th>
-                                            <th className="px-6 md:px-8 py-4 md:py-6 text-[9px] md:text-[10px] font-black text-white/40 uppercase tracking-[0.3em] text-right">Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-white/5 font-medium">
-                                        {filteredResults.length > 0 ? filteredResults.map((res) => (
-                                            <tr key={res.id} className="hover:bg-white/5 transition-colors group">
-                                                <td className="px-8 py-6">
-                                                    <div className="flex flex-col">
-                                                        <span className="text-base font-serif font-black text-white !text-white uppercase tracking-tight group-hover:text-white/70 transition-colors">{res.studentName}</span>
-                                                        <span className="text-[9px] font-black text-white/20 !text-white/20 uppercase tracking-widest mt-1">ID: {res.studentId.slice(0, 12)}...</span>
-                                                    </div>
-                                                </td>
-                                                <td className="px-8 py-6">
-                                                    <span className="text-[10px] font-black text-white/60 !text-white/60 uppercase tracking-widest bg-white/10 px-3 py-1 rounded-lg border border-white/5 shadow-inner">{res.moduleName}</span>
-                                                </td>
-                                                <td className="px-8 py-6 text-center">
-                                                    <div className={cn(
-                                                        "inline-flex items-center justify-center size-12 rounded-2xl font-serif font-black text-lg border shadow-xl group-hover:scale-110 transition-transform",
-                                                        res.passed ? "bg-white text-green-600 border-green-100" : "bg-white text-red-600 border-red-100"
-                                                    )}>
-                                                        {Math.round(res.score)}%
-                                                    </div>
-                                                </td>
-                                                <td className="px-8 py-6 text-center">
-                                                    <span className="text-white/60 font-black font-serif text-lg">{res.attempts}</span>
-                                                </td>
-                                                <td className="px-8 py-6">
-                                                    <div className="flex items-center gap-2 text-[10px] font-black text-white/40 !text-white/40 uppercase tracking-widest">
-                                                        <span className="material-symbols-outlined text-[18px]">calendar_today</span>
-                                                        {res.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase()}
-                                                    </div>
-                                                </td>
-                                                <td className="px-8 py-6 text-right">
-                                                    <span className={cn(
-                                                        "px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-[0.2em] shadow-sm",
-                                                        res.passed ? "bg-green-600 text-white" : "bg-red-600 text-white"
-                                                    )}>
-                                                        {res.passed ? 'Verified' : 'Flagged'}
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        )) : (
-                                            <tr>
-                                                <td colSpan="6" className="px-8 py-24 text-center">
-                                                    <div className="flex flex-col items-center gap-4 opacity-20">
-                                                        <span className="material-symbols-outlined text-6xl text-white">database_off</span>
-                                                        <p className="text-[10px] font-black uppercase tracking-[0.5em] text-white">No synchronization data found</p>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        )}
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div className="space-y-6">
+                            {filteredResults.length > 0 ? filteredResults.map((res) => (
+                                <div key={res.studentId} className="bg-espresso rounded-[2rem] border border-white/10 overflow-hidden shadow-2xl relative transition-all group">
+                                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-white/20 group-hover:bg-white transition-colors"></div>
+
+                                    {/* Student Main Row */}
+                                    <div
+                                        onClick={() => toggleStudent(res.studentId)}
+                                        className="p-6 md:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6 cursor-pointer hover:bg-white/5 transition-colors"
+                                    >
+                                        <div className="flex items-center gap-6">
+                                            <div className="relative shrink-0">
+                                                <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl overflow-hidden border-2 border-white/40 shadow-xl group-hover:scale-105 transition-transform">
+                                                    <img
+                                                        src={`https://ui-avatars.com/api/?name=${encodeURIComponent(res.studentName)}&background=random&color=fff&bold=true`}
+                                                        alt={res.studentName}
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="space-y-1">
+                                                <h3 className="text-xl md:text-2xl font-serif font-black text-white uppercase tracking-tight">{res.studentName}</h3>
+                                                <p className="text-[9px] md:text-[10px] font-black text-white/40 uppercase tracking-[0.3em]">Participant Code: {res.studentId.slice(0, 12).toUpperCase()}</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex items-center gap-4 md:gap-8">
+                                            <div className="text-center">
+                                                <p className="text-[8px] md:text-[9px] font-black text-white/40 uppercase tracking-widest mb-1">Modules Cleared</p>
+                                                <p className="text-lg md:text-xl font-black text-white">{Object.keys(res.modules).length}</p>
+                                            </div>
+                                            <div className="h-10 w-px bg-white/10 hidden sm:block"></div>
+                                            <button className={cn(
+                                                "w-10 h-10 md:w-12 md:h-12 rounded-xl border border-white/10 flex items-center justify-center text-white transition-all",
+                                                expandedStudents.has(res.studentId) ? "bg-white text-espresso rotate-180" : "bg-white/5"
+                                            )}>
+                                                <span className="material-symbols-outlined">{expandedStudents.has(res.studentId) ? 'expand_less' : 'expand_more'}</span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {/* Dropdown / Module Details */}
+                                    {expandedStudents.has(res.studentId) && (
+                                        <div className="px-6 md:px-10 pb-8 md:pb-12 animate-in fade-in slide-in-from-top-4 duration-300">
+                                            <div className="pt-6 border-t border-white/5 space-y-4">
+                                                <h4 className="text-[10px] font-black text-white/40 uppercase tracking-[0.4em] mb-4 flex items-center gap-3">
+                                                    <span className="w-8 h-px bg-white/10"></span>
+                                                    Knowledge Breakdown
+                                                </h4>
+                                                <div className="grid gap-4">
+                                                    {Object.values(res.modules).map((mod) => (
+                                                        <div key={mod.id} className="bg-white/5 rounded-2xl p-4 md:p-6 border border-white/5 hover:border-white/20 transition-all flex flex-col md:flex-row md:items-center justify-between gap-6 group/mod">
+                                                            <div className="flex items-center gap-5">
+                                                                <div className={cn(
+                                                                    "w-10 h-10 rounded-xl flex items-center justify-center border shadow-sm",
+                                                                    mod.passed ? "bg-green-500/10 border-green-500/20 text-green-500" : "bg-red-500/10 border-red-500/20 text-red-500"
+                                                                )}>
+                                                                    <span className="material-symbols-outlined text-[20px]">{mod.passed ? 'verified' : 'error'}</span>
+                                                                </div>
+                                                                <div>
+                                                                    <p className="text-[11px] md:text-[13px] font-black text-white uppercase tracking-wider">{mod.name}</p>
+                                                                    <p className="text-[9px] font-black text-white/30 uppercase tracking-widest mt-1">LATEST SYNC: {mod.date.toLocaleDateString().toUpperCase()}</p>
+                                                                </div>
+                                                            </div>
+
+                                                            <div className="flex items-center gap-6 md:gap-12 pl-[60px] md:pl-0">
+                                                                <div className="text-center">
+                                                                    <p className="text-[8px] font-black text-white/30 uppercase tracking-widest mb-1">Attempts</p>
+                                                                    <p className="text-sm md:text-base font-black text-white">{mod.attempts}</p>
+                                                                </div>
+                                                                <div className="text-center">
+                                                                    <p className="text-[8px] font-black text-white/30 uppercase tracking-widest mb-1">Score Matrix</p>
+                                                                    <p className={cn(
+                                                                        "text-sm md:text-base font-black",
+                                                                        mod.passed ? "text-green-400" : "text-red-400"
+                                                                    )}>{Math.round(mod.score)}%</p>
+                                                                </div>
+                                                                <div className="hidden sm:block">
+                                                                    <span className={cn(
+                                                                        "px-3 py-1 rounded-lg text-[8px] font-black uppercase tracking-widest border",
+                                                                        mod.passed ? "bg-green-500/10 border-green-500/20 text-green-500" : (mod.quizRequested ? "bg-amber-500/10 border-amber-500/20 text-amber-500" : "bg-red-500/10 border-red-500/20 text-red-500")
+                                                                    )}>
+                                                                        {mod.passed ? 'COMPETENT' : (mod.quizRequested ? 'AWAITING' : 'LOCKED')}
+                                                                    </span>
+                                                                </div>
+                                                                {mod.quizRequested && (
+                                                                    <button
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            grantAccess(res.studentId, mod.id);
+                                                                        }}
+                                                                        className="px-4 py-2 bg-white text-espresso rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-espresso hover:text-white transition-all shadow-sm flex items-center gap-2"
+                                                                    >
+                                                                        <span className="material-symbols-outlined text-[16px]">how_to_reg</span>
+                                                                        Grant Access
+                                                                    </button>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )) : (
+                                <div className="text-center py-20 md:py-32 bg-espresso rounded-[2rem] border-2 border-dashed border-white/10 flex flex-col items-center gap-6 opacity-40">
+                                    <span className="material-symbols-outlined text-6xl text-white">psychology_alt</span>
+                                    <p className="text-[10px] md:text-xs font-black uppercase tracking-[0.5em] text-white">No synchronized results found in registry</p>
+                                </div>
+                            )}
                         </div>
                     </div>
                 )}

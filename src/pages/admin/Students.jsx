@@ -48,6 +48,8 @@ export function Students() {
 
     const onsiteCount = students.filter(s => s.studyMethod === 'onsite').length;
     const onlineCount = students.filter(s => s.studyMethod === 'online').length;
+    const baristaCount = students.filter(s => !s.courseId || s.courseId === 'bean-to-brew').length;
+    const bartenderCount = students.filter(s => s.courseId === 'bar-tender-course').length;
     const allCount = students.length;
 
     const filteredStudents = students.filter(student => {
@@ -55,7 +57,14 @@ export function Students() {
             student.fullName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
             student.email?.toLowerCase().includes(searchQuery.toLowerCase());
 
-        const matchesTab = activeTab === 'all' || student.studyMethod === activeTab;
+        let matchesTab = activeTab === 'all';
+        if (activeTab === 'onsite' || activeTab === 'online') {
+            matchesTab = student.studyMethod === activeTab;
+        } else if (activeTab === 'barista') {
+            matchesTab = !student.courseId || student.courseId === 'bean-to-brew';
+        } else if (activeTab === 'bartender') {
+            matchesTab = student.courseId === 'bar-tender-course';
+        }
 
         return matchesSearch && matchesTab;
     });
@@ -106,6 +115,8 @@ export function Students() {
                             { id: 'all', label: 'All Clusters', icon: 'groups', count: allCount },
                             { id: 'onsite', label: 'Onsite Operational', icon: 'location_on', count: onsiteCount },
                             { id: 'online', label: 'Digital Venture', icon: 'language', count: onlineCount },
+                            { id: 'barista', label: 'Barista Students', icon: 'coffee', count: baristaCount },
+                            { id: 'bartender', label: 'Bartender Students', icon: 'local_bar', count: bartenderCount },
                         ].map((tab) => (
                             <button
                                 key={tab.id}

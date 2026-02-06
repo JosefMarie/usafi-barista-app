@@ -16,6 +16,8 @@ export function Dashboard() {
 
     // State for real data
     const [course, setCourse] = useState(null);
+    const activeCourseId = user?.courseId || BEAN_TO_BREW_ID;
+
     const [stats, setStats] = useState([
         { label: t('student.dashboard.stats.courses'), value: 0, icon: 'school', color: 'bg-blue-500' },
         { label: t('student.dashboard.stats.completed'), value: '0/0', icon: 'check_circle', color: 'bg-green-500' },
@@ -30,7 +32,7 @@ export function Dashboard() {
 
             try {
                 // 1. Fetch Course Details
-                const courseDoc = await getDoc(doc(db, 'courses', BEAN_TO_BREW_ID));
+                const courseDoc = await getDoc(doc(db, 'courses', activeCourseId));
                 let courseData = null;
                 if (courseDoc.exists()) {
                     courseData = { id: courseDoc.id, ...courseDoc.data() };
@@ -38,7 +40,7 @@ export function Dashboard() {
                 }
 
                 // 2. Fetch Modules & Progress (Real-time)
-                const modQ = query(collection(db, 'courses', BEAN_TO_BREW_ID, 'modules'), orderBy('title'));
+                const modQ = query(collection(db, 'courses', activeCourseId, 'modules'), orderBy('title'));
                 const progQ = collection(db, 'users', user.uid, 'progress');
 
                 const unsubModules = onSnapshot(modQ, (modSnap) => {
@@ -49,7 +51,7 @@ export function Dashboard() {
                         const progressMap = {};
                         progSnap.forEach(doc => {
                             const data = doc.data();
-                            if (data.courseId === BEAN_TO_BREW_ID) {
+                            if (data.courseId === activeCourseId) {
                                 progressMap[data.moduleId] = data;
                             }
                         });
@@ -270,7 +272,7 @@ export function Dashboard() {
                                     </div>
 
                                     <button
-                                        onClick={() => navigate(`/student/courses/${BEAN_TO_BREW_ID}?module=${nextModule.id}`)}
+                                        onClick={() => navigate(`/student/courses/${activeCourseId}?module=${nextModule.id}`)}
                                         className="w-full py-4 bg-white/40 hover:bg-white text-espresso font-black uppercase tracking-widest text-[10px] rounded-2xl transition-all shadow-sm flex items-center justify-center gap-2 border border-espresso/5 active:scale-95"
                                     >
                                         {t('student.dashboard.next_step.initiate_btn')} <span className="material-symbols-outlined text-lg">arrow_forward</span>

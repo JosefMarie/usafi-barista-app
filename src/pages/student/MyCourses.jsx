@@ -13,6 +13,7 @@ export function MyCourses() {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const { user } = useAuth();
+    const activeCourseId = user?.courseId || BEAN_TO_BREW_ID;
     const [course, setCourse] = useState(null);
     const [modules, setModules] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -24,13 +25,13 @@ export function MyCourses() {
 
             try {
                 // 1. Fetch Main Course Info
-                const courseDoc = await getDoc(doc(db, 'courses', BEAN_TO_BREW_ID));
+                const courseDoc = await getDoc(doc(db, 'courses', activeCourseId));
                 if (courseDoc.exists()) {
                     setCourse({ id: courseDoc.id, ...courseDoc.data() });
                 }
 
                 // 2. Fetch Modules
-                const q = query(collection(db, 'courses', BEAN_TO_BREW_ID, 'modules'), where('status', '==', 'published'));
+                const q = query(collection(db, 'courses', activeCourseId, 'modules'), where('status', '==', 'published'));
                 const querySnapshot = await getDocs(q);
                 const fetchedModules = querySnapshot.docs.map(doc => ({
                     id: doc.id,
@@ -163,7 +164,7 @@ export function MyCourses() {
 
                                     <div className="w-full sm:w-auto pt-4 sm:pt-0 border-t sm:border-none border-white/5">
                                         <button
-                                            onClick={() => navigate(`/student/courses/${BEAN_TO_BREW_ID}?module=${module.id}`)}
+                                            onClick={() => navigate(`/student/courses/${activeCourseId}?module=${module.id}`)}
                                             className="w-full sm:w-auto px-6 md:px-8 py-3 bg-white text-espresso font-black uppercase tracking-widest text-[9px] md:text-[10px] rounded-xl md:rounded-2xl hover:shadow-2xl transition-all shadow-xl active:scale-95"
                                         >
                                             {status === 'completed' ? t('student.courses.reexamine') :
@@ -235,7 +236,7 @@ export function MyCourses() {
                                         ) : (
                                             isGranted ? (
                                                 <button
-                                                    onClick={() => navigate(`/student/courses/${BEAN_TO_BREW_ID}?module=${module.id}`)}
+                                                    onClick={() => navigate(`/student/courses/${activeCourseId}?module=${module.id}`)}
                                                     className="w-full sm:w-auto px-6 md:px-8 py-3 bg-amber-500 text-black font-black uppercase tracking-widest text-[9px] md:text-[10px] rounded-xl md:rounded-2xl hover:bg-amber-400 hover:shadow-2xl transition-all shadow-xl active:scale-95 flex items-center justify-center gap-2"
                                                 >
                                                     <span className="material-symbols-outlined text-[16px]">play_arrow</span>
@@ -296,7 +297,7 @@ export function MyCourses() {
             </div>
 
             {/* Student Progress Report */}
-            <StudentProgressReport courseId={BEAN_TO_BREW_ID} />
+            <StudentProgressReport courseId={activeCourseId} />
         </div >
     );
 }

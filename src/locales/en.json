@@ -350,7 +350,8 @@
       "course": {
         "label": "Course Ahisemo (Chosen Course)",
         "options": {
-          "full-barista": "Full Barista Certificate"
+          "full-barista": "Full Barista Certificate",
+          "bar-tender": "Professional Bartender Course"
         }
       },
       "studyMethod": {

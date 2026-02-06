@@ -13,6 +13,7 @@ export function StudentDetails() {
 
     // State
     const [student, setStudent] = useState(null);
+    const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [isEditing, setIsEditing] = useState(false);
@@ -24,10 +25,11 @@ export function StudentDetails() {
         fullName: '',
         phone: '',
         status: '',
-        course: ''
+        course: '',
+        courseId: ''
     });
 
-    // Fetch Student Data
+    // Fetch Student Data & Courses
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -42,10 +44,16 @@ export function StudentDetails() {
                         fullName: data.fullName || data.name || '',
                         phone: data.phone || '',
                         status: data.status || 'pending',
-                        course: data.course || ''
+                        course: data.course || '',
+                        courseId: data.courseId || 'bean-to-brew'
                     });
 
-                    // 2. Fetch Progress and Calculate Deployment Matrix (Real-time)
+                    // 2. Fetch All Courses (for transfer)
+                    const coursesSnap = await getDocs(collection(db, 'courses'));
+                    const coursesList = coursesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                    setCourses(coursesList);
+
+                    // 3. Fetch Progress and Calculate Deployment Matrix (Real-time)
                     const courseId = data.courseId || 'bean-to-brew';
                     const modulesRef = collection(db, 'courses', courseId, 'modules');
                     const progressRef = collection(db, 'users', id, 'progress');
@@ -62,21 +70,16 @@ export function StudentDetails() {
                         });
                     });
 
-                    // Cleanup if component unmounts - actually simpler to just let it be for now or manage properly
-                    // But inside fetchData it's harder. Let's stick to the async fetch for now but ensure it's accurate.
-                    // Actually, let's just make sure it fetches the latest.
-
-                    // 3. Fetch Recent Interactions (Logs for this specific student)
+                    // 4. Fetch Recent Interactions (Logs for this specific student)
                     const interactionsRef = collection(db, 'activity');
                     const qInteractions = query(
                         interactionsRef,
                         where('userId', '==', id),
-                        limit(50) // Fetch more to sort in-memory safely
+                        limit(50)
                     );
                     const intSnap = await getDocs(qInteractions);
                     const logData = intSnap.docs.map(d => ({ id: d.id, ...d.data() }));
 
-                    // Sort in-memory to avoid mandatory composite index
                     logData.sort((a, b) => {
                         const timeA = a.timestamp?.toMillis?.() || 0;
                         const timeB = b.timestamp?.toMillis?.() || 0;
@@ -104,11 +107,23 @@ export function StudentDetails() {
         try {
             setLoading(true);
             const docRef = doc(db, 'users', id);
+
+            // Get selected course title if it changed
+            let courseTitle = editForm.course;
+            const courseHasChanged = editForm.courseId !== (student.courseId || 'bean-to-brew');
+            if (courseHasChanged) {
+                const selectedCourse = courses.find(c => c.id === editForm.courseId);
+                if (selectedCourse) {
+                    courseTitle = selectedCourse.title;
+                }
+            }
+
             await updateDoc(docRef, {
                 fullName: editForm.fullName,
                 phone: editForm.phone,
                 status: editForm.status,
-                course: editForm.course,
+                course: courseTitle,
+                courseId: editForm.courseId,
                 updatedAt: serverTimestamp()
             });
 
@@ -116,17 +131,23 @@ export function StudentDetails() {
             await addDoc(collection(db, 'activity'), {
                 userId: id,
                 userName: student.fullName || student.name || student.email,
-                adminId: 'current-admin', // Ideally get from Auth context if available in this component
-                action: `Updated profile schema for ${student.fullName}`,
+                adminId: authUser?.uid || 'current-admin',
+                action: courseHasChanged
+                    ? `Transferred ${student.fullName} to ${courseTitle}`
+                    : `Updated profile schema for ${student.fullName}`,
                 type: 'admin_edit',
-                icon: 'edit_note',
+                icon: courseHasChanged ? 'swap_horiz' : 'edit_note',
                 timestamp: serverTimestamp()
             });
 
             // Update local state
-            setStudent(prev => ({ ...prev, ...editForm }));
+            setStudent(prev => ({ ...prev, ...editForm, course: courseTitle }));
             setIsEditing(false);
-            // Optional: Add toast success here
+
+            // Refresh progress stats if course changed
+            if (courseHasChanged) {
+                window.location.reload();
+            }
         } catch (err) {
             console.error("Error updating student:", err);
             setError("Failed to update student");
@@ -247,7 +268,7 @@ export function StudentDetails() {
                                                 onChange={(e) => setEditForm({ ...editForm, fullName: e.target.value })}
                                             />
                                         </div>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
                                             <div>
                                                 <label className="block text-[8px] md:text-[10px] font-black uppercase tracking-[0.3em] text-espresso/40 mb-2 md:mb-3 ml-1">Operational Status</label>
                                                 <select
@@ -259,6 +280,18 @@ export function StudentDetails() {
                                                     <option value="active">ACTIVE OPERATION</option>
                                                     <option value="suspended">SUSPENDED (BILLING)</option>
                                                     <option value="graduated">VALIDATED ALUMNUS</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label className="block text-[8px] md:text-[10px] font-black uppercase tracking-[0.3em] text-espresso/40 mb-2 md:mb-3 ml-1">Assigned Curriculum</label>
+                                                <select
+                                                    className="w-full p-3 md:p-4 bg-white/40 border border-espresso/10 rounded-xl md:rounded-2xl focus:outline-none focus:ring-2 focus:ring-espresso text-espresso font-black uppercase tracking-widest text-[9px] md:text-[10px]"
+                                                    value={editForm.courseId}
+                                                    onChange={(e) => setEditForm({ ...editForm, courseId: e.target.value })}
+                                                >
+                                                    {courses.map(c => (
+                                                        <option key={c.id} value={c.id}>{c.title.toUpperCase()}</option>
+                                                    ))}
                                                 </select>
                                             </div>
                                             <div>

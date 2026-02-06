@@ -59,6 +59,7 @@ export function Enrollment() {
                         startDate: formData.startDate,
                         shift: formData.shift || '',
                         referral: formData.referral,
+                        courseId: formData.course === 'full-barista' ? 'bean-to-brew' : 'bar-tender-course',
                         status: 'pending', // Set back to pending for admin approval
                         reactivatedAt: serverTimestamp(),
                         deletedAt: null
@@ -88,6 +89,7 @@ export function Enrollment() {
                     shift: formData.shift || '',
                     referral: formData.referral,
                     role: 'student',
+                    courseId: formData.course === 'full-barista' ? 'bean-to-brew' : 'bar-tender-course',
                     status: 'pending',
                     createdAt: serverTimestamp(),
                     progress: 0,
@@ -268,6 +270,7 @@ export function Enrollment() {
                                     onChange={handleChange}
                                 >
                                     <option value="full-barista">{t('enrollment.form.course.options.full-barista')}</option>
+                                    <option value="bar-tender">{t('enrollment.form.course.options.bar-tender')}</option>
                                 </select>
                                 <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-espresso/50">expand_more</span>
                             </div>

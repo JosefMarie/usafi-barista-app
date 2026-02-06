@@ -1,6 +1,7 @@
 import React from 'react';
 import { cn } from '../../lib/utils';
 import { useTranslation } from 'react-i18next';
+import QRCode from "react-qr-code";
 
 
 const CoffeeWatermark = ({ className }) => (
@@ -40,7 +41,7 @@ export const StudentCertificate = React.forwardRef(({
 
     // Fallback data if student object is missing or incomplete
     const studentName = student?.fullName || student?.name || "Student Name";
-    const certificateId = student?.uid ? `USF-${student.uid.slice(0, 8).toUpperCase()}` : "USF-CERT-0000";
+    const certificateId = student?.uid || student?.id ? `USF-${(student.uid || student.id).slice(0, 8).toUpperCase()}` : "USF-CERT-0000";
     const completionDate = new Date().toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
@@ -113,14 +114,27 @@ export const StudentCertificate = React.forwardRef(({
                     <h2 className="font-serif text-6xl font-bold text-[#321C00] w-full text-center pb-2 border-b-2 border-[#a77c52]/20 max-w-4xl px-8 mb-2 capitalize leading-tight">
                         {studentName}
                     </h2>
+                    <p className="text-[10px] uppercase tracking-[0.4em] text-[#a77c52] font-black mt-2">
+                        {student?.courseId === 'bar-tender-course' ? 'Professional Mixology & Bar Management' : 'Professional Barista & Coffee Science'}
+                    </p>
                 </div>
 
                 {/* Achievement Description */}
                 <div className="z-10 max-w-4xl mx-auto">
                     <p className="text-lg text-[#321C00]/80 font-serif italic leading-relaxed">
-                        Has successfully completed the comprehensive professional barista training program,
-                        demonstrating exceptional proficiency in espresso extraction, milk texturing,
-                        brewing methods, and customer service excellence.
+                        {student?.courseId === 'bar-tender-course' ? (
+                            <>
+                                Has successfully completed the comprehensive professional bartender training program,
+                                demonstrating exceptional proficiency in mixology, cocktail crafting,
+                                bar operations, and beverage service excellence.
+                            </>
+                        ) : (
+                            <>
+                                Has successfully completed the comprehensive professional barista training program,
+                                demonstrating exceptional proficiency in espresso extraction, milk texturing,
+                                brewing methods, and customer service excellence.
+                            </>
+                        )}
                     </p>
                 </div>
 
@@ -144,11 +158,16 @@ export const StudentCertificate = React.forwardRef(({
                         <span className="text-[11px] uppercase font-bold text-[#321C00]/50 tracking-widest">Master Trainer</span>
                     </div>
 
-                    <div className="relative flex items-center justify-center group mb-4">
-                        <div className="absolute inset-0 bg-[#a77c52]/10 rounded-full blur-xl scale-150"></div>
-                        <div className="relative border-4 border-[#a77c52] rounded-full p-2 bg-[#FAF5E8]">
-                            <span className="material-symbols-outlined text-[64px] text-[#a77c52]">verified</span>
+                    {/* QR Code & Verified Badge */}
+                    <div className="flex flex-col items-center justify-end mb-2 gap-3">
+                        <div className="p-2 bg-white rounded-lg shadow-sm border border-[#a77c52]/20">
+                            <QRCode
+                                value={`https://usafi-barista.com/verify/${student.uid || student.id || student.uid}`}
+                                size={64}
+                                fgColor="#321C00"
+                            />
                         </div>
+                        <span className="text-[8px] uppercase tracking-widest text-[#a77c52] font-bold">Scan to Verify</span>
                     </div>
 
                     <div className="flex flex-col items-center w-64">
