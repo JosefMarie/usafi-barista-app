@@ -193,13 +193,7 @@ export function Certificates() {
                                             <p className="text-[9px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest mb-0.5 md:mb-1">{t('student.certificates.authenticated')}</p>
                                             <p className="text-xs md:text-sm font-bold text-espresso dark:text-white">{cert.completionDate}</p>
                                         </div>
-                                        <button
-                                            onClick={() => onPrintClick(cert)}
-                                            className="size-10 md:size-12 flex items-center justify-center bg-espresso text-white rounded-xl md:rounded-2xl shadow-lg hover:shadow-xl hover:scale-110 active:scale-90 transition-all"
-                                            title={t('student.certificates.export_btn')}
-                                        >
-                                            <span className="material-symbols-outlined text-lg md:text-xl">ios_share</span>
-                                        </button>
+                                        {/* Print button removed for student view */}
                                     </div>
                                 </div>
                             </div>

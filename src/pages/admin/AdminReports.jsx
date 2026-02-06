@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { collection, query, getDocs, where } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { cn } from '../../lib/utils';
 import { StudentTranscript } from '../../components/admin/StudentTranscript';
 import { StudentCertificate } from '../../components/admin/StudentCertificate';
-import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
+import { useReactToPrint } from 'react-to-print';
 
 export function AdminReports() {
     const [students, setStudents] = useState([]);
@@ -12,6 +12,13 @@ export function AdminReports() {
     const [loading, setLoading] = useState(true);
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [viewMode, setViewMode] = useState('list'); // 'list', 'transcript', 'certificate'
+
+    // Certificate Printing
+    const certificateRef = useRef();
+    const handlePrintCertificate = useReactToPrint({
+        contentRef: certificateRef,
+        documentTitle: selectedStudent ? `USAFI_Certificate_${selectedStudent.fullName || 'Student'}` : 'Certificate',
+    });
 
     useEffect(() => {
         const fetchStudents = async () => {
@@ -59,30 +66,28 @@ export function AdminReports() {
                             Print Transcript
                         </button>
                     ) : (
-                        <PDFDownloadLink
-                            document={<StudentCertificate student={selectedStudent} />}
-                            fileName={`USAFI_Certificate_${selectedStudent.fullName || 'Student'}.pdf`}
+                        <button
+                            onClick={handlePrintCertificate}
                             className="flex items-center gap-2 px-6 py-3 bg-espresso text-white rounded-xl font-black uppercase tracking-widest text-[10px] shadow-xl hover:scale-105 active:scale-95 transition-all"
                         >
-                            {({ loading }) => (
-                                <>
-                                    <span className="material-symbols-outlined">{loading ? 'sync' : 'download'}</span>
-                                    {loading ? 'Preparing Certificate...' : 'Download Certificate'}
-                                </>
-                            )}
-                        </PDFDownloadLink>
+                            <span className="material-symbols-outlined">print</span>
+                            Print Certificate
+                        </button>
                     )}
                 </div>
-                <div className="flex justify-center w-full" style={{ height: 'calc(100vh - 250px)', minHeight: '700px' }}>
+                <div className="flex justify-center w-full min-h-[700px]">
                     {viewMode === 'transcript' ? (
                         <div className="w-full max-w-5xl">
                             <StudentTranscript student={selectedStudent} />
                         </div>
                     ) : (
-                        <div className="w-full h-full max-w-6xl">
-                            <PDFViewer width="100%" height="100%" className="rounded-2xl border-2 border-espresso/10 shadow-2xl" showToolbar={true}>
-                                <StudentCertificate student={selectedStudent} />
-                            </PDFViewer>
+                        <div className="w-full h-full max-w-[1300px] overflow-auto flex justify-center py-8">
+                            {/* Display the HTML certificate */}
+                            <StudentCertificate
+                                ref={certificateRef}
+                                student={selectedStudent}
+                                className="transform scale-90 md:scale-100 origin-top shadow-none"
+                            />
                         </div>
                     )}
                 </div>
