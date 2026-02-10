@@ -35,9 +35,14 @@ export function AdminDashboard() {
                 const pendingApprovals = students.filter(s => s.status === 'pending').length;
                 const activeStudents = students.filter(s => s.status === 'active').length;
 
-                // Revenue: Online Active Students * 200,000
-                const onlineActive = students.filter(s => s.studyMethod === 'online' && s.status === 'active');
-                const monthlyRevenue = onlineActive.length * 200000;
+                // Revenue: Enrollments in the current month * 200,000
+                const now = new Date();
+                const thisMonthEnrollments = students.filter(s => {
+                    if (!s.createdAt) return false;
+                    const date = s.createdAt.toDate ? s.createdAt.toDate() : new Date(s.createdAt);
+                    return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+                });
+                const monthlyRevenue = thisMonthEnrollments.length * 200000;
 
                 // Engagement: Just a simple calculation for now, e.g., % of active students vs total (excluding pending)
                 // If everyone is pending, it might be 0.
@@ -80,14 +85,14 @@ export function AdminDashboard() {
                     }
                 });
 
-                // Determine Max for scaling
-                const maxCount = Math.max(...last12Months.map(m => m.count), 1);
+                // Determine Max for scaling (Monthly Revenue)
+                const maxMonthlyRevenue = Math.max(...last12Months.map(m => m.count * 200000), 1);
 
                 // Format for Chart
                 const chartData = last12Months.map((m, index) => ({
                     month: m.monthIndex === 0 || index === 0 ? `${months[m.monthIndex]} '${m.year.toString().slice(-2)}` : months[m.monthIndex],
-                    count: m.count,
-                    height: `${Math.max((m.count / maxCount) * 100, 5)}%`
+                    revenue: m.count * 200000,
+                    height: `${Math.max(((m.count * 200000) / maxMonthlyRevenue) * 100, 5)}%`
                 }));
 
 
@@ -312,7 +317,7 @@ export function AdminDashboard() {
                 </div>
 
                 {/* Monthly Enrollments Chart */}
-                <div className="rounded-[3rem] bg-white/40 dark:bg-black/20 border border-espresso/10 p-12 shadow-2xl relative overflow-hidden group/chart">
+                <div className="rounded-[2.5rem] md:rounded-[3rem] bg-white/40 dark:bg-black/20 border border-espresso/10 p-6 md:p-12 shadow-2xl relative overflow-hidden group/chart">
                     <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/10 group-hover/chart:bg-espresso transition-colors"></div>
                     <div className="flex justify-between items-center mb-12">
                         <div>
@@ -324,7 +329,7 @@ export function AdminDashboard() {
                             <span className="text-[10px] font-black text-espresso uppercase tracking-widest">{t('admin.dashboard.primary_metrics')}</span>
                         </div>
                     </div>
-                    <div className="w-full h-72 flex items-end justify-between gap-4 relative mt-16 px-4">
+                    <div className="w-full h-72 flex items-end justify-between gap-1 sm:gap-2 md:gap-4 relative mt-10 md:mt-16 px-4">
                         {/* Background Grid Lines */}
                         <div className="absolute inset-x-0 bottom-0 top-0 flex flex-col justify-between pointer-events-none pb-8">
                             {[...Array(5)].map((_, i) => (
@@ -336,17 +341,17 @@ export function AdminDashboard() {
                         {enrollmentData.length > 0 ? enrollmentData.map((item, index) => (
                             <div key={index} className="flex flex-col items-center gap-4 flex-1 z-10 group/bar cursor-pointer h-full justify-end">
                                 <div
-                                    className={`w-full max-w-[40px] rounded-2xl relative transition-all duration-500 delay-[${index * 50}ms] ${index === enrollmentData.length - 1
+                                    className={`w-full max-w-[32px] md:max-w-[40px] rounded-2xl relative transition-all duration-500 delay-[${index * 50}ms] ${index === enrollmentData.length - 1
                                         ? 'bg-espresso shadow-2xl shadow-espresso/40'
                                         : 'bg-espresso/10 dark:bg-espresso/20 group-hover/bar:bg-espresso/80 group-hover/bar:shadow-xl'
                                         }`}
                                     style={{ height: item.height }}
                                 >
                                     <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-espresso text-white text-[9px] font-black py-2 px-3 rounded-xl opacity-0 group-hover/bar:opacity-100 transition-all scale-75 group-hover/bar:scale-100 whitespace-nowrap z-20 pointer-events-none shadow-xl uppercase tracking-widest">
-                                        {item.count} {t('admin.dashboard.nodes')}
+                                        {new Intl.NumberFormat(i18n.language === 'rw' ? 'rw-RW' : (i18n.language === 'en' ? 'en-US' : (i18n.language === 'fr' ? 'fr-FR' : 'sw-TZ')), { style: 'currency', currency: 'RWF', maximumFractionDigits: 0 }).format(item.revenue)}
                                     </div>
                                 </div>
-                                <span className={`text-[10px] font-black uppercase tracking-widest transition-colors ${index === enrollmentData.length - 1 ? 'text-espresso' : 'text-espresso/30 dark:text-white/20'
+                                <span className={`text-[8px] md:text-[10px] font-black uppercase tracking-widest transition-colors ${index === enrollmentData.length - 1 ? 'text-espresso' : 'text-espresso/30 dark:text-white/20'
                                     }`}>
                                     {item.month}
                                 </span>

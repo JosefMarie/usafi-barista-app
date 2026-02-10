@@ -75,18 +75,20 @@ export function AdminReports() {
                         </button>
                     )}
                 </div>
-                <div className="flex justify-center w-full min-h-[700px]">
+                <div className="flex justify-center w-full min-h-[700px] overflow-hidden">
                     {viewMode === 'transcript' ? (
-                        <div className="w-full max-w-5xl">
-                            <StudentTranscript student={selectedStudent} />
+                        <div className="w-full flex justify-center py-4 md:py-8 overflow-x-auto">
+                            <div className="shrink-0 origin-top transform scale-[0.4] sm:scale-[0.6] md:scale-75 lg:scale-100 transition-transform">
+                                <StudentTranscript student={selectedStudent} />
+                            </div>
                         </div>
                     ) : (
-                        <div className="w-full h-full max-w-[1300px] overflow-auto flex justify-center py-8">
+                        <div className="w-full h-full max-w-[1300px] overflow-auto flex justify-center py-4 md:py-8">
                             {/* Display the HTML certificate */}
                             <StudentCertificate
                                 ref={certificateRef}
                                 student={selectedStudent}
-                                className="transform scale-90 md:scale-100 origin-top shadow-none"
+                                className="transform scale-[0.35] sm:scale-[0.5] md:scale-75 lg:scale-90 xl:scale-100 origin-top shadow-none"
                             />
                         </div>
                     )}
@@ -124,27 +126,27 @@ export function AdminReports() {
                     ) : filteredStudents.length > 0 ? (
                         <div className="divide-y divide-espresso/5">
                             {filteredStudents.map(student => (
-                                <div key={student.id} className="p-6 flex items-center justify-between hover:bg-white/40 transition-colors group">
+                                <div key={student.id} className="p-4 md:p-6 flex flex-col md:flex-row md:items-center justify-between hover:bg-white/40 transition-colors group gap-4">
                                     <div className="flex items-center gap-4">
-                                        <div className="size-12 rounded-full overflow-hidden border-2 border-white shadow-md">
+                                        <div className="size-10 md:size-12 rounded-full overflow-hidden border-2 border-white shadow-md shrink-0">
                                             <img
                                                 src={student.avatar || student.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(student.fullName || student.name || 'Student')}&background=random`}
                                                 alt=""
                                                 className="w-full h-full object-cover"
                                             />
                                         </div>
-                                        <div>
-                                            <h3 className="font-bold text-espresso dark:text-white">{student.fullName || student.name || 'Anonymous Student'}</h3>
-                                            <p className="text-xs text-espresso/60">{student.email}</p>
+                                        <div className="min-w-0 flex-1">
+                                            <h3 className="font-bold text-espresso dark:text-white truncate text-sm md:text-base">{student.fullName || student.name || 'Anonymous Student'}</h3>
+                                            <p className="text-[10px] md:text-xs text-espresso/60 truncate">{student.email}</p>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-2 md:opacity-0 group-hover:opacity-100 transition-opacity">
                                         <button
                                             onClick={() => {
                                                 setSelectedStudent(student);
                                                 setViewMode('transcript');
                                             }}
-                                            className="px-4 py-2 bg-espresso/5 text-espresso rounded-xl text-[10px] font-black uppercase tracking-widest border border-espresso/10 hover:bg-espresso hover:text-white transition-all active:scale-95"
+                                            className="flex-1 md:flex-none px-3 md:px-4 py-2 bg-espresso/5 text-espresso rounded-xl text-[9px] md:text-[10px] font-black uppercase tracking-widest border border-espresso/10 hover:bg-espresso hover:text-white transition-all active:scale-95"
                                         >
                                             Transcript
                                         </button>
@@ -153,7 +155,7 @@ export function AdminReports() {
                                                 setSelectedStudent(student);
                                                 setViewMode('certificate');
                                             }}
-                                            className="px-4 py-2 bg-espresso text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg hover:shadow-espresso/20 transition-all active:scale-95"
+                                            className="flex-1 md:flex-none px-3 md:px-4 py-2 bg-espresso text-white rounded-xl text-[9px] md:text-[10px] font-black uppercase tracking-widest shadow-lg hover:shadow-espresso/20 transition-all active:scale-95"
                                         >
                                             Certificate
                                         </button>
