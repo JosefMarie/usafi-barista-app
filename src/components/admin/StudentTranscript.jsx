@@ -168,7 +168,7 @@ export function StudentTranscript({ student }) {
                                 <th className="border border-black p-2 text-left">Module Name</th>
                                 <th className="border border-black p-2 text-center w-24">Marks Obtained</th>
                                 <th className="border border-black p-2 text-center w-32">Decision</th>
-                                <th className="border border-black p-2 text-center w-32">Re Assignment</th>
+                                <th className="border border-black p-2 text-center w-32">Re Assessment</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -178,7 +178,8 @@ export function StudentTranscript({ student }) {
                                 const attempts = prog.attempts || 0;
                                 const isPassed = prog.passed;
                                 const isFirstTimePass = isPassed && attempts === 1;
-                                const isReassignmentPass = isPassed && attempts > 1;
+                                // For legacy data or re-takes, if they passed with >= 70%, mark as competent in re-assessment
+                                const isReassessmentPass = isPassed && !isFirstTimePass && (score >= 70);
 
                                 return (
                                     <tr key={mod.id} className={cn(mod.isFinalAssessment && "font-bold bg-gray-50/30")}>
@@ -189,7 +190,7 @@ export function StudentTranscript({ student }) {
                                             {isFirstTimePass ? 'COMPETENT' : (isPassed ? 'NOT COMPETENT' : '-')}
                                         </td>
                                         <td className="border border-black p-1 text-center uppercase font-bold" style={{ fontSize: '9px' }}>
-                                            {isReassignmentPass ? 'COMPETENT' : '-'}
+                                            {isReassessmentPass ? 'COMPETENT' : '-'}
                                         </td>
                                     </tr>
                                 );

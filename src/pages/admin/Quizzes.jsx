@@ -371,6 +371,40 @@ export function Quizzes() {
         }
     };
 
+    const handleDeleteNode = async (idx) => {
+        if (!activeQuiz) return;
+        if (!confirm('Are you sure you want to PERMANENTLY delete this Logic Node? This action cannot be undone.')) return;
+
+        try {
+            setLoading(true);
+            let updatedQuestions = [...activeQuiz.questions];
+            updatedQuestions.splice(idx, 1);
+
+            // Update Firestore
+            const { type, courseId, moduleId, chapterId } = activeQuiz;
+            if (type === 'regular') {
+                const docRef = doc(db, 'courses', courseId, 'modules', moduleId);
+                await updateDoc(docRef, { 'quiz.questions': updatedQuestions });
+            } else {
+                const docRef = doc(db, 'business_courses', courseId, 'chapters', chapterId);
+                await updateDoc(docRef, { 'quiz.questions': updatedQuestions });
+            }
+
+            // Local state update
+            setAllQuizzes(prev => prev.map(q =>
+                q.id === selectedQuizId ? { ...q, questions: updatedQuestions } : q
+            ));
+
+            if (isNodeModalOpen) setIsNodeModalOpen(false);
+            alert('Logic Node deleted successfully!');
+        } catch (err) {
+            console.error("Error deleting logic node:", err);
+            alert('Failed to delete logic node.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     if (loading) return <div className="h-screen flex items-center justify-center"><span className="material-symbols-outlined animate-spin text-4xl text-primary">progress_activity</span></div>;
 
     return (
@@ -493,12 +527,23 @@ export function Quizzes() {
                                                     <p className="text-lg md:text-xl font-serif font-black text-white leading-tight tracking-tight uppercase group-hover:text-white/80 transition-colors break-words">
                                                         {q.question || q.text}
                                                     </p>
-                                                    <button
-                                                        onClick={() => handleOpenNodeModal(q, idx)}
-                                                        className="p-2 text-white/40 hover:text-white transition-colors shrink-0"
-                                                    >
-                                                        <span className="material-symbols-outlined text-[18px] md:text-[20px]">edit</span>
-                                                    </button>
+                                                    <div className="flex items-center gap-1">
+                                                        <button
+                                                            onClick={() => handleOpenNodeModal(q, idx)}
+                                                            className="p-2 text-white/40 hover:text-white transition-colors shrink-0"
+                                                        >
+                                                            <span className="material-symbols-outlined text-[18px] md:text-[20px]">edit</span>
+                                                        </button>
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleDeleteNode(idx);
+                                                            }}
+                                                            className="p-2 text-red-400/40 hover:text-red-400 transition-colors shrink-0"
+                                                        >
+                                                            <span className="material-symbols-outlined text-[18px] md:text-[20px]">delete</span>
+                                                        </button>
+                                                    </div>
                                                 </div>
                                                 <div className="flex flex-wrap items-center gap-3">
                                                     <span className="px-2 md:px-3 py-1 bg-white/10 text-white/70 text-[8px] md:text-[9px] font-black uppercase tracking-widest rounded-lg border border-white/5 flex items-center gap-2 shadow-inner">
@@ -846,6 +891,15 @@ export function Quizzes() {
                         </div>
 
                         <div className="p-6 md:p-10 bg-white/40 dark:bg-black/20 flex flex-col md:flex-row justify-end gap-3 md:gap-6">
+                            {editingNode && (
+                                <button
+                                    onClick={() => handleDeleteNode(editingNode.index)}
+                                    className="px-8 py-3 md:py-4 text-[9px] md:text-[10px] font-black text-red-500 uppercase tracking-widest hover:bg-red-500 hover:text-white rounded-xl transition-all border border-red-500/20"
+                                >
+                                    Decommission Node
+                                </button>
+                            )}
+                            <div className="flex-1"></div>
                             <button
                                 onClick={() => setIsNodeModalOpen(false)}
                                 className="order-2 md:order-1 px-8 py-3 md:py-4 text-[9px] md:text-[10px] font-black text-espresso/40 uppercase tracking-widest hover:text-espresso transition-colors"

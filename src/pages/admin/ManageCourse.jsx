@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { doc, getDoc, updateDoc, collection, query, where, onSnapshot, orderBy, addDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, deleteDoc, collection, query, where, onSnapshot, orderBy, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { cn } from '../../lib/utils';
 
@@ -88,6 +88,20 @@ export function ManageCourse() {
             setEditMode(false);
         } catch (error) {
             console.error("Error updating course:", error);
+        }
+    };
+
+    const handleDeleteItem = async (e, id, type) => {
+        e.stopPropagation();
+        if (!window.confirm(`Are you sure you want to PERMANENTLY delete this ${type}? This will remove all associated content and data.`)) return;
+
+        try {
+            const collectionName = type === 'module' ? 'modules' : 'lessons';
+            await deleteDoc(doc(db, 'courses', courseId, collectionName, id));
+            // No need for local state update as onSnapshot will handle it
+        } catch (error) {
+            console.error(`Error deleting ${type}:`, error);
+            alert(`Failed to delete ${type}`);
         }
     };
 
@@ -340,11 +354,20 @@ export function ManageCourse() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex items-center justify-between sm:justify-end gap-6 sm:pr-4 pl-16 sm:pl-0">
-                                    <span className="text-[8px] md:text-[10px] font-black text-white/60 uppercase tracking-[0.3em] group-hover:opacity-100 transition-all sm:translate-x-4 sm:group-hover:translate-x-0">
-                                        ACCESS DATA
-                                    </span>
-                                    <span className="material-symbols-outlined text-white/40 group-hover:text-white transition-colors">chevron_right</span>
+                                <div className="flex items-center justify-between sm:justify-end gap-4 md:gap-6 sm:pr-4 pl-16 sm:pl-0">
+                                    <button
+                                        onClick={(e) => handleDeleteItem(e, item.id, item.type)}
+                                        className="p-2 text-red-400/40 hover:text-red-400 transition-colors shrink-0 z-50"
+                                        title={`Delete ${item.type}`}
+                                    >
+                                        <span className="material-symbols-outlined text-[18px] md:text-[20px]">delete</span>
+                                    </button>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-[8px] md:text-[10px] font-black text-white/60 uppercase tracking-[0.3em] group-hover:opacity-100 transition-all sm:translate-x-4 sm:group-hover:translate-x-0">
+                                            ACCESS DATA
+                                        </span>
+                                        <span className="material-symbols-outlined text-white/40 group-hover:text-white transition-colors">chevron_right</span>
+                                    </div>
                                 </div>
                             </div>
                         ))
