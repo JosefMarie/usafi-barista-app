@@ -370,7 +370,11 @@ export function ManageModule() {
 
     // Derived State: Filtered & Sorted Students
     const filteredAndSortedStudents = useMemo(() => {
-        let result = [...students];
+        // Filter by curriculum - only show students registered for this course
+        let result = students.filter(s => {
+            const studentCourseId = s.courseId || 'bean-to-brew';
+            return studentCourseId === courseId;
+        });
 
         // 1. Filter by assignment (since we are in the assignments tab, we only want to see people we can potentially manage here)
         // Or do we want to see ALL students? Usually, we want to see assigned students or everyone. 
@@ -636,7 +640,7 @@ export function ManageModule() {
     };
 
     const grantQuizAccessToCompleted = async () => {
-        const completedStudentIds = students.filter(student => {
+        const completedStudentIds = filteredAndSortedStudents.filter(student => {
             const progress = studentProgress[student.id];
             // Check if they have reached the last slide (Assuming content length > 0)
             const lastSlideIndex = progress?.lastSlideIndex || 0;
@@ -1203,7 +1207,7 @@ export function ManageModule() {
                                     <button
                                         onClick={async () => {
                                             if (!window.confirm("Assign this module to ALL fetched students?")) return;
-                                            const allStudentIds = students.map(s => s.id);
+                                            const allStudentIds = filteredAndSortedStudents.map(s => s.id);
                                             setAssignedStudents(allStudentIds);
                                             try {
                                                 await updateDoc(doc(db, 'courses', courseId, 'modules', moduleId), {

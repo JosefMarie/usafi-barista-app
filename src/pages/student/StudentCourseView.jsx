@@ -202,8 +202,9 @@ export function StudentCourseView() {
 
     const startQuiz = () => {
         // Redundant safety check
-        if (!stats.passed && Number(stats.attempts) >= 3 && !isQuizAllowed) {
-            alert("Maximum attempts reached. Please request access.");
+        const isApplicant = user?.status === 'pending' || user?.status === 'unknown';
+        if (!stats.passed && (Number(stats.attempts) >= 3 || isApplicant) && !isQuizAllowed) {
+            alert(isApplicant ? "Account pending approval. Please wait for administration." : "Maximum attempts reached. Please request access.");
             setShowQuiz(true); // Ensure it shows the lock screen
             return;
         }
@@ -500,18 +501,27 @@ export function StudentCourseView() {
 
             <main className="flex-1 w-full p-4 md:p-6 pb-28 md:pb-24 max-w-6xl mx-auto">
                 {showQuiz ? (
-                    (!stats.passed && stats.attempts >= 3 && !isQuizAllowed) ? (
+                    (!stats.passed && (stats.attempts >= 3 || user?.status === 'pending' || user?.status === 'unknown') && !isQuizAllowed) ? (
                         <div className="animate-fade-in flex flex-col items-center justify-center min-h-[50vh] text-center space-y-6 max-w-2xl mx-auto px-6">
                             <div className="w-24 h-24 bg-espresso/5 rounded-[2rem] flex items-center justify-center text-espresso/30 mb-4 animate-pulse">
-                                <span className="material-symbols-outlined text-5xl">{quizRequested ? 'pending_actions' : 'lock_clock'}</span>
+                                <span className="material-symbols-outlined text-5xl">
+                                    {user?.status === 'pending' || user?.status === 'unknown' ? 'hourglass_empty' : (quizRequested ? 'pending_actions' : 'lock_clock')}
+                                </span>
                             </div>
-                            <h2 className="text-2xl md:text-4xl font-serif font-black text-espresso dark:text-white">{quizRequested ? 'Quiz Access Pending' : 'Maximum Attempts Exceeded'}</h2>
+                            <h2 className="text-2xl md:text-4xl font-serif font-black text-espresso dark:text-white">
+                                {user?.status === 'pending' || user?.status === 'unknown' ? 'Admisson Protocol Pending' : (quizRequested ? 'Quiz Access Pending' : 'Maximum Attempts Exceeded')}
+                            </h2>
                             <p className="text-sm md:text-base font-medium text-espresso/60 dark:text-white/60 leading-relaxed">
-                                {quizRequested
-                                    ? "Your request for additional assessment attempts is currently under review by the administration."
-                                    : "You have reached the maximum limit of 3 attempts for this module's evaluation. To proceed, you must request special authorization from the administration."}
+                                {user?.status === 'pending' || user?.status === 'unknown'
+                                    ? "Your application is currently under review. Assessment modules will become available once your enrollment is finalized."
+                                    : (quizRequested
+                                        ? "Your request for additional assessment attempts is currently under review by the administration."
+                                        : "You have reached the maximum limit of 3 attempts for this module's evaluation. To proceed, you must request special authorization from the administration.")
+                                }
                             </p>
-                            {!quizRequested ? (
+                            {(user?.status === 'pending' || user?.status === 'unknown') ? (
+                                <div className="px-8 py-3 bg-espresso/5 border border-espresso/10 text-espresso/40 rounded-xl font-bold text-xs uppercase tracking-widest">Awaiting Verification</div>
+                            ) : !quizRequested ? (
                                 <button onClick={requestQuizAccess} className="px-10 py-4 bg-espresso text-white rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-black transition-all shadow-2xl active:scale-95 flex items-center gap-3">
                                     <span className="material-symbols-outlined">request_quote</span>Request Quiz Access
                                 </button>
