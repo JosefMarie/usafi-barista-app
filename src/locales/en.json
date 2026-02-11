@@ -747,6 +747,14 @@
         "anti_cheat": {
           "title": "Anti-Bypass Protocol",
           "desc": "Page navigation, tab switching, or refresh attempts will trigger emergency quiz finalization."
+        },
+        "attempt_limit": {
+          "title": "Attempt Quota",
+          "desc": "You are allowed to take the Quiz 3 times only (3 Attempts only)"
+        },
+        "retake_policy": {
+          "title": "Re-evaluation Policy",
+          "desc": "On Academic transcript if you don't get final marks of 70% you pay a fee of 20k to redo the quizzes you failed"
         }
       },
       "results": {

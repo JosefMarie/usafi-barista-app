@@ -509,24 +509,30 @@ export function StudentCourseView() {
                                 </span>
                             </div>
                             <h2 className="text-2xl md:text-4xl font-serif font-black text-espresso dark:text-white">
-                                {user?.status === 'pending' || user?.status === 'unknown' ? 'Admisson Protocol Pending' : (quizRequested ? 'Quiz Access Pending' : 'Maximum Attempts Exceeded')}
+                                {user?.status === 'pending' || user?.status === 'unknown' ? 'Admisson Protocol Pending' : (quizRequested ? 'Re-evaluation Requested' : 'Maximum Attempts Exceeded')}
                             </h2>
                             <p className="text-sm md:text-base font-medium text-espresso/60 dark:text-white/60 leading-relaxed">
                                 {user?.status === 'pending' || user?.status === 'unknown'
                                     ? "Your application is currently under review. Assessment modules will become available once your enrollment is finalized."
                                     : (quizRequested
-                                        ? "Your request for additional assessment attempts is currently under review by the administration."
-                                        : "You have reached the maximum limit of 3 attempts for this module's evaluation. To proceed, you must request special authorization from the administration.")
+                                        ? "Your request for re-evaluation is currently under review. Administration will grant access once the protocol is finalized."
+                                        : "You have reached the maximum limit of 3 attempts for this module. Evaluation is now locked. Please contact administration for re-assessment procedures.")
                                 }
                             </p>
                             {(user?.status === 'pending' || user?.status === 'unknown') ? (
                                 <div className="px-8 py-3 bg-espresso/5 border border-espresso/10 text-espresso/40 rounded-xl font-bold text-xs uppercase tracking-widest">Awaiting Verification</div>
-                            ) : !quizRequested ? (
-                                <button onClick={requestQuizAccess} className="px-10 py-4 bg-espresso text-white rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-black transition-all shadow-2xl active:scale-95 flex items-center gap-3">
-                                    <span className="material-symbols-outlined">request_quote</span>Request Quiz Access
-                                </button>
-                            ) : (
+                            ) : quizRequested ? (
                                 <div className="px-8 py-3 bg-amber-50 border border-amber-200 text-amber-700 rounded-xl font-bold text-xs uppercase tracking-widest">Request Status: PENDING</div>
+                            ) : (
+                                <div className="space-y-4 w-full">
+                                    <div className="p-6 bg-white/40 border border-espresso/10 rounded-2xl text-left">
+                                        <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-2">Re-evaluation Policy</p>
+                                        <p className="text-xs font-medium text-espresso/60 leading-relaxed">
+                                            If your final course average is below 70%, a re-assessment fee of 20,000 RWF applies per module. If your average is above 70%, administration may grant access for failed modules free of charge.
+                                        </p>
+                                    </div>
+                                    <div className="px-8 py-3 bg-red-50 border border-red-100 text-red-600 rounded-xl font-bold text-[10px] uppercase tracking-widest">Evaluation Matrix Locked</div>
+                                </div>
                             )}
                             <button onClick={() => setShowQuiz(false)} className="text-espresso/40 hover:text-espresso text-[10px] font-black uppercase tracking-widest transition-colors">Return to Narrative</button>
                         </div>
@@ -559,6 +565,24 @@ export function StudentCourseView() {
                                                     <div>
                                                         <p className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-0.5">{t('student.quiz.rules.pass_mark.title')}</p>
                                                         <p className="text-[10px] md:text-sm font-bold text-espresso dark:text-white leading-tight" dangerouslySetInnerHTML={{ __html: t('student.quiz.rules.pass_mark.desc', { passMark: activeQuiz?.passMark || 70 }) }} />
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center gap-3 md:gap-5 p-3 md:p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
+                                                    <div className="size-8 md:size-12 rounded-xl bg-espresso/5 flex items-center justify-center shrink-0">
+                                                        <span className="material-symbols-outlined text-espresso text-xl md:text-2xl">event_repeat</span>
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-0.5">{t('student.quiz.rules.attempt_limit.title')}</p>
+                                                        <p className="text-[10px] md:text-sm font-bold text-espresso dark:text-white leading-tight">{t('student.quiz.rules.attempt_limit.desc')}</p>
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center gap-3 md:gap-5 p-3 md:p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
+                                                    <div className="size-8 md:size-12 rounded-xl bg-espresso/5 flex items-center justify-center shrink-0">
+                                                        <span className="material-symbols-outlined text-espresso text-xl md:text-2xl">payments</span>
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-0.5">{t('student.quiz.rules.retake_policy.title')}</p>
+                                                        <p className="text-[10px] md:text-sm font-bold text-espresso dark:text-white leading-tight">{t('student.quiz.rules.retake_policy.desc')}</p>
                                                     </div>
                                                 </div>
                                             </div>

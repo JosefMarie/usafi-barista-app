@@ -127,6 +127,14 @@
         "anti_cheat": {
           "title": "Itifaki ya Anti-Bypass",
           "desc": "Urambazaji wa ukurasa, kubadilisha kichupo, au majaribio ya kuonyesha upya ukurasa yatasababisha ukamilishaji wa dharura wa chemsha bongo."
+        },
+        "attempt_limit": {
+          "title": "Kikomo cha Majaribio",
+          "desc": "Unaruhusiwa kufanya Jaribio mara 3 pekee (Majaribio 3 pekee)"
+        },
+        "retake_policy": {
+          "title": "Sera ya Kurudia",
+          "desc": "Kwenye nakala ya kitaaluma ikiwa hautapata alama za mwisho za 70% unalipa ada ya 20k kurudia majaribio uliyofeli"
         }
       },
       "results": {

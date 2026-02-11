@@ -748,6 +748,14 @@
         "anti_cheat": {
           "title": "Amategeko y'Ingenzura",
           "desc": "Kuva kuri iyi paji, kureba indi paji, cyangwa kuyivugurura bituma ikizamini cyoherezwa ako kanya."
+        },
+        "attempt_limit": {
+          "title": "Inshuro zemewe",
+          "desc": "Wemerewe gukora ikizamini inshuro 3 gusa (3 Attempts only)"
+        },
+        "retake_policy": {
+          "title": "Amabwiriza yo gusubiramo",
+          "desc": "Kuri Academic transcript, iyo utabonye amanota ya 70%, wishyura 20k kugira ngo usubiremo ibizamini watsinzwe"
         }
       },
       "results": {

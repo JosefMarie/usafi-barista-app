@@ -177,9 +177,13 @@ export function StudentTranscript({ student }) {
                                 const score = prog.score || 0;
                                 const attempts = prog.attempts || 0;
                                 const isPassed = prog.passed;
-                                const isFirstTimePass = isPassed && attempts === 1;
-                                // For legacy data or re-takes, if they passed with >= 70%, mark as competent in re-assessment
-                                const isReassessmentPass = isPassed && !isFirstTimePass && (score >= 70);
+
+                                // "Not Competent" if they used 3+ attempts and still haven't passed or if they failed overall.
+                                // But user said: "after passing the not competence will change to competence"
+                                // So Decision should be COMPETENT if they passed at any point.
+                                // Let's use the columns to show history.
+                                const isFirstRunCompetent = isPassed && attempts <= 3;
+                                const isReassessmentCompetent = isPassed && attempts > 3;
 
                                 return (
                                     <tr key={mod.id} className={cn(mod.isFinalAssessment && "font-bold bg-gray-50/30")}>
@@ -187,10 +191,10 @@ export function StudentTranscript({ student }) {
                                         <td className="border border-black p-2 uppercase">{mod.title} {mod.isFinalAssessment && "(FINAL ASSESSMENT)"}</td>
                                         <td className="border border-black p-1 text-center font-bold tracking-tighter" style={{ width: '100px', fontSize: '10px' }}>{score.toFixed(1)}%</td>
                                         <td className="border border-black p-1 text-center uppercase font-bold" style={{ fontSize: '9px' }}>
-                                            {isFirstTimePass ? 'COMPETENT' : (isPassed ? 'NOT COMPETENT' : '-')}
+                                            {isPassed ? 'COMPETENT' : (attempts >= 3 ? 'NOT COMPETENT' : '-')}
                                         </td>
                                         <td className="border border-black p-1 text-center uppercase font-bold" style={{ fontSize: '9px' }}>
-                                            {isReassessmentPass ? 'COMPETENT' : '-'}
+                                            {isReassessmentCompetent ? 'COMPETENT' : '-'}
                                         </td>
                                     </tr>
                                 );

@@ -748,6 +748,14 @@
         "anti_cheat": {
           "title": "Protocole anti-contournement",
           "desc": "La navigation sur la page, le changement d'onglet ou les tentatives d'actualisation déclencheront la finalisation d'urgence du quiz."
+        },
+        "attempt_limit": {
+          "title": "Quota de tentatives",
+          "desc": "Vous n'êtes autorisé à passer le quiz que 3 fois seulement (3 tentatives uniquement)"
+        },
+        "retake_policy": {
+          "title": "Politique de réévaluation",
+          "desc": "Sur le relevé de notes, si vous n'obtenez pas une note finale de 70%, vous payez des frais de 20k pour refaire les quiz échoués"
         }
       },
       "results": {
