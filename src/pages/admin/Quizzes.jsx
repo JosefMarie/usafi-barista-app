@@ -45,6 +45,7 @@ export function Quizzes() {
 
             await updateDoc(progressRef, {
                 quizRequested: false,
+                isAuthorized: true, // RESET PERMISSION SLOT
                 attempts: 0, // Reset attempts to 0 so they get 3 more
                 updatedAt: serverTimestamp()
             });

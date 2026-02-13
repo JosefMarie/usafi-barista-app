@@ -34,7 +34,7 @@ export function StudentCourseView() {
     const [timeLeft, setTimeLeft] = useState(0);
     const [matchingOrder, setMatchingOrder] = useState([]);
     const [shuffledQuestions, setShuffledQuestions] = useState([]);
-    const [stats, setStats] = useState({ attempts: 0 });
+    const [stats, setStats] = useState({ attempts: null, passed: false, isAuthorized: false });
 
     // Study Mode State
     const [studyMode, setStudyMode] = useState('full'); // full, summary
@@ -81,11 +81,15 @@ export function StudentCourseView() {
                             setQuizRequested(progressData.quizRequested || false);
                             setStats({
                                 attempts: Number(progressData.attempts || 0),
-                                passed: progressData.passed || false
+                                passed: progressData.passed || false,
+                                isAuthorized: progressData.isAuthorized || false
                             });
                             if (progressData.passed) {
                                 setQuizResult({ score: progressData.score, passed: true });
                             }
+                        } else {
+                            // No progress yet, initialize stats
+                            setStats({ attempts: 0, passed: false, isAuthorized: false });
                         }
                         setIsProgressLoaded(true);
                     } catch (err) {
@@ -201,11 +205,32 @@ export function StudentCourseView() {
     }, [showQuiz, quizStarted, quizResult, timeLeft, currentQuestionIndex]);
 
     const startQuiz = () => {
-        // Redundant safety check
+        // Redundant safety check with race-condition guard
+        if (stats.attempts === null || !isProgressLoaded) {
+            console.warn("Attempting to start quiz before progress loaded.");
+            return;
+        }
+
+        const attempts = Number(stats.attempts || 0);
         const isApplicant = user?.status === 'pending' || user?.status === 'unknown';
-        if (!stats.passed && (Number(stats.attempts) >= 3 || isApplicant) && !isQuizAllowed) {
-            alert(isApplicant ? "Account pending approval. Please wait for administration." : "Maximum attempts reached. Please request access.");
-            setShowQuiz(true); // Ensure it shows the lock screen
+
+        // PERSISTENT ACCESS LOGIC (Section 16 of plan)
+        // 1. Applicants: Blocked unless explicitly allowed
+        // 2. Normal (Attempts < 3): Allowed if isQuizAllowed (module list) or isAuthorized
+        // 3. Locked (Attempts >= 3): ONLY allowed if isAuthorized is true (Progress doc)
+        // This prevents the "Sticky Access" bug where students remain in the module's quizAllowedStudents list indefinitely.
+        let allowed = false;
+        if (isApplicant) {
+            allowed = isQuizAllowed || stats.isAuthorized;
+        } else if (attempts < 3) {
+            allowed = isQuizAllowed || stats.isAuthorized;
+        } else {
+            allowed = stats.isAuthorized; // Re-assessment mode: sticky module list is ignored
+        }
+
+        if (!stats.passed && !allowed) {
+            alert(isApplicant ? "Account pending approval. Please wait for administration." : "Maximum attempts reached. Please request re-evaluation access.");
+            setShowQuiz(true);
             return;
         }
 
@@ -346,9 +371,10 @@ export function StudentCourseView() {
                 })
             };
 
-            // If failed for the 3rd time, lock it
+            // If failed for the 3rd time (or any re-assessment), lock it and revoke current authorization
             if (!passed && newAttempts >= 3) {
                 updateData.quizRequested = false;
+                updateData.isAuthorized = false; // CONSUME THE AUTHORIZATION SLOT
             }
 
             await setDoc(doc(db, 'users', user.uid, 'progress', moduleId), updateData, { merge: true });
@@ -538,51 +564,58 @@ export function StudentCourseView() {
                         </div>
                     ) : (
                         <div className="animate-fade-in space-y-8">
-                            {!quizResult ? (
+                            {stats.attempts === null || !isProgressLoaded ? (
+                                <div className="flex flex-col items-center justify-center p-20 bg-white/20 rounded-[2rem] border-2 border-dashed border-espresso/10 animate-pulse">
+                                    <span className="material-symbols-outlined animate-spin text-4xl text-espresso/40 mb-4">progress_activity</span>
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40">Synchronizing Assessment Matrix...</p>
+                                </div>
+                            ) : !quizResult ? (
                                 !quizStarted ? (
-                                    <div className="w-full bg-[#F5DEB3] dark:bg-white/5 p-5 md:p-12 rounded-[2rem] md:rounded-3xl border border-espresso/10 shadow-2xl text-left space-y-6 md:space-y-10 animate-scale-in relative overflow-hidden group">
-                                        <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                                        <div className="size-16 md:size-24 bg-espresso/5 rounded-2xl md:rounded-3xl flex items-center justify-center mx-auto text-espresso rotate-12 group-hover:rotate-0 transition-transform shadow-inner">
-                                            <span className="material-symbols-outlined text-4xl md:text-5xl">quiz</span>
-                                        </div>
-                                        <div className="text-center md:text-left">
-                                            <h2 className="text-xl md:text-4xl font-serif font-black text-espresso dark:text-white mb-2 md:mb-4">{t('student.quiz.title')}</h2>
-                                            <p className="text-[8px] md:text-sm font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.2em] mb-6 md:mb-8">{t('student.quiz.subtitle')}</p>
-                                            <div className="space-y-3 md:space-y-4 text-left">
-                                                <div className="flex items-center gap-3 md:gap-5 p-3 md:p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
-                                                    <div className="size-8 md:size-12 rounded-xl bg-espresso/5 flex items-center justify-center shrink-0">
-                                                        <span className="material-symbols-outlined text-espresso text-xl md:text-2xl">timer_10_alt_1</span>
+                                    <div className="space-y-8 animate-fade-in">
+                                        <div className="w-full bg-[#F5DEB3] dark:bg-white/5 p-5 md:p-12 rounded-[2rem] md:rounded-3xl border border-espresso/10 shadow-2xl text-left space-y-6 md:space-y-10 animate-scale-in relative overflow-hidden group">
+                                            <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
+                                            <div className="size-16 md:size-24 bg-espresso/5 rounded-2xl md:rounded-3xl flex items-center justify-center mx-auto text-espresso rotate-12 group-hover:rotate-0 transition-transform shadow-inner">
+                                                <span className="material-symbols-outlined text-4xl md:text-5xl">quiz</span>
+                                            </div>
+                                            <div className="text-center md:text-left">
+                                                <h2 className="text-xl md:text-4xl font-serif font-black text-espresso dark:text-white mb-2 md:mb-4">{t('student.quiz.title')}</h2>
+                                                <p className="text-[8px] md:text-sm font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.2em] mb-6 md:mb-8">{t('student.quiz.subtitle')}</p>
+                                                <div className="space-y-3 md:space-y-4 text-left">
+                                                    <div className="flex items-center gap-3 md:gap-5 p-3 md:p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
+                                                        <div className="size-8 md:size-12 rounded-xl bg-espresso/5 flex items-center justify-center shrink-0">
+                                                            <span className="material-symbols-outlined text-espresso text-xl md:text-2xl">timer_10_alt_1</span>
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-0.5">{t('student.quiz.rules.timer.title')}</p>
+                                                            <p className="text-[10px] md:text-sm font-bold text-espresso dark:text-white leading-tight">{t('student.quiz.rules.timer.desc')}</p>
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <p className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-0.5">{t('student.quiz.rules.timer.title')}</p>
-                                                        <p className="text-[10px] md:text-sm font-bold text-espresso dark:text-white leading-tight">{t('student.quiz.rules.timer.desc')}</p>
+                                                    <div className="flex items-center gap-3 md:gap-5 p-3 md:p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
+                                                        <div className="size-8 md:size-12 rounded-xl bg-espresso/5 flex items-center justify-center shrink-0">
+                                                            <span className="material-symbols-outlined text-espresso text-xl md:text-2xl">workspace_premium</span>
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-0.5">{t('student.quiz.rules.pass_mark.title')}</p>
+                                                            <p className="text-[10px] md:text-sm font-bold text-espresso dark:text-white leading-tight" dangerouslySetInnerHTML={{ __html: t('student.quiz.rules.pass_mark.desc', { passMark: activeQuiz?.passMark || 70 }) }} />
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className="flex items-center gap-3 md:gap-5 p-3 md:p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
-                                                    <div className="size-8 md:size-12 rounded-xl bg-espresso/5 flex items-center justify-center shrink-0">
-                                                        <span className="material-symbols-outlined text-espresso text-xl md:text-2xl">workspace_premium</span>
+                                                    <div className="flex items-center gap-3 md:gap-5 p-3 md:p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
+                                                        <div className="size-8 md:size-12 rounded-xl bg-espresso/5 flex items-center justify-center shrink-0">
+                                                            <span className="material-symbols-outlined text-espresso text-xl md:text-2xl">event_repeat</span>
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-0.5">{t('student.quiz.rules.attempt_limit.title')}</p>
+                                                            <p className="text-[10px] md:text-sm font-bold text-espresso dark:text-white leading-tight">{t('student.quiz.rules.attempt_limit.desc')}</p>
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <p className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-0.5">{t('student.quiz.rules.pass_mark.title')}</p>
-                                                        <p className="text-[10px] md:text-sm font-bold text-espresso dark:text-white leading-tight" dangerouslySetInnerHTML={{ __html: t('student.quiz.rules.pass_mark.desc', { passMark: activeQuiz?.passMark || 70 }) }} />
-                                                    </div>
-                                                </div>
-                                                <div className="flex items-center gap-3 md:gap-5 p-3 md:p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
-                                                    <div className="size-8 md:size-12 rounded-xl bg-espresso/5 flex items-center justify-center shrink-0">
-                                                        <span className="material-symbols-outlined text-espresso text-xl md:text-2xl">event_repeat</span>
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-0.5">{t('student.quiz.rules.attempt_limit.title')}</p>
-                                                        <p className="text-[10px] md:text-sm font-bold text-espresso dark:text-white leading-tight">{t('student.quiz.rules.attempt_limit.desc')}</p>
-                                                    </div>
-                                                </div>
-                                                <div className="flex items-center gap-3 md:gap-5 p-3 md:p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
-                                                    <div className="size-8 md:size-12 rounded-xl bg-espresso/5 flex items-center justify-center shrink-0">
-                                                        <span className="material-symbols-outlined text-espresso text-xl md:text-2xl">payments</span>
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-0.5">{t('student.quiz.rules.retake_policy.title')}</p>
-                                                        <p className="text-[10px] md:text-sm font-bold text-espresso dark:text-white leading-tight">{t('student.quiz.rules.retake_policy.desc')}</p>
+                                                    <div className="flex items-center gap-3 md:gap-5 p-3 md:p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
+                                                        <div className="size-8 md:size-12 rounded-xl bg-espresso/5 flex items-center justify-center shrink-0">
+                                                            <span className="material-symbols-outlined text-espresso text-xl md:text-2xl">payments</span>
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-0.5">{t('student.quiz.rules.retake_policy.title')}</p>
+                                                            <p className="text-[10px] md:text-sm font-bold text-espresso dark:text-white leading-tight">{t('student.quiz.rules.retake_policy.desc')}</p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

@@ -629,10 +629,13 @@ export function ManageModule() {
                 quizAllowedStudents: newAllowed
             });
 
-            // If we are allowing access, reset the quizRequested flag in user progress
+            // If we are allowing access, reset flags and set isAuthorized
             if (newAllowed.includes(studentId)) {
                 const progressRef = doc(db, 'users', studentId, 'progress', moduleId);
-                await updateDoc(progressRef, { quizRequested: false });
+                await updateDoc(progressRef, {
+                    quizRequested: false,
+                    isAuthorized: true // New persistent auth slot
+                });
             }
         } catch (error) {
             console.error("Sync Error:", error);
@@ -646,7 +649,13 @@ export function ManageModule() {
             const lastSlideIndex = progress?.lastSlideIndex || 0;
             const contentLen = (contentType === 'full' ? slides : summarySlides).length;
             // Consider completed if they are at the last slide or have a 'completed' status
-            return (contentLen > 0 && lastSlideIndex >= contentLen - 1) || progress?.status === 'completed';
+            const isReadComplete = (contentLen > 0 && lastSlideIndex >= contentLen - 1) || progress?.status === 'completed';
+
+            // SECURITY FIX: Exclude students who failed 3 times
+            const attempts = Number(progress?.attempts || 0);
+            const isLocked = !progress?.passed && attempts >= 3;
+
+            return isReadComplete && !isLocked;
         }).map(s => s.id);
 
         const newAllowed = [...new Set([...quizAllowedStudents, ...completedStudentIds])];
@@ -656,6 +665,12 @@ export function ManageModule() {
             await updateDoc(doc(db, 'courses', courseId, 'modules', moduleId), {
                 quizAllowedStudents: newAllowed
             });
+            // Also sync isAuthorized to all allowed students for Section 16 persistence
+            await Promise.all(completedStudentIds.map(sid => {
+                const pref = doc(db, 'users', sid, 'progress', moduleId);
+                return updateDoc(pref, { isAuthorized: true, quizRequested: false }).catch(() => { });
+            }));
+
             alert(`Granted quiz access to ${completedStudentIds.length} students who finished content.`);
         } catch (error) {
             console.error("Sync Error:", error);
@@ -1337,14 +1352,27 @@ export function ManageModule() {
                                                         </div>
                                                     </td>
                                                     <td className="px-4 md:px-8 py-4 md:py-5 text-center">
-                                                        <div onClick={(e) => toggleQuizAccess(e, student.id)} className={cn(
-                                                            "size-6 md:size-8 rounded-lg md:rounded-xl border flex items-center justify-center transition-all mx-auto z-20 relative hover:scale-110",
-                                                            isQuizAllowed
-                                                                ? "bg-green-600 border-green-600 text-white scale-110 shadow-lg"
-                                                                : hasRequestedQuiz ? "bg-amber-100 border-amber-500 text-amber-600 opacity-100" : "border-espresso/20 text-transparent opacity-50 hover:opacity-100 hover:text-espresso/40"
-                                                        )}>
+                                                        <div
+                                                            onClick={(e) => {
+                                                                const attempts = Number(progress?.attempts || 0);
+                                                                const isLocked = !progress?.passed && attempts >= 3;
+                                                                if (isLocked && !isQuizAllowed) {
+                                                                    if (!window.confirm("WARNING: This student has EXCEEDED 3 attempts. Granting access will allow them to try again. Proceed?")) return;
+                                                                }
+                                                                toggleQuizAccess(e, student.id);
+                                                            }}
+                                                            className={cn(
+                                                                "size-6 md:size-8 rounded-lg md:rounded-xl border flex items-center justify-center transition-all mx-auto z-20 relative hover:scale-110",
+                                                                isQuizAllowed
+                                                                    ? "bg-green-600 border-green-600 text-white scale-110 shadow-lg"
+                                                                    : (Number(progress?.attempts || 0) >= 3 && !progress?.passed)
+                                                                        ? "bg-red-500 border-red-600 text-white opacity-100 shadow-inner" // LOCKED STATE
+                                                                        : hasRequestedQuiz ? "bg-amber-100 border-amber-500 text-amber-600 opacity-100" : "border-espresso/20 text-transparent opacity-50 hover:opacity-100 hover:text-espresso/40"
+                                                            )}
+                                                            title={Number(progress?.attempts || 0) >= 3 && !progress?.passed ? "MAX ATTEMPTS REACHED - LOCKED" : ""}
+                                                        >
                                                             <span className="material-symbols-outlined text-[16px] md:text-[20px] font-bold">
-                                                                {isQuizAllowed ? 'lock_open' : hasRequestedQuiz ? 'notification_important' : 'lock'}
+                                                                {isQuizAllowed ? 'lock_open' : (Number(progress?.attempts || 0) >= 3 && !progress?.passed) ? 'lock_reset' : hasRequestedQuiz ? 'notification_important' : 'lock'}
                                                             </span>
                                                         </div>
                                                     </td>

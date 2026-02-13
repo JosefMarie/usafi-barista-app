@@ -305,6 +305,7 @@ function ReevaluationManager({ student, onBack }) {
             // 1. Reset progress document
             await updateDoc(progressRef, {
                 quizRequested: false,
+                isAuthorized: true, // RESET PERMISSION SLOT
                 attempts: 0, // Reset to allow 3 more
                 passed: false,
                 score: 0,
