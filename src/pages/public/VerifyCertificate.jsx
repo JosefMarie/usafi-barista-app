@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
+import { StudentTranscript } from '../../components/admin/StudentTranscript';
 
 export function VerifyCertificate() {
     const { id } = useParams(); // This should be the Student UID
@@ -131,7 +132,21 @@ export function VerifyCertificate() {
                 </div>
             </div>
 
-            <div className="mt-8 text-center">
+            {/* Transcript Section */}
+            <div className="mt-12 w-full max-w-5xl flex flex-col items-center">
+                <div className="mb-8 text-center px-4">
+                    <h2 className="text-2xl font-serif font-bold text-[#321C00] mb-2 uppercase tracking-wider">Academic Record</h2>
+                    <p className="text-[#321C00]/60 text-sm">Official Transcript of Completed Modules</p>
+                </div>
+
+                <div className="w-full overflow-x-auto pb-8 flex justify-center px-4">
+                    <div className="transform scale-[0.6] sm:scale-[0.8] md:scale-100 origin-top">
+                        <StudentTranscript student={student} />
+                    </div>
+                </div>
+            </div>
+
+            <div className="mt-8 text-center pb-12">
                 <Link to="/" className="text-[#a77c52] text-sm font-bold hover:underline">
                     &larr; Back to Usafi Coffee
                 </Link>

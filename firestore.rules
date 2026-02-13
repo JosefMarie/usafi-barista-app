@@ -25,7 +25,8 @@ service cloud.firestore {
       // Allow reading for:
       // 1. Authenticated users (own profile or staff)
       // 2. Unauthenticated users during enrollment (to check if email exists)
-      allow read: if true; // Open read for enrollment checks
+      // 3. Public verification page
+      allow read: if true; 
       // Allow create during enrollment (unauthenticated) or if authenticated
       allow create: if true; // Anyone can create during enrollment
       allow update: if isAuthenticated() && (request.auth.uid == userId || isAdminOrCEO());
@@ -33,42 +34,44 @@ service cloud.firestore {
       
       // User subcollections (progress, etc.)
       match /progress/{progressId} {
-        allow read, write: if isAuthenticated() && (request.auth.uid == userId || isStaff());
+        allow read: if true; // Allow public read for verification page
+        allow write: if isAuthenticated() && (request.auth.uid == userId || isStaff());
       }
       
       // Business course progress
       match /business_progress/{courseId} {
-        allow read, write: if isAuthenticated() && (request.auth.uid == userId || isStaff());
+        allow read: if true; // Allow public read for verification page
+        allow write: if isAuthenticated() && (request.auth.uid == userId || isStaff());
       }
     }
     
     // Courses collection (top-level and subcollections)
     match /courses/{courseId} {
-      allow read: if isAuthenticated();
+      allow read: if true; // Publicly readable for verification/courses list
       allow write: if isStaff();
       
       // Modules subcollection
       match /modules/{moduleId} {
-        allow read: if isAuthenticated();
+        allow read: if true;
         allow write: if isStaff();
       }
       
       // Lessons subcollection
       match /lessons/{lessonId} {
-        allow read: if isAuthenticated();
+        allow read: if true;
         allow write: if isStaff();
       }
     }
     
     // Standalone modules collection
     match /modules/{moduleId} {
-      allow read: if isAuthenticated();
+      allow read: if true;
       allow write: if isStaff();
     }
     
     // Quizzes collection
     match /quizzes/{quizId} {
-      allow read: if isAuthenticated();
+      allow read: if true;
       allow write: if isStaff();
     }
     
