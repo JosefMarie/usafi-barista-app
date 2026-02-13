@@ -1,16 +1,70 @@
-# React + Vite
+# Usafi Barista Training Center App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A comprehensive e-learning and management platform for barista training, designed to provide a seamless experience for students, instructors, and administrators.
 
-Currently, two official plugins are available:
+## 🚀 Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The Usafi Barista App is a sophisticated web application that manages the entire lifecycle of barista training. From public course browsing and registration to specialized student portals, instructor management, and administrative oversight, the platform ensures efficient training delivery and professional development.
 
-## React Compiler
+## ✨ Key Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 🌍 Public Portal
+- **Course Discovery**: Browse and search through available barista training modules.
+- **Registration**: Streamlined application process for new students.
+- **Job Opportunities**: Integrated job board specifically for the barista industry.
+- **CV Builder**: Professional CV generation tool for trained baristas.
+- **Certificate Verification**: Public-facing tool to verify student certificates via QR codes.
 
-## Expanding the ESLint configuration
+### 🎓 Student Experience
+- **Interactive Learning**: Access course materials, modules, and lessons.
+- **Quizzes & Assessments**: Real-time knowledge testing with persistent authorization logic.
+- **Progress Tracking**: Monitor learning journey and achievement milestones.
+- **Student Profile**: Manage personal details, resume, and training history.
+- **Multilingual Support**: Available in English, French, and Kinyarwanda.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 👨‍🏫 Instructor & Staff Management
+- **Course Management**: Edit and update curriculum content.
+- **Student Monitoring**: Track student progress and performance.
+- **Community Engagement**: Forum systems for interaction between students and staff.
+
+### ⚙️ Administrative Oversight
+- **System Dashboard**: High-level overview of training activities.
+- **Report Generation**: Detailed analytics on student performance and course effectiveness.
+- **User Management**: Control access levels for Admins, Instructors, and Students.
+- **Business Portal**: Specialized registration and approval flow for business partners.
+
+## 🛠️ Tech Stack
+
+- **Frontend**: [React 19](https://react.dev/) with [Vite 7](https://vite.dev/)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
+- **Backend/Infrastructure**: [Firebase](https://firebase.google.com/)
+  - **Firestore**: Real-time NoSQL database
+  - **Firebase Functions**: Serverless backend logic
+  - **Firebase Hosting**: High-performance web hosting
+  - **Firebase Storage**: Secure file management (certificates, CVs, fliers)
+- **Key Libraries**:
+  - `react-router-dom`: Modern navigation and routing
+  - `react-i18next`: Localization and internationalization
+  - `@react-pdf/renderer`: Dynamic PDF generation
+  - `framer-motion`: Smooth UI animations
+
+## 💻 Local Development
+
+1. **Clone the repository**
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+3. **Set up Firebase**:
+   Ensure you have the Firebase configuration set up in your environment or localized config files.
+4. **Run the development server**:
+   ```bash
+   npm run dev
+   ```
+5. **Build for production**:
+   ```bash
+   npm run build
+   ```
+
+---
+© 2026 Usafi Barista Training Center
