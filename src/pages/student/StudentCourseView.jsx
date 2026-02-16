@@ -215,17 +215,17 @@ export function StudentCourseView() {
         const isApplicant = user?.status === 'pending' || user?.status === 'unknown';
 
         // PERSISTENT ACCESS LOGIC (Section 16 of plan)
-        // 1. Applicants: Blocked unless explicitly allowed
-        // 2. Normal (Attempts < 3): Allowed if isQuizAllowed (module list) or isAuthorized
-        // 3. Locked (Attempts >= 3): ONLY allowed if isAuthorized is true (Progress doc)
-        // This prevents the "Sticky Access" bug where students remain in the module's quizAllowedStudents list indefinitely.
+        // 1. Applicants: Blocked unless explicitly allowed (isQuizAllowed or isAuthorized slot)
+        // 2. Normal (Attempts < 3): Allowed by default.
+        // 3. Locked (Attempts >= 3): ONLY allowed if isAuthorized is true (Progress doc Slot)
+        // This ensures the 3-fail lock is final until a new re-evaluation credit is granted.
         let allowed = false;
         if (isApplicant) {
             allowed = isQuizAllowed || stats.isAuthorized;
         } else if (attempts < 3) {
-            allowed = isQuizAllowed || stats.isAuthorized;
+            allowed = true; // Restoration of default access for new/ongoing students
         } else {
-            allowed = stats.isAuthorized; // Re-assessment mode: sticky module list is ignored
+            allowed = stats.isAuthorized; // Strict re-assessment mode
         }
 
         if (!stats.passed && !allowed) {
