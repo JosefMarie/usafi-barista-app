@@ -1,19 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { db } from '../../lib/firebase';
+import { doc, getDoc, updateDoc, onSnapshot } from 'firebase/firestore';
+import { cn } from '../../lib/utils';
 
-export function CEOSettings() {
-    const [settings, setSettings] = useState({
+export function CEOSettings({ settings: initialSettings }) {
+    const [settings, setSettings] = useState(initialSettings || {
         registrationsOpen: true,
         maintenanceMode: false,
         autoApproveStudents: false,
         notifyOnNewUser: true,
         systemVersion: '2.4.0-EXEC'
     });
+    const [saving, setSaving] = useState(false);
 
-    const toggleSetting = (key) => {
-        setSettings(prev => ({
-            ...prev,
-            [key]: !prev[key]
-        }));
+    useEffect(() => {
+        const unsubscribe = onSnapshot(doc(db, 'system_settings', 'global'), (snap) => {
+            if (snap.exists()) {
+                setSettings(snap.data());
+            }
+        });
+        return () => unsubscribe();
+    }, []);
+
+    const toggleSetting = async (key) => {
+        try {
+            setSaving(true);
+            const settingsRef = doc(db, 'system_settings', 'global');
+            await updateDoc(settingsRef, {
+                [key]: !settings[key],
+                updatedAt: new Date(),
+                updatedBy: 'ceo'
+            });
+        } catch (error) {
+            console.error("Error updating setting:", error);
+            alert("Failed to update setting. Please try again.");
+        } finally {
+            setSaving(false);
+        }
     };
 
     return (

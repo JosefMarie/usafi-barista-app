@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-export function Enrollment() {
+export function Enrollment({ settings }) {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -189,247 +189,269 @@ export function Enrollment() {
                 {/* Section 1: Online Registration Form */}
                 <div className="bg-[#F5DEB3] dark:bg-white/5 p-8 rounded-3xl shadow-2xl border border-espresso/10 mb-12 relative overflow-hidden group">
                     <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                    {error && (
-                        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-600 dark:text-red-300 text-sm font-medium">
-                            {error}
-                        </div>
-                    )}
-                    <form onSubmit={handleSubmit} className="space-y-6">
-
-                        {/* Full Name */}
-                        <div>
-                            <label htmlFor="fullName" className="block text-espresso dark:text-white font-bold mb-2">
-                                {t('enrollment.form.fullName.label')} <span className="text-red-500">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                id="fullName"
-                                name="fullName"
-                                required
-                                className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:border-espresso focus:ring-1 focus:ring-espresso outline-none transition-all"
-                                placeholder={t('enrollment.form.fullName.placeholder')}
-                                value={formData.fullName}
-                                onChange={handleChange}
-                            />
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {/* Phone */}
-                            <div>
-                                <label htmlFor="phone" className="block text-espresso dark:text-white font-bold mb-2">
-                                    {t('enrollment.form.phone.label')} <span className="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="tel"
-                                    id="phone"
-                                    name="phone"
-                                    required
-                                    className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:border-espresso focus:ring-1 focus:ring-espresso outline-none transition-all"
-                                    placeholder={t('enrollment.form.phone.placeholder')}
-                                    value={formData.phone}
-                                    onChange={handleChange}
-                                />
+                    {settings && !settings.registrationsOpen ? (
+                        <div className="text-center py-12 space-y-6">
+                            <div className="size-20 bg-espresso/5 rounded-full mx-auto flex items-center justify-center">
+                                <span className="material-symbols-outlined text-4xl text-espresso/40 tracking-normal">lock</span>
                             </div>
-
-                            {/* Email */}
-                            <div>
-                                <label htmlFor="email" className="block text-espresso dark:text-white font-bold mb-2">
-                                    {t('enrollment.form.email.label')} <span className="text-red-500">*</span>
-                                </label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    required
-                                    className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:border-espresso focus:ring-1 focus:ring-espresso outline-none transition-all"
-                                    placeholder={t('enrollment.form.email.placeholder')}
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                />
+                            <div className="space-y-2">
+                                <h2 className="text-2xl font-serif font-bold text-espresso dark:text-white">Registrations Paused</h2>
+                                <p className="text-espresso/60 dark:text-white/60 max-w-md mx-auto text-sm leading-relaxed">
+                                    Public enrollment is currently closed while we process existing applications. Please check back later or contact us directly.
+                                </p>
                             </div>
+                            <button
+                                onClick={() => navigate('/contact')}
+                                className="px-8 py-3 bg-espresso text-white rounded-xl font-black uppercase text-[10px] tracking-[0.2em] shadow-lg hover:scale-105 transition-transform"
+                            >
+                                Contact Support
+                            </button>
                         </div>
-
-                        {/* Password Field - NEW */}
-                        <div>
-                            <label htmlFor="password" className="block text-espresso dark:text-white font-bold mb-2">
-                                {t('enrollment.form.password.label')} <span className="text-red-500">*</span>
-                            </label>
-                            <div className="relative">
-                                <input
-                                    type={showPassword ? "text" : "password"}
-                                    id="password"
-                                    name="password"
-                                    required
-                                    minLength="6"
-                                    className="w-full px-4 py-3 pr-12 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:border-espresso focus:ring-1 focus:ring-espresso outline-none transition-all"
-                                    placeholder={t('enrollment.form.password.placeholder')}
-                                    value={formData.password}
-                                    onChange={handleChange}
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-espresso/40 hover:text-espresso transition-colors"
-                                >
-                                    <span className="material-symbols-outlined text-[20px]">
-                                        {showPassword ? 'visibility_off' : 'visibility'}
-                                    </span>
-                                </button>
-                            </div>
-                            <p className="text-xs text-espresso/50 dark:text-white/50 mt-1">
-                                {t('enrollment.form.password.hint')}
-                            </p>
-                        </div>
-
-                        {/* Residence */}
-                        <div>
-                            <label htmlFor="residence" className="block text-espresso dark:text-white font-bold mb-2">
-                                {t('enrollment.form.residence.label')} <span className="text-red-500">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                id="residence"
-                                name="residence"
-                                required
-                                className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:border-espresso focus:ring-1 focus:ring-espresso outline-none transition-all"
-                                placeholder={t('enrollment.form.residence.placeholder')}
-                                value={formData.residence}
-                                onChange={handleChange}
-                            />
-                        </div>
-
-                        {/* Course Ahisemo */}
-                        <div>
-                            <label className="block text-espresso dark:text-white font-bold mb-3">
-                                {t('enrollment.form.course.label')} (Select one or more) <span className="text-red-500">*</span>
-                            </label>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                {availableCourses.length === 0 ? (
-                                    <div className="text-espresso/50 text-sm p-4 bg-white/50 rounded-xl">Loading courses...</div>
-                                ) : (
-                                    availableCourses.map(course => (
-                                        <label key={course.id} className={`flex items-start gap-3 p-4 rounded-xl cursor-pointer border-2 transition-all ${formData.courses.includes(course.id) ? 'border-primary bg-primary/5 dark:bg-primary/20' : 'border-espresso/10 bg-white/50 dark:bg-black/20 hover:border-primary/50'}`}>
-                                            <input
-                                                type="checkbox"
-                                                className="mt-1 w-5 h-5 rounded border-espresso/20 text-primary focus:ring-primary"
-                                                checked={formData.courses.includes(course.id)}
-                                                onChange={() => handleCourseToggle(course.id)}
-                                            />
-                                            <div className="flex-1">
-                                                <p className="font-bold text-espresso dark:text-white">{course.title}</p>
-                                                <p className="text-xs text-espresso/60 dark:text-white/60 mt-1 line-clamp-2">{course.description}</p>
-                                            </div>
-                                        </label>
-                                    ))
-                                )}
-                            </div>
-                            {formData.courses.length === 0 && (
-                                <p className="text-red-500 text-xs mt-2">Please select at least one course.</p>
-                            )}
-                        </div>
-
-                        {/* Study Method */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label htmlFor="studyMethod" className="block text-espresso dark:text-white font-bold mb-2">
-                                    {t('enrollment.form.studyMethod.label')} <span className="text-red-500">*</span>
-                                </label>
-                                <div className="relative">
-                                    <select
-                                        id="studyMethod"
-                                        name="studyMethod"
-                                        required
-                                        className="w-full px-4 py-3 rounded-xl bg-background-light dark:bg-black/20 border border-[#e0dbd6] dark:border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none"
-                                        value={formData.studyMethod}
-                                        onChange={handleChange}
-                                    >
-                                        <option value="" disabled>{t('enrollment.form.studyMethod.placeholder')}</option>
-                                        <option value="onsite">{t('enrollment.form.studyMethod.options.onsite')}</option>
-                                        <option value="online">{t('enrollment.form.studyMethod.options.online')}</option>
-                                    </select>
-                                    <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-espresso/50">expand_more</span>
+                    ) : (
+                        <>
+                            {error && (
+                                <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-600 dark:text-red-300 text-sm font-medium">
+                                    {error}
                                 </div>
-                            </div>
+                            )}
+                            <form onSubmit={handleSubmit} className="space-y-6">
 
-                            {/* Start Date */}
-                            {/* Start Date OR Shift Selection */}
-                            <div>
-                                <label htmlFor="startDate" className="block text-espresso dark:text-white font-bold mb-2">
-                                    {formData.studyMethod === 'onsite' ? t('enrollment.form.onsite.label') : t('enrollment.form.online.label')} <span className="text-red-500">*</span>
-                                </label>
-                                {formData.studyMethod === 'onsite' ? (
+                                {/* Full Name */}
+                                <div>
+                                    <label htmlFor="fullName" className="block text-espresso dark:text-white font-bold mb-2">
+                                        {t('enrollment.form.fullName.label')} <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="fullName"
+                                        name="fullName"
+                                        required
+                                        className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:border-espresso focus:ring-1 focus:ring-espresso outline-none transition-all"
+                                        placeholder={t('enrollment.form.fullName.placeholder')}
+                                        value={formData.fullName}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {/* Phone */}
+                                    <div>
+                                        <label htmlFor="phone" className="block text-espresso dark:text-white font-bold mb-2">
+                                            {t('enrollment.form.phone.label')} <span className="text-red-500">*</span>
+                                        </label>
+                                        <input
+                                            type="tel"
+                                            id="phone"
+                                            name="phone"
+                                            required
+                                            className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:border-espresso focus:ring-1 focus:ring-espresso outline-none transition-all"
+                                            placeholder={t('enrollment.form.phone.placeholder')}
+                                            value={formData.phone}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+
+                                    {/* Email */}
+                                    <div>
+                                        <label htmlFor="email" className="block text-espresso dark:text-white font-bold mb-2">
+                                            {t('enrollment.form.email.label')} <span className="text-red-500">*</span>
+                                        </label>
+                                        <input
+                                            type="email"
+                                            id="email"
+                                            name="email"
+                                            required
+                                            className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:border-espresso focus:ring-1 focus:ring-espresso outline-none transition-all"
+                                            placeholder={t('enrollment.form.email.placeholder')}
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Password Field - NEW */}
+                                <div>
+                                    <label htmlFor="password" className="block text-espresso dark:text-white font-bold mb-2">
+                                        {t('enrollment.form.password.label')} <span className="text-red-500">*</span>
+                                    </label>
+                                    <div className="relative">
+                                        <input
+                                            type={showPassword ? "text" : "password"}
+                                            id="password"
+                                            name="password"
+                                            required
+                                            minLength="6"
+                                            className="w-full px-4 py-3 pr-12 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:border-espresso focus:ring-1 focus:ring-espresso outline-none transition-all"
+                                            placeholder={t('enrollment.form.password.placeholder')}
+                                            value={formData.password}
+                                            onChange={handleChange}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            className="absolute inset-y-0 right-0 pr-4 flex items-center text-espresso/40 hover:text-espresso transition-colors"
+                                        >
+                                            <span className="material-symbols-outlined text-[20px]">
+                                                {showPassword ? 'visibility_off' : 'visibility'}
+                                            </span>
+                                        </button>
+                                    </div>
+                                    <p className="text-xs text-espresso/50 dark:text-white/50 mt-1">
+                                        {t('enrollment.form.password.hint')}
+                                    </p>
+                                </div>
+
+                                {/* Residence */}
+                                <div>
+                                    <label htmlFor="residence" className="block text-espresso dark:text-white font-bold mb-2">
+                                        {t('enrollment.form.residence.label')} <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="residence"
+                                        name="residence"
+                                        required
+                                        className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:border-espresso focus:ring-1 focus:ring-espresso outline-none transition-all"
+                                        placeholder={t('enrollment.form.residence.placeholder')}
+                                        value={formData.residence}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+
+                                {/* Course Ahisemo */}
+                                <div>
+                                    <label className="block text-espresso dark:text-white font-bold mb-3">
+                                        {t('enrollment.form.course.label')} (Select one or more) <span className="text-red-500">*</span>
+                                    </label>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        {availableCourses.length === 0 ? (
+                                            <div className="text-espresso/50 text-sm p-4 bg-white/50 rounded-xl">Loading courses...</div>
+                                        ) : (
+                                            availableCourses.map(course => (
+                                                <label key={course.id} className={`flex items-start gap-3 p-4 rounded-xl cursor-pointer border-2 transition-all ${formData.courses.includes(course.id) ? 'border-primary bg-primary/5 dark:bg-primary/20' : 'border-espresso/10 bg-white/50 dark:bg-black/20 hover:border-primary/50'}`}>
+                                                    <input
+                                                        type="checkbox"
+                                                        className="mt-1 w-5 h-5 rounded border-espresso/20 text-primary focus:ring-primary"
+                                                        checked={formData.courses.includes(course.id)}
+                                                        onChange={() => handleCourseToggle(course.id)}
+                                                    />
+                                                    <div className="flex-1">
+                                                        <p className="font-bold text-espresso dark:text-white">{course.title}</p>
+                                                        <p className="text-xs text-espresso/60 dark:text-white/60 mt-1 line-clamp-2">{course.description}</p>
+                                                    </div>
+                                                </label>
+                                            ))
+                                        )}
+                                    </div>
+                                    {formData.courses.length === 0 && (
+                                        <p className="text-red-500 text-xs mt-2">Please select at least one course.</p>
+                                    )}
+                                </div>
+
+                                {/* Study Method */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label htmlFor="studyMethod" className="block text-espresso dark:text-white font-bold mb-2">
+                                            {t('enrollment.form.studyMethod.label')} <span className="text-red-500">*</span>
+                                        </label>
+                                        <div className="relative">
+                                            <select
+                                                id="studyMethod"
+                                                name="studyMethod"
+                                                required
+                                                className="w-full px-4 py-3 rounded-xl bg-background-light dark:bg-black/20 border border-[#e0dbd6] dark:border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none"
+                                                value={formData.studyMethod}
+                                                onChange={handleChange}
+                                            >
+                                                <option value="" disabled>{t('enrollment.form.studyMethod.placeholder')}</option>
+                                                <option value="onsite">{t('enrollment.form.studyMethod.options.onsite')}</option>
+                                                <option value="online">{t('enrollment.form.studyMethod.options.online')}</option>
+                                            </select>
+                                            <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-espresso/50">expand_more</span>
+                                        </div>
+                                    </div>
+
+                                    {/* Start Date */}
+                                    {/* Start Date OR Shift Selection */}
+                                    <div>
+                                        <label htmlFor="startDate" className="block text-espresso dark:text-white font-bold mb-2">
+                                            {formData.studyMethod === 'onsite' ? t('enrollment.form.onsite.label') : t('enrollment.form.online.label')} <span className="text-red-500">*</span>
+                                        </label>
+                                        {formData.studyMethod === 'onsite' ? (
+                                            <div className="relative">
+                                                <select
+                                                    id="shift"
+                                                    name="shift"
+                                                    required
+                                                    className="w-full px-4 py-3 rounded-xl bg-background-light dark:bg-black/20 border border-[#e0dbd6] dark:border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none"
+                                                    value={formData.shift}
+                                                    onChange={handleChange}
+                                                >
+                                                    <option value="" disabled>{t('enrollment.form.onsite.placeholder')}</option>
+                                                    <option value="1st-shift">{t('enrollment.form.onsite.options.1st-shift')}</option>
+                                                    <option value="2nd-shift">{t('enrollment.form.onsite.options.2nd-shift')}</option>
+                                                    <option value="3rd-shift">{t('enrollment.form.onsite.options.3rd-shift')}</option>
+                                                    <option value="4th-shift">{t('enrollment.form.onsite.options.4th-shift')}</option>
+                                                    <option value="5th-shift">{t('enrollment.form.onsite.options.5th-shift')}</option>
+                                                </select>
+                                                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-espresso/50">expand_more</span>
+                                            </div>
+                                        ) : (
+                                            <input
+                                                type="date"
+                                                id="startDate"
+                                                name="startDate"
+                                                required
+                                                className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:border-espresso focus:ring-1 focus:ring-espresso outline-none transition-all"
+                                                value={formData.startDate}
+                                                onChange={handleChange}
+                                            />
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Referral (Optional) */}
+                                <div>
+                                    <label htmlFor="referral" className="block text-espresso dark:text-white font-bold mb-2">
+                                        {t('enrollment.form.referral.label')}
+                                    </label>
                                     <div className="relative">
                                         <select
-                                            id="shift"
-                                            name="shift"
-                                            required
+                                            id="referral"
+                                            name="referral"
                                             className="w-full px-4 py-3 rounded-xl bg-background-light dark:bg-black/20 border border-[#e0dbd6] dark:border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none"
-                                            value={formData.shift}
+                                            value={formData.referral}
                                             onChange={handleChange}
                                         >
-                                            <option value="" disabled>{t('enrollment.form.onsite.placeholder')}</option>
-                                            <option value="1st-shift">{t('enrollment.form.onsite.options.1st-shift')}</option>
-                                            <option value="2nd-shift">{t('enrollment.form.onsite.options.2nd-shift')}</option>
-                                            <option value="3rd-shift">{t('enrollment.form.onsite.options.3rd-shift')}</option>
-                                            <option value="4th-shift">{t('enrollment.form.onsite.options.4th-shift')}</option>
-                                            <option value="5th-shift">{t('enrollment.form.onsite.options.5th-shift')}</option>
+                                            <option value="">{t('enrollment.form.referral.placeholder')}</option>
+                                            <option value="social-media">{t('enrollment.form.referral.options.social-media')}</option>
+                                            <option value="google">{t('enrollment.form.referral.options.google')}</option>
+                                            <option value="referral">{t('enrollment.form.referral.options.referral')}</option>
+                                            <option value="other">{t('enrollment.form.referral.options.other')}</option>
                                         </select>
                                         <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-espresso/50">expand_more</span>
                                     </div>
-                                ) : (
-                                    <input
-                                        type="date"
-                                        id="startDate"
-                                        name="startDate"
-                                        required
-                                        className="w-full px-4 py-3 rounded-xl bg-white/50 dark:bg-black/20 border border-espresso/10 focus:border-espresso focus:ring-1 focus:ring-espresso outline-none transition-all"
-                                        value={formData.startDate}
-                                        onChange={handleChange}
-                                    />
-                                )}
-                            </div>
-                        </div>
+                                </div>
 
-                        {/* Referral (Optional) */}
-                        <div>
-                            <label htmlFor="referral" className="block text-espresso dark:text-white font-bold mb-2">
-                                {t('enrollment.form.referral.label')}
-                            </label>
-                            <div className="relative">
-                                <select
-                                    id="referral"
-                                    name="referral"
-                                    className="w-full px-4 py-3 rounded-xl bg-background-light dark:bg-black/20 border border-[#e0dbd6] dark:border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none"
-                                    value={formData.referral}
-                                    onChange={handleChange}
+                                {/* Submit Button */}
+                                <button
+                                    type="submit"
+                                    disabled={!!loadingMessage || formData.courses.length === 0}
+                                    className="w-full py-4 rounded-xl bg-primary text-white text-lg font-bold shadow-lg hover:bg-primary/90 hover:scale-[1.02] transition-all duration-200 mt-4 disabled:opacity-70 disabled:cursor-not-allowed flex justify-center items-center"
                                 >
-                                    <option value="">{t('enrollment.form.referral.placeholder')}</option>
-                                    <option value="social-media">{t('enrollment.form.referral.options.social-media')}</option>
-                                    <option value="google">{t('enrollment.form.referral.options.google')}</option>
-                                    <option value="referral">{t('enrollment.form.referral.options.referral')}</option>
-                                    <option value="other">{t('enrollment.form.referral.options.other')}</option>
-                                </select>
-                                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-espresso/50">expand_more</span>
-                            </div>
-                        </div>
+                                    {loadingMessage ? (
+                                        <span className="flex items-center gap-2">
+                                            <span className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></span>
+                                            {loadingMessage}
+                                        </span>
+                                    ) : (
+                                        t('enrollment.form.submit')
+                                    )}
+                                </button>
 
-                        {/* Submit Button */}
-                        <button
-                            type="submit"
-                            disabled={!!loadingMessage || formData.courses.length === 0}
-                            className="w-full py-4 rounded-xl bg-primary text-white text-lg font-bold shadow-lg hover:bg-primary/90 hover:scale-[1.02] transition-all duration-200 mt-4 disabled:opacity-70 disabled:cursor-not-allowed flex justify-center items-center"
-                        >
-                            {loadingMessage ? (
-                                <span className="flex items-center gap-2">
-                                    <span className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></span>
-                                    {loadingMessage}
-                                </span>
-                            ) : (
-                                t('enrollment.form.submit')
-                            )}
-                        </button>
-
-                    </form>
+                            </form>
+                        </>
+                    )}
                 </div>
 
                 {/* Section 2: Payment Information & Policy */}

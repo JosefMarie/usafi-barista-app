@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { PublicLayout } from './components/layout/PublicLayout';
@@ -32,6 +33,10 @@ import { PaymentPending } from './pages/seeker/PaymentPending';
 import { SeekerDashboard } from './pages/seeker/SeekerDashboard';
 import { SeekerProfile } from './pages/seeker/SeekerProfile';
 import { VerifyCertificate } from './pages/public/VerifyCertificate';
+import { MaintenanceMode } from './pages/public/MaintenanceMode';
+import { onSnapshot, doc, setDoc } from 'firebase/firestore';
+import { db } from './lib/firebase';
+import { useAuth } from './context/AuthContext';
 
 // Auth Pages
 import { Login } from './pages/auth/Login';
@@ -110,154 +115,196 @@ import { CEOSettings } from './pages/ceo/CEOSettings';
 // Setup utility
 import { SetupCEO } from './pages/public/SetupCEO';
 
+function MaintenanceGuard({ children, user, settings }) {
+  if (settings?.maintenanceMode && user?.role !== 'ceo' && user?.role !== 'admin') {
+    return <Navigate to="/maintenance" replace />;
+  }
+  return children;
+}
+
 function App() {
+  const [settings, setSettings] = React.useState(null);
+
+  React.useEffect(() => {
+    const settingsRef = doc(db, 'system_settings', 'global');
+    const unsubscribe = onSnapshot(settingsRef, (snap) => {
+      if (snap.exists()) {
+        setSettings(snap.data());
+      } else {
+        // Document missing, create default to avoid null issues
+        setDoc(settingsRef, {
+          registrationsOpen: true,
+          maintenanceMode: false,
+          updatedAt: new Date().toISOString(),
+          updatedBy: 'system-init'
+        }).catch(console.error);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
   return (
     <ThemeProvider>
       <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<PublicLayout />}>
-              <Route index element={<Home />} />
-              <Route path="about" element={<About />} />
-              <Route path="courses" element={<Courses />} />
-              <Route path="career" element={<CareerSupport />} />
-              <Route path="equipment" element={<Equipment />} />
-              <Route path="testimonials" element={<Testimonials />} />
-              <Route path="gallery" element={<Gallery />} />
-              <Route path="blog" element={<Blog />} />
-              <Route path="inclusion" element={<Inclusion />} />
-              <Route path="contact" element={<Contact />} />
-              <Route path="certificates" element={<PublicCertificates />} />
-              <Route path="enroll" element={<Enrollment />} />
-              <Route path="privacy-policy" element={<PrivacyPolicy />} />
-              <Route path="thank-you" element={<ThankYou />} />
-              <Route path="login" element={<Login />} />
-              <Route path="forgot-password" element={<ForgotPassword />} />
-              <Route path="reset-password/:token" element={<ResetPassword />} />
-              <Route path="setup-admin" element={<SetupAdmin />} />
-              <Route path="setup-ceo" element={<SetupCEO />} />
-              <Route path="opportunities" element={<Opportunities />} />
-              <Route path="opportunities/post" element={<PostOpportunity />} />
-              <Route path="opportunities/register" element={<SeekerRegister />} />
-              <Route path="seeker/login" element={<SeekerLogin />} />
-              <Route path="business/register" element={<BusinessRegister />} />
-              <Route path="business/login" element={<BusinessLogin />} />
-              <Route path="verify/:id" element={<VerifyCertificate />} />
-            </Route>
-
-            {/* Seeker Routes */}
-            <Route path="/seeker">
-              <Route index element={<Navigate to="/seeker/dashboard" replace />} />
-              <Route path="payment-pending" element={<PaymentPending />} />
-              <Route path="dashboard" element={<SeekerDashboard />} />
-              <Route path="profile" element={<SeekerProfile />} />
-              <Route path="privacy-settings" element={<PrivacySettings />} />
-            </Route>
-
-            {/* Student Routes */}
-            <Route path="/student" element={<StudentLayout />}>
-              <Route index element={<Navigate to="/student/dashboard" replace />} />
-              <Route path="dashboard" element={<StudentDashboard />} />
-              <Route path="opportunities" element={<StudentOpportunities />} />
-              <Route path="courses" element={<MyCourses />} />
-              <Route path="e-learning" element={<ELearning />} />
-              <Route path="cv-builder" element={<CVBuilder />} />
-              <Route path="certificates" element={<StudentCertificates />} />
-              <Route path="profile" element={<StudentProfile />} />
-              <Route path="privacy-settings" element={<PrivacySettings />} />
-              <Route path="forum" element={<ForumList />} />
-              <Route path="forum/create" element={<CreatePost />} />
-              <Route path="forum/:id" element={<PostDetails />} />
-              <Route path="chat" element={<StudentChatList />} />
-              <Route path="chat/:recipientId" element={<ChatWindow />} />
-              <Route path="courses/:courseId" element={<StudentCourseView />} />
-            </Route>
-
-            {/* Admin Routes */}
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<Navigate to="/admin/dashboard" replace />} />
-              <Route path="dashboard" element={<AdminDashboard />} />
-              <Route path="courses" element={<AdminCourses />} />
-              <Route path="courses/:courseId" element={<ManageCourse />} />
-              <Route path="courses/:courseId/modules/:moduleId" element={<ManageModule />} />
-              <Route path="courses/:courseId/lessons/:lessonId" element={<ManageLesson />} />
-              <Route path="forum" element={<ForumList />} />
-              <Route path="forum/create" element={<CreatePost />} />
-              <Route path="forum/:id" element={<PostDetails />} />
-              <Route path="instructors" element={<Instructors />} />
-              <Route path="students" element={<Students />} />
-              <Route path="students/:id" element={<StudentDetails />} />
-              <Route path="categories" element={<Categories />} />
-              <Route path="quizzes" element={<Quizzes />} />
-              <Route path="testimonials" element={<AdminTestimonials />} />
-              <Route path="activity-log" element={<ActivityLog />} />
-              <Route path="activity-log" element={<ActivityLog />} />
-              <Route path="reports" element={<AdminReports />} />
-              <Route path="seekers" element={<AdminSeekers />} />
-              <Route path="business/users" element={<AdminBusinessUsers />} />
-              <Route path="business/courses" element={<AdminBusinessCourses />} />
-              <Route path="business/courses/:courseId" element={<ManageBusinessCourse />} />
-              <Route path="profile" element={<CommonProfile />} />
-              <Route path="privacy-settings" element={<PrivacySettings />} />
-            </Route>
-
-            {/* Instructor Routes */}
-            <Route path="/instructor" element={<InstructorLayout />}>
-              <Route index element={<Navigate to="/instructor/dashboard" replace />} />
-              <Route path="dashboard" element={<InstructorDashboard />} />
-              <Route path="courses" element={<InstructorCourses />} />
-              <Route path="courses/:courseId" element={<InstructorManageCourse />} />
-              <Route path="courses/:courseId/modules/:moduleId" element={<InstructorManageModule />} />
-              <Route path="students" element={<InstructorStudents />} />
-              <Route path="students/:id" element={<StudentDetails />} />
-              <Route path="chat" element={<InstructorChat />} />
-              <Route path="chat/:recipientId" element={<ChatWindow />} />
-              <Route path="schedule" element={<InstructorSchedule />} />
-              <Route path="share-video" element={<InstructorShareVideo />} />
-              <Route path="forum" element={<ForumList />} />
-              <Route path="forum/create" element={<CreatePost />} />
-              <Route path="forum/:id" element={<PostDetails />} />
-              <Route path="profile" element={<CommonProfile />} />
-              <Route path="privacy-settings" element={<PrivacySettings />} />
-            </Route>
-
-            {/* Manager Routes */}
-            <Route path="/manager" element={<ManagerLayout />}>
-              <Route index element={<Navigate to="/manager/dashboard" replace />} />
-              <Route path="dashboard" element={<ManagerDashboard />} />
-              <Route path="contacts" element={<ManagerContacts />} />
-              <Route path="subscribers" element={<ManagerSubscribers />} />
-              <Route path="messages" element={<ManagerMessages />} />
-              <Route path="opportunities" element={<ManagerOpportunities />} />
-              <Route path="equipment" element={<ManagerEquipment />} />
-              <Route path="gallery" element={<ManagerGallery />} />
-              <Route path="testimonials" element={<ManagerTestimonials />} />
-              <Route path="profile" element={<CommonProfile />} />
-              <Route path="privacy-settings" element={<PrivacySettings />} />
-            </Route>
-
-            {/* CEO Route */}
-            <Route path="/ceo" element={<CEOLayout />}>
-              <Route index element={<Navigate to="/ceo/dashboard" replace />} />
-              <Route path="dashboard" element={<CEODashboard />} />
-              <Route path="staff" element={<CEOStaff />} />
-              <Route path="revenue" element={<CEORevenue />} />
-              <Route path="settings" element={<CEOSettings />} />
-              <Route path="profile" element={<CommonProfile />} />
-            </Route>
-
-            {/* Business Student Routes */}
-            <Route path="/business">
-              <Route path="dashboard" element={<BusinessDashboard />} />
-              <Route path="profile" element={<BusinessProfile />} />
-              <Route path="courses/:courseId" element={<BusinessCourseView />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
+        <AppContent settings={settings} />
       </AuthProvider>
     </ThemeProvider>
   );
+}
+
+function AppContent({ settings }) {
+  const { user } = useAuth();
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* Maintenance Route */}
+        <Route path="/maintenance" element={<MaintenanceMode />} />
+
+        {/* Public Routes */}
+        <Route path="/" element={<MaintenanceGuard user={user} settings={settings}><PublicLayout /></MaintenanceGuard>}>
+          <Route index element={<Home />} />
+          <Route path="about" element={<About />} />
+          <Route path="courses" element={<Courses />} />
+          <Route path="career" element={<CareerSupport />} />
+          <Route path="equipment" element={<Equipment />} />
+          <Route path="testimonials" element={<Testimonials />} />
+          <Route path="gallery" element={<Gallery />} />
+          <Route path="blog" element={<Blog />} />
+          <Route path="inclusion" element={<Inclusion />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="certificates" element={<PublicCertificates />} />
+          <Route path="enroll" element={<Enrollment settings={settings} />} />
+          <Route path="privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="thank-you" element={<ThankYou />} />
+          <Route path="login" element={<Login />} />
+          <Route path="forgot-password" element={<ForgotPassword />} />
+          <Route path="reset-password/:token" element={<ResetPassword />} />
+          <Route path="setup-admin" element={<SetupAdmin />} />
+          <Route path="setup-ceo" element={<SetupCEO />} />
+          <Route path="opportunities" element={<Opportunities />} />
+          <Route path="opportunities/post" element={<PostOpportunity />} />
+          <Route path="opportunities/register" element={<SeekerRegister />} />
+          <Route path="seeker/login" element={<SeekerLogin />} />
+          <Route path="business/register" element={<BusinessRegister />} />
+          <Route path="business/login" element={<BusinessLogin />} />
+          <Route path="verify/:id" element={<VerifyCertificate />} />
+        </Route>
+
+        {/* Seeker Routes */}
+        <Route path="/seeker" element={<MaintenanceGuard user={user} settings={settings}><OutletContextWrapper /></MaintenanceGuard>}>
+          <Route index element={<Navigate to="/seeker/dashboard" replace />} />
+          <Route path="payment-pending" element={<PaymentPending />} />
+          <Route path="dashboard" element={<SeekerDashboard />} />
+          <Route path="profile" element={<SeekerProfile />} />
+          <Route path="privacy-settings" element={<PrivacySettings />} />
+        </Route>
+
+        {/* Student Routes */}
+        <Route path="/student" element={<MaintenanceGuard user={user} settings={settings}><StudentLayout /></MaintenanceGuard>}>
+          <Route index element={<Navigate to="/student/dashboard" replace />} />
+          <Route path="dashboard" element={<StudentDashboard />} />
+          <Route path="opportunities" element={<StudentOpportunities />} />
+          <Route path="courses" element={<MyCourses />} />
+          <Route path="e-learning" element={<ELearning />} />
+          <Route path="cv-builder" element={<CVBuilder />} />
+          <Route path="certificates" element={<StudentCertificates />} />
+          <Route path="profile" element={<StudentProfile />} />
+          <Route path="privacy-settings" element={<PrivacySettings />} />
+          <Route path="forum" element={<ForumList />} />
+          <Route path="forum/create" element={<CreatePost />} />
+          <Route path="forum/:id" element={<PostDetails />} />
+          <Route path="chat" element={<StudentChatList />} />
+          <Route path="chat/:recipientId" element={<ChatWindow />} />
+          <Route path="courses/:courseId" element={<StudentCourseView />} />
+        </Route>
+
+        {/* Admin Routes */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Navigate to="/admin/dashboard" replace />} />
+          <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="courses" element={<AdminCourses />} />
+          <Route path="courses/:courseId" element={<ManageCourse />} />
+          <Route path="courses/:courseId/modules/:moduleId" element={<ManageModule />} />
+          <Route path="courses/:courseId/lessons/:lessonId" element={<ManageLesson />} />
+          <Route path="forum" element={<ForumList />} />
+          <Route path="forum/create" element={<CreatePost />} />
+          <Route path="forum/:id" element={<PostDetails />} />
+          <Route path="instructors" element={<Instructors />} />
+          <Route path="students" element={<Students />} />
+          <Route path="students/:id" element={<StudentDetails />} />
+          <Route path="categories" element={<Categories />} />
+          <Route path="quizzes" element={<Quizzes />} />
+          <Route path="testimonials" element={<AdminTestimonials />} />
+          <Route path="activity-log" element={<ActivityLog />} />
+          <Route path="reports" element={<AdminReports />} />
+          <Route path="seekers" element={<AdminSeekers />} />
+          <Route path="business/users" element={<AdminBusinessUsers />} />
+          <Route path="business/courses" element={<AdminBusinessCourses />} />
+          <Route path="business/courses/:courseId" element={<ManageBusinessCourse />} />
+          <Route path="profile" element={<CommonProfile />} />
+          <Route path="privacy-settings" element={<PrivacySettings />} />
+        </Route>
+
+        {/* Instructor Routes */}
+        <Route path="/instructor" element={<InstructorLayout />}>
+          <Route index element={<Navigate to="/instructor/dashboard" replace />} />
+          <Route path="dashboard" element={<InstructorDashboard />} />
+          <Route path="courses" element={<InstructorCourses />} />
+          <Route path="courses/:courseId" element={<InstructorManageCourse />} />
+          <Route path="courses/:courseId/modules/:moduleId" element={<InstructorManageModule />} />
+          <Route path="students" element={<InstructorStudents />} />
+          <Route path="students/:id" element={<StudentDetails />} />
+          <Route path="chat" element={<InstructorChat />} />
+          <Route path="chat/:recipientId" element={<ChatWindow />} />
+          <Route path="schedule" element={<InstructorSchedule />} />
+          <Route path="share-video" element={<InstructorShareVideo />} />
+          <Route path="forum" element={<ForumList />} />
+          <Route path="forum/create" element={<CreatePost />} />
+          <Route path="forum/:id" element={<PostDetails />} />
+          <Route path="profile" element={<CommonProfile />} />
+          <Route path="privacy-settings" element={<PrivacySettings />} />
+        </Route>
+
+        {/* Manager Routes */}
+        <Route path="/manager" element={<ManagerLayout />}>
+          <Route index element={<Navigate to="/manager/dashboard" replace />} />
+          <Route path="dashboard" element={<ManagerDashboard />} />
+          <Route path="contacts" element={<ManagerContacts />} />
+          <Route path="subscribers" element={<ManagerSubscribers />} />
+          <Route path="messages" element={<ManagerMessages />} />
+          <Route path="opportunities" element={<ManagerOpportunities />} />
+          <Route path="equipment" element={<ManagerEquipment />} />
+          <Route path="gallery" element={<ManagerGallery />} />
+          <Route path="testimonials" element={<ManagerTestimonials />} />
+          <Route path="profile" element={<CommonProfile />} />
+          <Route path="privacy-settings" element={<PrivacySettings />} />
+        </Route>
+
+        {/* CEO Route */}
+        <Route path="/ceo" element={<CEOLayout />}>
+          <Route index element={<Navigate to="/ceo/dashboard" replace />} />
+          <Route path="dashboard" element={<CEODashboard settings={settings} />} />
+          <Route path="staff" element={<CEOStaff />} />
+          <Route path="revenue" element={<CEORevenue />} />
+          <Route path="settings" element={<CEOSettings settings={settings} />} />
+          <Route path="profile" element={<CommonProfile />} />
+        </Route>
+
+        {/* Business Student Routes */}
+        <Route path="/business" element={<MaintenanceGuard user={user} settings={settings}><OutletContextWrapper /></MaintenanceGuard>}>
+          <Route path="dashboard" element={<BusinessDashboard />} />
+          <Route path="profile" element={<BusinessProfile />} />
+          <Route path="courses/:courseId" element={<BusinessCourseView />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+// Helper to keep App structure clean for seeker/business which use Fragments usually
+function OutletContextWrapper() {
+  return <Outlet />;
 }
 
 export default App;

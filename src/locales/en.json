@@ -1174,5 +1174,37 @@
     "type_message": "Type a message...",
     "active_now": "Active now",
     "start_convo": "Start a conversation with {{name}}!"
+  },
+  "ceo": {
+    "nav": {
+      "executive_dashboard": "Executive Dashboard",
+      "staff_management": "Staff Management",
+      "revenue_report": "Revenue Report",
+      "global_settings": "Global Settings",
+      "my_profile": "My Profile",
+      "chief_executive": "Chief Executive",
+      "chief_executive_officer": "Chief Executive Officer",
+      "executive_menu": "Executive Menu",
+      "sign_out": "Sign Out"
+    },
+    "dashboard": {
+      "executive_board": "EXECUTIVE BOARD",
+      "operational_intelligence": "OPERATIONAL INTELLIGENCE",
+      "total_revenue": "TOTAL REVENUE",
+      "revenue_desc": "Global Platform Gross",
+      "user_base": "USER BASE",
+      "users_desc": "Verified Registrations",
+      "system_health": "SYSTEM HEALTH",
+      "health_desc": "Operational Efficiency",
+      "executive_actions": "EXECUTIVE ACTIONS",
+      "appoint_admin": "Appoint Administrator",
+      "grant_privileges": "Grant Management Privileges",
+      "global_announcement": "Global Announcement",
+      "broadcast_users": "Broadcast to All Users",
+      "emergency_lockdown": "Emergency Lockdown",
+      "restrict_access": "Restrict Platform Access",
+      "platform_version": "PLATFORM VERSION",
+      "revenue_trajectory": "REVENUE TRAJECTORY"
+    }
   }
 }
