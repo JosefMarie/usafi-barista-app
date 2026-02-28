@@ -52,7 +52,7 @@ export const StudentCertificate = React.forwardRef(({
     const ceoName = "Sandrine GASARASI";
 
     return (
-        <div ref={ref} className={cn("w-[297mm] h-[210mm] bg-[#FAF5E8] text-[#321C00] font-sans relative overflow-hidden mx-auto shadow-2xl print:shadow-none print:w-[297mm] print:h-[210mm] print:absolute print:top-0 print:left-0 print:m-0", className)}>
+        <div ref={ref} className={cn("certificate-sheet w-[297mm] h-[210mm] bg-[#FAF5E8] text-[#321C00] font-sans relative overflow-hidden mx-auto shadow-2xl print:shadow-none print:w-[297mm] print:h-[210mm] print:absolute print:top-0 print:left-0 print:m-0", className)}>
             {/* Styles matching the reference Tailwind config and Font setup */}
             <style>
                 {`
@@ -60,9 +60,33 @@ export const StudentCertificate = React.forwardRef(({
                     .font-serif { font-family: 'Playfair Display', serif; }
                     .font-display { font-family: 'Lexend', sans-serif; }
                     .bg-guilloche { background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIiBvcGFjaXR5PSIwLjAzIj48cGF0aCBkPSJNMjAgMjBMMCAwSDQwTDIwIDIwek0yMCAyMEw0MCA0MEgwTDIwIDIweiIgZmlsbD0iIzMyMUMwMCIvPjwvc3ZnPg=="); }
-                    @page { size: A4 landscape; margin: 0; }
+                    @page { size: A4 landscape !important; margin: 0 !important; }
                     @media print {
-                        body { -webkit-print-color-adjust: exact; }
+                        html, body { 
+                            margin: 0 !important; 
+                            padding: 0 !important; 
+                            background: white !important;
+                            -webkit-print-color-adjust: exact !important;
+                            print-color-adjust: exact !important;
+                        }
+                        .certificate-sheet {
+                            position: absolute !important;
+                            top: 0 !important;
+                            left: 0 !important;
+                            width: 297mm !important;
+                            height: 210mm !important;
+                            margin: 0 !important;
+                            padding: 0 !important;
+                            box-shadow: none !important;
+                            transform: none !important;
+                            background-color: #FAF5E8 !important;
+                            z-index: 1000 !important;
+                        }
+                        /* Reset visibility for print */
+                        .certificate-sheet * {
+                            color: #321C00 !important;
+                            -webkit-print-color-adjust: exact !important;
+                        }
                     }
                 `}
             </style>
@@ -90,12 +114,9 @@ export const StudentCertificate = React.forwardRef(({
                 </div>
 
                 {/* Header Section */}
-                <div className="z-10 bg-[#FAF5E8]/80 backdrop-blur-sm px-12 py-4 rounded-full border border-[#a77c52]/10 mb-2">
+                <div className="z-10 bg-[#FAF5E8]/80 backdrop-blur-sm print:backdrop-blur-none print:bg-[#FAF5E8] px-12 py-4 rounded-full border border-[#a77c52]/10 mb-2">
                     <div className="flex flex-col items-center">
                         <div className="flex items-center gap-4 mb-2">
-                            <div className="w-12 h-12 rounded-full bg-[#a77c52]/10 flex items-center justify-center border border-[#a77c52]/30">
-                                <span className="material-symbols-outlined text-[#a77c52] text-[24px]">coffee_maker</span>
-                            </div>
                             <img src="/logo.jpg" alt="Usafi Logo" className="h-12 w-auto object-contain mix-blend-multiply" />
                         </div>
                         <p className="text-[14px] font-bold tracking-[0.3em] text-[#a77c52] uppercase">Usafi Barista Training Center</p>
@@ -139,12 +160,18 @@ export const StudentCertificate = React.forwardRef(({
                 </div>
 
                 {/* Details Grid */}
-                <div className="z-10 w-full max-w-3xl flex justify-center gap-16 py-4 border-t border-b border-dashed border-[#a77c52]/20 my-2 bg-[#FAF5E8]/50">
+                <div className="z-10 w-full max-w-4xl flex justify-center gap-12 py-4 border-t border-b border-dashed border-[#a77c52]/20 my-2 bg-[#FAF5E8]/50">
+                    {/* Training Period - Replaces Date Issued */}
                     <div className="flex flex-col items-center">
-                        <span className="text-[10px] uppercase tracking-wider text-[#321C00]/40 font-bold mb-1">Date Issued</span>
-                        <span className="font-serif text-xl text-[#321C00] font-semibold">{completionDate}</span>
+                        <span className="text-[10px] uppercase tracking-wider text-[#321C00]/40 font-bold mb-1">Training Period</span>
+                        <span className="font-serif text-xl text-[#321C00] font-semibold leading-tight">
+                            {student.courseStartDate ? (student.courseStartDate.toDate ? student.courseStartDate.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : student.courseStartDate) : '...'}
+                            {' - '}
+                            {student.courseEndDate ? (student.courseEndDate.toDate ? student.courseEndDate.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : student.courseEndDate) : '...'}
+                        </span>
                     </div>
-                    <div className="flex flex-col items-center">
+
+                    <div className="flex flex-col items-center border-l border-[#a77c52]/10 pl-12">
                         <span className="text-[10px] uppercase tracking-wider text-[#321C00]/40 font-bold mb-1">Certificate ID</span>
                         <span className="font-display text-lg text-[#321C00] font-semibold tracking-wide">{certificateId}</span>
                     </div>
@@ -167,7 +194,7 @@ export const StudentCertificate = React.forwardRef(({
                                 fgColor="#321C00"
                             />
                         </div>
-                        <span className="text-[8px] uppercase tracking-widest text-[#a77c52] font-bold">Scan to Verify</span>
+                        <span className="text-[8px] uppercase tracking-widest text-[#a77c52] font-bold print:text-[#a77c52]">Scan to Verify</span>
                     </div>
 
                     <div className="flex flex-col items-center w-64">

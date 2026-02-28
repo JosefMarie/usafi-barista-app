@@ -15,8 +15,8 @@ export function Dashboard() {
     const [loading, setLoading] = useState(true);
 
     // State for real data
-    const [course, setCourse] = useState(null);
-    const activeCourseId = user?.courseId || BEAN_TO_BREW_ID;
+    const [coursesData, setCoursesData] = useState([]);
+    const enrolledCourses = user?.enrolledCourses || (user?.courseId ? [{ courseId: user.courseId, status: 'active' }] : [{ courseId: BEAN_TO_BREW_ID, status: 'active' }]);
 
     const [stats, setStats] = useState([
         { label: t('student.dashboard.stats.courses'), value: 0, icon: 'school', color: 'bg-blue-500' },
@@ -31,61 +31,72 @@ export function Dashboard() {
             if (!user) return;
 
             try {
-                // 1. Fetch Course Details
-                const courseDoc = await getDoc(doc(db, 'courses', activeCourseId));
-                let courseData = null;
-                if (courseDoc.exists()) {
-                    courseData = { id: courseDoc.id, ...courseDoc.data() };
-                    setCourse(courseData);
-                }
+                const fetchedCoursesData = [];
+                let overallTotalModules = 0;
+                let overallCompletedCount = 0;
+                let bestNextModule = null;
 
-                // 2. Fetch Modules & Progress (Real-time)
-                const modQ = query(collection(db, 'courses', activeCourseId, 'modules'), orderBy('title'));
-                const progQ = collection(db, 'users', user.uid, 'progress');
+                // Loop through enrolled courses
+                for (const enrolled of enrolledCourses) {
+                    if (enrolled.status !== 'active') continue; // Only process active courses for now
 
-                const unsubModules = onSnapshot(modQ, (modSnap) => {
+                    const cId = enrolled.courseId;
+                    const courseDoc = await getDoc(doc(db, 'courses', cId));
+                    if (!courseDoc.exists()) continue;
+
+                    const courseInfo = { id: courseDoc.id, ...courseDoc.data() };
+
+                    // Fetch modules
+                    const modQ = query(collection(db, 'courses', cId, 'modules'), orderBy('title'));
+                    const modSnap = await getDocs(modQ);
                     const modules = modSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-                    modules.sort((a, b) => a.title.localeCompare(b.title, undefined, { numeric: true }));
 
-                    const unsubProgress = onSnapshot(progQ, (progSnap) => {
-                        const progressMap = {};
-                        progSnap.forEach(doc => {
-                            const data = doc.data();
-                            if (data.courseId === activeCourseId) {
-                                progressMap[data.moduleId] = data;
-                            }
-                        });
-
-                        // Calculate Stats
-                        const totalModules = modules.length;
-                        const completedCount = Object.values(progressMap).filter(p => p.passed).length;
-
-                        // Determine Up Next
-                        let upcoming = null;
-                        for (const mod of modules) {
-                            if (mod.assignedStudents?.includes(user.uid)) {
-                                if (!progressMap[mod.id]?.passed) {
-                                    upcoming = mod;
-                                    break;
-                                }
-                            }
+                    // Fetch Progress
+                    const progQ = collection(db, 'users', user.uid, 'progress');
+                    const progSnap = await getDocs(progQ);
+                    const progressMap = {};
+                    progSnap.forEach(d => {
+                        const data = d.data();
+                        if (data.courseId === cId) {
+                            progressMap[data.moduleId] = data;
                         }
-
-                        // Update State
-                        setStats([
-                            { label: t('student.dashboard.stats.courses'), value: courseDoc.exists() ? 1 : 0, icon: 'school', color: 'bg-blue-500' },
-                            { label: t('student.dashboard.stats.completed'), value: `${completedCount}/${totalModules}`, icon: 'check_circle', color: 'bg-green-500' },
-                            { label: t('student.dashboard.stats.certificates'), value: completedCount, icon: 'workspace_premium', color: 'bg-yellow-500' },
-                        ]);
-
-                        setNextModule(upcoming);
-                        setLoading(false);
                     });
 
-                    return () => unsubProgress();
-                });
+                    // Local stats
+                    const totalModules = modules.length;
+                    const completedCount = Object.values(progressMap).filter(p => p.passed).length;
 
-                return () => unsubModules();
+                    overallTotalModules += totalModules;
+                    overallCompletedCount += completedCount;
+
+                    // Upcoming module logic
+                    let upcoming = null;
+                    for (const mod of modules) {
+                        if (mod.assignedStudents?.includes(user.uid) || true) { // We can default true if they're enrolled
+                            if (!progressMap[mod.id]?.passed) {
+                                upcoming = mod;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (upcoming && !bestNextModule) {
+                        bestNextModule = { ...upcoming, courseId: cId }; // Pick the first incomplete one we find
+                    }
+
+                    fetchedCoursesData.push(courseInfo);
+                }
+
+                setCoursesData(fetchedCoursesData);
+
+                // Update Stats
+                setStats([
+                    { label: t('student.dashboard.stats.courses'), value: fetchedCoursesData.length, icon: 'school', color: 'bg-blue-500' },
+                    { label: t('student.dashboard.stats.completed'), value: `${overallCompletedCount}/${overallTotalModules}`, icon: 'check_circle', color: 'bg-green-500' },
+                    { label: t('student.dashboard.stats.certificates'), value: overallCompletedCount, icon: 'workspace_premium', color: 'bg-yellow-500' },
+                ]);
+
+                setNextModule(bestNextModule);
 
                 // 6. Fetch Recent Activity
                 const activityQ = query(
@@ -170,41 +181,42 @@ export function Dashboard() {
                         </Link>
                     </div>
 
-                    {course ? (
-                        <div className="bg-espresso dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/10 overflow-hidden flex flex-col md:flex-row group cursor-pointer hover:shadow-2xl transition-all relative">
-                            <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-white/20 group-hover:bg-white transition-colors"></div>
-                            <div className="md:w-2/5 h-56 md:h-auto overflow-hidden relative">
-                                <div
-                                    className="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-700"
-                                    style={{ backgroundImage: `url('${course.thumbnail}')` }}
-                                ></div>
-                                <div className="absolute inset-0 bg-espresso/20 group-hover:bg-transparent transition-colors" />
-                            </div>
-                            <div className="p-8 md:w-3/5 flex flex-col justify-between relative z-10">
-                                <div>
-                                    <div className="flex items-center justify-between mb-4">
-                                        <span className="text-[10px] font-black text-espresso bg-white px-3 py-1 rounded-full uppercase tracking-widest shadow-lg">
-                                            {t('student.dashboard.curriculum.status_active')}
-                                        </span>
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-white/40">
-                                            {t('student.dashboard.curriculum.sync')}: {course.updatedAt?.toDate ? new Date(course.updatedAt.toDate()).toLocaleDateString() : 'Active'}
-                                        </span>
+                    {coursesData.length > 0 ? (
+                        <div className="space-y-4">
+                            {coursesData.map(c => (
+                                <div key={c.id} className="bg-espresso dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/10 overflow-hidden flex flex-col md:flex-row group cursor-pointer hover:shadow-2xl transition-all relative">
+                                    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-white/20 group-hover:bg-white transition-colors"></div>
+                                    <div className="md:w-2/5 h-56 md:h-auto overflow-hidden relative">
+                                        <div
+                                            className="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-700"
+                                            style={{ backgroundImage: `url('${c.thumbnail}')` }}
+                                        ></div>
+                                        <div className="absolute inset-0 bg-espresso/20 group-hover:bg-transparent transition-colors" />
                                     </div>
-                                    <h3 className="text-2xl font-serif font-bold text-white mb-3 group-hover:translate-x-1 transition-transform">
-                                        {course.title}
-                                    </h3>
-                                    <p className="text-sm font-medium text-white/60 line-clamp-2 mb-6 leading-relaxed">
-                                        {course.description || 'Master the art of coffee with this comprehensive guide.'}
-                                    </p>
-                                </div>
+                                    <div className="p-8 md:w-3/5 flex flex-col justify-between relative z-10">
+                                        <div>
+                                            <div className="flex items-center justify-between mb-4">
+                                                <span className="text-[10px] font-black text-espresso bg-white px-3 py-1 rounded-full uppercase tracking-widest shadow-lg">
+                                                    {t('student.dashboard.curriculum.status_active')}
+                                                </span>
+                                            </div>
+                                            <h3 className="text-2xl font-serif font-bold text-white mb-3 group-hover:translate-x-1 transition-transform">
+                                                {c.title}
+                                            </h3>
+                                            <p className="text-sm font-medium text-white/60 line-clamp-2 mb-6 leading-relaxed">
+                                                {c.description || 'Master the art of coffee with this comprehensive guide.'}
+                                            </p>
+                                        </div>
 
-                                <button
-                                    onClick={() => navigate('/student/courses')}
-                                    className="w-full py-4 bg-white text-espresso rounded-2xl font-black uppercase tracking-widest text-[10px] hover:shadow-2xl transition-all shadow-xl active:scale-95"
-                                >
-                                    {t('student.dashboard.curriculum.resume_btn')}
-                                </button>
-                            </div>
+                                        <button
+                                            onClick={() => navigate('/student/courses')}
+                                            className="w-full py-4 bg-white text-espresso rounded-2xl font-black uppercase tracking-widest text-[10px] hover:shadow-2xl transition-all shadow-xl active:scale-95"
+                                        >
+                                            {t('student.dashboard.curriculum.resume_btn')}
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     ) : (
                         <div className="bg-[#F5DEB3] dark:bg-white/5 rounded-3xl shadow-xl border border-espresso/10 p-12 text-center relative overflow-hidden group">
@@ -272,7 +284,7 @@ export function Dashboard() {
                                     </div>
 
                                     <button
-                                        onClick={() => navigate(`/student/courses/${activeCourseId}?module=${nextModule.id}`)}
+                                        onClick={() => navigate(`/student/courses/${nextModule.courseId}?module=${nextModule.id}`)}
                                         className="w-full py-4 bg-white/40 hover:bg-white text-espresso font-black uppercase tracking-widest text-[10px] rounded-2xl transition-all shadow-sm flex items-center justify-center gap-2 border border-espresso/5 active:scale-95"
                                     >
                                         {t('student.dashboard.next_step.initiate_btn')} <span className="material-symbols-outlined text-lg">arrow_forward</span>

@@ -15,8 +15,15 @@ export function AdminReports() {
     const [studentProgress, setStudentProgress] = useState(null);
     const [allModules, setAllModules] = useState([]);
 
-    // Certificate Printing
+    // Printing Refs
+    const transcriptRef = useRef();
     const certificateRef = useRef();
+
+    const handlePrintTranscript = useReactToPrint({
+        contentRef: transcriptRef,
+        documentTitle: selectedStudent ? `USAFI_Transcript_${selectedStudent.fullName || 'Student'}` : 'Transcript',
+    });
+
     const handlePrintCertificate = useReactToPrint({
         contentRef: certificateRef,
         documentTitle: selectedStudent ? `USAFI_Certificate_${selectedStudent.fullName || 'Student'}` : 'Certificate',
@@ -124,7 +131,7 @@ export function AdminReports() {
                     </button>
                     {viewMode === 'transcript' ? (
                         <button
-                            onClick={() => window.print()}
+                            onClick={handlePrintTranscript}
                             className="flex items-center gap-2 px-6 py-3 bg-espresso text-white rounded-xl font-black uppercase tracking-widest text-[10px] shadow-xl hover:scale-105 active:scale-95 transition-all"
                         >
                             <span className="material-symbols-outlined">print</span>
@@ -143,18 +150,19 @@ export function AdminReports() {
                 <div className="flex justify-center w-full min-h-[700px] overflow-hidden">
                     {viewMode === 'transcript' ? (
                         <div className="w-full flex justify-center py-4 md:py-8 overflow-x-auto">
-                            <div className="shrink-0 origin-top transform scale-[0.4] sm:scale-[0.6] md:scale-75 lg:scale-100 transition-transform">
-                                <StudentTranscript student={selectedStudent} />
+                            <div className="shrink-0 origin-top transform scale-[0.4] sm:scale-[0.6] md:scale-75 lg:scale-100 transition-transform print:transform-none">
+                                <StudentTranscript ref={transcriptRef} student={selectedStudent} />
                             </div>
                         </div>
                     ) : (
                         <div className="w-full h-full max-w-[1300px] overflow-auto flex justify-center py-4 md:py-8">
-                            {/* Display the HTML certificate */}
-                            <StudentCertificate
-                                ref={certificateRef}
-                                student={selectedStudent}
-                                className="transform scale-[0.35] sm:scale-[0.5] md:scale-75 lg:scale-90 xl:scale-100 origin-top shadow-none"
-                            />
+                            <div className="shrink-0 origin-top transform scale-[0.35] sm:scale-[0.5] md:scale-75 lg:scale-90 xl:scale-100 shadow-none print:transform-none">
+                                <StudentCertificate
+                                    ref={certificateRef}
+                                    student={selectedStudent}
+                                    className="shadow-none print:shadow-none"
+                                />
+                            </div>
                         </div>
                     )}
                 </div>
@@ -240,6 +248,43 @@ export function AdminReports() {
                                             <span className="material-symbols-outlined text-[14px]">payments</span>
                                             Re-eval
                                         </button>
+
+                                        {/* Date Inputs for Training Period */}
+                                        <div className="flex items-center gap-2 px-3 py-1 bg-white/40 dark:bg-white/5 rounded-xl border border-espresso/10">
+                                            <div className="flex flex-col">
+                                                <span className="text-[7px] font-black uppercase opacity-40">Start Date</span>
+                                                <input
+                                                    type="date"
+                                                    defaultValue={student.courseStartDate ? (student.courseStartDate.toDate ? student.courseStartDate.toDate().toISOString().split('T')[0] : student.courseStartDate) : ""}
+                                                    onBlur={async (e) => {
+                                                        const newVal = e.target.value;
+                                                        if (newVal === (student.courseStartDate?.toDate ? student.courseStartDate.toDate().toISOString().split('T')[0] : student.courseStartDate)) return;
+                                                        try {
+                                                            await updateDoc(doc(db, 'users', student.id), { courseStartDate: newVal });
+                                                            // We could update local state here but for a simple date field, 
+                                                            // blur-save is often enough for admin tools.
+                                                        } catch (err) { console.error("Error saving start date:", err); }
+                                                    }}
+                                                    className="bg-transparent text-[10px] font-bold text-espresso dark:text-white focus:outline-none"
+                                                />
+                                            </div>
+                                            <div className="w-px h-6 bg-espresso/10"></div>
+                                            <div className="flex flex-col">
+                                                <span className="text-[7px] font-black uppercase opacity-40">End Date</span>
+                                                <input
+                                                    type="date"
+                                                    defaultValue={student.courseEndDate ? (student.courseEndDate.toDate ? student.courseEndDate.toDate().toISOString().split('T')[0] : student.courseEndDate) : ""}
+                                                    onBlur={async (e) => {
+                                                        const newVal = e.target.value;
+                                                        if (newVal === (student.courseEndDate?.toDate ? student.courseEndDate.toDate().toISOString().split('T')[0] : student.courseEndDate)) return;
+                                                        try {
+                                                            await updateDoc(doc(db, 'users', student.id), { courseEndDate: newVal });
+                                                        } catch (err) { console.error("Error saving end date:", err); }
+                                                    }}
+                                                    className="bg-transparent text-[10px] font-bold text-espresso dark:text-white focus:outline-none"
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             ))}

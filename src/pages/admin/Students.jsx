@@ -48,8 +48,18 @@ export function Students() {
 
     const onsiteCount = students.filter(s => s.studyMethod === 'onsite').length;
     const onlineCount = students.filter(s => s.studyMethod === 'online').length;
-    const baristaCount = students.filter(s => !s.courseId || s.courseId === 'bean-to-brew').length;
-    const bartenderCount = students.filter(s => s.courseId === 'bar-tender-course').length;
+    const baristaCount = students.filter(s => {
+        const hasLegacyBarista = !s.courseId || s.courseId === 'bean-to-brew';
+        const hasEnrolledBarista = s.enrolledCourses?.some(c => c.courseId === 'bean-to-brew');
+        return hasLegacyBarista || hasEnrolledBarista;
+    }).length;
+
+    const bartenderCount = students.filter(s => {
+        const hasLegacyBartender = s.courseId === 'bar-tender-course';
+        const hasEnrolledBartender = s.enrolledCourses?.some(c => c.courseId === 'bar-tender-course');
+        return hasLegacyBartender || hasEnrolledBartender;
+    }).length;
+
     const allCount = students.length;
 
     const filteredStudents = students.filter(student => {
@@ -61,9 +71,9 @@ export function Students() {
         if (activeTab === 'onsite' || activeTab === 'online') {
             matchesTab = student.studyMethod === activeTab;
         } else if (activeTab === 'barista') {
-            matchesTab = !student.courseId || student.courseId === 'bean-to-brew';
+            matchesTab = (!student.courseId || student.courseId === 'bean-to-brew') || student.enrolledCourses?.some(c => c.courseId === 'bean-to-brew');
         } else if (activeTab === 'bartender') {
-            matchesTab = student.courseId === 'bar-tender-course';
+            matchesTab = (student.courseId === 'bar-tender-course') || student.enrolledCourses?.some(c => c.courseId === 'bar-tender-course');
         }
 
         return matchesSearch && matchesTab;
@@ -226,7 +236,9 @@ export function Students() {
                                         <div className="flex flex-wrap items-center justify-end gap-2 md:gap-4">
                                             <div className="flex items-center gap-2 bg-white/10 px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl border border-white/5 shadow-inner">
                                                 <span className="material-symbols-outlined text-[14px] md:text-[16px] text-white/40">hub</span>
-                                                <span className="text-[8px] md:text-[9px] font-black text-white/70 uppercase tracking-widest">{student.course}</span>
+                                                <span className="text-[8px] md:text-[9px] font-black text-white/70 uppercase tracking-widest truncate max-w-[120px]">
+                                                    {student.enrolledCourses?.length > 1 ? 'Multiple Programs' : (student.course || 'FLUID SELECTION')}
+                                                </span>
                                             </div>
                                             <span className={cn(
                                                 "px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] shadow-sm border",

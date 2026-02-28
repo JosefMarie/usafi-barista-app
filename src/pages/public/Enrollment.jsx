@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -11,7 +11,7 @@ export function Enrollment() {
         email: '',
         password: '', // Added password field
         residence: '',
-        course: 'full-barista',
+        courses: [], // Array of course IDs
         studyMethod: '',
         startDate: '',
         shift: '',
@@ -20,6 +20,38 @@ export function Enrollment() {
     const [showPassword, setShowPassword] = useState(false);
     const [loadingMessage, setLoadingMessage] = useState(''); // Changed from boolean to string/empty checks
     const [error, setError] = useState('');
+    const [availableCourses, setAvailableCourses] = useState([]);
+
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                const { collection, query, where, getDocs } = await import('firebase/firestore');
+                const { db } = await import('../../lib/firebase');
+                const q = query(collection(db, 'courses'), where('status', '==', 'published'));
+                const snapshot = await getDocs(q);
+                const coursesList = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                // Make sure 'full-barista' maps correctly or we just use IDs
+                setAvailableCourses(coursesList);
+            } catch (err) {
+                console.error("Error fetching courses:", err);
+            }
+        };
+        fetchCourses();
+    }, []);
+
+    const handleCourseToggle = (courseId) => {
+        setFormData(prev => {
+            const currentCourses = prev.courses || [];
+            if (currentCourses.includes(courseId)) {
+                return { ...prev, courses: currentCourses.filter(id => id !== courseId) };
+            } else {
+                return { ...prev, courses: [...currentCourses, courseId] };
+            }
+        });
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -54,15 +86,21 @@ export function Enrollment() {
                         fullName: formData.fullName,
                         phone: formData.phone,
                         residence: formData.residence,
-                        course: formData.course,
                         studyMethod: formData.studyMethod,
                         startDate: formData.startDate,
                         shift: formData.shift || '',
                         referral: formData.referral,
-                        courseId: formData.course === 'full-barista' ? 'bean-to-brew' : 'bar-tender-course',
+                        courseId: formData.courses[0] || '',
+                        course: formData.courses.length > 1 ? 'Multiple' : 'Single',
                         status: 'pending', // Set back to pending for admin approval
                         reactivatedAt: serverTimestamp(),
-                        deletedAt: null
+                        deletedAt: null,
+                        enrolledCourses: formData.courses.map(courseId => ({
+                            courseId,
+                            status: 'pending',
+                            enrolledAt: serverTimestamp(),
+                            progress: 0
+                        }))
                     };
 
                     await updateDoc(doc(db, 'users', userId), updatedUserData);
@@ -83,17 +121,22 @@ export function Enrollment() {
                     phone: formData.phone,
                     email: formData.email,
                     residence: formData.residence,
-                    course: formData.course,
                     studyMethod: formData.studyMethod,
                     startDate: formData.startDate,
                     shift: formData.shift || '',
                     referral: formData.referral,
                     role: 'student',
-                    courseId: formData.course === 'full-barista' ? 'bean-to-brew' : 'bar-tender-course',
+                    courseId: formData.courses[0] || '',
+                    course: formData.courses.length > 1 ? 'Multiple' : 'Single',
                     status: 'pending',
                     createdAt: serverTimestamp(),
                     progress: 0,
-                    enrolledCourses: []
+                    enrolledCourses: formData.courses.map(courseId => ({
+                        courseId,
+                        status: 'pending',
+                        enrolledAt: serverTimestamp(),
+                        progress: 0
+                    }))
                 };
 
                 await setDoc(doc(db, 'users', userId), userData);
@@ -257,23 +300,32 @@ export function Enrollment() {
 
                         {/* Course Ahisemo */}
                         <div>
-                            <label htmlFor="course" className="block text-espresso dark:text-white font-bold mb-2">
-                                {t('enrollment.form.course.label')} <span className="text-red-500">*</span>
+                            <label className="block text-espresso dark:text-white font-bold mb-3">
+                                {t('enrollment.form.course.label')} (Select one or more) <span className="text-red-500">*</span>
                             </label>
-                            <div className="relative">
-                                <select
-                                    id="course"
-                                    name="course"
-                                    required
-                                    className="w-full px-4 py-3 rounded-xl bg-background-light dark:bg-black/20 border border-[#e0dbd6] dark:border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none"
-                                    value={formData.course}
-                                    onChange={handleChange}
-                                >
-                                    <option value="full-barista">{t('enrollment.form.course.options.full-barista')}</option>
-                                    <option value="bar-tender">{t('enrollment.form.course.options.bar-tender')}</option>
-                                </select>
-                                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-espresso/50">expand_more</span>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                {availableCourses.length === 0 ? (
+                                    <div className="text-espresso/50 text-sm p-4 bg-white/50 rounded-xl">Loading courses...</div>
+                                ) : (
+                                    availableCourses.map(course => (
+                                        <label key={course.id} className={`flex items-start gap-3 p-4 rounded-xl cursor-pointer border-2 transition-all ${formData.courses.includes(course.id) ? 'border-primary bg-primary/5 dark:bg-primary/20' : 'border-espresso/10 bg-white/50 dark:bg-black/20 hover:border-primary/50'}`}>
+                                            <input
+                                                type="checkbox"
+                                                className="mt-1 w-5 h-5 rounded border-espresso/20 text-primary focus:ring-primary"
+                                                checked={formData.courses.includes(course.id)}
+                                                onChange={() => handleCourseToggle(course.id)}
+                                            />
+                                            <div className="flex-1">
+                                                <p className="font-bold text-espresso dark:text-white">{course.title}</p>
+                                                <p className="text-xs text-espresso/60 dark:text-white/60 mt-1 line-clamp-2">{course.description}</p>
+                                            </div>
+                                        </label>
+                                    ))
+                                )}
                             </div>
+                            {formData.courses.length === 0 && (
+                                <p className="text-red-500 text-xs mt-2">Please select at least one course.</p>
+                            )}
                         </div>
 
                         {/* Study Method */}
@@ -364,7 +416,7 @@ export function Enrollment() {
                         {/* Submit Button */}
                         <button
                             type="submit"
-                            disabled={!!loadingMessage}
+                            disabled={!!loadingMessage || formData.courses.length === 0}
                             className="w-full py-4 rounded-xl bg-primary text-white text-lg font-bold shadow-lg hover:bg-primary/90 hover:scale-[1.02] transition-all duration-200 mt-4 disabled:opacity-70 disabled:cursor-not-allowed flex justify-center items-center"
                         >
                             {loadingMessage ? (

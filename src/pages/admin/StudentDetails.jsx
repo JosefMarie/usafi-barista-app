@@ -54,19 +54,36 @@ export function StudentDetails() {
                     setCourses(coursesList);
 
                     // 3. Fetch Progress and Calculate Deployment Matrix (Real-time)
-                    const courseId = data.courseId || 'bean-to-brew';
-                    const modulesRef = collection(db, 'courses', courseId, 'modules');
-                    const progressRef = collection(db, 'users', id, 'progress');
+                    // We now calculate progress across ALL enrolled courses
+                    const enrolledCourses = data.enrolledCourses || (data.courseId ? [{ courseId: data.courseId, status: data.status || 'active' }] : [{ courseId: 'bean-to-brew', status: 'active' }]);
 
-                    const unsubModules = onSnapshot(modulesRef, (mSnap) => {
-                        const total = mSnap.size;
-                        getDocs(progressRef).then(pSnap => {
-                            const completed = pSnap.docs.filter(d => d.data().passed).length;
-                            setProgressStats({
-                                percent: total > 0 ? Math.round((completed / total) * 100) : 0,
-                                completed,
-                                total
+                    let totalModulesCombined = 0;
+                    let completedModulesCombined = 0;
+
+                    // Fetch progress documents once
+                    const progressRef = collection(db, 'users', id, 'progress');
+                    getDocs(progressRef).then(async pSnap => {
+                        const allProgress = pSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                        const completedIds = new Set(allProgress.filter(p => p.passed).map(p => p.moduleId || p.id));
+
+                        for (const enrolled of enrolledCourses) {
+                            if (enrolled.status !== 'active') continue;
+                            const modulesRef = collection(db, 'courses', enrolled.courseId, 'modules');
+                            const mSnap = await getDocs(modulesRef);
+                            totalModulesCombined += mSnap.size;
+
+                            // Check which of these specific modules are completed
+                            mSnap.forEach(mDoc => {
+                                if (completedIds.has(mDoc.id)) {
+                                    completedModulesCombined++;
+                                }
                             });
+                        }
+
+                        setProgressStats({
+                            percent: totalModulesCombined > 0 ? Math.round((completedModulesCombined / totalModulesCombined) * 100) : 0,
+                            completed: completedModulesCombined,
+                            total: totalModulesCombined
                         });
                     });
 
@@ -108,22 +125,15 @@ export function StudentDetails() {
             setLoading(true);
             const docRef = doc(db, 'users', id);
 
-            // Get selected course title if it changed
-            let courseTitle = editForm.course;
-            const courseHasChanged = editForm.courseId !== (student.courseId || 'bean-to-brew');
-            if (courseHasChanged) {
-                const selectedCourse = courses.find(c => c.id === editForm.courseId);
-                if (selectedCourse) {
-                    courseTitle = selectedCourse.title;
-                }
-            }
+            // In edit mode we just update the global status and phone for now
+            // Detailed course status is handled individually below.
+
+            // To maintain backward compatibility with old course/courseId field we just update them if needed, but primarily rely on enrolledCourses
 
             await updateDoc(docRef, {
                 fullName: editForm.fullName,
                 phone: editForm.phone,
                 status: editForm.status,
-                course: courseTitle,
-                courseId: editForm.courseId,
                 updatedAt: serverTimestamp()
             });
 
@@ -132,27 +142,52 @@ export function StudentDetails() {
                 userId: id,
                 userName: student.fullName || student.name || student.email,
                 adminId: authUser?.uid || 'current-admin',
-                action: courseHasChanged
-                    ? `Transferred ${student.fullName} to ${courseTitle}`
-                    : `Updated profile schema for ${student.fullName}`,
+                action: `Updated profile schema for ${student.fullName}`,
                 type: 'admin_edit',
-                icon: courseHasChanged ? 'swap_horiz' : 'edit_note',
+                icon: 'edit_note',
                 timestamp: serverTimestamp()
             });
 
             // Update local state
-            setStudent(prev => ({ ...prev, ...editForm, course: courseTitle }));
+            setStudent(prev => ({ ...prev, ...editForm }));
             setIsEditing(false);
 
-            // Refresh progress stats if course changed
-            if (courseHasChanged) {
-                window.location.reload();
-            }
         } catch (err) {
             console.error("Error updating student:", err);
             setError("Failed to update student");
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleCourseStatusChange = async (courseId, newStatus) => {
+        try {
+            const currentEnrolled = student.enrolledCourses || [];
+            const updatedEnrolled = currentEnrolled.map(c =>
+                c.courseId === courseId ? { ...c, status: newStatus } : c
+            );
+
+            await updateDoc(doc(db, 'users', id), {
+                enrolledCourses: updatedEnrolled
+            });
+
+            setStudent(prev => ({ ...prev, enrolledCourses: updatedEnrolled }));
+
+            // Log interaction
+            const courseTitle = courses.find(c => c.id === courseId)?.title || courseId;
+            await addDoc(collection(db, 'activity'), {
+                userId: id,
+                userName: student.fullName || student.name,
+                adminId: authUser?.uid || 'admin',
+                action: `Program status changed: ${courseTitle} -> ${newStatus.toUpperCase()}`,
+                type: 'enrollment_update',
+                icon: 'auto_stories',
+                timestamp: serverTimestamp()
+            });
+
+        } catch (err) {
+            console.error("Error updating course status:", err);
+            alert("Failed to update course status.");
         }
     };
 
@@ -282,18 +317,7 @@ export function StudentDetails() {
                                                     <option value="graduated">VALIDATED ALUMNUS</option>
                                                 </select>
                                             </div>
-                                            <div>
-                                                <label className="block text-[8px] md:text-[10px] font-black uppercase tracking-[0.3em] text-espresso/40 mb-2 md:mb-3 ml-1">Assigned Curriculum</label>
-                                                <select
-                                                    className="w-full p-3 md:p-4 bg-white/40 border border-espresso/10 rounded-xl md:rounded-2xl focus:outline-none focus:ring-2 focus:ring-espresso text-espresso font-black uppercase tracking-widest text-[9px] md:text-[10px]"
-                                                    value={editForm.courseId}
-                                                    onChange={(e) => setEditForm({ ...editForm, courseId: e.target.value })}
-                                                >
-                                                    {courses.map(c => (
-                                                        <option key={c.id} value={c.id}>{c.title.toUpperCase()}</option>
-                                                    ))}
-                                                </select>
-                                            </div>
+                                            {/* Course assignment moved to separate section below */}
                                             <div>
                                                 <label className="block text-[8px] md:text-[10px] font-black uppercase tracking-[0.3em] text-espresso/40 mb-2 md:mb-3 ml-1">Comms Frequency</label>
                                                 <input
@@ -354,7 +378,9 @@ export function StudentDetails() {
                                                         <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-espresso/5 flex items-center justify-center text-espresso/40 group-hover/info:bg-espresso group-hover/info:text-white transition-all shadow-sm">
                                                             <span className="material-symbols-outlined text-[18px] md:text-[20px]">school</span>
                                                         </div>
-                                                        <span className="text-xs md:text-sm font-black text-espresso uppercase tracking-widest break-words">{student.course || 'FLUID SELECTION'}</span>
+                                                        <span className="text-xs md:text-sm font-black text-espresso uppercase tracking-widest break-words">
+                                                            {student.enrolledCourses ? `${student.enrolledCourses.length} Programs` : (student.course || 'FLUID SELECTION')}
+                                                        </span>
                                                     </div>
                                                     <div className="flex items-center gap-3 md:gap-4 group/info">
                                                         <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-espresso/5 flex items-center justify-center text-espresso/40 group-hover/info:bg-espresso group-hover/info:text-white transition-all shadow-sm">
@@ -506,6 +532,55 @@ export function StudentDetails() {
                                 )}
                             </div>
                             <p className="text-[8px] md:text-[9px] font-black uppercase tracking-widest text-espresso/40 dark:text-white/40">Temporal activity sequence log</p>
+                        </div>
+                    </div>
+
+                    {/* Course Enrollments Section */}
+                    <div className="bg-white/40 dark:bg-black/20 p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] border border-espresso/10 relative overflow-hidden group/courses">
+                        <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover/courses:bg-espresso transition-colors"></div>
+                        <h3 className="text-lg md:text-xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight mb-6">Program Enrollments</h3>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {(student.enrolledCourses || (student.courseId ? [{ courseId: student.courseId, status: student.status || 'active' }] : [])).map((enrollment, idx) => {
+                                const courseData = courses.find(c => c.id === enrollment.courseId) || { title: enrollment.courseId };
+                                return (
+                                    <div key={idx} className="bg-white/80 dark:bg-black/40 p-5 rounded-2xl border border-espresso/10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                                        <div>
+                                            <h4 className="font-serif font-bold text-espresso dark:text-white">{courseData.title}</h4>
+                                            <div className="flex items-center gap-2 mt-2">
+                                                <span className={`px-2 py-1 rounded-md text-[8px] font-black uppercase tracking-widest border ${enrollment.status === 'active' ? 'bg-green-500/10 text-green-600 border-green-500/20' :
+                                                        enrollment.status === 'pending' ? 'bg-amber-500/10 text-amber-600 border-amber-500/20' :
+                                                            'bg-red-500/10 text-red-600 border-red-500/20'
+                                                    }`}>
+                                                    {enrollment.status}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        {isAdmin && (
+                                            <div className="flex gap-2 w-full md:w-auto mt-2 md:mt-0">
+                                                {enrollment.status !== 'active' && (
+                                                    <button onClick={() => handleCourseStatusChange(enrollment.courseId, 'active')} className="flex-1 md:flex-none px-3 py-2 bg-green-500 text-white rounded-xl text-[9px] font-black uppercase transition-all hover:bg-green-600 shadow-sm">
+                                                        Approve
+                                                    </button>
+                                                )}
+                                                {enrollment.status === 'active' && (
+                                                    <button onClick={() => handleCourseStatusChange(enrollment.courseId, 'suspended')} className="flex-1 md:flex-none px-3 py-2 bg-white text-red-500 border border-red-200 rounded-xl text-[9px] font-black uppercase transition-all hover:bg-red-50 shadow-sm">
+                                                        Suspend
+                                                    </button>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })}
+
+                            {(!student.enrolledCourses || student.enrolledCourses.length === 0) && !student.courseId && (
+                                <div className="col-span-1 md:col-span-2 text-center p-8 opacity-40">
+                                    <span className="material-symbols-outlined text-3xl mb-2">school</span>
+                                    <p className="text-[10px] font-black uppercase tracking-widest">No Active Enrollments Found</p>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </main>

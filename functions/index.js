@@ -7,10 +7,17 @@ admin.initializeApp();
  * Cloud Function to securely reset a user's password using a validated token.
  * Only callable if the token is valid, unused, and unexpired.
  */
-exports.finalizePasswordReset = functions.https.onCall(async (data, context) => {
-    const { token, newPassword } = data;
+exports.finalizePasswordReset = functions.https.onCall(async (request, context) => {
+    // In newer SDKs (v4+, v6+), the first argument is a 'CallableRequest' object.
+    // In older SDKs, it's the raw data.
+    const data = (request && typeof request === 'object' && 'data' in request) ? request.data : request;
+
+    console.log("finalizePasswordReset triggered. Token provided:", !!data?.token);
+
+    const { token, newPassword } = data || {};
 
     if (!token || !newPassword) {
+        console.error("Missing fields. Token exists:", !!token, "Password exists:", !!newPassword);
         throw new functions.https.HttpsError('invalid-argument', 'Token and new password are required.');
     }
 
@@ -37,8 +44,8 @@ exports.finalizePasswordReset = functions.https.onCall(async (data, context) => 
             }
 
             // Check expiration (Timestamp handling)
-            const now = admin.firestore.Timestamp.now();
-            if (tokenData.expiresAt < now) {
+            const expiresAtMs = tokenData.expiresAt.toMillis ? tokenData.expiresAt.toMillis() : new Date(tokenData.expiresAt).getTime();
+            if (expiresAtMs < Date.now()) {
                 throw new functions.https.HttpsError('failed-precondition', 'Link expired.');
             }
 

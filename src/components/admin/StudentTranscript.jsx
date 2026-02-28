@@ -4,7 +4,7 @@ import { db } from '../../lib/firebase';
 import { format } from 'date-fns';
 import { cn } from '../../lib/utils';
 
-export function StudentTranscript({ student }) {
+export const StudentTranscript = React.forwardRef(({ student }, ref) => {
     const [course, setCourse] = useState(null);
     const [modules, setModules] = useState([]);
     const [progress, setProgress] = useState({});
@@ -63,7 +63,7 @@ export function StudentTranscript({ student }) {
     const averageScore = modules.length > 0 ? (totalMarks + finalScore) / (modules.length) : 0;
 
     return (
-        <div className="transcript-sheet bg-white text-black p-[10mm] shadow-2xl relative print:shadow-none print:p-0 border border-gray-200 print:border-none mx-auto mb-20 overflow-hidden" style={{ width: '210mm', minHeight: '297mm', fontFamily: '"Tw Cen MT", "Century Gothic", sans-serif' }}>
+        <div ref={ref} className="transcript-sheet bg-white text-black p-[10mm] shadow-2xl relative print:shadow-none print:p-0 border border-gray-200 print:border-none mx-auto mb-20 overflow-hidden" style={{ width: '210mm', minHeight: '297mm', fontFamily: '"Tw Cen MT", "Century Gothic", sans-serif' }}>
             {/* WATERMARK LAYER - Forced to background */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0" style={{ opacity: 0.1 }}>
                 <img src="/logo.jpg" alt="" className="w-1/2 object-contain" />
@@ -75,36 +75,27 @@ export function StudentTranscript({ student }) {
                 <style>{`
                     @media print {
                         @page { 
-                            size: A4; 
-                            margin: 0mm !important; 
+                            size: A4 portrait !important; 
+                            margin: 0 !important; 
                         }
                         html, body {
                             margin: 0 !important;
                             padding: 0 !important;
-                            height: 100%;
-                            font-family: "Tw Cen MT", "Century Gothic", sans-serif !important;
-                        }
-                        body * {
-                            visibility: hidden;
-                        }
-                        .transcript-sheet, .transcript-sheet * {
-                            visibility: visible;
-                            font-family: '"Tw Cen MT", "Century Gothic", sans-serif' !important;
+                            background: white !important;
+                            width: 210mm !important;
+                            height: 297mm !important;
                         }
                         .transcript-sheet {
-                            position: absolute !important;
-                            top: 0 !important;
-                            left: 0 !important;
-                            width: 210mm !important;
-                            min-height: 297mm !important;
+                            position: static !important;
                             margin: 0 !important;
                             padding: 10mm !important;
+                            width: 210mm !important;
+                            height: 297mm !important;
                             border: none !important;
                             box-shadow: none !important;
-                            background: white !important;
+                            transform: none !important;
                             -webkit-print-color-adjust: exact;
                         }
-                        /* Ensure table rows don't break halfway */
                         tr { page-break-inside: avoid; }
                     }
                     
@@ -233,10 +224,14 @@ export function StudentTranscript({ student }) {
 
                     <div className="text-center space-y-0 border-t border-gray-100 pt-1 mt-auto">
                         <p className="text-[8px] font-bold uppercase tracking-widest text-gray-400">Issued by Usafi International Training Center</p>
-                        <p className="text-[7px] font-medium text-gray-400">{format(new Date(), 'EEEE, MMMM do, yyyy')}</p>
+                        <p className="text-[7px] font-medium text-gray-400">
+                            Training Period: {student.courseStartDate ? format(student.courseStartDate.toDate ? student.courseStartDate.toDate() : new Date(student.courseStartDate), 'dd MMM yyyy') : '...'}
+                            {' - '}
+                            {student.courseEndDate ? format(student.courseEndDate.toDate ? student.courseEndDate.toDate() : new Date(student.courseEndDate), 'dd MMM yyyy') : '...'}
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
     );
-}
+});
