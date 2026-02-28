@@ -270,10 +270,10 @@ export function CEODashboard({ settings }) {
                                     </div>
                                     <div>
                                         <p className="font-bold text-xs md:text-sm">
-                                            {isMaintenanceOn ? 'Lift Lockdown' : t('ceo.dashboard.emergency_lockdown')}
+                                            {isMaintenanceOn ? t('ceo.dashboard.lift_lockdown') : t('ceo.dashboard.emergency_lockdown')}
                                         </p>
                                         <p className="text-[9px] md:text-[10px] opacity-50">
-                                            {isMaintenanceOn ? 'Resume public operations' : t('ceo.dashboard.restrict_access')}
+                                            {isMaintenanceOn ? t('ceo.dashboard.resume_public_ops') : t('ceo.dashboard.restrict_access')}
                                         </p>
                                     </div>
                                 </li>
@@ -305,12 +305,12 @@ export function CEODashboard({ settings }) {
                                         <div className="size-16 bg-[#D4Af37]/10 rounded-3xl mx-auto flex items-center justify-center text-[#B8860B] mb-4">
                                             <span className="material-symbols-outlined text-3xl">shield_person</span>
                                         </div>
-                                        <h3 className="text-2xl font-serif font-black text-[#4B3832]">Appoint Administrator</h3>
-                                        <p className="text-xs text-[#4B3832]/60 mt-1 uppercase tracking-widest font-black">Escalate User Privileges</p>
+                                        <h3 className="text-2xl font-serif font-black text-[#4B3832]">{t('ceo.dashboard.appoint_admin_title')}</h3>
+                                        <p className="text-xs text-[#4B3832]/60 mt-1 uppercase tracking-widest font-black">{t('ceo.dashboard.escalate_privileges')}</p>
                                     </div>
                                     <div className="space-y-4">
                                         <div className="space-y-2">
-                                            <label className="text-[10px] font-black uppercase tracking-widest text-[#4B3832]/40">User Email Address</label>
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-[#4B3832]/40">{t('ceo.dashboard.email_label')}</label>
                                             <input
                                                 type="email"
                                                 value={adminEmail}
@@ -320,7 +320,7 @@ export function CEODashboard({ settings }) {
                                             />
                                         </div>
                                         <p className="text-[10px] text-[#4B3832]/60 leading-relaxed">
-                                            Warning: This user will gain full access to management tools, student records, and platform settings.
+                                            {t('ceo.dashboard.appoint_warning')}
                                         </p>
                                         <button
                                             onClick={async () => {
@@ -329,10 +329,10 @@ export function CEODashboard({ settings }) {
                                                     const q = query(collection(db, 'users'), where('email', '==', adminEmail));
                                                     const snap = await getDocs(q);
                                                     if (snap.empty) {
-                                                        alert("User not found.");
+                                                        alert(t('ceo.dashboard.user_not_found'));
                                                     } else {
                                                         await updateDoc(doc(db, 'users', snap.docs[0].id), { role: 'admin' });
-                                                        alert(`${adminEmail} successfully appointed as Admin.`);
+                                                        alert(t('ceo.dashboard.appoint_success', { email: adminEmail }));
                                                         setActionModal(null);
                                                     }
                                                 } catch (e) { alert(e.message); }
@@ -341,7 +341,7 @@ export function CEODashboard({ settings }) {
                                             disabled={processing || !adminEmail}
                                             className="w-full py-4 rounded-2xl bg-[#D4Af37] text-[#4B3832] font-black uppercase text-xs tracking-[0.2em] shadow-xl hover:scale-105 transition-transform disabled:opacity-50"
                                         >
-                                            {processing ? 'Processing...' : 'Confirm Appointment'}
+                                            {processing ? t('ceo.dashboard.processing') : t('ceo.dashboard.confirm_appointment')}
                                         </button>
                                     </div>
                                 </div>
@@ -354,12 +354,12 @@ export function CEODashboard({ settings }) {
                                         <div className="size-16 bg-[#D4Af37]/10 rounded-3xl mx-auto flex items-center justify-center text-[#B8860B] mb-4">
                                             <span className="material-symbols-outlined text-3xl">broadcast_on_home</span>
                                         </div>
-                                        <h3 className="text-2xl font-serif font-black text-[#4B3832]">Global Broadcast</h3>
-                                        <p className="text-xs text-[#4B3832]/60 mt-1 uppercase tracking-widest font-black">Notify All Active Users</p>
+                                        <h3 className="text-2xl font-serif font-black text-[#4B3832]">{t('ceo.dashboard.global_broadcast_title')}</h3>
+                                        <p className="text-xs text-[#4B3832]/60 mt-1 uppercase tracking-widest font-black">{t('ceo.dashboard.notify_active_users')}</p>
                                     </div>
                                     <div className="space-y-4">
                                         <div className="space-y-2">
-                                            <label className="text-[10px] font-black uppercase tracking-widest text-[#4B3832]/40">Subject</label>
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-[#4B3832]/40">{t('ceo.dashboard.subject_label')}</label>
                                             <input
                                                 type="text"
                                                 value={announcement.title}
@@ -369,7 +369,7 @@ export function CEODashboard({ settings }) {
                                             />
                                         </div>
                                         <div className="space-y-2">
-                                            <label className="text-[10px] font-black uppercase tracking-widest text-[#4B3832]/40">Message</label>
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-[#4B3832]/40">{t('ceo.dashboard.message_label')}</label>
                                             <textarea
                                                 value={announcement.message}
                                                 onChange={(e) => setAnnouncement({ ...announcement, message: e.target.value })}
@@ -388,7 +388,7 @@ export function CEODashboard({ settings }) {
                                                         createdBy: 'ceo',
                                                         type: 'executive'
                                                     });
-                                                    alert("Announcement broadcasted successfully.");
+                                                    alert(t('ceo.dashboard.broadcast_success'));
                                                     setActionModal(null);
                                                 } catch (e) { alert(e.message); }
                                                 setProcessing(false);
@@ -396,7 +396,7 @@ export function CEODashboard({ settings }) {
                                             disabled={processing || !announcement.title || !announcement.message}
                                             className="w-full py-4 rounded-2xl bg-[#4B3832] text-[#F5DEB3] font-black uppercase text-xs tracking-[0.2em] shadow-xl hover:scale-105 transition-transform disabled:opacity-50"
                                         >
-                                            {processing ? 'Broadcasting...' : 'Launch Broadcast'}
+                                            {processing ? t('ceo.dashboard.broadcasting') : t('ceo.dashboard.launch_broadcast')}
                                         </button>
                                     </div>
                                 </div>
@@ -413,17 +413,17 @@ export function CEODashboard({ settings }) {
                                             <span className="material-symbols-outlined text-3xl">{isMaintenanceOn ? 'key' : 'lock_reset'}</span>
                                         </div>
                                         <h3 className="text-2xl font-serif font-black text-[#4B3832]">
-                                            {isMaintenanceOn ? 'Lift Protocol' : 'Emergency Lockdown'}
+                                            {isMaintenanceOn ? t('ceo.dashboard.lift_protocol') : t('ceo.dashboard.emergency_lockdown')}
                                         </h3>
                                         <p className="text-xs text-[#4B3832]/60 mt-1 uppercase tracking-widest font-black">
-                                            {isMaintenanceOn ? 'Resume Operations' : 'Restrict Platform Access'}
+                                            {isMaintenanceOn ? t('ceo.dashboard.resume_operations') : t('ceo.dashboard.restrict_access')}
                                         </p>
                                     </div>
                                     <div className="space-y-6">
                                         <p className="text-xs text-[#4B3832]/60 leading-relaxed text-center">
                                             {isMaintenanceOn
-                                                ? "This will restore full access to the platform for all students and public users immediately."
-                                                : "This will immediately redirect all non-administrative users to the maintenance page. Use only for critical updates or security breaches."
+                                                ? t('ceo.dashboard.lift_lockdown_desc')
+                                                : t('ceo.dashboard.emergency_lockdown_desc')
                                             }
                                         </p>
                                         <button
@@ -445,7 +445,7 @@ export function CEODashboard({ settings }) {
                                                 isMaintenanceOn ? "bg-green-600 text-white" : "bg-red-600 text-white"
                                             )}
                                         >
-                                            {processing ? 'Processing...' : (isMaintenanceOn ? 'Confirm Reactivation' : 'Confirm Lockdown')}
+                                            {processing ? t('ceo.dashboard.processing') : (isMaintenanceOn ? t('ceo.dashboard.confirm_reactivation') : t('ceo.dashboard.confirm_lockdown'))}
                                         </button>
                                     </div>
                                 </div>
