@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, updateDoc, serverTimestamp, collection, query, where, orderBy, limit, getDocs, addDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
+import { cn } from '../../lib/utils';
 
 export function StudentDetails() {
     const { user: authUser } = useAuth();
@@ -26,7 +27,9 @@ export function StudentDetails() {
         phone: '',
         status: '',
         course: '',
-        courseId: ''
+        courseId: '',
+        totalFee: 0,
+        amountPaid: 0
     });
 
     // Fetch Student Data & Courses
@@ -45,7 +48,9 @@ export function StudentDetails() {
                         phone: data.phone || '',
                         status: data.status || 'pending',
                         course: data.course || '',
-                        courseId: data.courseId || 'bean-to-brew'
+                        courseId: data.courseId || 'bean-to-brew',
+                        totalFee: data.totalFee || ((data.courseId === 'bean-to-brew' || (data.enrolledCourses && data.enrolledCourses.some(c => c.courseId === 'bean-to-brew'))) ? 200000 : 0),
+                        amountPaid: data.amountPaid || 0
                     });
 
                     // 2. Fetch All Courses (for transfer)
@@ -134,6 +139,8 @@ export function StudentDetails() {
                 fullName: editForm.fullName,
                 phone: editForm.phone,
                 status: editForm.status,
+                totalFee: Number(editForm.totalFee) || 0,
+                amountPaid: Number(editForm.amountPaid) || 0,
                 updatedAt: serverTimestamp()
             });
 
@@ -326,6 +333,24 @@ export function StudentDetails() {
                                                     onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
                                                 />
                                             </div>
+                                            <div>
+                                                <label className="block text-[8px] md:text-[10px] font-black uppercase tracking-[0.3em] text-espresso/40 mb-2 md:mb-3 ml-1">Total Course Fee (RWF)</label>
+                                                <input
+                                                    type="number"
+                                                    className="w-full p-3 md:p-4 bg-white/40 border border-espresso/10 rounded-xl md:rounded-2xl focus:outline-none focus:ring-2 focus:ring-espresso text-espresso font-black uppercase tracking-widest text-[9px] md:text-[10px]"
+                                                    value={editForm.totalFee}
+                                                    onChange={(e) => setEditForm({ ...editForm, totalFee: e.target.value })}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-[8px] md:text-[10px] font-black uppercase tracking-[0.3em] text-espresso/40 mb-2 md:mb-3 ml-1">Amount Paid (RWF)</label>
+                                                <input
+                                                    type="number"
+                                                    className="w-full p-3 md:p-4 bg-white/40 border border-espresso/10 rounded-xl md:rounded-2xl focus:outline-none focus:ring-2 focus:ring-espresso text-espresso font-black uppercase tracking-widest text-[9px] md:text-[10px]"
+                                                    value={editForm.amountPaid}
+                                                    onChange={(e) => setEditForm({ ...editForm, amountPaid: e.target.value })}
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 ) : (
@@ -482,6 +507,62 @@ export function StudentDetails() {
                         </div>
                     )}
 
+                    {/* Financial Status Section */}
+                    {isAdmin && !isEditing && (
+                        <div className="bg-white/40 dark:bg-black/20 p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] border border-espresso/10 relative overflow-hidden group/finance">
+                            <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover/finance:bg-espresso transition-colors"></div>
+                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+                                <div>
+                                    <h3 className="text-xl md:text-2xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight">Financial Status</h3>
+                                    <p className="text-[9px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] mt-1">Tuition & Operations Billing Schema</p>
+                                </div>
+                                <div className={cn(
+                                    "px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-sm",
+                                    (student.amountPaid || 0) >= (student.totalFee || 0) && student.totalFee > 0 ? "bg-green-100 text-green-700 border border-green-200" :
+                                        (student.amountPaid || 0) > 0 ? "bg-amber-100 text-amber-700 border border-amber-200" : "bg-red-100 text-red-700 border border-red-200"
+                                )}>
+                                    {(student.amountPaid || 0) >= (student.totalFee || 0) && student.totalFee > 0 ? 'Fully Cleared' :
+                                        (student.amountPaid || 0) > 0 ? 'Partial Payment (Half Pay)' : 'Pending Payment'}
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                                <div className="bg-espresso p-8 rounded-3xl text-white shadow-xl relative overflow-hidden group/card/finance">
+                                    <div className="absolute right-0 top-0 p-4 opacity-10 group-hover/card/finance:scale-110 transition-transform">
+                                        <span className="material-symbols-outlined text-4xl">payments</span>
+                                    </div>
+                                    <p className="text-[9px] font-black uppercase tracking-[0.2em] opacity-60 mb-3">Total Program Fee</p>
+                                    <p className="text-2xl md:text-3xl font-serif font-black">
+                                        {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'RWF' }).format(student.totalFee || 0)}
+                                    </p>
+                                </div>
+
+                                <div className="bg-green-600 p-8 rounded-3xl text-white shadow-xl relative overflow-hidden group/card/finance">
+                                    <div className="absolute right-0 top-0 p-4 opacity-10 group-hover/card/finance:scale-110 transition-transform">
+                                        <span className="material-symbols-outlined text-4xl">check_circle</span>
+                                    </div>
+                                    <p className="text-[9px] font-black uppercase tracking-[0.2em] opacity-60 mb-3">Total Amount Paid</p>
+                                    <p className="text-2xl md:text-3xl font-serif font-black">
+                                        {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'RWF' }).format(student.amountPaid || 0)}
+                                    </p>
+                                </div>
+
+                                <div className={cn(
+                                    "p-8 rounded-3xl text-white shadow-xl relative overflow-hidden group/card/finance",
+                                    (Number(student.totalFee || 0) - Number(student.amountPaid || 0)) <= 0 ? "bg-blue-600" : "bg-amber-600"
+                                )}>
+                                    <div className="absolute right-0 top-0 p-4 opacity-10 group-hover/card/finance:scale-110 transition-transform">
+                                        <span className="material-symbols-outlined text-4xl">account_balance_wallet</span>
+                                    </div>
+                                    <p className="text-[9px] font-black uppercase tracking-[0.2em] opacity-60 mb-3">Outstanding Balance</p>
+                                    <p className="text-2xl md:text-3xl font-serif font-black">
+                                        {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'RWF' }).format(Math.max(0, Number(student.totalFee || 0) - Number(student.amountPaid || 0)))}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Progress Analytics Layer */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
                         {/* Deployment Matrix */}
@@ -549,8 +630,8 @@ export function StudentDetails() {
                                             <h4 className="font-serif font-bold text-espresso dark:text-white">{courseData.title}</h4>
                                             <div className="flex items-center gap-2 mt-2">
                                                 <span className={`px-2 py-1 rounded-md text-[8px] font-black uppercase tracking-widest border ${enrollment.status === 'active' ? 'bg-green-500/10 text-green-600 border-green-500/20' :
-                                                        enrollment.status === 'pending' ? 'bg-amber-500/10 text-amber-600 border-amber-500/20' :
-                                                            'bg-red-500/10 text-red-600 border-red-500/20'
+                                                    enrollment.status === 'pending' ? 'bg-amber-500/10 text-amber-600 border-amber-500/20' :
+                                                        'bg-red-500/10 text-red-600 border-red-500/20'
                                                     }`}>
                                                     {enrollment.status}
                                                 </span>

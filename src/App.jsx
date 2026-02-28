@@ -1,7 +1,10 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { db } from './lib/firebase';
+import { doc, onSnapshot, setDoc } from 'firebase/firestore';
+import { seedSystemData } from './lib/dataSeeder';
 import { PublicLayout } from './components/layout/PublicLayout';
 import { StudentLayout } from './components/layout/StudentLayout';
 import { AdminLayout } from './components/layout/AdminLayout';
@@ -34,10 +37,6 @@ import { SeekerDashboard } from './pages/seeker/SeekerDashboard';
 import { SeekerProfile } from './pages/seeker/SeekerProfile';
 import { VerifyCertificate } from './pages/public/VerifyCertificate';
 import { MaintenanceMode } from './pages/public/MaintenanceMode';
-import { onSnapshot, doc, setDoc } from 'firebase/firestore';
-import { db } from './lib/firebase';
-import { useAuth } from './context/AuthContext';
-
 // Auth Pages
 import { Login } from './pages/auth/Login';
 import { ForgotPassword } from './pages/auth/ForgotPassword';
@@ -125,6 +124,7 @@ function MaintenanceGuard({ children, user, settings }) {
 function App() {
   const [settings, setSettings] = React.useState(null);
 
+
   React.useEffect(() => {
     const settingsRef = doc(db, 'system_settings', 'global');
     const unsubscribe = onSnapshot(settingsRef, (snap) => {
@@ -154,6 +154,13 @@ function App() {
 
 function AppContent({ settings }) {
   const { user } = useAuth();
+
+  React.useEffect(() => {
+    if (user && (user.role === 'admin' || user.role === 'ceo')) {
+      console.log("AppContent: Admin/CEO detected, running seeder...");
+      seedSystemData();
+    }
+  }, [user]);
 
   return (
     <BrowserRouter>

@@ -100,7 +100,8 @@ export function Enrollment({ settings }) {
                             status: 'pending',
                             enrolledAt: serverTimestamp(),
                             progress: 0
-                        }))
+                        })),
+                        totalFee: formData.courses.includes('bean-to-brew') ? 200000 : (userData.totalFee || 0)
                     };
 
                     await updateDoc(doc(db, 'users', userId), updatedUserData);
@@ -113,6 +114,10 @@ export function Enrollment({ settings }) {
                 setLoadingMessage(t('enrollment.loading.auth'));
                 const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
                 userId = userCredential.user.uid;
+
+                // Calculate initial totalFee (Barista default: 200,000 RWF)
+                const isBarista = formData.courses.includes('bean-to-brew');
+                const defaultTotalFee = isBarista ? 200000 : 0;
 
                 // Create User Document in Firestore
                 setLoadingMessage(t('enrollment.loading.db'));
@@ -131,6 +136,8 @@ export function Enrollment({ settings }) {
                     status: 'pending',
                     createdAt: serverTimestamp(),
                     progress: 0,
+                    totalFee: defaultTotalFee,
+                    amountPaid: 0,
                     enrolledCourses: formData.courses.map(courseId => ({
                         courseId,
                         status: 'pending',

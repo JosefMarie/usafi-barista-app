@@ -15,7 +15,9 @@ export function MyCourses() {
     const { user } = useAuth();
 
     // Support either the new array format or fallback to the old activeCourseId for legacy
-    const enrolledCourses = user?.enrolledCourses || (user?.courseId ? [{ courseId: user.courseId, status: 'active' }] : [{ courseId: BEAN_TO_BREW_ID, status: 'active' }]);
+    const enrolledCourses = (user?.enrolledCourses && user.enrolledCourses.length > 0)
+        ? user.enrolledCourses
+        : (user?.courseId ? [{ courseId: user.courseId, status: 'active' }] : [{ courseId: BEAN_TO_BREW_ID, status: 'active' }]);
 
     const [coursesData, setCoursesData] = useState([]);
     const [loading, setLoading] = useState(true);

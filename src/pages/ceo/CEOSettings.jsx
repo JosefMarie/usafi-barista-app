@@ -82,13 +82,41 @@ export function CEOSettings({ settings: initialSettings }) {
                     </div>
                 </div>
 
-                <div className="bg-[#4B3832] text-[#F5DEB3] p-6 md:p-8 rounded-[2rem] shadow-xl relative overflow-hidden group">
-                    <span className="material-symbols-outlined absolute -right-4 -bottom-4 text-8xl md:text-9xl opacity-10 group-hover:scale-110 transition-transform duration-700">shield</span>
-                    <h3 className="font-bold text-lg md:text-xl mb-3 leading-none">Security Override</h3>
-                    <p className="text-xs md:text-sm opacity-70 mb-6 max-w-md leading-relaxed">Initiate a global password reset for all staff accounts. This action is irreversible and requires multi-factor authentication.</p>
-                    <button className="w-full sm:w-auto px-6 py-3.5 bg-red-600 hover:bg-red-700 text-white font-black text-[10px] md:text-xs uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-red-600/20 active:scale-95">
-                        Initiate Staff Lockdown
-                    </button>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                    <div className="bg-[#4B3832] text-[#F5DEB3] p-6 md:p-8 rounded-[2rem] shadow-xl relative overflow-hidden group">
+                        <span className="material-symbols-outlined absolute -right-4 -bottom-4 text-8xl md:text-9xl opacity-10 group-hover:scale-110 transition-transform duration-700">shield</span>
+                        <h3 className="font-bold text-lg md:text-xl mb-3 leading-none">Security Override</h3>
+                        <p className="text-xs md:text-sm opacity-70 mb-6 max-w-sm leading-relaxed">Initiate a global password reset for all staff accounts. This action is irreversible.</p>
+                        <button className="w-full sm:w-auto px-6 py-3.5 bg-red-600 hover:bg-red-700 text-white font-black text-[10px] md:text-xs uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-red-600/20 active:scale-95">
+                            Staff Lockdown
+                        </button>
+                    </div>
+
+                    <div className="bg-white/40 dark:bg-black/20 p-6 md:p-8 rounded-[2rem] border border-[#D4Af37]/20 shadow-xl relative overflow-hidden group">
+                        <span className="material-symbols-outlined absolute -right-4 -bottom-4 text-8xl md:text-9xl opacity-5 group-hover:scale-110 transition-transform duration-700 text-[#D4Af37]">sync</span>
+                        <h3 className="font-bold text-lg md:text-xl mb-3 leading-none text-[#4B3832] dark:text-[#F5DEB3]">Data Integrity</h3>
+                        <p className="text-xs md:text-sm text-[#4B3832]/60 dark:text-[#F5DEB3]/60 mb-6 max-w-sm leading-relaxed">Force a system-wide synchronization of core curricula and platform configuration.</p>
+                        <button
+                            onClick={async () => {
+                                if (!window.confirm("Force System Sync? This will overwrite or ensure all default courses and modules exist.")) return;
+                                try {
+                                    setSaving(true);
+                                    const { seedSystemData } = await import('../../lib/dataSeeder');
+                                    const res = await seedSystemData(true);
+                                    alert(`Sync Complete! \nCourses updated: ${res.courses}\nModules added: ${res.modules}`);
+                                } catch (e) {
+                                    console.error(e);
+                                    alert("Sync failed.");
+                                } finally {
+                                    setSaving(false);
+                                }
+                            }}
+                            disabled={saving}
+                            className="w-full sm:w-auto px-6 py-3.5 bg-[#D4Af37] hover:bg-[#b08d26] text-white font-black text-[10px] md:text-xs uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-[#D4Af37]/20 active:scale-95 disabled:opacity-50"
+                        >
+                            {saving ? 'Syncing...' : 'Force System Sync'}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

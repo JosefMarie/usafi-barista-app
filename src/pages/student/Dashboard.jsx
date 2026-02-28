@@ -16,7 +16,9 @@ export function Dashboard() {
 
     // State for real data
     const [coursesData, setCoursesData] = useState([]);
-    const enrolledCourses = user?.enrolledCourses || (user?.courseId ? [{ courseId: user.courseId, status: 'active' }] : [{ courseId: BEAN_TO_BREW_ID, status: 'active' }]);
+    const enrolledCourses = (user?.enrolledCourses && user.enrolledCourses.length > 0)
+        ? user.enrolledCourses
+        : (user?.courseId ? [{ courseId: user.courseId, status: 'active' }] : [{ courseId: BEAN_TO_BREW_ID, status: 'active' }]);
 
     const [stats, setStats] = useState([
         { label: t('student.dashboard.stats.courses'), value: 0, icon: 'school', color: 'bg-blue-500' },

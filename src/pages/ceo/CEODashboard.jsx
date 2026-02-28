@@ -79,6 +79,10 @@ export function CEODashboard({ settings }) {
                     }
                 });
 
+                // 4. Check seeding status
+                const courseCheck = await getDoc(doc(db, 'courses', 'bean-to-brew'));
+                const isSeeded = courseCheck.exists();
+
                 // Update Stats
                 const usersSnapCount = await getCountFromServer(usersRef);
                 const qStaff = query(usersRef, where('role', 'in', ['admin', 'manager', 'instructor']));
@@ -88,7 +92,8 @@ export function CEODashboard({ settings }) {
                     ...prev,
                     totalRevenue: estimatedTotalRevenue,
                     totalUsers: usersSnapCount.data().count,
-                    staffCount: staffSnap.size
+                    staffCount: staffSnap.size,
+                    isSeeded: isSeeded
                 }));
 
                 setRevenueData(last6Months);
@@ -131,6 +136,41 @@ export function CEODashboard({ settings }) {
                         </div>
                     </div>
                 </div>
+
+                {/* Seeding Alert */}
+                {!stats.isSeeded && (
+                    <div className="bg-amber-500/10 border border-amber-500/30 rounded-[2rem] p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 animate-fade-in shadow-xl shadow-amber-500/5">
+                        <div className="flex items-center gap-6 text-left">
+                            <div className="size-16 rounded-2xl bg-amber-500/20 flex items-center justify-center text-amber-600 shrink-0">
+                                <span className="material-symbols-outlined text-4xl">database_off</span>
+                            </div>
+                            <div>
+                                <h4 className="font-serif font-black text-xl md:text-2xl text-amber-900 dark:text-amber-400 leading-tight">System Integrity Alert</h4>
+                                <p className="text-xs md:text-sm text-amber-800/70 dark:text-amber-400/70 mt-1 max-w-xl font-medium">Core curricula documents and instructional modules were not detected in the production database. Students will encounter "Course not found" errors until initialized.</p>
+                            </div>
+                        </div>
+                        <button
+                            onClick={async () => {
+                                setProcessing(true);
+                                try {
+                                    const { seedSystemData } = await import('../../lib/dataSeeder');
+                                    await seedSystemData(true);
+                                    window.location.reload();
+                                } catch (e) {
+                                    console.error(e);
+                                    alert("Seeding failed: " + e.message);
+                                } finally {
+                                    setProcessing(false);
+                                }
+                            }}
+                            disabled={processing}
+                            className="w-full md:w-auto px-10 py-4 bg-amber-600 hover:bg-amber-700 text-white font-black text-xs uppercase tracking-[0.2em] rounded-xl shadow-lg shadow-amber-600/30 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-3 shrink-0"
+                        >
+                            <span className="material-symbols-outlined text-lg">{processing ? 'sync' : 'database'}</span>
+                            {processing ? 'Synchronizing...' : 'Initialize Curricula'}
+                        </button>
+                    </div>
+                )}
 
                 {/* KPI Matrix */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">

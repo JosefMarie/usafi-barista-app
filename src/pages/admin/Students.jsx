@@ -10,6 +10,9 @@ export function Students() {
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
     const [activeTab, setActiveTab] = useState('all'); // 'all', 'onsite', 'online'
+    const [syncing, setSyncing] = useState(false);
+    const [approvalModal, setApprovalModal] = useState(null); // { studentId, fullName, courseFee }
+    const [paymentInput, setPaymentInput] = useState({ amount: '', isFull: false });
 
     useEffect(() => {
         // Query users where role is 'student'
@@ -30,15 +33,62 @@ export function Students() {
         return () => unsubscribe();
     }, []);
 
-    const handleApprove = async (e, studentId) => {
-        e.preventDefault(); // Prevent Link navigation
+    const handleApprove = async (e, studentId, amountPaid) => {
+        if (e) e.preventDefault();
         try {
             await updateDoc(doc(db, 'users', studentId), {
-                status: 'active'
+                status: 'active',
+                amountPaid: Number(amountPaid) || 0,
+                updatedAt: new Date().toISOString()
             });
-            // Toast or notification could go here
+            setApprovalModal(null);
+            setPaymentInput({ amount: '', isFull: false });
         } catch (error) {
             console.error("Error approving student:", error);
+            alert("Failed to approve student.");
+        }
+    };
+
+    const openApprovalModal = (e, student) => {
+        e.preventDefault();
+        const fee = getStudentFee(student);
+        setApprovalModal({
+            id: student.id,
+            fullName: student.fullName,
+            totalFee: fee
+        });
+        setPaymentInput({ amount: '', isFull: false });
+    };
+
+    const handleSyncBaristaFees = async () => {
+        if (!window.confirm("This will permanently set the Total Program Fee to 200,000 RWF for all students enrolled in the Barista course who don't have a fee set. Proceed?")) return;
+
+        setSyncing(true);
+        try {
+            const baristaStudents = students.filter(s =>
+                ((!s.courseId || s.courseId === 'bean-to-brew') || s.enrolledCourses?.some(c => c.courseId === 'bean-to-brew')) &&
+                (!s.totalFee || s.totalFee === 0)
+            );
+
+            if (baristaStudents.length === 0) {
+                alert("No Barista students found with missing fees.");
+                return;
+            }
+
+            let updatedCount = 0;
+            for (const student of baristaStudents) {
+                await updateDoc(doc(db, 'users', student.id), {
+                    totalFee: 200000
+                });
+                updatedCount++;
+            }
+
+            alert(`Successfully synchronized ${updatedCount} Barista student records.`);
+        } catch (error) {
+            console.error("Error syncing fees:", error);
+            alert("Failed to synchronize records.");
+        } finally {
+            setSyncing(false);
         }
     };
 
@@ -46,21 +96,23 @@ export function Students() {
         return <div className="p-8 text-center text-espresso dark:text-white">Loading students...</div>;
     }
 
+    const allCount = students.length;
+    const now = new Date();
+    const getDaysSpent = (createdAt) => {
+        if (!createdAt) return 0;
+        const date = createdAt.toDate ? createdAt.toDate() : new Date(createdAt);
+        return Math.floor((now - date) / (1000 * 60 * 60 * 24));
+    };
+
+    const month1Count = students.filter(s => getDaysSpent(s.createdAt) <= 30 && s.status !== 'graduated').length;
+    const month2Count = students.filter(s => {
+        const days = getDaysSpent(s.createdAt);
+        return days > 30 && days <= 60 && s.status !== 'graduated';
+    }).length;
+    const month3Count = students.filter(s => getDaysSpent(s.createdAt) > 60 && s.status !== 'graduated').length;
+    const completedCount = students.filter(s => s.status === 'graduated').length;
     const onsiteCount = students.filter(s => s.studyMethod === 'onsite').length;
     const onlineCount = students.filter(s => s.studyMethod === 'online').length;
-    const baristaCount = students.filter(s => {
-        const hasLegacyBarista = !s.courseId || s.courseId === 'bean-to-brew';
-        const hasEnrolledBarista = s.enrolledCourses?.some(c => c.courseId === 'bean-to-brew');
-        return hasLegacyBarista || hasEnrolledBarista;
-    }).length;
-
-    const bartenderCount = students.filter(s => {
-        const hasLegacyBartender = s.courseId === 'bar-tender-course';
-        const hasEnrolledBartender = s.enrolledCourses?.some(c => c.courseId === 'bar-tender-course');
-        return hasLegacyBartender || hasEnrolledBartender;
-    }).length;
-
-    const allCount = students.length;
 
     const filteredStudents = students.filter(student => {
         const matchesSearch =
@@ -74,10 +126,25 @@ export function Students() {
             matchesTab = (!student.courseId || student.courseId === 'bean-to-brew') || student.enrolledCourses?.some(c => c.courseId === 'bean-to-brew');
         } else if (activeTab === 'bartender') {
             matchesTab = (student.courseId === 'bar-tender-course') || student.enrolledCourses?.some(c => c.courseId === 'bar-tender-course');
+        } else if (activeTab === 'month1') {
+            matchesTab = getDaysSpent(student.createdAt) <= 30 && student.status !== 'graduated';
+        } else if (activeTab === 'month2') {
+            const days = getDaysSpent(student.createdAt);
+            matchesTab = days > 30 && days <= 60 && student.status !== 'graduated';
+        } else if (activeTab === 'month3') {
+            matchesTab = getDaysSpent(student.createdAt) > 60 && student.status !== 'graduated';
+        } else if (activeTab === 'completed') {
+            matchesTab = student.status === 'graduated';
         }
 
         return matchesSearch && matchesTab;
     });
+
+    const getStudentFee = (student) => {
+        if (student.totalFee && student.totalFee > 0) return student.totalFee;
+        const isBarista = (!student.courseId || student.courseId === 'bean-to-brew') || student.enrolledCourses?.some(c => c.courseId === 'bean-to-brew');
+        return isBarista ? 200000 : 0;
+    };
 
     const pendingStudents = students.filter(s => s.status === 'pending');
     const filteredPending = pendingStudents.filter(s =>
@@ -95,9 +162,15 @@ export function Students() {
                         <h1 className="text-3xl md:text-4xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none">Global Registry</h1>
                         <p className="text-[9px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] mt-2">Participant Verification & Management</p>
                     </div>
-                    <div className="flex gap-3 md:gap-4">
-                        <button className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-white/40 hover:bg-espresso hover:text-white transition-all flex items-center justify-center active:scale-95 shadow-sm group">
-                            <span className="material-symbols-outlined text-[20px] md:text-[24px]">filter_list</span>
+                    <div className="flex flex-wrap gap-3 md:gap-4">
+                        <button
+                            onClick={handleSyncBaristaFees}
+                            disabled={syncing}
+                            className="px-4 md:px-6 py-3 md:py-3.5 bg-white/40 text-espresso text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] rounded-xl md:rounded-2xl border border-espresso/10 hover:bg-espresso hover:text-white transition-all active:scale-95 shadow-sm flex items-center gap-2 disabled:opacity-50"
+                            title="Synchronize all Barista fees to 200,000 RWF"
+                        >
+                            <span className="material-symbols-outlined text-[16px] md:text-[18px]">{syncing ? 'sync' : 'database'}</span>
+                            {syncing ? 'Syncing...' : 'Sync Barista Fees'}
                         </button>
                         <button className="flex-1 md:flex-none px-6 md:px-8 py-3 md:py-3.5 bg-espresso text-white text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] rounded-xl md:rounded-2xl shadow-xl hover:shadow-espresso/40 active:scale-95 transition-all flex items-center justify-center md:justify-start gap-2">
                             <span className="material-symbols-outlined text-[16px] md:text-[18px]">person_add</span>
@@ -123,10 +196,12 @@ export function Students() {
                     <div className="flex flex-wrap items-center gap-2 md:gap-4 p-1.5 bg-white/30 dark:bg-black/20 rounded-2xl border border-espresso/5 backdrop-blur-sm self-start">
                         {[
                             { id: 'all', label: 'All Clusters', icon: 'groups', count: allCount },
-                            { id: 'onsite', label: 'Onsite Operational', icon: 'location_on', count: onsiteCount },
-                            { id: 'online', label: 'Digital Venture', icon: 'language', count: onlineCount },
-                            { id: 'barista', label: 'Barista Students', icon: 'coffee', count: baristaCount },
-                            { id: 'bartender', label: 'Bartender Students', icon: 'local_bar', count: bartenderCount },
+                            { id: 'month1', label: 'Month 1', icon: 'looks_one', count: month1Count },
+                            { id: 'month2', label: 'Month 2', icon: 'looks_two', count: month2Count },
+                            { id: 'month3', label: 'Month 3+', icon: 'more_time', count: month3Count },
+                            { id: 'completed', label: 'Completed', icon: 'verified', count: completedCount },
+                            { id: 'onsite', label: 'Onsite', icon: 'location_on', count: onsiteCount },
+                            { id: 'online', label: 'Online', icon: 'language', count: onlineCount },
                         ].map((tab) => (
                             <button
                                 key={tab.id}
@@ -179,7 +254,7 @@ export function Students() {
                                         </div>
                                     </Link>
                                     <button
-                                        onClick={(e) => handleApprove(e, student.id)}
+                                        onClick={(e) => openApprovalModal(e, student)}
                                         className="w-full sm:w-auto px-6 md:px-8 py-2.5 md:py-3 bg-espresso text-white text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] rounded-xl md:rounded-2xl hover:shadow-xl active:scale-95 transition-all shadow-lg"
                                     >
                                         Execute Approval
@@ -235,16 +310,23 @@ export function Students() {
                                     <div className="flex flex-col items-end gap-3 md:gap-4 pl-16 sm:pl-0">
                                         <div className="flex flex-wrap items-center justify-end gap-2 md:gap-4">
                                             <div className="flex items-center gap-2 bg-white/10 px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl border border-white/5 shadow-inner">
-                                                <span className="material-symbols-outlined text-[14px] md:text-[16px] text-white/40">hub</span>
-                                                <span className="text-[8px] md:text-[9px] font-black text-white/70 uppercase tracking-widest truncate max-w-[120px]">
-                                                    {student.enrolledCourses?.length > 1 ? 'Multiple Programs' : (student.course || 'FLUID SELECTION')}
+                                                <span className="material-symbols-outlined text-[14px] md:text-[16px] text-white/40">payments</span>
+                                                <span className={cn(
+                                                    "text-[8px] md:text-[9px] font-black uppercase tracking-widest",
+                                                    (student.amountPaid || 0) >= getStudentFee(student) && getStudentFee(student) > 0 ? "text-green-400" :
+                                                        (student.amountPaid || 0) > 0 ? "text-amber-400" : "text-red-400"
+                                                )}>
+                                                    {(student.amountPaid || 0) >= getStudentFee(student) && getStudentFee(student) > 0 ? 'Full Pay' :
+                                                        (student.amountPaid || 0) > 0 ? 'Half Pay' : 'Unpaid'}
                                                 </span>
                                             </div>
                                             <span className={cn(
                                                 "px-3 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] shadow-sm border",
                                                 student.status === 'active'
                                                     ? 'bg-green-400/10 border-green-400/20 text-green-400'
-                                                    : 'bg-amber-400/10 border-amber-400/20 text-amber-400'
+                                                    : student.status === 'graduated'
+                                                        ? 'bg-indigo-400/10 border-indigo-400/20 text-indigo-400'
+                                                        : 'bg-amber-400/10 border-amber-400/20 text-amber-400'
                                             )}>
                                                 {student.status}
                                             </span>
@@ -255,7 +337,7 @@ export function Students() {
                                             <button
                                                 onClick={(e) => {
                                                     e.preventDefault();
-                                                    handleApprove(e, student.id);
+                                                    openApprovalModal(e, student);
                                                 }}
                                                 className="w-full sm:w-auto px-4 md:px-6 py-2 bg-white text-espresso text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] rounded-lg md:rounded-xl hover:shadow-lg active:scale-95 transition-all z-10"
                                             >
@@ -268,6 +350,76 @@ export function Students() {
                         )}
                     </div>
                 </div>
+
+                {/* Approval Modal */}
+                {approvalModal && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-espresso/90 backdrop-blur-md animate-in fade-in duration-300">
+                        <div className="bg-[#FAF5E8] w-full max-w-md rounded-[2.5rem] shadow-2xl border border-espresso/20 overflow-hidden relative p-10">
+                            <button
+                                onClick={() => setApprovalModal(null)}
+                                className="absolute top-6 right-6 text-espresso/40 hover:text-espresso"
+                            >
+                                <span className="material-symbols-outlined">close</span>
+                            </button>
+
+                            <div className="text-center mb-8">
+                                <div className="size-16 bg-espresso/10 rounded-3xl mx-auto flex items-center justify-center text-espresso mb-4">
+                                    <span className="material-symbols-outlined text-3xl">verified_user</span>
+                                </div>
+                                <h3 className="text-2xl font-serif font-black text-espresso">Finalize Admission</h3>
+                                <p className="text-[10px] text-espresso/40 mt-1 uppercase tracking-widest font-black">Member: {approvalModal.fullName}</p>
+                            </div>
+
+                            <div className="space-y-6">
+                                <div className="bg-espresso/5 p-4 rounded-2xl border border-espresso/5">
+                                    <div className="flex justify-between items-center mb-1">
+                                        <span className="text-[9px] font-black text-espresso/40 uppercase tracking-widest">Target Program Fee</span>
+                                        <span className="text-xs font-serif font-black text-espresso">
+                                            {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'RWF' }).format(approvalModal.totalFee)}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-espresso/40 ml-1">Initial Deposit (RWF)</label>
+                                    <div className="relative">
+                                        <input
+                                            type="number"
+                                            value={paymentInput.amount}
+                                            onChange={(e) => setPaymentInput({ ...paymentInput, amount: e.target.value, isFull: false })}
+                                            placeholder="Enter amount paid"
+                                            className="w-full px-5 py-4 rounded-2xl bg-white border border-espresso/10 focus:border-espresso outline-none font-bold text-espresso shadow-inner"
+                                        />
+                                        <button
+                                            onClick={() => setPaymentInput({ amount: approvalModal.totalFee.toString(), isFull: true })}
+                                            className={cn(
+                                                "absolute right-2 top-2 bottom-2 px-4 rounded-xl text-[8px] font-black uppercase tracking-widest transition-all",
+                                                paymentInput.isFull ? "bg-green-500 text-white" : "bg-espresso/10 text-espresso hover:bg-espresso hover:text-white"
+                                            )}
+                                        >
+                                            Set Full Pay
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="pt-4 flex gap-3">
+                                    <button
+                                        onClick={() => setApprovalModal(null)}
+                                        className="flex-1 py-4 rounded-2xl border border-espresso/10 text-espresso font-black uppercase text-[10px] tracking-widest hover:bg-espresso/5 transition-all"
+                                    >
+                                        Abort
+                                    </button>
+                                    <button
+                                        onClick={() => handleApprove(null, approvalModal.id, paymentInput.amount)}
+                                        className="flex-[2] py-4 rounded-2xl bg-espresso text-white font-black uppercase text-[10px] tracking-[0.2em] shadow-xl hover:scale-105 active:scale-95 transition-all"
+                                    >
+                                        Confirm & Approve
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
