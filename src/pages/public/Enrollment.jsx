@@ -101,7 +101,14 @@ export function Enrollment({ settings }) {
                             enrolledAt: serverTimestamp(),
                             progress: 0
                         })),
-                        totalFee: formData.courses.includes('bean-to-brew') ? 200000 : (userData.totalFee || 0)
+                        totalFee: (() => {
+                            const hasBarista = formData.courses.includes('bean-to-brew');
+                            const hasBartender = formData.courses.includes('bar-tender-course');
+                            if (hasBarista && hasBartender) return 500000;
+                            if (hasBartender) return 300000;
+                            if (hasBarista) return 250000;
+                            return userData.totalFee || 0;
+                        })()
                     };
 
                     await updateDoc(doc(db, 'users', userId), updatedUserData);
@@ -115,9 +122,13 @@ export function Enrollment({ settings }) {
                 const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
                 userId = userCredential.user.uid;
 
-                // Calculate initial totalFee (Barista default: 200,000 RWF)
-                const isBarista = formData.courses.includes('bean-to-brew');
-                const defaultTotalFee = isBarista ? 200000 : 0;
+                // Calculate initial totalFee
+                const hasBarista = formData.courses.includes('bean-to-brew');
+                const hasBartender = formData.courses.includes('bar-tender-course');
+                let defaultTotalFee = 0;
+                if (hasBarista && hasBartender) defaultTotalFee = 500000;
+                else if (hasBartender) defaultTotalFee = 300000;
+                else if (hasBarista) defaultTotalFee = 250000;
 
                 // Create User Document in Firestore
                 setLoadingMessage(t('enrollment.loading.db'));

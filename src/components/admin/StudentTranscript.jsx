@@ -4,13 +4,13 @@ import { db } from '../../lib/firebase';
 import { format } from 'date-fns';
 import { cn } from '../../lib/utils';
 
-export const StudentTranscript = React.forwardRef(({ student }, ref) => {
+export const StudentTranscript = React.forwardRef(({ student, courseId }, ref) => {
     const [course, setCourse] = useState(null);
     const [modules, setModules] = useState([]);
     const [progress, setProgress] = useState({});
     const [loading, setLoading] = useState(true);
 
-    const BEAN_TO_BREW_ID = student?.courseId || 'bean-to-brew';
+    const TARGET_COURSE_ID = courseId || student?.courseId || 'bean-to-brew';
 
     useEffect(() => {
         if (!student) return;
@@ -19,13 +19,13 @@ export const StudentTranscript = React.forwardRef(({ student }, ref) => {
             setLoading(true);
             try {
                 // 1. Fetch Course Info
-                const courseSnap = await getDoc(doc(db, 'courses', BEAN_TO_BREW_ID));
+                const courseSnap = await getDoc(doc(db, 'courses', TARGET_COURSE_ID));
                 if (courseSnap.exists()) {
                     setCourse(courseSnap.data());
                 }
 
                 // 2. Fetch Modules
-                const modulesSnap = await getDocs(query(collection(db, 'courses', BEAN_TO_BREW_ID, 'modules')));
+                const modulesSnap = await getDocs(query(collection(db, 'courses', TARGET_COURSE_ID, 'modules')));
                 const mods = modulesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
                 mods.sort((a, b) => a.title.localeCompare(b.title, undefined, { numeric: true }));
                 setModules(mods);

@@ -11,7 +11,6 @@ export function AdminDashboard() {
         totalStudents: 0,
         pendingApprovals: 0,
         activeCourses: 0,
-        monthlyRevenue: 0,
         quizRequests: 0,
         studentEngagement: 94 // Still slightly mock, or could be (active/total)*100
     });
@@ -34,15 +33,6 @@ export function AdminDashboard() {
                 const totalStudents = students.length;
                 const pendingApprovals = students.filter(s => s.status === 'pending').length;
                 const activeStudents = students.filter(s => s.status === 'active').length;
-
-                // Revenue: Enrollments in the current month * 200,000
-                const now = new Date();
-                const thisMonthEnrollments = students.filter(s => {
-                    if (!s.createdAt) return false;
-                    const date = s.createdAt.toDate ? s.createdAt.toDate() : new Date(s.createdAt);
-                    return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
-                });
-                const monthlyRevenue = thisMonthEnrollments.length * 200000;
 
                 // Engagement: Just a simple calculation for now, e.g., % of active students vs total (excluding pending)
                 // If everyone is pending, it might be 0.
@@ -85,14 +75,14 @@ export function AdminDashboard() {
                     }
                 });
 
-                // Determine Max for scaling (Monthly Revenue)
-                const maxMonthlyRevenue = Math.max(...last12Months.map(m => m.count * 200000), 1);
+                // Determine Max for scaling (Student Counts)
+                const maxEnrollment = Math.max(...last12Months.map(m => m.count), 1);
 
                 // Format for Chart
                 const chartData = last12Months.map((m, index) => ({
                     month: m.monthIndex === 0 || index === 0 ? `${months[m.monthIndex]} '${m.year.toString().slice(-2)}` : months[m.monthIndex],
-                    revenue: m.count * 200000,
-                    height: `${Math.max(((m.count * 200000) / maxMonthlyRevenue) * 100, 5)}%`
+                    count: m.count,
+                    height: `${Math.max((m.count / maxEnrollment) * 100, 5)}%`
                 }));
 
 
@@ -196,7 +186,6 @@ export function AdminDashboard() {
                     totalStudents,
                     pendingApprovals,
                     activeCourses: activeCoursesCount,
-                    monthlyRevenue,
                     quizRequests: quizRequestsCount,
                     studentEngagement: studentEngagement || 94
                 });
@@ -284,35 +273,17 @@ export function AdminDashboard() {
                 </div>
 
                 {/* Revenue & Engagement Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
-                    <div className="flex items-center gap-4 md:gap-8 rounded-3xl md:rounded-[2.5rem] p-6 md:p-10 bg-white/40 dark:bg-black/20 border border-espresso/10 shadow-2xl relative overflow-hidden group/rev">
-                        <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover/rev:bg-espresso transition-colors"></div>
-                        <div className="h-14 w-14 md:h-20 md:w-20 rounded-2xl md:rounded-[1.5rem] bg-espresso text-white flex items-center justify-center shadow-xl shadow-espresso/20 shrink-0">
-                            <span className="material-symbols-outlined text-2xl md:text-4xl">payments</span>
-                        </div>
-                        <div>
-                            <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-[0.4em] mb-2">{t('admin.dashboard.monthly_revenue')}</p>
-                            <p className="text-2xl md:text-4xl font-serif font-black text-espresso dark:text-white leading-tight">
-                                {new Intl.NumberFormat(i18n.language === 'rw' ? 'rw-RW' : (i18n.language === 'en' ? 'en-US' : (i18n.language === 'fr' ? 'fr-FR' : 'sw-TZ')), { style: 'currency', currency: 'RWF', maximumFractionDigits: 0 }).format(stats.monthlyRevenue)}
-                            </p>
-                        </div>
-                        <div className="absolute right-4 md:right-8 top-4 md:top-8">
-                            <span className="text-green-600 text-[10px] font-black uppercase tracking-widest bg-green-50 px-3 py-1 rounded-full">+8.5%</span>
-                        </div>
+                <div className="flex items-center gap-4 md:gap-8 rounded-3xl md:rounded-[2.5rem] p-6 md:p-10 bg-white/40 dark:bg-black/20 border border-espresso/10 shadow-2xl relative overflow-hidden group/eng w-full">
+                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover/eng:bg-espresso transition-colors"></div>
+                    <div className="h-14 w-14 md:h-20 md:w-20 rounded-2xl md:rounded-[1.5rem] bg-espresso text-white flex items-center justify-center shadow-xl shadow-espresso/20 shrink-0">
+                        <span className="material-symbols-outlined text-2xl md:text-4xl">diversity_3</span>
                     </div>
-
-                    <div className="flex items-center gap-4 md:gap-8 rounded-3xl md:rounded-[2.5rem] p-6 md:p-10 bg-white/40 dark:bg-black/20 border border-espresso/10 shadow-2xl relative overflow-hidden group/eng">
-                        <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover/eng:bg-espresso transition-colors"></div>
-                        <div className="h-14 w-14 md:h-20 md:w-20 rounded-2xl md:rounded-[1.5rem] bg-espresso text-white flex items-center justify-center shadow-xl shadow-espresso/20 shrink-0">
-                            <span className="material-symbols-outlined text-2xl md:text-4xl">diversity_3</span>
-                        </div>
-                        <div>
-                            <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-[0.4em] mb-2">{t('admin.dashboard.efficiency_index')}</p>
-                            <p className="text-3xl md:text-5xl font-serif font-black text-espresso dark:text-white leading-tight">{stats.studentEngagement}%</p>
-                        </div>
-                        <div className="absolute right-4 md:right-8 top-4 md:top-8">
-                            <span className="text-green-600 text-[10px] font-black uppercase tracking-widest bg-green-50 px-3 py-1 rounded-full">+4.2%</span>
-                        </div>
+                    <div>
+                        <p className="text-espresso/40 dark:text-white/40 text-[10px] font-black uppercase tracking-[0.4em] mb-2">{t('admin.dashboard.efficiency_index')}</p>
+                        <p className="text-3xl md:text-5xl font-serif font-black text-espresso dark:text-white leading-tight">{stats.studentEngagement}%</p>
+                    </div>
+                    <div className="absolute right-4 md:right-8 top-4 md:top-8">
+                        <span className="text-green-600 text-[10px] font-black uppercase tracking-widest bg-green-50 px-3 py-1 rounded-full">+4.2%</span>
                     </div>
                 </div>
 
@@ -348,7 +319,7 @@ export function AdminDashboard() {
                                     style={{ height: item.height }}
                                 >
                                     <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-espresso text-white text-[9px] font-black py-2 px-3 rounded-xl opacity-0 group-hover/bar:opacity-100 transition-all scale-75 group-hover/bar:scale-100 whitespace-nowrap z-20 pointer-events-none shadow-xl uppercase tracking-widest">
-                                        {new Intl.NumberFormat(i18n.language === 'rw' ? 'rw-RW' : (i18n.language === 'en' ? 'en-US' : (i18n.language === 'fr' ? 'fr-FR' : 'sw-TZ')), { style: 'currency', currency: 'RWF', maximumFractionDigits: 0 }).format(item.revenue)}
+                                        {item.count} Enrollments
                                     </div>
                                 </div>
                                 <span className={`text-[8px] md:text-[10px] font-black uppercase tracking-widest transition-colors ${index === enrollmentData.length - 1 ? 'text-espresso' : 'text-espresso/30 dark:text-white/20'

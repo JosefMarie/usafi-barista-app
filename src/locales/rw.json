@@ -847,6 +847,8 @@
       "business_students": "Abigira Ubucuruzi",
       "business_courses": "Amasomo y'Ubucuruzi",
       "reports": "Raporo",
+      "graduates": "Abarangije",
+      "mark_graduated": "Merka nk'uwarangije",
       "my_profile": "Umwirondoro",
       "sign_out": "Sohoka",
       "admin_menu": "Iburyo bw'Admin",
@@ -1196,7 +1198,288 @@
       "confirm_lockdown": "Kwemeza Gufunga",
       "user_not_found": "Umukoresha ntabonetse.",
       "appoint_success": "{{email}} yagizwe Admin neza.",
-      "broadcast_success": "Itangazo ryoherejwe neza."
+      "broadcast_success": "Itangazo ryoherejwe neza.",
+      "weekend_revenue": "Imyidagaduro ya Weekend",
+      "donation_total": "Ikigega cya Buruse"
+    }
+  },
+  "donations": {
+    "title": "Ikigega cya Buruse",
+    "description": "Gusura kwanyu kudufasha gutera inkunga y'ishuri ku banyeshuri bafite impano ariko badafite ubushobozi. Hindura weekend yawe y'imyidagaduro ejo hazaza h'undi muntu.",
+    "cta": "Tera Inkunga Unyeshuri",
+    "scholarship_gift": "Impano ya Buruse",
+    "thank_you": "Murakoze Cyane!",
+    "confirmation": "Inkunga yanyu ya {{amount}} RWF yakiriwe neza. Ubu uri igice cy'urugendo rw'umuntu ushaka kuba inzobere mu ikawa.",
+    "header_title": "Fasha Umubalista w'Ejo Hazaza",
+    "header_desc": "Inkunga yawe ihita ifasha mu gutanga buruse ku banyarwanda bafite impano ariko badafite amikoro yo kwiga uyu mwuga.",
+    "select_amount": "Hitamo Inkunga",
+    "choose_amount_desc": "Hitamo umubare w'amafaranga ushaka gutanga kugira ngo ufashe umunyeshuri.",
+    "supporter": {
+      "label": "Umufasha",
+      "desc": "Ishyura ibikoresho by'ibanze ku munyeshuri."
+    },
+    "catalyst": {
+      "label": "Umusemburo wa Buruse",
+      "desc": "Ishyura ukwezi kose kw'imyitozo ikomeye."
+    },
+    "maker": {
+      "label": "Uwubaka Ejo Hazaza",
+      "desc": "Afasha umunyeshuri mu masomo ye yose."
+    },
+    "custom_amount": "Cyangwa Shyiramo Umubare Wishakiye",
+    "enter_amount_placeholder": "Shyiramo umubare w'amafaranga",
+    "proceed_payment": "Komeza ku Kwishyura",
+    "anonymous": "Tanga inkunga utagaragajwe",
+    "confirm_donation": "Wemeze Inkunga",
+    "processing": "Turimo gutunganya...",
+    "close_btn": "Funga usubire ahabanza"
+  },
+  "booking": {
+    "session_details": "Ibisobanuro by'Igice",
+    "session_desc": "Hitamo umwitozo ushaka n'itariki ya weekend wifuza.",
+    "select_activity": "Hitamo Umwitozo",
+    "choose_date": "Hitamo Itariki ya Weekend",
+    "num_people": "Umubare w'Abantu",
+    "personal_info": "Ibiranga Umuntu",
+    "full_name": "Amazina Yose",
+    "email": "Imevuri",
+    "phone": "Inomero ya Terefoni",
+    "secure_checkout": "Kwishyura Mu Ntwaro",
+    "card_info": "Ibiranga Ikarita",
+    "confirm_pay": "Wemeze & Wishyure {{amount}} RWF",
+    "booking_success": "Byagenze neza!",
+    "booking_confirm_desc": "Imyidagaduro yawe yemejwe. Twayoherereje ibisobanuro kuri {{email}}.",
+    "booking_id": "Inomero y'Izigama"
+  },
+  "weekendExperience": {
+    "hero_badge": "Buri wa Gatandatu & ku Cyumweru",
+    "title": "Uburambe bwa Kawa mu Mpera z'Icyumweru",
+    "description": "Niba uri umushyitsi w'inzira, ukunda kawa, cyangwa ushaka igikorwa gidasanzwe muri iki cyumweru — amarembo yacu arafunguye. Injira mu isi ya kawa y'ubunyamwuga hamwe n'inzobere zacu za barista.",
+    "stats": {
+      "activities": "Ibikorwa Bitandukanye",
+      "combos": "Amapaki Abumbiye hamwe",
+      "discount": "Kugabanyirizwa amatsinda",
+      "days": "Muri Weekend Gusa"
+    },
+    "explore_btn": "Reba Ibikorwa",
+    "donate_btn": "Tanga Inkunga y'Ubumenyi",
+    "highlights": {
+      "brew": {
+        "title": "Itegurire Kawa Yawe",
+        "desc": "Ukoresheje ibikoresho by'ubunyamwuga"
+      },
+      "taste": {
+        "title": "Sogongera & Vumbura",
+        "desc": "Shakisha uburyohe bwa kawa y'u Rwanda"
+      },
+      "learn": {
+        "title": "Iga ku Binzobere",
+        "desc": "Abarimu ba barista b'abanyamwuga"
+      },
+      "capture": {
+        "title": "Bika Ibihe Byiza",
+        "desc": "Sangiza abandi ibyo wize"
+      }
+    },
+    "group_discount": {
+      "title": "Inshuti nyinshi, ugabanyirizwa kurushaho!",
+      "badge": "Kugabanyirizwa Inyungu",
+      "desc": "Nimuze n'itsinda ryanyu, umuryango, cyangwa inshuti zikunda kawa maze mugabanyirizwe igiciro ako kanya.",
+      "tier1": "Abantu 2–3",
+      "tier2": "Abantu 4–6",
+      "tier3": "Abantu 7+"
+    },
+    "choose_adventure": "Hitamo Urugendo Rwawe",
+    "combos_description": "Amapaki yacu ahuriza hamwe ibikorwa byiza ku giciro cyiza. Ni byiza niba ushaka kubikora umunsi wose — cyangwa kugaruka uzi ko hari byinshi byo kuvumbura.",
+    "click_card_hint": "Kanda kuri buri karita urebe icyo uzakora muri icyo gikorwa.",
+    "gallery": {
+      "badge": "Ibihe kuri videwo",
+      "title": "Weekend za Nyabyo,<br />Inkuru z'Abantu",
+      "subtitle": "Amafoto na videwo bishyirwaho n'itsinda ryacu bivuye mu bikorwa nyirizina bya weekend. Buri shusho ni igihe cyabereye hano.",
+      "btn": "Reba Amafoto Yose"
+    },
+    "what_to_expect": {
+      "badge": "Itegurire",
+      "title": "Ibyo Witega",
+      "desc": "Buri kimwe cyose ugomba kumenya mbere yo kuza kugira ngo witegure kuryoherwa na buri ntambwe.",
+      "steps": {
+        "book": {
+          "title": "Saba unyuze kuri Interineti",
+          "desc": "Hitamo igikorwa cyangwa ipaki wifuza, hitamo ku wa Gatandatu cyangwa ku Cyumweru, maze wishyure unyuze kuri interineti mu buryo bwizewe."
+        },
+        "arrive": {
+          "title": "Gera Hano Uhure n'abariya Barista",
+          "desc": "Zana ku ishuri ryacu iminota 15 mbere. Umwarimu wawe wa barista azakwakira, agusobanurire iby'ibanze mbere yo gutangira."
+        },
+        "enjoy": {
+          "title": "Kora, Iga kandi Wishime",
+          "desc": "Tangira akazi! Buri kimwe cyose bakeneye kirahari — amataburiye, ibikoresho n'ibindi. Inshingano yawe yonyine ni ukwishimisha, kwiga, no gutwara ibyo wize (hamwe na kawa!) iwanyu."
+        }
+      }
+    },
+    "donate_cta": {
+      "title": "Hindura Kwidagadura Kwawe mo Ejo Hazaza h'Undi",
+      "desc": "Uruzinduko rwanyu rufasha muri ibi bikorwa. Ariko impano igera kure — yishyurira abanyarwanda bafite impano badafite ubushobozi amasomo y'ubunyamwuga bwa barista. Ibiceri bike bihindura ubuzima.",
+      "btn_give": "Tanga Inkunga",
+      "btn_mission": "Inshingano Yacu"
+    },
+    "booking": {
+      "payment_err": "Ikosa mu kwishyura:",
+      "personal_details": "Ibiranga Umuntu",
+      "personal_desc": "Intambwe ya nyuma — andika imyirondoro yawe maze wishyure.",
+      "summary": "Incamake ya Rezervasiyo",
+      "people": "abantu",
+      "person": "umuntu",
+      "group_discount_applied": "kugabanyirizwa kw'itsinda",
+      "full_name": "Amazina Yose",
+      "email": "Imeyili",
+      "phone": "Inomero ya Terefoni",
+      "country": "Igihugu / Inkomoko",
+      "country_placeholder": "urugero Rwanda, Kenya, Uganda...",
+      "processing": "Turimo gutunganya...",
+      "pay": "Ishyura",
+      "alert_weekend": "Nyabuneka hitamo ku wa Gatandatu cyangwa ku Cyumweru — twakira abashyitsi muri weekend gusa!",
+      "payment_init_err": "Kwishyura byanze gutangira:",
+      "step_experience": "Uburambe",
+      "step_payment": "Kwishyura",
+      "step_confirmed": "Byemejwe",
+      "combo_package": "Ipaki Ihuriza hamwe",
+      "session_details": "Ibisobanuro by'Igihe",
+      "session_desc": "Hitamo itariki, umubare w'abantu, n'igikorwa.",
+      "selected_combo": "Ipaki Ihiswemo",
+      "select_activity": "Hitamo Igikorwa",
+      "weekend_date": "Itariki ya Weekend",
+      "weekends_only": "Gatandatu & Cyumweru gusa",
+      "num_people": "Umubare w'Abantu",
+      "discount_exclaim": "ugabanyirijwe!",
+      "special_requests": "Ubusabe Bwihariye (Ntabwo ari itegeko)",
+      "special_requests_hint": "Ibiryo udakoresha, ubufasha waba ukeneye, indimi ushaka ko dukoresha...",
+      "group_discount": "Kugabanyirizwa amatsinda",
+      "total": "Igiteranyo",
+      "preparing": "Turimo kubitegura...",
+      "continue_payment": "Komeza ku Kwishyura",
+      "success_title": "Byemejwe! 🎉",
+      "success_desc1": "Ubutumwa bwo kwemeza bwoherejwe kuri",
+      "success_desc2": "Dutegerezanyije amatsiko kuzakubona ku wa",
+      "your_booking": "Rezervasiyo Yawe",
+      "guests": "abashyitsi",
+      "guest": "umushyitsi",
+      "back_home": "Subira Ahabanza",
+      "explore_more": "Shakisha Ibindi"
+    },
+    "tabs": {
+      "all_experiences": "Uburambe Bwose",
+      "combo_packages": "Amapaki Abumbiye hamwe",
+      "single_activities": "Ibikorwa bimwe na bimwe",
+      "combos_and_save": "Huza & Zigama"
+    },
+    "filters": {
+      "all": "Ibikorwa Byose",
+      "beginner": "Abatangira",
+      "hands_on": "Ibinyura mu ntoki",
+      "short": "Munsi y'Amasaha 2"
+    },
+    "card_hint": "💡 Kanda kuri karita urebe icyo uzakora muri icyo gikorwa.",
+    "per_person": "kuri buri muntu",
+    "book_btn": "Saba Aha",
+    "what_youll_do": "Icyo uzakora",
+    "activities": {
+      "latte_art": {
+        "title": "Ihugurwa rya Latte Art",
+        "subtitle": "Sogongera & Remba",
+        "description": "Tanga imitima, rosettas, n'amashurwe ukurikije inama z'inzobere zacu. Ubumenyi bw'amata, gushushanya — uzasohokana ubumenyi bushya.",
+        "highlights": [
+          "Ubumenyi bwo gushyushya amata",
+          "Gushushanya iby'ibanze",
+          "Imitima & amashurwe",
+          "Kawa itunganyije ushobora gutwara iwanyu"
+        ],
+        "badge": "Ikunzwe Cyane"
+      },
+      "sensory_tasting": {
+        "title": "Igihe cyo Gusoza Kawa",
+        "subtitle": "Sogongera & Vumbura",
+        "description": "Shakisha uburyohe butandukanye bw'ikawa y'u Rwanda. Menya ibiranga uburyohe bw'ikawa — kuva ku misozi mishya kugeza kuri shokolati — ukoresheje amabwiriza y'ubunyamwuga.",
+        "highlights": [
+          "Inkomoko 5 zihariye",
+          "Amahugurwa ku buryohe",
+          "Kumenya imihumuro",
+          "Kusogongera kuyobowe n'inzobere"
+        ],
+        "badge": "Ikunzwe na Bose"
+      },
+      "bean_to_bag": {
+        "title": "Kuva ku Mbuto kugeza mu Gikapu",
+        "subtitle": "Gutsirika & Kuzyana",
+        "description": "Irebere uburyo kawa y'icyatsi ihinduka ikaba iy'ubunyamwuga. Uzatsirikira kawa yawe ubwawe kandi utahane igikapu cyayo wihitiyemo.",
+        "highlights": [
+          "Guhitamo imbuto nziza",
+          "Igenzura ry'uko itsirikwa",
+          "Kuyikonjesha & kuyitondeka",
+          "Igikapu bwite utahana"
+        ],
+        "badge": "Ibinyura mu ntoki"
+      },
+      "espresso_workshop": {
+        "title": "Ateliye yo Gusoma Espresso",
+        "subtitle": "Sorora & Uzuza",
+        "description": "Iga ubwenge buri inyuma ya espresso nziza — nyudufiti, ingufu, ubushyuhe, n'igihe. Sorora ama shots y'ukuri ku mashini yacu ya La Marzocco.",
+        "highlights": [
+          "Gutunganya mashini",
+          "Ubunararibonye bwa nyudufiti",
+          "Igihe cy'isoma",
+          "Ikagerageza rya espresso"
+        ],
+        "badge": "Urwego rwa Barisita"
+      },
+      "equipment_tour": {
+        "title": "Kwiga ibikoresho Birebire",
+        "subtitle": "Iga & Sobanukirwa",
+        "description": "Urugendo rugenzurwa mu bikoresho by'akazi bya barisita — grinder, ibipimo, tamper. Sobanukirwa ibyo ukeneye kugirango uhange mu rugo.",
+        "highlights": [
+          "Inzobere vs grinder z'amazu",
+          "Anatomiya ya espresso machine",
+          "Gutandukanya ibikoresho",
+          "Ubujyanama bw'aho gutangirira"
+        ],
+        "badge": "Ibihagije ku Batangira"
+      },
+      "coffee_preparation": {
+        "title": "Kuva ku Murima kugeza mu Bikombe",
+        "subtitle": "Tegura & Teka",
+        "description": "Kurikira urugendo rwose rwa kawa — kuva ku busitani bwo kunyiganya kugeza no guteka amaboko. Buri ntambwe kuva ku mbuto kugeza mu bikombe.",
+        "highlights": [
+          "Kuva ku mbuto kugeza ku cukali",
+          "Gutunganya bisiga & kamere",
+          "Uburyo bwo guteka amaboko",
+          "Inkuru y'inkomoko ya Rwanda"
+        ],
+        "badge": "Biremeza Cyane"
+      },
+      "cold_brew": {
+        "title": "Cold Brew & Ibinyobwa by'Umunsi",
+        "subtitle": "Fungura & Ohesha",
+        "description": "Teka cold brew yawe, iga kimiya yayo, hanyuma remba ibinyobwa by'umunsi (nta liyeri). Biroroshye ku bafite ubwihangane.",
+        "highlights": [
+          "Ingano za cold brew",
+          "Uburyo bwa nitro",
+          "Guhanga ibinyobwa by'umunsi",
+          "Ubuhanga bwo gutanga"
+        ],
+        "badge": "Biremeza Guhanga"
+      },
+      "barista_basics": {
+        "title": "Amahugurwa y'Ibanze ya Barisita",
+        "subtitle": "Iga & Hindura",
+        "description": "Verisiyo ngufi y'amasomo yacu y'inzobere ya barisita. Ibanze by'amata, espresso, isuku, n'akazi k'abaguzi mu gitondo kimwe.",
+        "highlights": [
+          "Ibanze bya espresso",
+          "Amata yofurugutse & yatunganyijwe",
+          "Amahame yo gusukura",
+          "Imyitwarire yo gukorana n'abaguzi"
+        ],
+        "badge": "Byiza Cyane"
+      }
     }
   }
 }

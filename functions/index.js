@@ -88,3 +88,43 @@ exports.finalizePasswordReset = functions.https.onCall(async (request, context) 
         throw new functions.https.HttpsError('internal', error.message || 'Internal server error processing reset.');
     }
 });
+
+/**
+ * Cloud Function to create a Stripe Payment Intent.
+ * This securely creates a transaction and returns a client_secret for the frontend.
+ */
+exports.createPaymentIntent = functions.https.onCall(async (request, context) => {
+    // Newer SDKs (v1.x for Callable) wrap data in 'request.data'
+    const data = (request && typeof request === 'object' && 'data' in request) ? request.data : request;
+    const { amount, currency = 'rwf', metadata = {} } = data || {};
+
+    if (!amount || amount < 500) {
+        throw new functions.https.HttpsError('invalid-argument', 'Amount must be at least 500 RWF.');
+    }
+
+    try {
+        const stripe = require('stripe')(functions.config().stripe.secret);
+
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount: Math.round(amount), // Stripe requires integers
+            currency: currency.toLowerCase(),
+            metadata: {
+                ...metadata,
+                timestamp: new Date().toISOString()
+            },
+            automatic_payment_methods: {
+                enabled: true,
+            },
+        });
+
+        console.log(`PaymentIntent created: ${paymentIntent.id} for amount: ${amount}`);
+
+        return {
+            clientSecret: paymentIntent.client_secret,
+            id: paymentIntent.id
+        };
+    } catch (error) {
+        console.error('Stripe PaymentIntent Error:', error);
+        throw new functions.https.HttpsError('internal', `Stripe Error: ${error.message}`);
+    }
+});

@@ -49,7 +49,7 @@ export function StudentDetails() {
                         status: data.status || 'pending',
                         course: data.course || '',
                         courseId: data.courseId || 'bean-to-brew',
-                        totalFee: data.totalFee || ((data.courseId === 'bean-to-brew' || (data.enrolledCourses && data.enrolledCourses.some(c => c.courseId === 'bean-to-brew'))) ? 200000 : 0),
+                        totalFee: data.totalFee || ((data.courseId === 'bean-to-brew' || (data.enrolledCourses && data.enrolledCourses.some(c => c.courseId === 'bean-to-brew'))) ? 250000 : 0),
                         amountPaid: data.amountPaid || 0
                     });
 
@@ -195,6 +195,106 @@ export function StudentDetails() {
         } catch (err) {
             console.error("Error updating course status:", err);
             alert("Failed to update course status.");
+        }
+    };
+
+    const handleAddProgram = async (courseId) => {
+        if (!courseId) return;
+
+        try {
+            const currentEnrolled = student.enrolledCourses || (student.courseId ? [{ courseId: student.courseId, status: student.status || 'active' }] : []);
+
+            // Prevent duplicates
+            if (currentEnrolled.some(c => c.courseId === courseId)) {
+                alert("Student is already enrolled in this program.");
+                return;
+            }
+
+            const updatedEnrolled = [
+                ...currentEnrolled,
+                {
+                    courseId,
+                    status: 'active',
+                    enrolledAt: new Date().toISOString(),
+                    progress: 0
+                }
+            ];
+
+            // Re-calculate fee based on new enrollment
+            const hasBarista = updatedEnrolled.some(c => c.courseId === 'bean-to-brew');
+            const hasBartender = updatedEnrolled.some(c => c.courseId === 'bar-tender-course');
+            let newTotalFee = student.totalFee || 0;
+
+            if (hasBarista && hasBartender) newTotalFee = 500000;
+            else if (hasBartender) newTotalFee = Math.max(newTotalFee, 300000);
+            else if (hasBarista) newTotalFee = Math.max(newTotalFee, 250000);
+
+            await updateDoc(doc(db, 'users', id), {
+                enrolledCourses: updatedEnrolled,
+                totalFee: newTotalFee
+            });
+
+            setStudent(prev => ({ ...prev, enrolledCourses: updatedEnrolled, totalFee: newTotalFee }));
+
+            // Log interaction
+            const courseTitle = courses.find(c => c.id === courseId)?.title || courseId;
+            await addDoc(collection(db, 'activity'), {
+                userId: id,
+                userName: student.fullName || student.name,
+                adminId: authUser?.uid || 'admin',
+                action: `Added to program: ${courseTitle}`,
+                type: 'enrollment_add',
+                icon: 'add_task',
+                timestamp: serverTimestamp()
+            });
+
+            alert(`Successfully added to ${courseTitle}`);
+
+        } catch (err) {
+            console.error("Error adding program:", err);
+            alert("Failed to add program.");
+        }
+    };
+
+    const handleRemoveProgram = async (courseId) => {
+        if (!window.confirm("Are you sure you want to remove this enrollment? Progressive data for this course will be archived.")) return;
+
+        try {
+            const currentEnrolled = student.enrolledCourses || [];
+            const updatedEnrolled = currentEnrolled.filter(c => c.courseId !== courseId);
+
+            // Re-calculate fee based on remaining enrollments
+            const hasBarista = updatedEnrolled.some(c => c.courseId === 'bean-to-brew');
+            const hasBartender = updatedEnrolled.some(c => c.courseId === 'bar-tender-course');
+            let newTotalFee = 0;
+
+            if (hasBarista && hasBartender) newTotalFee = 500000;
+            else if (hasBartender) newTotalFee = 300000;
+            else if (hasBarista) newTotalFee = 250000;
+            // If none left, keep existing fee or set to 0? Let's keep 0 if empty.
+
+            await updateDoc(doc(db, 'users', id), {
+                enrolledCourses: updatedEnrolled,
+                totalFee: newTotalFee
+            });
+
+            setStudent(prev => ({ ...prev, enrolledCourses: updatedEnrolled, totalFee: newTotalFee }));
+
+            // Log interaction
+            const courseTitle = courses.find(c => c.id === courseId)?.title || courseId;
+            await addDoc(collection(db, 'activity'), {
+                userId: id,
+                userName: student.fullName || student.name,
+                adminId: authUser?.uid || 'admin',
+                action: `Removed from program: ${courseTitle}`,
+                type: 'enrollment_remove',
+                icon: 'delete_sweep',
+                timestamp: serverTimestamp()
+            });
+
+        } catch (err) {
+            console.error("Error removing program:", err);
+            alert("Failed to remove program.");
         }
     };
 
@@ -619,7 +719,28 @@ export function StudentDetails() {
                     {/* Course Enrollments Section */}
                     <div className="bg-white/40 dark:bg-black/20 p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] border border-espresso/10 relative overflow-hidden group/courses">
                         <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/5 group-hover/courses:bg-espresso transition-colors"></div>
-                        <h3 className="text-lg md:text-xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight mb-6">Program Enrollments</h3>
+                        <div className="flex justify-between items-center mb-6">
+                            <h3 className="text-lg md:text-xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight">Program Enrollments</h3>
+
+                            {isAdmin && (
+                                <div className="flex gap-2">
+                                    <select
+                                        className="bg-white/60 text-espresso text-[10px] font-black uppercase tracking-widest px-3 py-2 rounded-xl outline-none border border-espresso/10 focus:ring-2 focus:ring-espresso"
+                                        onChange={(e) => {
+                                            if (e.target.value) {
+                                                handleAddProgram(e.target.value);
+                                                e.target.value = "";
+                                            }
+                                        }}
+                                    >
+                                        <option value="">+ Add Program</option>
+                                        {courses.filter(c => !(student.enrolledCourses || []).some(ec => ec.courseId === c.id)).map(c => (
+                                            <option key={c.id} value={c.id}>{c.title}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
+                        </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {(student.enrolledCourses || (student.courseId ? [{ courseId: student.courseId, status: student.status || 'active' }] : [])).map((enrollment, idx) => {
@@ -650,6 +771,13 @@ export function StudentDetails() {
                                                         Suspend
                                                     </button>
                                                 )}
+                                                <button
+                                                    onClick={() => handleRemoveProgram(enrollment.courseId)}
+                                                    className="flex-1 md:flex-none px-3 py-2 bg-white text-gray-400 border border-gray-100 rounded-xl text-[9px] font-black uppercase transition-all hover:bg-red-50 hover:text-red-600 shadow-sm"
+                                                    title="Remove Enrollment"
+                                                >
+                                                    <span className="material-symbols-outlined text-[14px]">delete</span>
+                                                </button>
                                             </div>
                                         )}
                                     </div>

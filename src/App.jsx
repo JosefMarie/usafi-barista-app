@@ -42,6 +42,9 @@ import { Login } from './pages/auth/Login';
 import { ForgotPassword } from './pages/auth/ForgotPassword';
 import { ResetPassword } from './pages/auth/ResetPassword';
 import { PrivacySettings } from './pages/common/PrivacySettings';
+import { WeekendExperience } from './pages/public/WeekendExperience';
+import { ExperienceBooking } from './pages/public/ExperienceBooking';
+import { DonationPage } from './pages/public/DonationPage';
 
 // Student Pages
 import { Dashboard as StudentDashboard } from './pages/student/Dashboard';
@@ -59,6 +62,7 @@ import { Quizzes } from './pages/admin/Quizzes';
 import { Testimonials as AdminTestimonials } from './pages/admin/Testimonials';
 import { ActivityLog } from './pages/admin/ActivityLog';
 import { AdminReports } from './pages/admin/AdminReports';
+import { Graduates } from './pages/admin/Graduates';
 import { SetupAdmin } from './pages/admin/SetupAdmin';
 import { ForumList } from './pages/forum/ForumList';
 import { CreatePost } from './pages/forum/CreatePost';
@@ -103,6 +107,7 @@ import { ManagerMessages } from './pages/manager/Messages';
 import { ManagerEquipment } from './pages/manager/ManagerEquipment';
 import { ManagerGallery } from './pages/manager/ManagerGallery';
 import { ManagerTestimonials } from './pages/manager/ManagerTestimonials';
+import { WeekendMedia } from './pages/admin/WeekendMedia';
 
 // CEO Pages
 import { CEOLayout } from './components/layout/CEOLayout';
@@ -196,6 +201,9 @@ function AppContent({ settings }) {
           <Route path="business/register" element={<BusinessRegister />} />
           <Route path="business/login" element={<BusinessLogin />} />
           <Route path="verify/:id" element={<VerifyCertificate />} />
+          <Route path="weekend-experience" element={<WeekendExperience />} />
+          <Route path="weekend-experience/book" element={<ExperienceBooking />} />
+          <Route path="donate" element={<DonationPage />} />
         </Route>
 
         {/* Seeker Routes */}
@@ -245,6 +253,7 @@ function AppContent({ settings }) {
           <Route path="testimonials" element={<AdminTestimonials />} />
           <Route path="activity-log" element={<ActivityLog />} />
           <Route path="reports" element={<AdminReports />} />
+          <Route path="graduates" element={<Graduates />} />
           <Route path="seekers" element={<AdminSeekers />} />
           <Route path="business/users" element={<AdminBusinessUsers />} />
           <Route path="business/courses" element={<AdminBusinessCourses />} />
@@ -284,6 +293,7 @@ function AppContent({ settings }) {
           <Route path="equipment" element={<ManagerEquipment />} />
           <Route path="gallery" element={<ManagerGallery />} />
           <Route path="testimonials" element={<ManagerTestimonials />} />
+          <Route path="weekend-media" element={<WeekendMedia />} />
           <Route path="profile" element={<CommonProfile />} />
           <Route path="privacy-settings" element={<PrivacySettings />} />
         </Route>

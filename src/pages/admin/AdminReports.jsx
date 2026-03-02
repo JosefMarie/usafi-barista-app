@@ -1,19 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { collection, query, getDocs, where, doc, updateDoc, arrayUnion, serverTimestamp, getDoc, collectionGroup } from 'firebase/firestore';
+import { collection, query, getDocs, where, doc, updateDoc, arrayUnion, serverTimestamp, getDoc, collectionGroup, addDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { cn } from '../../lib/utils';
 import { StudentTranscript } from '../../components/admin/StudentTranscript';
 import { StudentCertificate } from '../../components/admin/StudentCertificate';
 import { useReactToPrint } from 'react-to-print';
+import { useAuth } from '../../context/AuthContext';
 
 export function AdminReports() {
+    const { user: authUser } = useAuth();
     const [students, setStudents] = useState([]);
+    const [courses, setCourses] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(true);
     const [selectedStudent, setSelectedStudent] = useState(null);
+    const [targetCourseId, setTargetCourseId] = useState(null);
     const [viewMode, setViewMode] = useState('list'); // 'list', 'transcript', 'certificate', 'reevaluation'
-    const [studentProgress, setStudentProgress] = useState(null);
-    const [allModules, setAllModules] = useState([]);
+    const [allModules, setAllModules] = useState({}); // { courseId: [modules] }
 
     // Printing Refs
     const transcriptRef = useRef();
@@ -30,72 +33,87 @@ export function AdminReports() {
     });
 
     useEffect(() => {
-        const fetchStudents = async () => {
+        const fetchAllData = async () => {
             setLoading(true);
             try {
-                // 1. Fetch Students
+                // 1. Fetch All Courses
+                const coursesSnap = await getDocs(collection(db, 'courses'));
+                const coursesList = coursesSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                setCourses(coursesList);
+
+                // 2. Fetch Modules for all courses
+                const modsData = {};
+                await Promise.all(coursesList.map(async (course) => {
+                    const mSnap = await getDocs(query(collection(db, 'courses', course.id, 'modules')));
+                    modsData[course.id] = mSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+                }));
+                setAllModules(modsData);
+
+                // 3. Fetch Students
                 const q = query(collection(db, 'users'), where('role', '==', 'student'));
                 const snap = await getDocs(q);
                 const studentsWithData = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-                // 2. Fetch Modules (default course)
-                const modulesSnap = await getDocs(query(collection(db, 'courses', 'bean-to-brew', 'modules')));
-                const mods = modulesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-                setAllModules(mods);
-
-                // 3. Fetch All Progress via collectionGroup
-                let progressSnap;
+                // 4. Fetch All Progress via collectionGroup
                 let progressByStudent = {};
-
                 try {
-                    progressSnap = await getDocs(collectionGroup(db, 'progress'));
+                    const progressSnap = await getDocs(collectionGroup(db, 'progress'));
                     progressSnap.docs.forEach(doc => {
                         const studentId = doc.ref.parent.parent.id;
                         if (!progressByStudent[studentId]) progressByStudent[studentId] = {};
                         progressByStudent[studentId][doc.id] = doc.data();
                     });
-                } catch (e) {
-                    console.warn("CollectionGroup 'progress' might not be indexed, falling back to per-student fetch.");
-                    // Fallback to fetching per student if collectionGroup fails or returns empty
-                }
+                } catch (e) { console.warn("CollectionGroup 'progress' might not be indexed"); }
 
-                // 4. Calculate marks for each student
-                const enrichedStudents = await Promise.all(studentsWithData.map(async (student) => {
+                // 5. Calculate marks per course for each student
+                const enriched = await Promise.all(studentsWithData.map(async (student) => {
                     let prog = progressByStudent[student.id];
 
-                    // Fallback: Fetch progress for this student if not found in collectionGroup
                     if (!prog || Object.keys(prog).length === 0) {
                         try {
                             const pSnap = await getDocs(collection(db, 'users', student.id, 'progress'));
                             prog = {};
                             pSnap.docs.forEach(d => { prog[d.id] = d.data(); });
-                        } catch (err) {
-                            prog = {};
-                        }
+                        } catch (err) { prog = {}; }
                     }
 
-                    const totalMarks = mods.reduce((acc, m) => acc + (prog[m.id]?.score || 0), 0);
-                    const averageScore = mods.length > 0 ? totalMarks / mods.length : 0;
+                    // Define which courses to show (enrolledCourses list or legacy fields)
+                    let enrolledRaw = student.enrolledCourses;
+                    if (!enrolledRaw || enrolledRaw.length === 0) {
+                        enrolledRaw = student.courseId ? [{ courseId: student.courseId }] : [{ courseId: 'bean-to-brew' }];
+                    }
 
-                    // Logic for "Finished": If all modules in the course have marks
-                    // User said: "if in the report all modules have marks mark that student as completed the course"
-                    const isFinished = mods.length > 0 && mods.every(m => prog[m.id]?.score !== undefined);
+                    // Normalize to array of objects { courseId }
+                    const enrolled = enrolledRaw.map(item => typeof item === 'string' ? { courseId: item } : item);
 
-                    return {
-                        ...student,
-                        averageScore,
-                        isCourseFinished: isFinished
-                    };
+                    const coursesStatus = enrolled.map(enroll => {
+                        const cid = enroll.courseId || 'bean-to-brew';
+                        const mods = modsData[cid] || [];
+                        const totalMarks = mods.reduce((acc, m) => acc + (prog[m.id]?.score || 0), 0);
+                        const avg = mods.length > 0 ? totalMarks / mods.length : 0;
+                        const isFinished = mods.length > 0 && mods.every(m => prog[m.id]?.score !== undefined);
+                        const isGraduated = student.graduatedCourses?.[cid] || (student.status === 'graduated' && cid === (student.courseId || 'bean-to-brew'));
+
+                        return {
+                            ...enroll,
+                            courseId: cid,
+                            averageScore: avg,
+                            isFinished,
+                            isGraduated
+                        };
+                    });
+
+                    return { ...student, coursesStatus };
                 }));
 
-                setStudents(enrichedStudents);
+                setStudents(enriched);
             } catch (error) {
-                console.error("Error fetching students and progress:", error);
+                console.error("Error fetching multi-course data:", error);
             } finally {
                 setLoading(false);
             }
         };
-        fetchStudents();
+        fetchAllData();
     }, []);
 
     const filteredStudents = students.filter(s =>
@@ -103,6 +121,59 @@ export function AdminReports() {
         s.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         s.uid?.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    const handleMarkGraduated = async (student, courseId, avg) => {
+        const courseTitle = courses.find(c => c.id === courseId)?.title || courseId;
+        if (!window.confirm(`Are you sure you want to mark ${student.fullName || student.name} as graduated from ${courseTitle}?`)) return;
+
+        try {
+            const studentRef = doc(db, 'users', student.id);
+            const graduationDate = new Date().toISOString();
+
+            const updatedGraduatedCourses = {
+                ...(student.graduatedCourses || {}),
+                [courseId]: {
+                    date: graduationDate,
+                    averageScore: avg
+                }
+            };
+
+            await updateDoc(studentRef, {
+                graduatedCourses: updatedGraduatedCourses,
+                status: 'graduated',
+                graduationDate: graduationDate,
+                averageScore: avg,
+                updatedAt: serverTimestamp()
+            });
+
+            // Log activity
+            await addDoc(collection(db, 'activity'), {
+                userId: student.id,
+                userName: student.fullName || student.name,
+                adminId: authUser?.uid || 'anonymous-admin',
+                action: `Graduated: ${courseTitle}`,
+                type: 'graduation',
+                icon: 'school',
+                timestamp: serverTimestamp()
+            });
+
+            // Update local state
+            setStudents(prev => prev.map(s =>
+                s.id === student.id ? {
+                    ...s,
+                    graduatedCourses: updatedGraduatedCourses,
+                    coursesStatus: s.coursesStatus.map(cs =>
+                        cs.courseId === courseId ? { ...cs, isGraduated: true } : cs
+                    )
+                } : s
+            ));
+
+            alert(`${student.fullName || student.name} has graduated from ${courseTitle}.`);
+        } catch (error) {
+            console.error("GRADUATION FAILURE:", error);
+            alert(`Failed to mark student as graduated: ${error.message}`);
+        }
+    };
 
     if (selectedStudent) {
         if (viewMode === 'reevaluation') {
@@ -151,7 +222,7 @@ export function AdminReports() {
                     {viewMode === 'transcript' ? (
                         <div className="w-full flex justify-center py-4 md:py-8 overflow-x-auto">
                             <div className="shrink-0 origin-top transform scale-[0.4] sm:scale-[0.6] md:scale-75 lg:scale-100 transition-transform print:transform-none">
-                                <StudentTranscript ref={transcriptRef} student={selectedStudent} />
+                                <StudentTranscript ref={transcriptRef} student={selectedStudent} courseId={targetCourseId} />
                             </div>
                         </div>
                     ) : (
@@ -160,6 +231,7 @@ export function AdminReports() {
                                 <StudentCertificate
                                     ref={certificateRef}
                                     student={selectedStudent}
+                                    courseId={targetCourseId}
                                     className="shadow-none print:shadow-none"
                                 />
                             </div>
@@ -177,7 +249,7 @@ export function AdminReports() {
                 <p className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em]">Generate and print official student transcripts</p>
             </header>
 
-            <div className="max-w-4xl w-full space-y-6">
+            <div className="max-w-6xl w-full space-y-6">
                 {/* Search Bar */}
                 <div className="relative group">
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-espresso/40 group-focus-within:text-espresso transition-colors">search</span>
@@ -213,37 +285,64 @@ export function AdminReports() {
                                             <p className="text-[10px] md:text-xs text-espresso/60 truncate">{student.email}</p>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex flex-wrap items-center gap-3 ml-auto">
+                                        {(student.coursesStatus || []).map(cs => (
+                                            <div key={cs.courseId} className="flex items-center gap-2 p-2 bg-espresso/5 rounded-2xl border border-espresso/10">
+                                                <div className="flex flex-col px-2 min-w-[60px]">
+                                                    <span className="text-[7px] font-black uppercase opacity-40">{courses.find(c => c.id === cs.courseId)?.title?.split(' ')[0] || cs.courseId}</span>
+                                                    <span className="text-[10px] font-bold text-espresso">{cs.averageScore.toFixed(1)}%</span>
+                                                </div>
+                                                <div className="flex gap-1">
+                                                    <button
+                                                        onClick={() => {
+                                                            setSelectedStudent(student);
+                                                            setTargetCourseId(cs.courseId);
+                                                            setViewMode('transcript');
+                                                        }}
+                                                        title="Transcript"
+                                                        className={cn(
+                                                            "size-9 flex items-center justify-center rounded-xl transition-all active:scale-95 shadow-sm",
+                                                            cs.isFinished ? "bg-green-500 text-white" : "bg-amber-400 text-espresso"
+                                                        )}
+                                                    >
+                                                        <span className="material-symbols-outlined text-lg">description</span>
+                                                    </button>
+                                                    <button
+                                                        onClick={() => {
+                                                            setSelectedStudent(student);
+                                                            setTargetCourseId(cs.courseId);
+                                                            setViewMode('certificate');
+                                                        }}
+                                                        title="Certificate"
+                                                        className="size-9 flex items-center justify-center bg-espresso text-white rounded-xl shadow-sm hover:translate-y-[-2px] transition-all"
+                                                    >
+                                                        <span className="material-symbols-outlined text-lg">workspace_premium</span>
+                                                    </button>
+
+                                                    {!cs.isGraduated && cs.isFinished ? (
+                                                        <button
+                                                            onClick={() => handleMarkGraduated(student, cs.courseId, cs.averageScore)}
+                                                            title="Mark Graduated"
+                                                            className="size-9 flex items-center justify-center bg-green-600 text-white rounded-xl shadow-lg hover:bg-green-700 transition-all border border-green-500"
+                                                        >
+                                                            <span className="material-symbols-outlined text-lg">school</span>
+                                                        </button>
+                                                    ) : cs.isGraduated ? (
+                                                        <div className="size-9 flex items-center justify-center bg-green-100 text-green-700 rounded-xl border border-green-200" title="Graduated">
+                                                            <span className="material-symbols-outlined text-lg">verified</span>
+                                                        </div>
+                                                    ) : null}
+                                                </div>
+                                            </div>
+                                        ))}
+
                                         <button
                                             onClick={() => {
                                                 setSelectedStudent(student);
-                                                setViewMode('transcript');
-                                            }}
-                                            className={cn(
-                                                "flex-1 md:flex-none px-3 md:px-4 py-2 rounded-xl text-[9px] md:text-[10px] font-black uppercase tracking-widest border transition-all active:scale-95 flex items-center gap-2",
-                                                student.isCourseFinished
-                                                    ? "bg-green-500 text-white border-green-600 hover:bg-green-600 shadow-md shadow-green-500/20"
-                                                    : "bg-amber-400 text-espresso border-amber-500 hover:bg-amber-500 shadow-sm shadow-amber-500/10"
-                                            )}
-                                        >
-                                            <span className="opacity-70 font-black">{(student.averageScore || 0).toFixed(1)}%</span>
-                                            Transcript
-                                        </button>
-                                        <button
-                                            onClick={() => {
-                                                setSelectedStudent(student);
-                                                setViewMode('certificate');
-                                            }}
-                                            className="flex-1 md:flex-none px-3 md:px-4 py-2 bg-espresso text-white rounded-xl text-[9px] md:text-[10px] font-black uppercase tracking-widest shadow-lg hover:shadow-espresso/20 transition-all active:scale-95"
-                                        >
-                                            Certificate
-                                        </button>
-                                        <button
-                                            onClick={() => {
-                                                setSelectedStudent(student);
+                                                setTargetCourseId(student.courseId || 'bean-to-brew');
                                                 setViewMode('reevaluation');
                                             }}
-                                            className="flex-1 md:flex-none px-3 md:px-4 py-2 bg-amber-500 text-white rounded-xl text-[9px] md:text-[10px] font-black uppercase tracking-widest shadow-lg hover:shadow-amber-500/20 transition-all active:scale-95 flex items-center gap-1"
+                                            className="px-4 py-3 bg-amber-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg hover:shadow-amber-500/20 transition-all active:scale-95 flex items-center gap-1"
                                         >
                                             <span className="material-symbols-outlined text-[14px]">payments</span>
                                             Re-eval
@@ -297,7 +396,7 @@ export function AdminReports() {
                     )}
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 

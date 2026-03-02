@@ -13,7 +13,9 @@ export function CEODashboard({ settings }) {
         projectedGrowth: 15,
         totalUsers: 0,
         staffCount: 0,
-        systemHealth: 98
+        systemHealth: 98,
+        weekendRevenue: 0,
+        donationTotal: 0
     });
 
     // Executive Action States
@@ -42,14 +44,14 @@ export function CEODashboard({ settings }) {
                 const studentSnap = await getDocs(qStudents);
                 const students = studentSnap.docs.map(doc => ({ ...doc.data(), createdAt: doc.data().createdAt?.toDate ? doc.data().createdAt.toDate() : new Date(doc.data().createdAt || Date.now()) }));
 
-                // 2. Calculate Total Revenue (Active Online * 200k + Active Onsite * 500k? - defaulting to 200k for all for now or logic from Admin)
-                // AdminDashboard uses: onlineActive.length * 200000. Let's start with that but maybe apply to all active for CEO generic view?
-                // Let's stick to the Admin logic for consistency: Online students = 200k. Onsite = maybe 300k? 
+                // 2. Calculate Total Revenue (Active Online * 250k + Active Onsite * 500k? - defaulting to 250k for all for now or logic from Admin)
+                // AdminDashboard uses: onlineActive.length * 250000. Let's start with that but maybe apply to all active for CEO generic view?
+                // Let's stick to the Admin logic for consistency: Online students = 250k. Onsite = maybe 300k? 
                 // Let's assume average 250,000 for simplicity if specific pricing isn't in DB, 
-                // OR better: use the Admin logic strictly to avoid confusion. Admin says: onlineActive * 200k.
-                // Let's count ALL active students x 200,000 for a "Total Estimated Revenue"
+                // OR better: use the Admin logic strictly to avoid confusion. Admin says: onlineActive * 250k.
+                // Let's count ALL active students x 250,000 for a "Total Estimated Revenue"
                 const activeStudents = students.filter(s => s.status === 'active');
-                const estimatedTotalRevenue = activeStudents.length * 200000;
+                const estimatedTotalRevenue = activeStudents.reduce((sum, s) => sum + (s.totalFee || 250000), 0);
 
                 // 3. Generate Chart Data (Last 6 Months)
                 const today = new Date();
@@ -68,20 +70,30 @@ export function CEODashboard({ settings }) {
                 // Bucket students into months based on createdAt
                 // Assuming revenue is recognized at enrollment/activation? Or cumulative?
                 // "Revenue Trajectory" usually means revenue COLLECTED in that month.
-                // So we sum up 200k for each student enrolled in that month.
+                // So we sum up 250k for each student enrolled in that month.
                 students.forEach(s => {
                     if (s.status === 'active') { // Only count active paying students
                         const d = s.createdAt; // already parsed above
                         const match = last6Months.find(m => m.monthIndex === d.getMonth() && m.year === d.getFullYear());
                         if (match) {
-                            match.amount += 200000;
+                            match.amount += (s.totalFee || 250000);
                         }
                     }
                 });
 
-                // 4. Check seeding status
-                const courseCheck = await getDoc(doc(db, 'courses', 'bean-to-brew'));
-                const isSeeded = courseCheck.exists();
+                // 4. Fetch Weekend Bookings Revenue
+                const bookingsRef = collection(db, 'weekend_bookings');
+                const bookingsSnap = await getDocs(bookingsRef);
+                const weekendTotal = bookingsSnap.docs.reduce((sum, doc) => sum + (doc.data().totalPrice || 0), 0);
+
+                // 5. Fetch Donations Impact
+                const donationsRef = collection(db, 'donations');
+                const donationsSnap = await getDocs(donationsRef);
+                const donationTotal = donationsSnap.docs.reduce((sum, doc) => sum + (doc.data().amount || 0), 0);
+
+                // 6. Check seeding status
+                const courseCheck = await getDocs(query(collection(db, 'courses'), limit(1)));
+                const isSeeded = !courseCheck.empty;
 
                 // Update Stats
                 const usersSnapCount = await getCountFromServer(usersRef);
@@ -90,7 +102,9 @@ export function CEODashboard({ settings }) {
 
                 setStats(prev => ({
                     ...prev,
-                    totalRevenue: estimatedTotalRevenue,
+                    totalRevenue: estimatedTotalRevenue + weekendTotal + donationTotal,
+                    weekendRevenue: weekendTotal,
+                    donationTotal: donationTotal,
                     totalUsers: usersSnapCount.data().count,
                     staffCount: staffSnap.size,
                     isSeeded: isSeeded
@@ -230,6 +244,34 @@ export function CEODashboard({ settings }) {
                             {stats.systemHealth}%
                         </h3>
                         <p className="text-[10px] md:text-xs font-bold text-green-600 mt-2">{t('ceo.dashboard.all_systems_nominal')}</p>
+                    </div>
+
+                    {/* NEW: Weekend Revenue - Rose */}
+                    <div className="bg-rose-500 text-white p-6 md:p-8 rounded-[2rem] shadow-2xl shadow-rose-500/20 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-6 md:p-8 opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-110 duration-700">
+                            <span className="material-symbols-outlined text-7xl md:text-9xl">weekend</span>
+                        </div>
+                        <p className="text-white/60 font-black text-[10px] uppercase tracking-[0.2em] mb-3 md:mb-4">{t('ceo.dashboard.weekend_revenue')}</p>
+                        <h3 className="text-3xl md:text-4xl font-serif font-black leading-none mb-2 tabular-nums">
+                            {new Intl.NumberFormat(i18n.language === 'rw' ? 'rw-RW' : (i18n.language === 'en' ? 'en-US' : (i18n.language === 'fr' ? 'fr-FR' : 'sw-TZ')), { style: 'currency', currency: 'RWF', notation: "compact" }).format(stats.weekendRevenue)}
+                        </h3>
+                        <div className="flex items-center gap-2 mt-4 text-white/80 text-[10px] md:text-xs font-bold">
+                            <span className="bg-white/10 px-2 py-1 rounded-lg">New Revenue Stream</span>
+                        </div>
+                    </div>
+
+                    {/* NEW: Donations - Emerald */}
+                    <div className="bg-emerald-600 text-white p-6 md:p-8 rounded-[2rem] shadow-2xl shadow-emerald-600/20 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-6 md:p-8 opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-110 duration-700">
+                            <span className="material-symbols-outlined text-7xl md:text-9xl">volunteer_activism</span>
+                        </div>
+                        <p className="text-white/60 font-black text-[10px] uppercase tracking-[0.2em] mb-3 md:mb-4">{t('ceo.dashboard.donation_total')}</p>
+                        <h3 className="text-3xl md:text-4xl font-serif font-black leading-none mb-2 tabular-nums">
+                            {new Intl.NumberFormat(i18n.language === 'rw' ? 'rw-RW' : (i18n.language === 'en' ? 'en-US' : (i18n.language === 'fr' ? 'fr-FR' : 'sw-TZ')), { style: 'currency', currency: 'RWF', notation: "compact" }).format(stats.donationTotal)}
+                        </h3>
+                        <div className="flex items-center gap-2 mt-4 text-white/80 text-[10px] md:text-xs font-bold">
+                            <span className="bg-white/10 px-2 py-1 rounded-lg">Community Impact</span>
+                        </div>
                     </div>
                 </div>
 

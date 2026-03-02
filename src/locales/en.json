@@ -28,7 +28,8 @@
       "cta_testimonials": "Testimonials",
       "cta_business": "Business Classes",
       "cta_equipment": "Tools and Equipment",
-      "cta_login": "Login"
+      "cta_login": "Login",
+      "cta_weekend_fun": "Weekend Fun ☕✨"
     },
     "benefits": {
       "title": "Why Choose Usafi Barista Training Center?",
@@ -846,6 +847,8 @@
       "business_students": "Business Students",
       "business_courses": "Business Courses",
       "reports": "Reports",
+      "graduates": "Graduates",
+      "mark_graduated": "Mark as Graduated",
       "my_profile": "My Profile",
       "sign_out": "Sign Out",
       "admin_menu": "Admin Menu",
@@ -1195,7 +1198,346 @@
       "confirm_lockdown": "Confirm Lockdown",
       "user_not_found": "User not found.",
       "appoint_success": "{{email}} successfully appointed as Admin.",
-      "broadcast_success": "Announcement broadcasted successfully."
+      "broadcast_success": "Announcement broadcasted successfully.",
+      "weekend_revenue": "Weekend Experiences",
+      "donation_total": "Scholarship Fund"
+    }
+  },
+  "donations": {
+    "title": "Scholarship Fund",
+    "description": "Your visit helps us fund scholarships for talented individuals who lack the means to study. Turn your fun weekend into someone else's professional future.",
+    "cta": "Support a Scholar",
+    "scholarship_gift": "Scholarship Gift",
+    "thank_you": "Thank You!",
+    "confirmation": "Your donation of {{amount}} RWF has been successfully processed. You are now a part of someone's journey to coffee mastery.",
+    "header_title": "Empower a Future Barista",
+    "header_desc": "Your direct contribution funds scholarships for talented Rwandans who lack the financial means to access professional training.",
+    "select_amount": "Select Donation",
+    "choose_amount_desc": "Choose an amount to support a student's journey.",
+    "supporter": {
+      "label": "Supporter",
+      "desc": "Covers essential materials for a student."
+    },
+    "catalyst": {
+      "label": "Scholarship Catalyst",
+      "desc": "Funds a full month of intensive training."
+    },
+    "maker": {
+      "label": "Future Maker",
+      "desc": "Supports a student through their entire course."
+    },
+    "custom_amount": "Or Enter Custom Amount",
+    "enter_amount_placeholder": "Enter RWF amount",
+    "proceed_payment": "Proceed to Payment",
+    "anonymous": "Donate anonymously",
+    "confirm_donation": "Confirm Donation",
+    "processing": "Processing Legacy...",
+    "close_btn": "Close & Return Home"
+  },
+  "booking": {
+    "session_details": "Session Details",
+    "session_desc": "Select your activity and preferred weekend date.",
+    "select_activity": "Select Activity",
+    "choose_date": "Choose Your Weekend Date",
+    "num_people": "Number of People",
+    "personal_info": "Personal Information",
+    "full_name": "Full Name",
+    "email": "Email Address",
+    "phone": "Phone Number",
+    "secure_checkout": "Secure Checkout",
+    "card_info": "Card Information",
+    "confirm_pay": "Confirm & Pay {{amount}} RWF",
+    "booking_success": "Booking Successful!",
+    "booking_confirm_desc": "Your weekend adventure is confirmed. We've sent the details to {{email}}.",
+    "booking_id": "Booking ID"
+  },
+  "weekendExperience": {
+    "hero_badge": "Every Saturday & Sunday",
+    "title": "Weekend Coffee Experiences",
+    "subtitle": "Pour & Create",
+    "description": "Whether you're a curious traveler, a coffee enthusiast, or just looking for something extraordinary to do this weekend — our doors are open. Dive into the world of specialty coffee with our expert baristas.",
+    "stats": {
+      "activities": "Unique Activities",
+      "combos": "Combo Packages",
+      "discount": "Group Discount",
+      "days": "Open Weekends"
+    },
+    "explore_btn": "Explore Activities",
+    "donate_btn": "Donate a Scholarship",
+    "highlights": {
+      "brew": {
+        "title": "Brew Your Own",
+        "desc": "Hands-on with real equipment"
+      },
+      "taste": {
+        "title": "Taste & Discover",
+        "desc": "Explore Rwanda's terroir"
+      },
+      "learn": {
+        "title": "Learn from Pros",
+        "desc": "Expert barista instructors"
+      },
+      "capture": {
+        "title": "Capture Moments",
+        "desc": "Share your experience"
+      }
+    },
+    "group_discount": {
+      "title": "The more friends, the more you save!",
+      "badge": "Group Discounts",
+      "desc": "Bring your team, your family, or your fellow coffee lovers and enjoy automatic group discounts.",
+      "tier1": "2–3 people",
+      "tier2": "4–6 people",
+      "tier3": "7+ people"
+    },
+    "choose_adventure": "Choose Your Adventure",
+    "combos_description": "Our curated combo packages bundle the best experiences together at a special price. Perfect if you want to make a full day of it — or come back again knowing there's more to discover.",
+    "click_card_hint": "Click any card to see what you'll do in that experience.",
+    "gallery": {
+      "badge": "Live Moments",
+      "title": "Real Weekends,<br />Real Stories",
+      "subtitle": "Photos and videos posted directly by our team from real weekend sessions. Every frame is a moment that happened here.",
+      "btn": "Full Gallery"
+    },
+    "what_to_expect": {
+      "badge": "Be Prepared",
+      "title": "What to Expect",
+      "desc": "Everything you need to know before your visit so you can focus on enjoying every sip.",
+      "steps": {
+        "book": {
+          "title": "Book Online",
+          "desc": "Choose your activity or combo, select a Saturday or Sunday, and securely pay online."
+        },
+        "arrive": {
+          "title": "Arrive & Meet Your Barista",
+          "desc": "Come to our school 15 minutes early. Your expert barista instructor will welcome you, brief you, and make sure you're comfortable before you begin."
+        },
+        "enjoy": {
+          "title": "Create, Learn & Enjoy",
+          "desc": "Dive in! Everything is provided — aprons, equipment, ingredients. Your only job is to enjoy, learn, and take great memories (and coffee!) home."
+        }
+      }
+    },
+    "donate_cta": {
+      "title": "Turn Your Fun Into Someone's Future",
+      "desc": "Your visit already helps us run these sessions. But a donation goes further — it funds scholarships for talented Rwandans who cannot afford professional barista training. A few thousand RWF changes a life.",
+      "btn_give": "Give a Scholarship",
+      "btn_mission": "Our Mission"
+    },
+    "booking": {
+      "payment_err": "Payment error:",
+      "personal_details": "Personal Details",
+      "personal_desc": "One last step — fill in your info and complete payment.",
+      "summary": "Booking Summary",
+      "people": "people",
+      "person": "person",
+      "group_discount_applied": "group discount applied",
+      "full_name": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "country": "Country / Origin",
+      "country_placeholder": "e.g. USA, France, Kenya...",
+      "processing": "Processing...",
+      "pay": "Pay",
+      "alert_weekend": "Please choose a Saturday or Sunday — we only host on weekends!",
+      "payment_init_err": "Failed to initialize payment:",
+      "step_experience": "Experience",
+      "step_payment": "Payment",
+      "step_confirmed": "Confirmed",
+      "combo_package": "Combo Package",
+      "session_details": "Session Details",
+      "session_desc": "Choose your date, number of participants, and activity.",
+      "selected_combo": "Selected Combo",
+      "select_activity": "Select Activity",
+      "weekend_date": "Weekend Date",
+      "weekends_only": "Saturdays & Sundays only",
+      "num_people": "Number of People",
+      "discount_exclaim": "discount!",
+      "special_requests": "Special Requests (optional)",
+      "special_requests_hint": "Dietary restrictions, accessibility needs, language preferences...",
+      "group_discount": "Group discount",
+      "total": "Total",
+      "preparing": "Preparing...",
+      "continue_payment": "Continue to Payment",
+      "success_title": "You're Booked! 🎉",
+      "success_desc1": "A confirmation has been sent to",
+      "success_desc2": "We can't wait to see you on",
+      "your_booking": "Your Booking",
+      "guests": "guests",
+      "guest": "guest",
+      "back_home": "Back to Home",
+      "explore_more": "Explore More"
+    },
+    "tabs": {
+      "all_experiences": "All Experiences",
+      "combo_packages": "Combo Packages",
+      "single_activities": "Single Activities",
+      "combos_and_save": "Combos & Save"
+    },
+    "filters": {
+      "all": "All Experiences",
+      "beginner": "Beginner Friendly",
+      "hands_on": "Hands-On",
+      "short": "Under 2 Hours"
+    },
+    "card_hint": "💡 Click any card to see what you'll do in that experience.",
+    "per_person": "per person",
+    "book_btn": "Book Now",
+    "what_youll_do": "What You'll Do",
+    "activities": {
+      "latte_art": {
+        "title": "Latte Art Masterclass",
+        "subtitle": "Pour & Create",
+        "description": "Pour hearts, rosettas, and tulips under the guidance of our professional baristas. From milk-steaming science to freehand designs, you'll leave with a new skill to impress.",
+        "highlights": [
+          "Milk steaming science",
+          "Basic pour designs",
+          "Heart & tulip patterns",
+          "Take-home artisan coffee"
+        ],
+        "badge": "Most Popular"
+      },
+      "sensory_tasting": {
+        "title": "Sensory Cupping Session",
+        "subtitle": "Taste & Discover",
+        "description": "Explore the complex terroir of Rwandan specialty coffee. Learn to identify flavor notes — from fruity highlands to chocolate lowlands — using professional tasting protocols.",
+        "highlights": [
+          "5 specialty origins",
+          "Flavor wheel training",
+          "Aroma identification",
+          "Expert guided tasting"
+        ],
+        "badge": "Crowd Favourite"
+      },
+      "bean_to_bag": {
+        "title": "Bean to Bag: Roasting Fun",
+        "subtitle": "Roast & Take Home",
+        "description": "Witness the transformation of green coffee beans into aromatic perfection. You'll hand-roast a batch and take home a personalized bag of your creation.",
+        "highlights": [
+          "Green bean selection",
+          "Roast level control",
+          "Cooling & sorting",
+          "Personalized bag to take home"
+        ],
+        "badge": "Hands-On"
+      },
+      "espresso_workshop": {
+        "title": "Espresso Extraction Workshop",
+        "subtitle": "Pull & Perfect",
+        "description": "Learn the engineering behind a perfect espresso shot — grind size, pressure, temperature, and timing. Pull real shots on our professional La Marzocco machines.",
+        "highlights": [
+          "Machine calibration",
+          "Grind & dose mastery",
+          "Shot timing & extraction",
+          "Espresso tasting flight"
+        ],
+        "badge": "Barista Level"
+      },
+      "equipment_tour": {
+        "title": "Equipment & Tools Deep Dive",
+        "subtitle": "Learn & Understand",
+        "description": "A guided tour through professional barista equipment — grinders, scales, tampers, and brewing devices. Understand what you need to build your home setup.",
+        "highlights": [
+          "Pro vs home grinders",
+          "Espresso machine anatomy",
+          "Brewing device comparison",
+          "Home setup consultation"
+        ],
+        "badge": "Best for Beginners"
+      },
+      "coffee_preparation": {
+        "title": "Farm to Cup Experience",
+        "subtitle": "Process & Brew",
+        "description": "Follow the entire coffee preparation journey — from the washing station process to manually brewing. Experience every step from cherry to your cup.",
+        "highlights": [
+          "Cherry to parchment",
+          "Wet & natural processing",
+          "Manual brewing methods",
+          "Rwanda origin story"
+        ],
+        "badge": "Immersive"
+      },
+      "cold_brew": {
+        "title": "Cold Brew & Signature Drinks",
+        "subtitle": "Mix & Chill",
+        "description": "Craft your own cold brew, learn the chemistry behind it, then create signature coffee cocktails (non-alcoholic). Perfect for the creative mind.",
+        "highlights": [
+          "Cold brew ratios",
+          "Nitro techniques",
+          "Signature drink creation",
+          "Shake & serve skills"
+        ],
+        "badge": "Creative"
+      },
+      "barista_basics": {
+        "title": "Barista Basics Bootcamp",
+        "subtitle": "Learn & Practice",
+        "description": "A condensed version of our professional Barista Course. Get the core fundamentals — milk, espresso, hygiene, and customer service etiquette — in a single morning session.",
+        "highlights": [
+          "Espresso fundamentals",
+          "Milk steaming & texturing",
+          "Hygiene standards",
+          "Basic customer etiquette"
+        ],
+        "badge": "Premium"
+      }
+    },
+    "combos": {
+      "title": "Combo Packages",
+      "desc": "Bundle the best experiences at a special price. Make a full day of it and discover more.",
+      "coffee_lover": {
+        "title": "Coffee Lover's Duo",
+        "tagline": "The perfect starter combo — taste & create."
+      },
+      "barista_journey": {
+        "title": "The Full Barista Journey",
+        "tagline": "Everything a barista needs to know in one day."
+      },
+      "origin_explorer": {
+        "title": "Origin Explorer's Pack",
+        "tagline": "Trace Rwanda coffee from farm to your cup."
+      },
+      "ultimate": {
+        "title": "The Ultimate Experience",
+        "tagline": "The absolute best of everything we offer. Unforgettable."
+      },
+      "book_combo": "Book Combo",
+      "original_price": "Original Price",
+      "you_save": "You save"
+    },
+    "gallery": {
+      "badge": "Live Moments",
+      "title": "Real Weekends, Real Stories",
+      "subtitle": "Photos and videos posted directly by our team from real weekend sessions. Every frame is a moment that happened here."
+    },
+    "view_gallery": "Full Gallery",
+    "live_highlight": "Live Highlight",
+    "hover_play": "Hover to play",
+    "guest_highlight": "Guest Highlight",
+    "gallery_coming_soon": "Gallery Coming Soon",
+    "gallery_coming_soon_desc": "Our manager will post real photos & videos of weekend sessions. Check back after our next event!",
+    "what_to_expect": {
+      "badge": "Be Prepared",
+      "title": "What to Expect",
+      "subtitle": "Everything you need to know before your visit so you can focus on enjoying every sip.",
+      "step1": {
+        "title": "Book Online",
+        "desc": "Choose your activity or combo, select a Saturday or Sunday, and securely pay online. You'll receive a confirmation email immediately."
+      },
+      "step2": {
+        "title": "Arrive & Meet Your Barista",
+        "desc": "Come to our school 15 minutes early. Your expert barista instructor will welcome you, brief you, and make sure you're comfortable before you begin."
+      },
+      "step3": {
+        "title": "Create, Learn & Enjoy",
+        "desc": "Dive in! Everything is provided — aprons, equipment, ingredients. Your only job is to enjoy, learn, and take great memories (and coffee!) home."
+      }
+    },
+    "donation_cta": {
+      "title": "Turn Your Fun Into Someone's Future",
+      "desc": "Your visit already helps us run these sessions. But a donation goes further — it funds scholarships for talented Rwandans who cannot afford professional barista training.",
+      "btn_donate": "Give a Scholarship",
+      "btn_mission": "Our Mission"
     }
   }
 }

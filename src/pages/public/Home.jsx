@@ -81,7 +81,16 @@ export function Home() {
                             </div>
                         </Link>
 
-                        {/* 6. Login - Sleek Dark/Espresso */}
+                        {/* 6. Weekend Fun - Vibrant Pink/Rose */}
+                        <Link to="/weekend-experience" className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-pink-500 to-rose-600 p-[2px] transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-pink-500/30">
+                            <div className="relative flex h-14 w-full items-center justify-center rounded-xl bg-transparent px-8 transition-all duration-300 group-hover:bg-white/10">
+                                <span className="text-base md:text-lg font-bold tracking-wide text-white">
+                                    {t('home.hero.cta_weekend_fun') || 'Weekend Fun ☕✨'}
+                                </span>
+                            </div>
+                        </Link>
+
+                        {/* 7. Login - Sleek Dark/Espresso */}
                         <Link to="/login" className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-zinc-800 to-black p-[2px] transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-black/50">
                             <div className="relative flex h-14 w-full items-center justify-center rounded-xl bg-transparent px-8 transition-all duration-300 group-hover:bg-white/10">
                                 <span className="text-base md:text-lg font-bold tracking-wide text-white">

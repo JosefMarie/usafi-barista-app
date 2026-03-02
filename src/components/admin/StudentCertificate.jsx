@@ -35,9 +35,12 @@ const CoffeeWatermark = ({ className }) => (
 
 export const StudentCertificate = React.forwardRef(({
     student,
+    courseId,
     className
 }, ref) => {
     const { t } = useTranslation();
+
+    const TARGET_COURSE_ID = courseId || student?.courseId || 'bean-to-brew';
 
     // Fallback data if student object is missing or incomplete
     const studentName = student?.fullName || student?.name || "Student Name";
@@ -136,14 +139,14 @@ export const StudentCertificate = React.forwardRef(({
                         {studentName}
                     </h2>
                     <p className="text-[10px] uppercase tracking-[0.4em] text-[#a77c52] font-black mt-2">
-                        {student?.courseId === 'bar-tender-course' ? 'Professional Mixology & Bar Management' : 'Professional Barista & Coffee Science'}
+                        {TARGET_COURSE_ID === 'bar-tender-course' ? 'Professional Mixology & Bar Management' : 'Professional Barista & Coffee Science'}
                     </p>
                 </div>
 
                 {/* Achievement Description */}
                 <div className="z-10 max-w-4xl mx-auto">
                     <p className="text-lg text-[#321C00]/80 font-serif italic leading-relaxed">
-                        {student?.courseId === 'bar-tender-course' ? (
+                        {TARGET_COURSE_ID === 'bar-tender-course' ? (
                             <>
                                 Has successfully completed the comprehensive professional bartender training program,
                                 demonstrating exceptional proficiency in mixology, cocktail crafting,

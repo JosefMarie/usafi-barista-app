@@ -38,6 +38,7 @@ export function ManagerLayout() {
         { icon: 'work', label: 'Opportunities', path: '/manager/opportunities' },
         { icon: 'construction', label: 'Equipment', path: '/manager/equipment' },
         { icon: 'photo_library', label: 'Gallery', path: '/manager/gallery' },
+        { icon: 'weekend', label: 'Weekend Media', path: '/manager/weekend-media' },
         { icon: 'reviews', label: 'Testimonials', path: '/manager/testimonials' },
         { icon: 'person', label: t('manager.nav.my_profile'), path: '/manager/profile' },
     ];

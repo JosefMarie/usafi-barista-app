@@ -1196,7 +1196,311 @@
       "confirm_lockdown": "Confirmer le Verrouillage",
       "user_not_found": "Utilisateur non trouvé.",
       "appoint_success": "{{email}} nommé avec succès comme Administrateur.",
-      "broadcast_success": "Annonce diffusée avec succès."
+      "broadcast_success": "Annonce diffusée avec succès.",
+      "weekend_revenue": "Expériences Weekend",
+      "donation_total": "Fonds de Bourses"
+    }
+  },
+  "donations": {
+    "title": "Fonds de Bourses d'Études",
+    "description": "Votre visite nous aide à financer des bourses pour des personnes talentueuses qui n'ont pas les moyens d'étudier. Transformez votre weekend de plaisir en l'avenir professionnel de quelqu'un d'autre.",
+    "cta": "Soutenir un Boursier",
+    "scholarship_gift": "Cadeau de Bourse",
+    "thank_you": "Merci !",
+    "confirmation": "Votre don de {{amount}} RWF a été traité avec succès. Vous faites maintenant partie du voyage de quelqu'un vers la maîtrise du café.",
+    "header_title": "Autonomiser un Futur Barista",
+    "header_desc": "Votre contribution directe finance des bourses pour des Rwandais talentueux qui n'ont pas les moyens financiers d'accéder à une formation professionnelle.",
+    "select_amount": "Sélectionner un Don",
+    "choose_amount_desc": "Choisissez un montant pour soutenir le parcours d'un étudiant.",
+    "supporter": {
+      "label": "Supporter",
+      "desc": "Couvre le matériel essentiel pour un étudiant."
+    },
+    "catalyst": {
+      "label": "Catalyseur de Bourse",
+      "desc": "Finance un mois complet de formation intensive."
+    },
+    "maker": {
+      "label": "Faiseur d'Avenir",
+      "desc": "Soutient un étudiant tout au long de son cours."
+    },
+    "custom_amount": "Ou Entrez un Montant Personnalisé",
+    "enter_amount_placeholder": "Entrez le montant en RWF",
+    "proceed_payment": "Procéder au Paiement",
+    "anonymous": "Donner anonymement",
+    "confirm_donation": "Confirmer le Don",
+    "processing": "Traitement de l'Héritage...",
+    "close_btn": "Fermer & Retourner à l'Accueil"
+  },
+  "booking": {
+    "session_details": "Détails de la Session",
+    "session_desc": "Sélectionnez votre activité et votre date de weekend préférée.",
+    "select_activity": "Sélectionner une Activité",
+    "choose_date": "Choisissez Votre Date de Weekend",
+    "num_people": "Nombre de Personnes",
+    "personal_info": "Informations Personnelles",
+    "full_name": "Nom Complet",
+    "email": "Adresse Email",
+    "phone": "Numéro de Téléphone",
+    "secure_checkout": "Paiement Sécurisé",
+    "card_info": "Informations de Carte",
+    "confirm_pay": "Confirmer & Payer {{amount}} RWF",
+    "booking_success": "Réservation Réussie !",
+    "booking_confirm_desc": "Votre aventure du weekend est confirmée. Nous avons envoyé les détails à {{email}}.",
+    "booking_id": "ID de Réservation"
+  },
+  "weekendExperience": {
+    "hero_badge": "Chaque Samedi & Dimanche",
+    "title": "Expériences Café du Weekend",
+    "description": "Que vous soyez un voyageur curieux, un passionné de café ou simplement à la recherche d'une activité extraordinaire ce weekend — nos portes vous sont ouvertes. Plongez dans l'univers du café de spécialité avec nos baristas experts.",
+    "stats": {
+      "activities": "Activités Uniques",
+      "combos": "Forfaits Combos",
+      "discount": "Réduction Groupe",
+      "days": "Weekends Ouverts"
+    },
+    "explore_btn": "Explorer les Activités",
+    "donate_btn": "Offrir une Bourse",
+    "highlights": {
+      "brew": {
+        "title": "Préparez Votre Café",
+        "desc": "Avec vrai équipement professionnel"
+      },
+      "taste": {
+        "title": "Goûtez & Découvrez",
+        "desc": "Explorez le terroir rwandais"
+      },
+      "learn": {
+        "title": "Apprenez des Pros",
+        "desc": "Instructeurs baristas experts"
+      },
+      "capture": {
+        "title": "Capturez des Moments",
+        "desc": "Partagez votre expérience"
+      }
+    },
+    "group_discount": {
+      "title": "Plus vous êtes nombreux, plus vous économisez !",
+      "badge": "Réductions Groupe",
+      "desc": "Venez avec votre équipe, votre famille ou vos amis et profitez de réductions automatiques.",
+      "tier1": "2–3 personnes",
+      "tier2": "4–6 personnes",
+      "tier3": "7+ personnes"
+    },
+    "choose_adventure": "Choisissez Votre Aventure",
+    "combos_description": "Nos forfaits combo regroupent les meilleures expériences à un prix spécial. Parfait si vous voulez y passer la journée — ou revenir en sachant qu'il y a plus à découvrir.",
+    "click_card_hint": "Cliquez sur une carte pour voir ce que vous ferez dans cette expérience.",
+    "gallery": {
+      "badge": "Moments en Direct",
+      "title": "Vrais Weekends,<br />Vraies Histoires",
+      "subtitle": "Photos et vidéos postées directement par notre équipe lors des sessions du weekend. Chaque image est un moment qui s'est déroulé ici.",
+      "btn": "Galerie Complète"
+    },
+    "what_to_expect": {
+      "badge": "Soyez Prêts",
+      "title": "À Quoi S'attendre",
+      "desc": "Tout ce que vous devez savoir avant votre visite afin de vous concentrer sur la dégustation.",
+      "steps": {
+        "book": {
+          "title": "Réservez en Ligne",
+          "desc": "Choisissez votre activité ou combo, sélectionnez un samedi ou dimanche, et payez en ligne en toute sécurité."
+        },
+        "arrive": {
+          "title": "Arrivez & Rencontrez Votre Barista",
+          "desc": "Venez à notre école 15 minutes en avance. Votre instructeur barista expert vous accueillera, vous briefera et s'assurera que vous êtes à l'aise avant de commencer."
+        },
+        "enjoy": {
+          "title": "Créez, Apprenez & Profitez",
+          "desc": "Plongez-y ! Tout est fourni — tabliers, équipement, ingrédients. Votre seule tâche est de profiter, d'apprendre et de ramener de super souvenirs (et du café !) à la maison."
+        }
+      }
+    },
+    "donate_cta": {
+      "title": "Transformez Votre Plaisir en Avenir",
+      "desc": "Votre visite nous aide déjà à organiser ces sessions. Mais un don va plus loin — il finance des bourses pour des Rwandais talentueux ne pouvant s'offrir une formation professionnelle. Quelques milliers de RWF changent une vie.",
+      "btn_give": "Offrir une Bourse",
+      "btn_mission": "Notre Mission"
+    },
+    "booking": {
+      "payment_err": "Erreur de paiement :",
+      "personal_details": "Détails Personnels",
+      "personal_desc": "Dernière étape — remplissez vos informations et finalisez le paiement.",
+      "summary": "Résumé de Réservation",
+      "people": "personnes",
+      "person": "personne",
+      "group_discount_applied": "réduction de groupe appliquée",
+      "full_name": "Nom Complet",
+      "email": "Adresse E-mail",
+      "phone": "Numéro de Téléphone",
+      "country": "Pays / Origine",
+      "country_placeholder": "ex. USA, France, Kenya...",
+      "processing": "Traitement...",
+      "pay": "Payer",
+      "alert_weekend": "Veuillez choisir un samedi ou un dimanche — nous n'accueillons que le weekend !",
+      "payment_init_err": "Échec de l'initialisation du paiement :",
+      "step_experience": "Expérience",
+      "step_payment": "Paiement",
+      "step_confirmed": "Confirmé",
+      "combo_package": "Forfait Combo",
+      "session_details": "Détails de Session",
+      "session_desc": "Choisissez votre date, le nombre de participants et l'activité.",
+      "selected_combo": "Combo Sélectionné",
+      "select_activity": "Sélectionner une Activité",
+      "weekend_date": "Date du Weekend",
+      "weekends_only": "Samedis & Dimanches uniquement",
+      "num_people": "Nombre de Personnes",
+      "discount_exclaim": "de réduction !",
+      "special_requests": "Demandes Spéciales (optionnel)",
+      "special_requests_hint": "Restrictions alimentaires, besoins d'accessibilité, préférences de langue...",
+      "group_discount": "Réduction de groupe",
+      "total": "Total",
+      "preparing": "Préparation...",
+      "continue_payment": "Continuer vers le Paiement",
+      "success_title": "Réservation Confirmée ! 🎉",
+      "success_desc1": "Une confirmation a été envoyée à",
+      "success_desc2": "Nous avons hâte de vous voir le",
+      "your_booking": "Votre Réservation",
+      "guests": "invités",
+      "guest": "invité",
+      "back_home": "Retour à l'Accueil",
+      "explore_more": "Explorer Plus"
+    },
+    "tabs": {
+      "all_experiences": "Toutes les Expériences",
+      "combo_packages": "Forfaits Combos",
+      "single_activities": "Activités Uniques",
+      "combos_and_save": "Combos & Économies"
+    },
+    "filters": {
+      "all": "Toutes les Expériences",
+      "beginner": "Pour Débutants",
+      "hands_on": "Pratique",
+      "short": "Moins de 2 Heures"
+    },
+    "card_hint": "💡 Cliquez sur une carte pour voir ce que vous ferez.",
+    "per_person": "par personne",
+    "book_btn": "Réserver Maintenant",
+    "what_youll_do": "Ce que vous ferez",
+    "activities": {
+      "latte_art": {
+        "title": "Masterclass Art Latte",
+        "subtitle": "Versez & Créez",
+        "description": "Versez des cœurs, rosettas et tulipes guidé par nos baristas professionnels. Science du lait, dessins libres — vous repartirez avec une nouvelle compétence.",
+        "highlights": [
+          "Science du lait moussé",
+          "Designs de base",
+          "Cœurs & tulipes",
+          "Café artisanal à emporter"
+        ],
+        "badge": "Le Plus Populaire"
+      },
+      "sensory_tasting": {
+        "title": "Session de Cupping Sensoriel",
+        "subtitle": "Goûtez & Découvrez",
+        "description": "Explorez le terroir complexe du café rwandais. Identifiez les notes aromatiques — des hauts plateaux fruités aux plaines chocolatées — avec des protocoles professionnels.",
+        "highlights": [
+          "5 origines de spécialité",
+          "Formation roue des saveurs",
+          "Identification des arômes",
+          "Dégustation guidée"
+        ],
+        "badge": "Favori du Public"
+      },
+      "bean_to_bag": {
+        "title": "Du Grain au Sachet : Torréfaction",
+        "subtitle": "Torréfiez & Repartez",
+        "description": "Observez la transformation des grains verts en café aromatique. Vous torréfierez à la main et repartirez avec votre propre sachet personnalisé.",
+        "highlights": [
+          "Sélection des grains verts",
+          "Contrôle du niveau de torréfaction",
+          "Refroidissement & tri",
+          "Sachet personnalisé"
+        ],
+        "badge": "Pratique"
+      },
+      "espresso_workshop": {
+        "title": "Atelier Extraction Espresso",
+        "subtitle": "Tirez & Perfectionnez",
+        "description": "Apprenez l'ingénierie derrière un espresso parfait — mouture, pression, température, timing. Tirez de vrais shots sur nos machines La Marzocco.",
+        "highlights": [
+          "Calibration de la machine",
+          "Maîtrise de la dose",
+          "Timing d'extraction",
+          "Vol de dégustation espresso"
+        ],
+        "badge": "Niveau Barista"
+      },
+      "equipment_tour": {
+        "title": "Immersion dans l'Équipement",
+        "subtitle": "Apprenez & Comprenez",
+        "description": "Visite guidée de l'équipement barista professionnel — broyeurs, balances, tampons et appareils. Comprenez comment équiper votre maison.",
+        "highlights": [
+          "Pro vs broyeurs maison",
+          "Anatomie machine espresso",
+          "Comparaison appareils",
+          "Consultation setup maison"
+        ],
+        "badge": "Idéal pour Débutants"
+      },
+      "coffee_preparation": {
+        "title": "De la Ferme à la Tasse",
+        "subtitle": "Transformez & Préparez",
+        "description": "Suivez le voyage complet du café — de la station de lavage jusqu'à la préparation manuelle. Chaque étape de la cerise à votre tasse.",
+        "highlights": [
+          "De la cerise au parchemin",
+          "Traitements humide & naturel",
+          "Méthodes de brassage manuel",
+          "Histoire du Rwanda"
+        ],
+        "badge": "Immersif"
+      },
+      "cold_brew": {
+        "title": "Cold Brew & Boissons Signature",
+        "subtitle": "Mélangez & Rafraîchissez",
+        "description": "Préparez votre cold brew, découvrez sa chimie, puis créez des cocktails signature au café (sans alcool).",
+        "highlights": [
+          "Ratios cold brew",
+          "Techniques nitro",
+          "Création de boissons signature",
+          "Techniques de service"
+        ],
+        "badge": "Créatif"
+      },
+      "barista_basics": {
+        "title": "Bootcamp Barista Débutant",
+        "subtitle": "Apprenez & Pratiquez",
+        "description": "Une version condensée de notre cours barista professionnel. Fondamentaux du lait, espresso, hygiène et service client en une seule matinée.",
+        "highlights": [
+          "Fondamentaux espresso",
+          "Lait moussé & texturé",
+          "Normes d'hygiène",
+          "Étiquette de service"
+        ],
+        "badge": "Premium"
+      }
+    },
+    "combos": {
+      "title": "Forfaits Combos",
+      "desc": "Combinez les meilleures expériences à prix spécial. Profitez d'une journée complète.",
+      "coffee_lover": {
+        "title": "Duo Amateurs de Café",
+        "tagline": "Le combo idéal pour débuter — goûtez & créez."
+      },
+      "barista_journey": {
+        "title": "Le Voyage Barista Complet",
+        "tagline": "Tout ce qu'un barista doit savoir en une journée."
+      },
+      "origin_explorer": {
+        "title": "Pack Explorateur d'Origines",
+        "tagline": "Retracez le café rwandais de la ferme à votre tasse."
+      },
+      "ultimate": {
+        "title": "L'Expérience Ultime",
+        "tagline": "Le meilleur de tout ce que nous offrons. Inoubliable."
+      },
+      "book_combo": "Réserver le Combo",
+      "original_price": "Prix Original",
+      "you_save": "Vous économisez"
     }
   }
 }

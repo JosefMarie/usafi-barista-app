@@ -60,30 +60,25 @@ export function Students() {
         setPaymentInput({ amount: '', isFull: false });
     };
 
-    const handleSyncBaristaFees = async () => {
-        if (!window.confirm("This will permanently set the Total Program Fee to 200,000 RWF for all students enrolled in the Barista course who don't have a fee set. Proceed?")) return;
+    const handleSyncFees = async () => {
+        if (!window.confirm("This will synchronize Total Program Fees for all students based on their enrolled courses:\n- Barista only: 250,000 RWF\n- Bartender only: 300,000 RWF\n- Both: 500,000 RWF\n\nProceed?")) return;
 
         setSyncing(true);
         try {
-            const baristaStudents = students.filter(s =>
-                ((!s.courseId || s.courseId === 'bean-to-brew') || s.enrolledCourses?.some(c => c.courseId === 'bean-to-brew')) &&
-                (!s.totalFee || s.totalFee === 0)
-            );
-
-            if (baristaStudents.length === 0) {
-                alert("No Barista students found with missing fees.");
-                return;
-            }
-
             let updatedCount = 0;
-            for (const student of baristaStudents) {
-                await updateDoc(doc(db, 'users', student.id), {
-                    totalFee: 200000
-                });
-                updatedCount++;
+            for (const student of students) {
+                const targetFee = getStudentFee({ ...student, totalFee: 0 }); // Calculate what it SHOULD be
+
+                // Only update if current fee is 0, missing, or one of the old default values (like 200k)
+                if (!student.totalFee || student.totalFee === 0 || student.totalFee === 200000 || student.totalFee !== targetFee) {
+                    await updateDoc(doc(db, 'users', student.id), {
+                        totalFee: targetFee
+                    });
+                    updatedCount++;
+                }
             }
 
-            alert(`Successfully synchronized ${updatedCount} Barista student records.`);
+            alert(`Successfully synchronized ${updatedCount} student records.`);
         } catch (error) {
             console.error("Error syncing fees:", error);
             alert("Failed to synchronize records.");
@@ -141,9 +136,19 @@ export function Students() {
     });
 
     const getStudentFee = (student) => {
-        if (student.totalFee && student.totalFee > 0) return student.totalFee;
-        const isBarista = (!student.courseId || student.courseId === 'bean-to-brew') || student.enrolledCourses?.some(c => c.courseId === 'bean-to-brew');
-        return isBarista ? 200000 : 0;
+        // If they already have a custom fee set manually, respect it
+        if (student.totalFee && student.totalFee > 0 && student.totalFee !== 200000) return student.totalFee;
+
+        const enrolledIds = student.enrolledCourses?.map(c => c.courseId) || [];
+        const courseId = student.courseId;
+
+        const hasBarista = enrolledIds.includes('bean-to-brew') || courseId === 'bean-to-brew' || !courseId;
+        const hasBartender = enrolledIds.includes('bar-tender-course') || courseId === 'bar-tender-course';
+
+        if (hasBarista && hasBartender) return 500000;
+        if (hasBartender) return 300000;
+        if (hasBarista) return 250000;
+        return 0;
     };
 
     const pendingStudents = students.filter(s => s.status === 'pending');
@@ -164,13 +169,13 @@ export function Students() {
                     </div>
                     <div className="flex flex-wrap gap-3 md:gap-4">
                         <button
-                            onClick={handleSyncBaristaFees}
+                            onClick={handleSyncFees}
                             disabled={syncing}
                             className="px-4 md:px-6 py-3 md:py-3.5 bg-white/40 text-espresso text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] rounded-xl md:rounded-2xl border border-espresso/10 hover:bg-espresso hover:text-white transition-all active:scale-95 shadow-sm flex items-center gap-2 disabled:opacity-50"
-                            title="Synchronize all Barista fees to 200,000 RWF"
+                            title="Synchronize all student fees based on courses"
                         >
                             <span className="material-symbols-outlined text-[16px] md:text-[18px]">{syncing ? 'sync' : 'database'}</span>
-                            {syncing ? 'Syncing...' : 'Sync Barista Fees'}
+                            {syncing ? 'Syncing...' : 'Sync Global Fees'}
                         </button>
                         <button className="flex-1 md:flex-none px-6 md:px-8 py-3 md:py-3.5 bg-espresso text-white text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] rounded-xl md:rounded-2xl shadow-xl hover:shadow-espresso/40 active:scale-95 transition-all flex items-center justify-center md:justify-start gap-2">
                             <span className="material-symbols-outlined text-[16px] md:text-[18px]">person_add</span>

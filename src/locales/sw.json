@@ -400,7 +400,345 @@
       "confirm_lockdown": "Thibitisha Kufunga",
       "user_not_found": "Mtumiaji hajapatikana.",
       "appoint_success": "{{email}} ameteuliwa kuwa Msimamizi kwa mafanikio.",
-      "broadcast_success": "Tangazo limetangazwa kwa mafanikio."
+      "broadcast_success": "Tangazo limetangazwa kwa mafanikio.",
+      "weekend_revenue": "Mapato ya Weekend",
+      "donation_total": "Mfuko wa Udhamini"
+    }
+  },
+  "donations": {
+    "title": "Mfuko wa Udhamini wa Masomo",
+    "description": "Ziara yako inatusaidia kufadhili udhamini wa masomo kwa watu wenye vipaji ambao hawana uwezo wa kusoma. Geuza weekend yako ya burudani kuwa maisha ya kitaalamu ya mtu mwingine.",
+    "cta": "Msaidie Mwanafunzi",
+    "scholarship_gift": "Zawadi ya Udhamini",
+    "thank_you": "Asante!",
+    "confirmation": "Mchango wako wa {{amount}} RWF umekamilika kwa mafanikio. Sasa wewe ni sehemu ya safari ya mtu kuelekea umahiri wa kahawa.",
+    "header_title": "Muwezeshe Barista wa Baadaye",
+    "header_desc": "Mchango wako wa moja kwa moja unafadhili udhamini kwa Wanyarwanda wenye vipaji ambao hawana uwezo wa kifedha wa kupata mafunzo ya kitaalamu.",
+    "select_amount": "Chagua Mchango",
+    "choose_amount_desc": "Chagua kiwango cha kusaidia safari ya mwanafunzi.",
+    "supporter": {
+      "label": "Msaidizi",
+      "desc": "Inagharamia vifaa muhimu kwa mwanafunzi."
+    },
+    "catalyst": {
+      "label": "Kichocheo cha Udhamini",
+      "desc": "Inagharamia mwezi mzima wa mafunzo makali."
+    },
+    "maker": {
+      "label": "Mjenzi wa Baadaye",
+      "desc": "Anamsaidia mwanafunzi katika kozi yake yote."
+    },
+    "custom_amount": "Au Ingiza Kiwango Chako",
+    "enter_amount_placeholder": "Ingiza kiasi cha RWF",
+    "proceed_payment": "Endelea na Malipo",
+    "anonymous": "Toa mchango bila jina",
+    "confirm_donation": "Thibitisha Mchango",
+    "processing": "Tunachakata...",
+    "close_btn": "Funga na Urudi Nyumbani"
+  },
+  "booking": {
+    "session_details": "Maelezo ya Kipindi",
+    "session_desc": "Chagua shughuli yako na tarehe ya weekend unayopendelea.",
+    "select_activity": "Chagua Shughuli",
+    "choose_date": "Chagua Tarehe Yako ya Weekend",
+    "num_people": "Idadi ya Watu",
+    "personal_info": "Habari za Kibinafsi",
+    "full_name": "Majina Kamili",
+    "email": "Anwani ya Barua Pepe",
+    "phone": "Nambari ya Simu",
+    "secure_checkout": "Malipo Salama",
+    "card_info": "Habari za Kadi",
+    "confirm_pay": "Thibitisha na Ulipe {{amount}} RWF",
+    "booking_success": "Uhifadhi Umefanikiwa!",
+    "booking_confirm_desc": "Matukio yako ya weekend yamethibitishwa. Tumetuma maelezo kwa {{email}}.",
+    "booking_id": "Kitambulisho cha Uhifadhi"
+  },
+  "weekendExperience": {
+    "hero_badge": "Kila Jumamosi & Jumapili",
+    "title": "Uzoefu wa Kahawa wa Wikendi",
+    "description": "Iwe ni msafiri mwenye udadisi, mpenda kahawa, au unatafuta shughuli ya ajabu wikendi hii — milango yetu iko wazi. Jitose katika ulimwengu wa kahawa ya hali ya juu na wataalam wetu wa barista.",
+    "stats": {
+      "activities": "Shughuli za Kipekee",
+      "combos": "Vifurushi vya Pamoja",
+      "discount": "Punguzo la Kikundi",
+      "days": "Wikendi Zinazofunguliwa"
+    },
+    "explore_btn": "Chunguza Shughuli",
+    "donate_btn": "Toa Msaada wa Elimu",
+    "highlights": {
+      "brew": {
+        "title": "Tengeneza Kahawa Yako",
+        "desc": "Kwa vifaa halisi vya kitaalamu"
+      },
+      "taste": {
+        "title": "Onja & Gundua",
+        "desc": "Chunguza udongo wa Rwanda"
+      },
+      "learn": {
+        "title": "Jifunze kwa Wataalamu",
+        "desc": "Wafundishaji wataalam wa barista"
+      },
+      "capture": {
+        "title": "Nasa Wakati Mzuri",
+        "desc": "Shiriki uzoefu wako"
+      }
+    },
+    "group_discount": {
+      "title": "Marafiki wengi, unaokombolewa zaidi!",
+      "badge": "Punguzo la Kikundi",
+      "desc": "Kuja na timu yako, familia yako, au marafiki wanaopenda kahawa na ufurahie punguzo za kiotomatiki.",
+      "tier1": "Watu 2–3",
+      "tier2": "Watu 4–6",
+      "tier3": "Watu 7+"
+    },
+    "choose_adventure": "Chagua Tukio Lako",
+    "combos_description": "Vifurushi vyetu vilivyotengenezwa maalum huleta pamoja uzoefu bora kwa bei maalum. Ni nzuri ikiwa unataka kuitumia siku nzima - au kurudi tena ukijua kuna mengi ya kugundua.",
+    "click_card_hint": "Bofya kadi yoyote ili kuona kile utakachofanya katika uzoefu huo.",
+    "gallery": {
+      "badge": "Nyakati Mbalimbali",
+      "title": "Wikendi za Kweli,<br />Hadithi za Kweli",
+      "subtitle": "Picha na video zilizowekwa moja kwa moja na timu yetu kutoka kwenye vikao halisi. Kila picha ni wakati uliotokea hapa.",
+      "btn": "Picha Zote"
+    },
+    "what_to_expect": {
+      "badge": "Jiandae",
+      "title": "Nini cha Kutarajia",
+      "desc": "Kila kitu unachohitaji kujua kabla ya ziara yako ili uweze kuzingatia kufurahia kila fundo.",
+      "steps": {
+        "book": {
+          "title": "Weka Nafasi Mtandaoni",
+          "desc": "Chagua shughuli yako au kifurushi, chagua Jumamosi au Jumapili, na ulipe salama mtandaoni."
+        },
+        "arrive": {
+          "title": "Fika na Uonane na Barista",
+          "desc": "Fika shuleni kwetu dakika 15 mapema. Mwalimu wako wa barista mtaalam atakukaribisha, kueleza mambo machache na kuhakikisha unajisikia vizuri kabla ya kuanzishwa."
+        },
+        "enjoy": {
+          "title": "Buni, Jifunze na Furahia",
+          "desc": "Ingia kazini! Kila kitu kimetolewa — aprons, vifaa na viungo. Kazi yako pekee ni kufurahia, kujifunza, na kuchukua kumbukumbu nzuri nyumbani."
+        }
+      }
+    },
+    "donate_cta": {
+      "title": "Badilisha Burudani Yako Kuwa Baadaye ya Mtu Mwingine",
+      "desc": "Ziara yako inatusaidia kuendesha hizi vikao. Lakini mchango unaenda mbali zaidi - unagharamia udhamini kwa Wanarwanda wenye vipaji ambao hawawezi kununua elimu ya barista ya kimataifa. RWF chache elfu zinabadilisha maisha.",
+      "btn_give": "Toa Udhamini",
+      "btn_mission": "Dhamira Yetu"
+    },
+    "booking": {
+      "payment_err": "Kosa la malipo:",
+      "personal_details": "Maelezo ya Kibinafsi",
+      "personal_desc": "Hatua ya mwisho - jaza habari yako kisha ukamilishe malipo.",
+      "summary": "Muhtasari wa Uhifadhi",
+      "people": "watu",
+      "person": "mtu",
+      "group_discount_applied": "punguzo la kikundi kutumika",
+      "full_name": "Jina Kamili",
+      "email": "Barua Pepe",
+      "phone": "Nambari ya Simu",
+      "country": "Nchi / Asili",
+      "country_placeholder": "mfano: Kenya, Rwanda, Tanzania...",
+      "processing": "Inashughulikiwa...",
+      "pay": "Lipa",
+      "alert_weekend": "Tafadhali chagua Jumamosi au Jumapili — tunakaribisha tu wikendi!",
+      "payment_init_err": "Imeshindwa kuanzisha malipo:",
+      "step_experience": "Uzoefu",
+      "step_payment": "Malipo",
+      "step_confirmed": "Imethibitishwa",
+      "combo_package": "Kifurushi cha Pamoja",
+      "session_details": "Maelezo ya Kikao",
+      "session_desc": "Chagua tarehe, idadi ya watu, na shughuli.",
+      "selected_combo": "Kifurushi Kilichoteuliwa",
+      "select_activity": "Chagua Shughuli",
+      "weekend_date": "Tarehe ya Wikendi",
+      "weekends_only": "Jumamosi na Jumapili tu",
+      "num_people": "Idadi ya Watu",
+      "discount_exclaim": "punguzo!",
+      "special_requests": "Maombi Maalum (si lazima)",
+      "special_requests_hint": "Kizuizi cha chakula, mahitaji ya ufikiaji, matakwa ya lugha...",
+      "group_discount": "Punguzo la kikundi",
+      "total": "Jumla",
+      "preparing": "Inatayarishwa...",
+      "continue_payment": "Endelea kwa Malipo",
+      "success_title": "Umethibitishwa! 🎉",
+      "success_desc1": "Uthibitisho umetumwa kwa",
+      "success_desc2": "Tunatarajia kukuona mnamo",
+      "your_booking": "Pangilio Zako",
+      "guests": "wageni",
+      "guest": "mgeni",
+      "back_home": "Rejea Mwanzo",
+      "explore_more": "Chunguza Zaidi"
+    },
+    "tabs": {
+      "all_experiences": "Uzoefu Wote",
+      "combo_packages": "Vifurushi vya Pamoja",
+      "single_activities": "Shughuli Moja Moja",
+      "combos_and_save": "Pamoja na Akiba"
+    },
+    "filters": {
+      "all": "Uzoefu Wote",
+      "beginner": "Rafiki kwa Wanaoanza",
+      "hands_on": "Vitendo",
+      "short": "Chini ya Saa 2"
+    },
+    "card_hint": "💡 Bofya kadi yoyote kuona utakachofanya katika uzoefu huo.",
+    "per_person": "kwa mtu",
+    "book_btn": "Weka Nafasi Sasa",
+    "what_youll_do": "Utakachofanya",
+    "activities": {
+      "latte_art": {
+        "title": "Darasa la Sanaa ya Latte",
+        "subtitle": "Mimina & Unda",
+        "description": "Mimina mioyo, rosettas, na tulips chini ya uangalizi wa wataalam wetu wa barista. Sayansi ya kunywa maziwa, michoro huru — utaondoka na ujuzi mpya.",
+        "highlights": [
+          "Sayansi ya maziwa ya mvuke",
+          "Michoro ya msingi",
+          "Mioyo na tulips",
+          "Kahawa ya kisanaa kuchukua nyumbani"
+        ],
+        "badge": "Inayopendwa Zaidi"
+      },
+      "sensory_tasting": {
+        "title": "Sehemu ya Kuhisi Kahawa",
+        "subtitle": "Onja & Gundua",
+        "description": "Chunguza udongo wa kahawa ya Rwanda. Tambua ladha — kutoka nyanda za juu zenye matunda hadi maeneo ya chokolate — ukitumia itifaki za kitaalamu.",
+        "highlights": [
+          "Asili 5 za kipekee",
+          "Mafunzo ya magurudumu ya ladha",
+          "Utambuzi wa harufu",
+          "Ladha iliyoongozwa na wataalam"
+        ],
+        "badge": "Kipendwa cha Umma"
+      },
+      "bean_to_bag": {
+        "title": "Kutoka Punje hadi Mfuko",
+        "subtitle": "Oka & Chukua",
+        "description": "Angalia ubadilishaji wa punje za kahawa ya kijani hadi kahawa yenye harufu nzuri. Utaoka kwa mikono na kurudi na mfuko uliobinafsishwa.",
+        "highlights": [
+          "Kuchagua punje za kijani",
+          "Udhibiti wa kiwango cha kuoka",
+          "Kupoza na kupanga",
+          "Mfuko wa kibinafsi kuchukua nyumbani"
+        ],
+        "badge": "Vitendo"
+      },
+      "espresso_workshop": {
+        "title": "Warsha ya Uchimbaji wa Espresso",
+        "subtitle": "Vuta & Timiza",
+        "description": "Jifunze uhandisi nyuma ya risasi kamili ya espresso — ukubwa wa kusaga, shinikizo, joto, na muda. Vuta risasi halisi kwenye mashine zetu za kitaalamu za La Marzocco.",
+        "highlights": [
+          "Urekebishaji wa mashine",
+          "Utaalamu wa kipimo na dozi",
+          "Muda wa uchimbaji",
+          "Ndege ya ladha ya espresso"
+        ],
+        "badge": "Kiwango cha Barista"
+      },
+      "equipment_tour": {
+        "title": "Kuelewa Vifaa kwa Kina",
+        "subtitle": "Jifunze & Elewa",
+        "description": "Safari iliyoongozwa kupitia vifaa vya kitaalamu vya barista — grinder, mizani, tampers, na vifaa vya kutengeneza. Elewa unachohitaji kwa usanidi wako wa nyumbani.",
+        "highlights": [
+          "Kitaalamu vs grinder za nyumbani",
+          "Anatomia ya mashine ya espresso",
+          "Kulinganisha vifaa",
+          "Ushauri wa mpangilio wa nyumbani"
+        ],
+        "badge": "Bora kwa Wanaoanza"
+      },
+      "coffee_preparation": {
+        "title": "Kutoka Shamba hadi Kikombe",
+        "subtitle": "Andaa & Pika",
+        "description": "Fuata safari nzima ya maandalizi ya kahawa — kutoka mchakato wa kituo cha kuosha hadi kupika kwa mikono. Kila hatua kutoka kwa tunda hadi kikombe chako.",
+        "highlights": [
+          "Kutoka tunda hadi ngozi",
+          "Usindikaji wa mvua na asili",
+          "Njia za kupiga za mikono",
+          "Hadithi ya asili ya Rwanda"
+        ],
+        "badge": "Inayozamisha Sana"
+      },
+      "cold_brew": {
+        "title": "Cold Brew & Vinywaji vya Kipekee",
+        "subtitle": "Changanya & Poza",
+        "description": "Tengeneza cold brew yako, jifunze kemikali yake, kisha unda vinywaji vya kipekee (visivyo na pombe). Kamili kwa akili ya ubunifu.",
+        "highlights": [
+          "Uwiano wa cold brew",
+          "Mbinu za nitro",
+          "Uundaji wa kinywaji cha kipekee",
+          "Ujuzi wa kutoa huduma"
+        ],
+        "badge": "Ubunifu"
+      },
+      "barista_basics": {
+        "title": "Mafunzo ya Misingi ya Barista",
+        "subtitle": "Jifunze & Fanya Mazoezi",
+        "description": "Toleo lililofupishwa la kozi yetu ya kitaalamu ya barista. Misingi ya maziwa, espresso, usafi, na adabu ya huduma kwa wateja katika asubuhi moja.",
+        "highlights": [
+          "Misingi ya espresso",
+          "Maziwa ya mvuke na maumbo",
+          "Viwango vya usafi",
+          "Adabu ya msingi ya wateja"
+        ],
+        "badge": "Ya Hali ya Juu"
+      }
+    },
+    "combos": {
+      "title": "Vifurushi vya Pamoja",
+      "desc": "Unganisha uzoefu mzuri kwa bei maalum. Fanya siku nzima yake.",
+      "coffee_lover": {
+        "title": "Jozi la Wapenda Kahawa",
+        "tagline": "Mchanganyiko bora wa kuanza — onja na unda."
+      },
+      "barista_journey": {
+        "title": "Safari Kamili ya Barista",
+        "tagline": "Kila kitu ambacho barista anahitaji kujua kwa siku moja."
+      },
+      "origin_explorer": {
+        "title": "Kifurushi cha Mchunguzi wa Asili",
+        "tagline": "Fuatilia kahawa ya Rwanda kutoka shambani hadi kikombeni."
+      },
+      "ultimate": {
+        "title": "Uzoefu wa Mwisho",
+        "tagline": "Bora kabisa ya kila kitu tunachotoa. Isiyosahaulika."
+      },
+      "book_combo": "Weka Kifurushi",
+      "original_price": "Bei ya Kawaida",
+      "you_save": "Unaokombolewa"
+    },
+    "gallery": {
+      "badge": "Wakati Halisi",
+      "title": "Wikendi Halisi, Hadithi Halisi",
+      "subtitle": "Picha na video zilizowekwa moja kwa moja na timu yetu kutoka vikao halisi vya wikendi."
+    },
+    "view_gallery": "Matunzio Kamili",
+    "live_highlight": "Wakati Halisi",
+    "hover_play": "Sogeza ili kucheza",
+    "guest_highlight": "Wakati wa Mgeni",
+    "gallery_coming_soon": "Matunzio Yanakuja Hivi Karibuni",
+    "gallery_coming_soon_desc": "Meneja wetu ataweka picha na video halisi za vikao vya wikendi. Rudi baada ya tukio letu lijalo!",
+    "what_to_expect": {
+      "badge": "Jitayarishe",
+      "title": "Unachostahili Kutegemea",
+      "subtitle": "Kila kitu unachohitaji kujua kabla ya ziara yako ili uweze kuzingatia kufurahia kila sip.",
+      "step1": {
+        "title": "Weka Nafasi Mtandaoni",
+        "desc": "Chagua shughuli yako au kifurushi, chagua Jumamosi au Jumapili, ulipe kwa usalama mtandaoni. Utapokea barua pepe ya uthibitisho mara moja."
+      },
+      "step2": {
+        "title": "Fika & Kutana na Barista Wako",
+        "desc": "Kuja dakika 15 mapema. Mkufunzi wako mtaalam wa barista atakukaribisha, atakufafanua, na kuhakikisha uko sawa kabla ya kuanza."
+      },
+      "step3": {
+        "title": "Unda, Jifunze & Furahia",
+        "desc": "Ingia! Kila kitu kinatolewa — aprons, vifaa, viungo. Kazi yako pekee ni kufurahia, kujifunza, na kurudi nyumbani na kumbukumbu nzuri!"
+      }
+    },
+    "donation_cta": {
+      "title": "Geuza Furaha Yako kuwa Mustakabali wa Mtu",
+      "desc": "Ziara yako tayari inatuaidia kuendesha vikao hivi. Lakini mchango unaenda mbali zaidi — unafadhili ufadhili kwa Wanyarwanda wenye vipaji wasioweza kumudu mafunzo ya kitaalamu.",
+      "btn_donate": "Toa Ufadhili wa Elimu",
+      "btn_mission": "Dhamira Yetu"
     }
   }
 }

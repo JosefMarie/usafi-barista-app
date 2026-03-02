@@ -21,16 +21,16 @@ export function CEORevenue() {
 
                 // Calculate Revenue
                 const activeStudents = students.filter(s => s.status === 'active');
-                const estimatedTotalRevenue = activeStudents.length * 200000;
+                const estimatedTotalRevenue = activeStudents.reduce((sum, s) => sum + (s.totalFee || 250000), 0);
 
                 // Monthly Revenue catch (this month)
                 const now = new Date();
                 const thisMonthStudents = activeStudents.filter(s => s.createdAt.getMonth() === now.getMonth() && s.createdAt.getFullYear() === now.getFullYear());
-                const monthlyRevenue = thisMonthStudents.length * 200000;
+                const monthlyRevenue = thisMonthStudents.reduce((sum, s) => sum + (s.totalFee || 250000), 0);
 
                 // Pending Revenue (students with 'pending' status) - assume potential
                 const pendingStudents = students.filter(s => s.status === 'pending');
-                const pendingRevenue = pendingStudents.length * 200000;
+                const pendingRevenue = pendingStudents.reduce((sum, s) => sum + (s.totalFee || 250000), 0);
 
                 setStats({
                     totalRevenue: estimatedTotalRevenue,
@@ -48,7 +48,7 @@ export function CEORevenue() {
                     // Assuming cumulative for simplicity or enrollment based? "Revenue Report" usually implies cash flow.
                     // Let's rely on enrollment month for "Cash In".
                     const enrolledInMonth = activeStudents.filter(s => s.createdAt.getMonth() === d.getMonth() && s.createdAt.getFullYear() === d.getFullYear());
-                    const amount = enrolledInMonth.length * 200000;
+                    const amount = enrolledInMonth.reduce((sum, s) => sum + (s.totalFee || 250000), 0);
 
                     last12Months.push({
                         month: monthName,
