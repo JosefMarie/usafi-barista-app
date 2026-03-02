@@ -1,33 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../../lib/firebase';
+import { collection, addDoc, serverTimestamp, setDoc, doc } from 'firebase/firestore';
+import { db, auth } from '../../lib/firebase';
 import { useTranslation } from 'react-i18next';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { httpsCallable, getFunctions } from 'firebase/functions';
 import { useStripe, useElements, PaymentElement, Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { SEO } from '../../components/common/SEO';
+import { addDays, format, startOfToday, nextSaturday, nextSunday, isSaturday, isSunday } from 'date-fns';
+
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_sample');
 
 // ─── Data (must match WeekendExperience.jsx) ──────────────────────────────────
 
-const ACTIVITIES = [
-    { id: 'latte_art', title: 'Latte Art Masterclass', price: 20000, duration: '2hrs', gradient: 'from-pink-500 to-rose-600', icon: 'local_cafe' },
-    { id: 'sensory_tasting', title: 'Sensory Cupping Session', price: 25000, duration: '2.5hrs', gradient: 'from-amber-400 to-orange-500', icon: 'temp_preferences_custom' },
-    { id: 'bean_to_bag', title: 'Bean to Bag: Roasting Fun', price: 30000, duration: '3hrs', gradient: 'from-emerald-400 to-teal-500', icon: 'fire_griddler' },
-    { id: 'espresso_workshop', title: 'Espresso Extraction Workshop', price: 27000, duration: '2hrs', gradient: 'from-violet-500 to-indigo-600', icon: 'coffee_maker' },
-    { id: 'equipment_tour', title: 'Equipment & Tools Deep Dive', price: 17000, duration: '1.5hrs', gradient: 'from-sky-400 to-blue-500', icon: 'settings' },
-    { id: 'coffee_preparation', title: 'Farm to Cup Experience', price: 23000, duration: '2.5hrs', gradient: 'from-lime-500 to-emerald-600', icon: 'agriculture' },
-    { id: 'cold_brew', title: 'Cold Brew & Signature Drinks', price: 22000, duration: '2hrs', gradient: 'from-blue-400 to-violet-500', icon: 'water_drop' },
-    { id: 'barista_basics', title: 'Barista Basics Bootcamp', price: 35000, duration: '4hrs', gradient: 'from-fuchsia-500 to-rose-600', icon: 'school' }
-];
+// ─── Constants ──────────────────────────────────────────────────────────
+const DEFAULT_BNR_RATE = 1463; // Current known BNR rate
 
-const COMBOS = {
-    coffee_lover: { title: "Coffee Lover's Duo", activities: ['latte_art', 'sensory_tasting'], comboPrice: 44000 },
-    barista_journey: { title: 'The Full Barista Journey', activities: ['espresso_workshop', 'latte_art', 'equipment_tour'], comboPrice: 53000 },
-    origin_explorer: { title: "Origin Explorer's Pack", activities: ['coffee_preparation', 'sensory_tasting', 'bean_to_bag'], comboPrice: 65000 },
-    ultimate: { title: 'The Ultimate Experience', activities: ['barista_basics', 'latte_art', 'sensory_tasting', 'bean_to_bag'], comboPrice: 84000 }
+const WEEKEND_COMBO = {
+    id: 'weekend_combo',
+    title: '7-Point Combo Coffee Course',
+    price1Day: 150,
+    price2Days: 300,
+    gradient: 'from-rose-500 via-amber-500 to-emerald-500',
+    icon: 'workspace_premium'
 };
 
 function getGroupDiscount(numPeople) {
@@ -36,6 +34,27 @@ function getGroupDiscount(numPeople) {
     if (numPeople >= 2) return 0.05;
     return 0;
 }
+
+const getUpcomingWeekends = (count = 8) => {
+    const weekends = [];
+    let current = startOfToday();
+
+    // Find next Saturday
+    let sat = isSaturday(current) ? current : nextSaturday(current);
+
+    for (let i = 0; i < count; i++) {
+        const saturday = addDays(sat, i * 7);
+        const sunday = addDays(saturday, 1);
+        weekends.push({
+            id: format(saturday, 'yyyy-MM-dd'),
+            saturday,
+            sunday,
+            label: `${format(saturday, 'MMM d')} - ${format(sunday, 'MMM d')}`
+        });
+    }
+    return weekends;
+};
+
 
 // ─── Stripe Payment Step ──────────────────────────────────────────────────────
 
@@ -66,9 +85,33 @@ function PaymentForm({ formData, totalPrice, finalTotal, bookingDetails, onNext,
             if (result.error) {
                 alert(result.error.message);
             } else {
+                // 1. Create Auth User
+                let userId = null;
+                try {
+                    const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+                    userId = userCredential.user.uid;
+
+                    // 2. Create/Update User Profile
+                    await setDoc(doc(db, 'users', userId), {
+                        fullName: formData.fullName,
+                        email: formData.email,
+                        role: 'weekend_guest',
+                        status: 'active',
+                        createdAt: serverTimestamp(),
+                        phoneNumber: formData.phone,
+                        country: formData.country
+                    });
+                } catch (authErr) {
+                    console.warn("Auth account creation failed (user might exist):", authErr.message);
+                    // If user exists, we continue with booking but they might need to reset password
+                    // In a production app, we should handle this more gracefully
+                }
+
+                // 3. Save Booking
                 await addDoc(collection(db, 'weekend_bookings'), {
                     ...formData,
                     ...bookingDetails,
+                    userId: userId,
                     totalPrice: finalTotal,
                     status: 'confirmed',
                     paymentMethod: 'stripe',
@@ -102,8 +145,9 @@ function PaymentForm({ formData, totalPrice, finalTotal, bookingDetails, onNext,
                 <div className="flex justify-between items-center">
                     <div>
                         <p className="font-black text-sm text-espresso dark:text-[#F5DEB3]">
-                            {bookingDetails.isCombo ? t(`weekendExperience.combos.${bookingDetails.comboId}.title`, bookingDetails.comboTitle) : t(`weekendExperience.activities.${bookingDetails.activityId}.title`, bookingDetails.activityTitle)}
+                            {t('weekendExperience.combo.title')}
                         </p>
+
                         <p className="text-xs text-espresso/50">{formData.numPeople} {formData.numPeople > 1 ? t('weekendExperience.booking.people', 'people') : t('weekendExperience.booking.person', 'person')} · {formData.date}</p>
                         {bookingDetails.groupDiscount > 0 && (
                             <p className="text-xs text-emerald-600 font-bold mt-1">✓ {Math.round(bookingDetails.groupDiscount * 100)}% {t('weekendExperience.booking.group_discount_applied', 'group discount applied')}</p>
@@ -139,6 +183,15 @@ function PaymentForm({ formData, totalPrice, finalTotal, bookingDetails, onNext,
                     />
                 </div>
                 <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-espresso/40">{t('weekendExperience.booking.password', 'Create Password')}</label>
+                    <input type="password" required value={formData.password}
+                        onChange={e => formData.setPassword(e.target.value)}
+                        minLength={6}
+                        className="w-full px-6 py-4 rounded-2xl bg-[#FAF5E8] dark:bg-white/5 border border-espresso/10 focus:border-rose-500 outline-none font-bold"
+                        placeholder="Min. 6 characters"
+                    />
+                </div>
+                <div className="space-y-2">
                     <label className="text-[10px] font-black uppercase tracking-widest text-espresso/40">{t('weekendExperience.booking.country', 'Country / Origin')}</label>
                     <input type="text" placeholder={t('weekendExperience.booking.country_placeholder', 'e.g. USA, France, Kenya...')}
                         value={formData.country}
@@ -151,7 +204,7 @@ function PaymentForm({ formData, totalPrice, finalTotal, bookingDetails, onNext,
             {/* Stripe Card Panel */}
             <div className="p-8 rounded-[2.5rem] bg-gradient-to-br from-espresso to-[#2A1E1B] text-[#F5DEB3] shadow-2xl relative overflow-hidden">
                 <div className="absolute -right-10 -bottom-10 p-20 opacity-5 scale-150 rotate-12 pointer-events-none">
-                    <span className="material-symbols-outlined text-[10rem]">verified</span>
+                    <span className="material-symbols-outlined">verified</span>
                 </div>
                 <div className="relative z-10 space-y-6">
                     <div className="flex justify-between items-center">
@@ -187,53 +240,76 @@ export function ExperienceBooking() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
-    const activityId = searchParams.get('activity') || 'latte_art';
-    const comboId = searchParams.get('combo');
-
-    const selectedActivity = ACTIVITIES.find(a => a.id === activityId);
-    const selectedCombo = comboId ? COMBOS[comboId] : null;
+    const initialDuration = parseInt(searchParams.get('duration')) || 1;
 
     const [step, setStep] = useState(1);
     const [loading, setLoading] = useState(false);
     const [clientSecret, setClientSecret] = useState('');
 
-    const [currentActivity, setCurrentActivity] = useState(selectedActivity || ACTIVITIES[0]);
+    const [duration, setDuration] = useState(initialDuration); // 1 or 2
     const [numPeople, setNumPeople] = useState(1);
     const [date, setDate] = useState('');
     const [specialRequests, setSpecialRequests] = useState('');
+
+    const [exchangeRate, setExchangeRate] = useState(DEFAULT_BNR_RATE);
+    const [isRateLoading, setIsRateLoading] = useState(true);
+
+    // Reset date when duration changes to prevent invalid states
+    useEffect(() => {
+        setDate('');
+    }, [duration]);
+
+    useEffect(() => {
+        const fetchRate = async () => {
+            try {
+                const response = await fetch('https://open.er-api.com/v6/latest/USD');
+                const data = await response.json();
+                if (data && data.rates && data.rates.RWF) {
+                    setExchangeRate(Math.round(data.rates.RWF));
+                }
+            } catch (err) {
+                console.error('Failed to fetch BNR rate, using fallback:', err);
+                // Fallback is already set as DEFAULT_BNR_RATE
+            } finally {
+                setIsRateLoading(false);
+            }
+        };
+        fetchRate();
+    }, []);
 
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [country, setCountry] = useState('');
+    const [password, setPassword] = useState('');
 
-    // Price calculations
-    const basePrice = selectedCombo ? selectedCombo.comboPrice : currentActivity.price;
-    const totalBeforeDiscount = selectedCombo ? basePrice : basePrice * numPeople;
-    const groupDiscount = selectedCombo ? 0 : getGroupDiscount(numPeople);
-    const discountAmount = Math.round(totalBeforeDiscount * groupDiscount);
-    const finalTotal = totalBeforeDiscount - discountAmount;
+    // Price calculations (USD for display, RWF for Stripe)
+    const pricePerPersonUSD = duration === 1 ? WEEKEND_COMBO.price1Day : WEEKEND_COMBO.price2Days;
+    const finalTotalUSD = pricePerPersonUSD * numPeople;
+    const finalTotal = Math.round(finalTotalUSD * exchangeRate); // Convert to RWF for Stripe using dynamic rate
+
 
     const bookingDetails = {
-        activityId: currentActivity.id,
-        activityTitle: selectedCombo ? null : currentActivity.title,
-        comboId: comboId || null,
-        comboTitle: selectedCombo ? selectedCombo.title : null,
-        isCombo: !!selectedCombo,
+        activityId: WEEKEND_COMBO.id,
+        activityTitle: t('weekendExperience.combo.title'),
+        duration,
         numPeople,
         date,
         specialRequests,
-        basePrice,
-        groupDiscount,
-        discountAmount
+        pricePerPersonUSD,
+        finalTotalUSD,
     };
 
+
+
     const handleContinue = async () => {
+        // Validation now redundant but kept as safety
         const day = new Date(date).getDay();
         if (day !== 0 && day !== 6) {
             alert(t('weekendExperience.booking.alert_weekend', 'Please choose a Saturday or Sunday — we only host on weekends!'));
             return;
         }
+
         setLoading(true);
         try {
             const functions = getFunctions();
@@ -242,11 +318,11 @@ export function ExperienceBooking() {
                 amount: finalTotal,
                 currency: 'rwf',
                 metadata: {
-                    type: selectedCombo ? 'combo_booking' : 'experience_booking',
-                    activity: currentActivity.id,
-                    combo: comboId || null,
+                    type: 'weekend_combo_v2',
+                    duration,
                     numPeople
                 }
+
             });
             setClientSecret(data.clientSecret);
             setStep(2);
@@ -265,7 +341,7 @@ export function ExperienceBooking() {
 
     return (
         <div className="flex flex-col min-h-screen bg-[#FAF5E8] dark:bg-[#1c1916] font-display text-espresso dark:text-white pb-20 pt-24">
-            <SEO title={selectedCombo ? `${t('weekendExperience.book_btn', 'Book')} ${t(`weekendExperience.combos.${selectedCombo.id}.title`, selectedCombo.title)}` : `${t('weekendExperience.book_btn', 'Book')} ${t(`weekendExperience.activities.${currentActivity.id}.title`, currentActivity.title)}`} />
+            <SEO title={`${t('weekendExperience.book_btn', 'Book')} ${WEEKEND_COMBO.title}`} />
 
             <div className="container mx-auto px-6 max-w-3xl">
                 {/* Progress */}
@@ -295,87 +371,114 @@ export function ExperienceBooking() {
                                 </button>
                                 <div>
                                     <h2 className="font-serif text-3xl font-black text-[#4B3832] dark:text-[#F5DEB3] mb-1">
-                                        {selectedCombo ? t('weekendExperience.booking.combo_package', 'Combo Package') : t('weekendExperience.booking.session_details', 'Session Details')}
+                                        {t('weekendExperience.booking.combo_package', 'Combo Package')}
                                     </h2>
                                     <p className="text-[#4B3832]/60 dark:text-[#F5DEB3]/60 font-medium text-sm">{t('weekendExperience.booking.session_desc', 'Choose your date, number of participants, and activity.')}</p>
                                 </div>
                             </div>
 
-                            {selectedCombo && (
-                                <div className="p-6 rounded-2xl bg-gradient-to-r from-violet-500/10 to-pink-500/10 border border-violet-500/20">
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-violet-500 mb-2">{t('weekendExperience.booking.selected_combo', 'Selected Combo')}</p>
-                                    <p className="font-serif font-black text-xl text-[#4B3832] dark:text-[#F5DEB3]">{t(`weekendExperience.combos.${selectedCombo.id}.title`, selectedCombo.title)}</p>
-                                    <p className="text-sm text-espresso/50 dark:text-[#F5DEB3]/50 mt-1">
-                                        {selectedCombo.activities.map(id => t(`weekendExperience.activities.${id}.title`, ACTIVITIES.find(a => a.id === id)?.title)).join(' · ')}
-                                    </p>
-                                </div>
-                            )}
+                            <div className="p-6 rounded-2xl bg-gradient-to-r from-violet-500/10 to-pink-500/10 border border-violet-500/20">
+                                <p className="text-[10px] font-black uppercase tracking-widest text-violet-500 mb-2">{t('weekendExperience.booking.selected_combo', 'Selected Combo')}</p>
+                                <p className="font-serif font-black text-xl text-[#4B3832] dark:text-[#F5DEB3]">{WEEKEND_COMBO.title}</p>
+                                <p className="text-sm text-espresso/50 dark:text-[#F5DEB3]/50 mt-1">
+                                    {t('weekendExperience.booking.combo_description', 'A comprehensive 7-point coffee course covering everything from bean to cup.')}
+                                </p>
+                            </div>
 
-                            {/* Activity Selector (for non-combo) */}
-                            {!selectedCombo && (
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-espresso/40">{t('weekendExperience.booking.select_activity', 'Select Activity')}</label>
-                                    <div className="grid grid-cols-1 gap-3 max-h-64 overflow-y-auto pr-2">
-                                        {ACTIVITIES.map(a => (
-                                            <button
-                                                key={a.id}
-                                                type="button"
-                                                onClick={() => setCurrentActivity(a)}
-                                                className={`flex items-center gap-4 p-4 rounded-2xl border-2 text-left transition-all ${currentActivity.id === a.id ? 'border-rose-500 bg-rose-500/5 shadow-md' : 'border-espresso/5 hover:border-espresso/20'}`}
-                                            >
-                                                <div className={`size-10 rounded-xl bg-gradient-to-br ${a.gradient} flex items-center justify-center text-white flex-shrink-0`}>
-                                                    <span className="material-symbols-outlined text-lg">{a.icon}</span>
-                                                </div>
-                                                <div className="flex-1">
-                                                    <p className="font-bold text-sm text-espresso dark:text-[#F5DEB3]">{t(`weekendExperience.activities.${a.id}.title`, a.title)}</p>
-                                                    <p className="text-[10px] text-espresso/40">{t(`weekendExperience.activities.${a.id}.duration`, a.duration)}</p>
-                                                </div>
-                                                <p className="font-serif font-black text-sm text-rose-600">{a.price.toLocaleString()} RWF</p>
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-espresso/40">{t('weekendExperience.booking.weekend_date', 'Weekend Date')}</label>
-                                    <input
-                                        type="date" required
-                                        min={new Date().toISOString().split('T')[0]}
-                                        value={date}
-                                        onChange={e => setDate(e.target.value)}
-                                        className="w-full px-6 py-4 rounded-2xl bg-[#FAF5E8] dark:bg-white/5 border border-espresso/10 focus:border-rose-500 outline-none font-bold"
-                                    />
-                                    <p className="text-[9px] text-rose-500 font-bold uppercase tracking-tighter flex items-center gap-1">
-                                        <span className="material-symbols-outlined text-sm">event</span>
-                                        {t('weekendExperience.booking.weekends_only', 'Saturdays & Sundays only')}
-                                    </p>
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-espresso/40">
-                                        {t('weekendExperience.booking.num_people', 'Number of People')}
-                                        {numPeople >= 2 && !selectedCombo && (
-                                            <span className="ml-2 text-emerald-600">({Math.round(getGroupDiscount(numPeople) * 100)}% {t('weekendExperience.booking.discount_exclaim', 'discount!')})</span>
-                                        )}
-                                    </label>
-                                    <div className="flex items-center gap-3">
+                            {/* Duration Selection */}
+                            <div className="space-y-4">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-[#F5DEB3]/40">
+                                    Course Duration
+                                </label>
+                                <div className="grid grid-cols-2 gap-4">
+                                    {[
+                                        { val: 1, label: '1 Day', price: '$150' },
+                                        { val: 2, label: '2 Days', price: '$300' }
+                                    ].map(d => (
                                         <button
+                                            key={d.val}
                                             type="button"
-                                            onClick={() => setNumPeople(Math.max(1, numPeople - 1))}
-                                            className="size-12 rounded-xl border border-espresso/10 flex items-center justify-center hover:bg-espresso hover:text-white transition-colors font-black text-lg"
-                                        >−</button>
-                                        <div className="flex-1 px-6 py-4 rounded-2xl bg-[#FAF5E8] dark:bg-white/5 border border-espresso/10 text-center font-black text-xl">
-                                            {numPeople}
-                                        </div>
-                                        <button
-                                            type="button"
-                                            onClick={() => setNumPeople(Math.min(20, numPeople + 1))}
-                                            className="size-12 rounded-xl border border-espresso/10 flex items-center justify-center hover:bg-espresso hover:text-white transition-colors font-black text-lg"
-                                        >+</button>
-                                    </div>
+                                            onClick={() => setDuration(d.val)}
+                                            className={`p-6 rounded-3xl border-2 transition-all flex flex-col items-center gap-1 ${duration === d.val ? 'border-rose-500 bg-rose-500/5 shadow-inner' : 'border-espresso/5 bg-white dark:bg-white/5 hover:border-espresso/20'}`}
+                                        >
+                                            <span className={`text-[10px] font-black uppercase tracking-widest ${duration === d.val ? 'text-rose-500' : 'text-espresso/40'}`}>{d.label}</span>
+                                            <span className={`text-xl font-serif font-black ${duration === d.val ? 'text-espresso dark:text-white' : 'text-espresso/20'}`}>{d.price}</span>
+                                        </button>
+                                    ))}
                                 </div>
                             </div>
+
+                            {/* Weekend Date Selection */}
+                            <div className="space-y-4">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-[#F5DEB3]/40">
+                                    {t('weekendExperience.weekend_picker.label', 'Select Weekend Date')}
+                                </label>
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-h-72 overflow-y-auto pr-2 no-scrollbar">
+                                    {getUpcomingWeekends(8).map((wk) => {
+                                        if (duration === 1) {
+                                            // Show individual Saturday and Sunday buttons
+                                            return [wk.saturday, wk.sunday].map(d => {
+                                                const dateStr = format(d, 'yyyy-MM-dd');
+                                                const isSelected = date === dateStr;
+                                                return (
+                                                    <button
+                                                        key={dateStr}
+                                                        type="button"
+                                                        onClick={() => setDate(dateStr)}
+                                                        className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-1 ${isSelected ? 'border-rose-500 bg-rose-500/5 shadow-md scale-105' : 'border-espresso/5 bg-white dark:bg-white/5 hover:border-espresso/20'}`}
+                                                    >
+                                                        <span className={`text-[10px] font-black uppercase tracking-widest ${isSelected ? 'text-rose-500' : 'text-espresso/30'}`}>
+                                                            {format(d, 'EEEE')}
+                                                        </span>
+                                                        <span className="font-serif font-black text-lg">{format(d, 'MMM d')}</span>
+                                                        <span className="text-[9px] opacity-40">{format(d, 'yyyy')}</span>
+                                                    </button>
+                                                );
+                                            });
+                                        } else {
+                                            // Show combined Weekend Button
+                                            const isSelected = date === wk.id;
+                                            return (
+                                                <button
+                                                    key={wk.id}
+                                                    type="button"
+                                                    onClick={() => setDate(wk.id)}
+                                                    className={`col-span-2 p-6 rounded-3xl border-2 transition-all flex flex-col items-center gap-2 ${isSelected ? 'border-rose-500 bg-rose-500/5 shadow-md scale-105' : 'border-espresso/5 bg-white dark:bg-white/5 hover:border-espresso/20'}`}
+                                                >
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="material-symbols-outlined text-rose-500 text-sm">calendar_view_week</span>
+                                                        <span className={`text-[10px] font-black uppercase tracking-widest ${isSelected ? 'text-rose-500' : 'text-espresso/30'}`}>
+                                                            {t('weekendExperience.weekend_picker.grouped_label', 'Full Weekend Experience')}
+                                                        </span>
+                                                    </div>
+                                                    <span className="font-serif font-black text-xl">{wk.label}</span>
+                                                    <span className="text-[10px] opacity-40 uppercase tracking-tighter">
+                                                        {t('weekendExperience.weekend_picker.sat_sun', 'Saturday & Sunday')}
+                                                    </span>
+                                                </button>
+                                            );
+                                        }
+                                    }).flat()}
+                                </div>
+                                <p className="text-[10px] text-rose-500/60 font-medium italic text-center">
+                                    {duration === 2
+                                        ? t('weekendExperience.weekend_picker.duration_note', 'For 2-day courses, sessions begin on the selected date.')
+                                        : t('weekendExperience.weekend_picker.helper', 'Only Saturdays & Sundays are available for booking.')
+                                    }
+                                </p>
+                            </div>
+
+
+                            {/* Group Size selection (moved below date for better flow) */}
+                            <div className="space-y-4">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-espresso/40 dark:text-[#F5DEB3]/40">Number of People</label>
+                                <div className="flex items-center gap-4 bg-white dark:bg-white/5 border border-espresso/10 rounded-2xl p-3 transition-all focus-within:ring-2 focus-within:ring-rose-500/20 max-w-xs mx-auto md:mx-0">
+                                    <button onClick={() => setNumPeople(Math.max(1, numPeople - 1))} className="size-12 rounded-xl bg-espresso/5 flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all"><span className="material-symbols-outlined">remove</span></button>
+                                    <span className="flex-1 text-center font-serif font-black text-2xl">{numPeople}</span>
+                                    <button onClick={() => setNumPeople(Math.min(10, numPeople + 1))} className="size-12 rounded-xl bg-espresso/5 flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all"><span className="material-symbols-outlined">add</span></button>
+                                </div>
+                            </div>
+
 
                             <div className="space-y-2">
                                 <label className="text-[10px] font-black uppercase tracking-widest text-espresso/40">{t('weekendExperience.booking.special_requests', 'Special Requests (optional)')}</label>
@@ -388,48 +491,60 @@ export function ExperienceBooking() {
                                 />
                             </div>
 
-                            {/* Price Breakdown */}
-                            <div className="pt-6 border-t border-espresso/5">
-                                <div className="space-y-2 mb-6">
-                                    <div className="flex justify-between text-sm">
-                                        <span className="text-espresso/50">
-                                            {selectedCombo ? t(`weekendExperience.combos.${selectedCombo.id}.title`, selectedCombo.title) : `${t(`weekendExperience.activities.${currentActivity.id}.title`, currentActivity.title)} × ${numPeople}`}
-                                        </span>
-                                        <span className="font-bold">{totalBeforeDiscount.toLocaleString()} RWF</span>
-                                    </div>
-                                    {discountAmount > 0 && (
-                                        <div className="flex justify-between text-sm text-emerald-600">
-                                            <span>{t('weekendExperience.booking.group_discount', 'Group discount')} ({Math.round(groupDiscount * 100)}%)</span>
-                                            <span className="font-bold">−{discountAmount.toLocaleString()} RWF</span>
+                            <div className="p-8 rounded-[2rem] bg-espresso/5 dark:bg-white/5 border border-espresso/10 space-y-6">
+                                <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest opacity-40">
+                                    <span>Summary</span>
+                                    <span>Amount</span>
+                                </div>
+                                <div className="space-y-4">
+                                    <div className="flex justify-between items-end">
+                                        <div>
+                                            <p className="font-serif font-black text-xl">{t('weekendExperience.combo.title')}</p>
+                                            <p className="text-xs opacity-50">{duration === 1 ? '1 Day' : '2 Day'} Course for {numPeople} {numPeople > 1 ? 'people' : 'person'}</p>
                                         </div>
-                                    )}
-                                    <div className="flex justify-between text-lg font-black pt-2 border-t border-espresso/5">
-                                        <span className="text-[#4B3832] dark:text-[#F5DEB3]">{t('weekendExperience.booking.total', 'Total')}</span>
-                                        <span className="text-rose-600 font-serif">{finalTotal.toLocaleString()} RWF</span>
+                                        <p className="font-serif font-black text-xl">${finalTotalUSD}</p>
                                     </div>
                                 </div>
 
-                                <button
-                                    onClick={handleContinue}
-                                    disabled={!date || loading}
-                                    className="w-full py-5 bg-gradient-to-r from-rose-500 to-amber-500 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
-                                >
-                                    {loading ? (
-                                        <><div className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>{t('weekendExperience.booking.preparing', 'Preparing...')}</>
-                                    ) : (
-                                        <>{t('weekendExperience.booking.continue_payment', 'Continue to Payment')} <span className="material-symbols-outlined text-sm">arrow_forward</span></>
-                                    )}
-                                </button>
+                                <div className="pt-6 border-t border-espresso/10 flex justify-between items-center">
+                                    <span className="text-xs font-black uppercase tracking-widest">Total to Pay (RWF)</span>
+                                    <div className="text-right">
+                                        {isRateLoading ? (
+                                            <div className="flex items-center justify-end gap-2 text-rose-500/50">
+                                                <div className="size-3 border-2 border-rose-500/20 border-t-rose-500 rounded-full animate-spin"></div>
+                                                <span className="text-sm font-serif font-black">Fetching BNR Rate...</span>
+                                            </div>
+                                        ) : (
+                                            <p className="text-3xl font-serif font-black text-rose-500">{finalTotal.toLocaleString()} RWF</p>
+                                        )}
+                                        <p className="text-[10px] opacity-40 uppercase tracking-widest">BNR Exchange Rate: $1 = {exchangeRate.toLocaleString()} RWF</p>
+                                    </div>
+                                </div>
+
                             </div>
+
+
+                            <button
+                                onClick={handleContinue}
+                                disabled={!date || loading}
+                                className="w-full py-5 bg-gradient-to-r from-rose-500 to-amber-500 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+                            >
+                                {loading ? (
+                                    <><div className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>{t('weekendExperience.booking.preparing', 'Preparing...')}</>
+                                ) : (
+                                    <>{t('weekendExperience.booking.continue_payment', 'Continue to Payment')} <span className="material-symbols-outlined text-sm">arrow_forward</span></>
+                                )}
+                            </button>
                         </div>
                     )}
+
 
                     {/* Step 2: Payment */}
                     {step === 2 && clientSecret && (
                         <Elements stripe={stripePromise} options={{ clientSecret }}>
                             <PaymentForm
-                                formData={{ fullName, email, phone, country, numPeople, date, setFullName, setEmail, setPhone, setCountry }}
-                                totalPrice={totalBeforeDiscount}
+                                formData={{ fullName, email, phone, country, password, numPeople, date, setFullName, setEmail, setPhone, setCountry, setPassword }}
+                                totalPrice={finalTotalUSD}
                                 finalTotal={finalTotal}
                                 bookingDetails={bookingDetails}
                                 onNext={() => setStep(3)}
@@ -437,6 +552,7 @@ export function ExperienceBooking() {
                                 loading={loading}
                                 setLoading={setLoading}
                             />
+
                         </Elements>
                     )}
 
@@ -460,12 +576,19 @@ export function ExperienceBooking() {
                             <div className="p-6 rounded-2xl bg-gradient-to-r from-rose-500/10 to-amber-500/10 border border-rose-500/20 text-left space-y-2 max-w-sm mx-auto">
                                 <p className="text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-3">{t('weekendExperience.booking.your_booking', 'Your Booking')}</p>
                                 <p className="font-bold text-sm">
-                                    {selectedCombo ? t(`weekendExperience.combos.${selectedCombo.id}.title`, selectedCombo.title) : t(`weekendExperience.activities.${currentActivity.id}.title`, currentActivity.title)}
+                                    {t('weekendExperience.combo.title')}
                                 </p>
-                                <p className="text-xs text-espresso/50">{date} · {numPeople} {numPeople > 1 ? t('weekendExperience.booking.guests', 'guests') : t('weekendExperience.booking.guest', 'guest')}</p>
+                                <p className="text-xs text-espresso/50">
+                                    {duration === 2 ? getUpcomingWeekends(8).find(w => w.id === date)?.label || 'Full Weekend' : date} · {numPeople} {numPeople > 1 ? t('weekendExperience.booking.guests', 'guests') : t('weekendExperience.booking.guest', 'guest')} · {duration === 1 ? '1 Day' : '2 Days'}
+                                </p>
                                 <p className="font-serif font-black text-rose-600">{finalTotal.toLocaleString()} RWF</p>
                             </div>
+
                             <div className="flex flex-wrap gap-4 justify-center pt-4">
+                                <button onClick={() => navigate('/guest/dashboard')} className="px-10 py-4 bg-rose-500 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:scale-105 transition-all shadow-xl flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-sm">dashboard</span>
+                                    {t('weekendExperience.booking.go_to_dashboard', 'Go to Dashboard')}
+                                </button>
                                 <button onClick={() => navigate('/')} className="px-10 py-4 bg-[#4B3832] text-[#F5DEB3] rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:scale-105 transition-all shadow-xl">
                                     {t('weekendExperience.booking.back_home', 'Back to Home')}
                                 </button>
@@ -486,3 +609,4 @@ export function ExperienceBooking() {
         </div>
     );
 }
+

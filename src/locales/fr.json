@@ -1251,256 +1251,119 @@
   },
   "weekendExperience": {
     "hero_badge": "Chaque Samedi & Dimanche",
-    "title": "Expériences Café du Weekend",
-    "description": "Que vous soyez un voyageur curieux, un passionné de café ou simplement à la recherche d'une activité extraordinaire ce weekend — nos portes vous sont ouvertes. Plongez dans l'univers du café de spécialité avec nos baristas experts.",
+    "title": "Expérience Café du Weekend",
+    "description": "Que vous soyez un voyageur curieux, un passionné de café ou simplement à la recherche d'une activité extraordinaire ce weekend — nos portes vous sont ouvertes. Plongez dans l'univers du café de spécialité avec nos baristas experts grâce à notre Cours Combo en 7 points.",
     "stats": {
-      "activities": "Activités Uniques",
-      "combos": "Forfaits Combos",
-      "discount": "Réduction Groupe",
+      "modules": "7 Modules Stratégiques",
+      "duration": "1-2 Jours",
+      "price_start": "À partir de 150$",
       "days": "Weekends Ouverts"
     },
-    "explore_btn": "Explorer les Activités",
-    "donate_btn": "Offrir une Bourse",
-    "highlights": {
-      "brew": {
-        "title": "Préparez Votre Café",
-        "desc": "Avec vrai équipement professionnel"
+    "explore_btn": "Découvrir le Voyage",
+    "book_btn": "Réserver votre Place",
+    "guest_login_btn": "Connexion Invité",
+    "gallery_coming_soon": "Galerie Bientôt Disponible",
+    "pricing": {
+      "one_day": "150$",
+      "two_days": "300$",
+      "per_person": "par personne"
+    },
+    "combo": {
+      "title": "Cours Combo en 7 points",
+      "subtitle": "Un voyage complet du grain à la tasse",
+      "m1": {
+        "title": "Introduction au Café",
+        "desc": "Histoire, variétés (Arabica vs Robusta), et le voyage de la ferme à la tasse."
       },
-      "taste": {
-        "title": "Goûtez & Découvrez",
-        "desc": "Explorez le terroir rwandais"
+      "m2": {
+        "title": "Profil de Torréfaction",
+        "desc": "Compréhension des niveaux de torréfaction, chimie et développement sensoriel."
       },
-      "learn": {
-        "title": "Apprenez des Pros",
-        "desc": "Instructeurs baristas experts"
+      "m3": {
+        "title": "Tableau de Mouture",
+        "desc": "Maîtrise de la taille des particules pour différentes méthodes d'infusion."
       },
-      "capture": {
-        "title": "Capturez des Moments",
-        "desc": "Partagez votre expérience"
+      "m4": {
+        "title": "Extraction Espresso",
+        "desc": "Perfectionner le shot doré : pression, température et timing."
+      },
+      "m5": {
+        "title": "Pratique du Latte Art",
+        "desc": "Maîtrise de la texture du lait et création de magnifiques designs."
+      },
+      "m6": {
+        "title": "Boissons à base d'Espresso",
+        "desc": "Confectionner le parfait Cappuccino, Flat White, et plus encore."
+      },
+      "m7": {
+        "title": "Infusion Manuelle de Base",
+        "desc": "L'art de la préparation V60, Chemex et Aeropress."
       }
-    },
-    "group_discount": {
-      "title": "Plus vous êtes nombreux, plus vous économisez !",
-      "badge": "Réductions Groupe",
-      "desc": "Venez avec votre équipe, votre famille ou vos amis et profitez de réductions automatiques.",
-      "tier1": "2–3 personnes",
-      "tier2": "4–6 personnes",
-      "tier3": "7+ personnes"
-    },
-    "choose_adventure": "Choisissez Votre Aventure",
-    "combos_description": "Nos forfaits combo regroupent les meilleures expériences à un prix spécial. Parfait si vous voulez y passer la journée — ou revenir en sachant qu'il y a plus à découvrir.",
-    "click_card_hint": "Cliquez sur une carte pour voir ce que vous ferez dans cette expérience.",
-    "gallery": {
-      "badge": "Moments en Direct",
-      "title": "Vrais Weekends,<br />Vraies Histoires",
-      "subtitle": "Photos et vidéos postées directement par notre équipe lors des sessions du weekend. Chaque image est un moment qui s'est déroulé ici.",
-      "btn": "Galerie Complète"
-    },
-    "what_to_expect": {
-      "badge": "Soyez Prêts",
-      "title": "À Quoi S'attendre",
-      "desc": "Tout ce que vous devez savoir avant votre visite afin de vous concentrer sur la dégustation.",
-      "steps": {
-        "book": {
-          "title": "Réservez en Ligne",
-          "desc": "Choisissez votre activité ou combo, sélectionnez un samedi ou dimanche, et payez en ligne en toute sécurité."
-        },
-        "arrive": {
-          "title": "Arrivez & Rencontrez Votre Barista",
-          "desc": "Venez à notre école 15 minutes en avance. Votre instructeur barista expert vous accueillera, vous briefera et s'assurera que vous êtes à l'aise avant de commencer."
-        },
-        "enjoy": {
-          "title": "Créez, Apprenez & Profitez",
-          "desc": "Plongez-y ! Tout est fourni — tabliers, équipement, ingrédients. Votre seule tâche est de profiter, d'apprendre et de ramener de super souvenirs (et du café !) à la maison."
-        }
-      }
-    },
-    "donate_cta": {
-      "title": "Transformez Votre Plaisir en Avenir",
-      "desc": "Votre visite nous aide déjà à organiser ces sessions. Mais un don va plus loin — il finance des bourses pour des Rwandais talentueux ne pouvant s'offrir une formation professionnelle. Quelques milliers de RWF changent une vie.",
-      "btn_give": "Offrir une Bourse",
-      "btn_mission": "Notre Mission"
     },
     "booking": {
-      "payment_err": "Erreur de paiement :",
-      "personal_details": "Détails Personnels",
-      "personal_desc": "Dernière étape — remplissez vos informations et finalisez le paiement.",
-      "summary": "Résumé de Réservation",
-      "people": "personnes",
-      "person": "personne",
-      "group_discount_applied": "réduction de groupe appliquée",
-      "full_name": "Nom Complet",
-      "email": "Adresse E-mail",
-      "phone": "Numéro de Téléphone",
-      "country": "Pays / Origine",
-      "country_placeholder": "ex. USA, France, Kenya...",
-      "processing": "Traitement...",
-      "pay": "Payer",
-      "alert_weekend": "Veuillez choisir un samedi ou un dimanche — nous n'accueillons que le weekend !",
-      "payment_init_err": "Échec de l'initialisation du paiement :",
       "step_experience": "Expérience",
       "step_payment": "Paiement",
       "step_confirmed": "Confirmé",
-      "combo_package": "Forfait Combo",
-      "session_details": "Détails de Session",
-      "session_desc": "Choisissez votre date, le nombre de participants et l'activité.",
-      "selected_combo": "Combo Sélectionné",
-      "select_activity": "Sélectionner une Activité",
+      "session_details": "Détails du Cours",
+      "session_desc": "Sélectionnez votre durée et le nombre de participants.",
+      "duration": "Durée du Cours",
+      "one_day": "Expérience de 1 Jour (150$)",
+      "two_days": "Expérience de 2 Jours (300$)",
+      "num_people": "Nombre de Personnes",
+      "total": "Prix Total",
       "weekend_date": "Date du Weekend",
       "weekends_only": "Samedis & Dimanches uniquement",
-      "num_people": "Nombre de Personnes",
-      "discount_exclaim": "de réduction !",
-      "special_requests": "Demandes Spéciales (optionnel)",
-      "special_requests_hint": "Restrictions alimentaires, besoins d'accessibilité, préférences de langue...",
-      "group_discount": "Réduction de groupe",
-      "total": "Total",
-      "preparing": "Préparation...",
-      "continue_payment": "Continuer vers le Paiement",
-      "success_title": "Réservation Confirmée ! 🎉",
+      "alert_weekend": "Veuillez choisir un samedi ou un dimanche !",
+      "processing": "Traitement...",
+      "pay": "Payer",
+      "summary": "Résumé de la Réservation",
+      "personal_details": "Détails Personnels",
+      "personal_desc": "Remplissez vos informations pour finaliser la réservation.",
+      "full_name": "Nom Complet",
+      "email": "Adresse Email",
+      "phone": "Numéro de Téléphone",
+      "country": "Pays / Origine",
+      "success_title": "Vous êtes réservé ! 🎉",
       "success_desc1": "Une confirmation a été envoyée à",
       "success_desc2": "Nous avons hâte de vous voir le",
       "your_booking": "Votre Réservation",
-      "guests": "invités",
-      "guest": "invité",
+      "go_to_dashboard": "Aller au Tableau de Bord",
+      "password": "Créer un Mot de Passe",
       "back_home": "Retour à l'Accueil",
-      "explore_more": "Explorer Plus"
+      "explore_more": "Explorer plus",
+      "your_booking": "Votre réservation"
     },
-    "tabs": {
-      "all_experiences": "Toutes les Expériences",
-      "combo_packages": "Forfaits Combos",
-      "single_activities": "Activités Uniques",
-      "combos_and_save": "Combos & Économies"
+    "weekend_picker": {
+      "label": "Sélectionnez une date de week-end",
+      "helper": "Uniquement les samedis et dimanches sont disponibles pour la réservation.",
+      "duration_note": "Pour les cours de 2 jours, les sessions commencent à la date sélectionnée.",
+      "grouped_label": "Expérience Week-end Complet",
+      "sat_sun": "Samedi et Dimanche"
     },
-    "filters": {
-      "all": "Toutes les Expériences",
-      "beginner": "Pour Débutants",
-      "hands_on": "Pratique",
-      "short": "Moins de 2 Heures"
-    },
-    "card_hint": "💡 Cliquez sur une carte pour voir ce que vous ferez.",
-    "per_person": "par personne",
-    "book_btn": "Réserver Maintenant",
-    "what_youll_do": "Ce que vous ferez",
-    "activities": {
-      "latte_art": {
-        "title": "Masterclass Art Latte",
-        "subtitle": "Versez & Créez",
-        "description": "Versez des cœurs, rosettas et tulipes guidé par nos baristas professionnels. Science du lait, dessins libres — vous repartirez avec une nouvelle compétence.",
-        "highlights": [
-          "Science du lait moussé",
-          "Designs de base",
-          "Cœurs & tulipes",
-          "Café artisanal à emporter"
-        ],
-        "badge": "Le Plus Populaire"
-      },
-      "sensory_tasting": {
-        "title": "Session de Cupping Sensoriel",
-        "subtitle": "Goûtez & Découvrez",
-        "description": "Explorez le terroir complexe du café rwandais. Identifiez les notes aromatiques — des hauts plateaux fruités aux plaines chocolatées — avec des protocoles professionnels.",
-        "highlights": [
-          "5 origines de spécialité",
-          "Formation roue des saveurs",
-          "Identification des arômes",
-          "Dégustation guidée"
-        ],
-        "badge": "Favori du Public"
-      },
-      "bean_to_bag": {
-        "title": "Du Grain au Sachet : Torréfaction",
-        "subtitle": "Torréfiez & Repartez",
-        "description": "Observez la transformation des grains verts en café aromatique. Vous torréfierez à la main et repartirez avec votre propre sachet personnalisé.",
-        "highlights": [
-          "Sélection des grains verts",
-          "Contrôle du niveau de torréfaction",
-          "Refroidissement & tri",
-          "Sachet personnalisé"
-        ],
-        "badge": "Pratique"
-      },
-      "espresso_workshop": {
-        "title": "Atelier Extraction Espresso",
-        "subtitle": "Tirez & Perfectionnez",
-        "description": "Apprenez l'ingénierie derrière un espresso parfait — mouture, pression, température, timing. Tirez de vrais shots sur nos machines La Marzocco.",
-        "highlights": [
-          "Calibration de la machine",
-          "Maîtrise de la dose",
-          "Timing d'extraction",
-          "Vol de dégustation espresso"
-        ],
-        "badge": "Niveau Barista"
-      },
-      "equipment_tour": {
-        "title": "Immersion dans l'Équipement",
-        "subtitle": "Apprenez & Comprenez",
-        "description": "Visite guidée de l'équipement barista professionnel — broyeurs, balances, tampons et appareils. Comprenez comment équiper votre maison.",
-        "highlights": [
-          "Pro vs broyeurs maison",
-          "Anatomie machine espresso",
-          "Comparaison appareils",
-          "Consultation setup maison"
-        ],
-        "badge": "Idéal pour Débutants"
-      },
-      "coffee_preparation": {
-        "title": "De la Ferme à la Tasse",
-        "subtitle": "Transformez & Préparez",
-        "description": "Suivez le voyage complet du café — de la station de lavage jusqu'à la préparation manuelle. Chaque étape de la cerise à votre tasse.",
-        "highlights": [
-          "De la cerise au parchemin",
-          "Traitements humide & naturel",
-          "Méthodes de brassage manuel",
-          "Histoire du Rwanda"
-        ],
-        "badge": "Immersif"
-      },
-      "cold_brew": {
-        "title": "Cold Brew & Boissons Signature",
-        "subtitle": "Mélangez & Rafraîchissez",
-        "description": "Préparez votre cold brew, découvrez sa chimie, puis créez des cocktails signature au café (sans alcool).",
-        "highlights": [
-          "Ratios cold brew",
-          "Techniques nitro",
-          "Création de boissons signature",
-          "Techniques de service"
-        ],
-        "badge": "Créatif"
-      },
-      "barista_basics": {
-        "title": "Bootcamp Barista Débutant",
-        "subtitle": "Apprenez & Pratiquez",
-        "description": "Une version condensée de notre cours barista professionnel. Fondamentaux du lait, espresso, hygiène et service client en une seule matinée.",
-        "highlights": [
-          "Fondamentaux espresso",
-          "Lait moussé & texturé",
-          "Normes d'hygiène",
-          "Étiquette de service"
-        ],
-        "badge": "Premium"
+    "what_to_expect": {
+      "badge": "Soyez Prêt",
+      "title": "À Quoi S'attendre",
+      "desc": "Tout ce que vous devez savoir avant votre visite.",
+      "steps": {
+        "book": {
+          "title": "Réserver en Ligne",
+          "desc": "Choisissez votre durée, sélectionnez une date, et payez en toute sécurité."
+        },
+        "arrive": {
+          "title": "Arriver & Rencontrer",
+          "desc": "Rencontrez votre instructeur 15 minutes avant le début de la session."
+        },
+        "enjoy": {
+          "title": "Apprendre & Profiter",
+          "desc": "Pratique pratique avec un équipement professionnel."
+        }
       }
-    },
-    "combos": {
-      "title": "Forfaits Combos",
-      "desc": "Combinez les meilleures expériences à prix spécial. Profitez d'une journée complète.",
-      "coffee_lover": {
-        "title": "Duo Amateurs de Café",
-        "tagline": "Le combo idéal pour débuter — goûtez & créez."
-      },
-      "barista_journey": {
-        "title": "Le Voyage Barista Complet",
-        "tagline": "Tout ce qu'un barista doit savoir en une journée."
-      },
-      "origin_explorer": {
-        "title": "Pack Explorateur d'Origines",
-        "tagline": "Retracez le café rwandais de la ferme à votre tasse."
-      },
-      "ultimate": {
-        "title": "L'Expérience Ultime",
-        "tagline": "Le meilleur de tout ce que nous offrons. Inoubliable."
-      },
-      "book_combo": "Réserver le Combo",
-      "original_price": "Prix Original",
-      "you_save": "Vous économisez"
     }
+  },
+  "donate_cta": {
+    "title": "Transformez Votre Plaisir en Avenir",
+    "desc": "Votre visite nous aide déjà à organiser ces sessions. Mais un don va plus loin — il finance des bourses pour des Rwandais talentueux ne pouvant s'offrir une formation professionnelle.",
+    "btn_give": "Offrir une Bourse",
+    "btn_mission": "Notre Mission"
   }
 }

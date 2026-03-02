@@ -10,250 +10,78 @@ import { db } from '../../lib/firebase';
 // DATA
 // ─────────────────────────────────────────────────────────────────────────────
 
-const ACTIVITIES = [
-    {
-        id: 'latte_art', title: 'Latte Art Masterclass', subtitle: 'Pour & Create',
-        description: 'Pour hearts, rosettas, and tulips under the guidance of our professional baristas. From milk-steaming science to freehand designs, you\'ll leave with a new skill to impress.',
-        icon: 'local_cafe', gradient: 'from-pink-500 via-rose-500 to-red-600', lightGradient: 'from-pink-500/10 via-rose-500/10 to-red-600/10',
-        price: 20000, duration: '2 hours', maxPeople: 8,
-        highlights: ['Milk steaming science', 'Basic pour designs', 'Heart & tulip patterns', 'Take-home artisan coffee'], badge: 'Most Popular'
-    },
-    {
-        id: 'sensory_tasting', title: 'Sensory Cupping Session', subtitle: 'Taste & Discover',
-        description: 'Explore the complex terroir of Rwandan specialty coffee. Learn to identify flavor notes — from fruity highlands to chocolate lowlands — using professional tasting protocols.',
-        icon: 'temp_preferences_custom', gradient: 'from-amber-400 via-orange-500 to-yellow-600', lightGradient: 'from-amber-400/10 via-orange-500/10 to-yellow-600/10',
-        price: 25000, duration: '2.5 hours', maxPeople: 10,
-        highlights: ['5 specialty origins', 'Flavor wheel training', 'Aroma identification', 'Expert guided tasting'], badge: 'Crowd Favourite'
-    },
-    {
-        id: 'bean_to_bag', title: 'Bean to Bag: Roasting Fun', subtitle: 'Roast & Take Home',
-        description: 'Witness the transformation of green coffee beans into aromatic perfection. You\'ll hand-roast a batch using traditional methods and take home a personalized bag of your creation.',
-        icon: 'fire_griddler', gradient: 'from-emerald-400 via-teal-500 to-green-600', lightGradient: 'from-emerald-400/10 via-teal-500/10 to-green-600/10',
-        price: 30000, duration: '3 hours', maxPeople: 6,
-        highlights: ['Green bean selection', 'Roast level control', 'Cooling & sorting', 'Personalized bag to take home'], badge: 'Hands-On'
-    },
-    {
-        id: 'espresso_workshop', title: 'Espresso Extraction Workshop', subtitle: 'Pull & Perfect',
-        description: 'Learn the engineering behind a perfect espresso shot — grind size, pressure, temperature, and timing. Pull real shots on our professional La Marzocco machines.',
-        icon: 'coffee_maker', gradient: 'from-violet-500 via-purple-600 to-indigo-700', lightGradient: 'from-violet-500/10 via-purple-600/10 to-indigo-700/10',
-        price: 27000, duration: '2 hours', maxPeople: 6,
-        highlights: ['Machine calibration', 'Grind & dose mastery', 'Shot timing & extraction', 'Espresso tasting flight'], badge: 'Barista Level'
-    },
-    {
-        id: 'equipment_tour', title: 'Equipment & Tools Deep Dive', subtitle: 'Learn & Understand',
-        description: 'A guided tour through professional barista equipment — grinders, scales, tampers, portafilters, and brewing devices. Understand what you need to build your home setup.',
-        icon: 'settings', gradient: 'from-sky-400 via-cyan-500 to-blue-600', lightGradient: 'from-sky-400/10 via-cyan-500/10 to-blue-600/10',
-        price: 17000, duration: '1.5 hours', maxPeople: 12,
-        highlights: ['Pro vs home grinders', 'Espresso machine anatomy', 'Brewing device comparison', 'Home setup consultation'], badge: 'Best for Beginners'
-    },
-    {
-        id: 'coffee_preparation', title: 'Farm to Cup Experience', subtitle: 'Process & Brew',
-        description: 'Follow the entire coffee preparation journey — from understanding the washing station process to manually brewing. Experience every step from cherry to your cup.',
-        icon: 'agriculture', gradient: 'from-lime-500 via-green-500 to-emerald-600', lightGradient: 'from-lime-500/10 via-green-500/10 to-emerald-600/10',
-        price: 23000, duration: '2.5 hours', maxPeople: 8,
-        highlights: ['Cherry to parchment', 'Wet & natural processing', 'Manual brewing methods', 'Rwanda origin story'], badge: 'Immersive'
-    },
-    {
-        id: 'cold_brew', title: 'Cold Brew & Signature Drinks', subtitle: 'Mix & Chill',
-        description: 'Craft your own cold brew, learn the chemistry behind it, then create signature coffee cocktails (non-alcoholic). Perfect for the creative mind and the coffee lover.',
-        icon: 'water_drop', gradient: 'from-blue-400 via-indigo-500 to-violet-600', lightGradient: 'from-blue-400/10 via-indigo-500/10 to-violet-600/10',
-        price: 22000, duration: '2 hours', maxPeople: 10,
-        highlights: ['Cold brew ratios', 'Nitro techniques', 'Signature drink creation', 'Shake & serve skills'], badge: 'Creative'
-    },
-    {
-        id: 'barista_basics', title: 'Barista Basics Bootcamp', subtitle: 'Learn & Practice',
-        description: 'A condensed version of our professional Barista Course. Get the core fundamentals — milk, espresso, hygiene, and customer service etiquette — in a single morning session.',
-        icon: 'school', gradient: 'from-fuchsia-500 via-pink-500 to-rose-600', lightGradient: 'from-fuchsia-500/10 via-pink-500/10 to-rose-600/10',
-        price: 40000, duration: '4 hours', maxPeople: 6,
-        highlights: ['Espresso fundamentals', 'Milk steaming & texturing', 'Hygiene standards', 'Basic customer etiquette'], badge: 'Premium'
-    }
+const COMBO_MODULES = [
+    { id: 'coffee_intro', icon: 'history_edu', gradient: 'from-amber-500 to-orange-600', lightGradient: 'from-amber-500/10 to-orange-600/10' },
+    { id: 'roasting_profile', icon: 'fire_griddler', gradient: 'from-rose-500 to-red-600', lightGradient: 'from-rose-500/10 to-red-600/10' },
+    { id: 'grinding_chart', icon: 'shutter_speed', gradient: 'from-emerald-500 to-teal-600', lightGradient: 'from-emerald-500/10 to-teal-600/10' },
+    { id: 'espresso_extraction', icon: 'coffee_maker', gradient: 'from-blue-500 to-indigo-600', lightGradient: 'from-blue-500/10 to-indigo-600/10' },
+    { id: 'latte_art', icon: 'local_cafe', gradient: 'from-pink-500 to-rose-600', lightGradient: 'from-pink-500/10 to-rose-600/10' },
+    { id: 'espresso_drinks', icon: 'restaurant_menu', gradient: 'from-violet-500 to-purple-600', lightGradient: 'from-violet-500/10 to-purple-600/10' },
+    { id: 'manual_brewing', icon: 'humidity_low', gradient: 'from-cyan-500 to-sky-600', lightGradient: 'from-cyan-500/10 to-sky-600/10' }
 ];
 
-const COMBOS = [
-    // coffee_lover: latte_art(20k) + sensory_tasting(25k) = 45k original → combo 44k → saves 1k
-    {
-        id: 'coffee_lover', title: "Coffee Lover's Duo", activities: ['latte_art', 'sensory_tasting'],
-        originalPrice: 45000, comboPrice: 44000, savings: 1000,
-        gradient: 'from-rose-600 to-amber-500', icon: 'favorite', tagline: 'The perfect starter combo — taste & create.'
-    },
-    // barista_journey: espresso(27k) + latte_art(20k) + equipment_tour(17k) = 64k original → combo 53k → saves 11k
-    {
-        id: 'barista_journey', title: 'The Full Barista Journey', activities: ['espresso_workshop', 'latte_art', 'equipment_tour'],
-        originalPrice: 64000, comboPrice: 53000, savings: 11000,
-        gradient: 'from-violet-600 to-pink-500', icon: 'workspace_premium', tagline: 'Everything a barista needs to know in one day.'
-    },
-    // origin_explorer: coffee_preparation(23k) + sensory_tasting(25k) + bean_to_bag(30k) = 78k original → combo 65k → saves 13k
-    {
-        id: 'origin_explorer', title: "Origin Explorer's Pack", activities: ['coffee_preparation', 'sensory_tasting', 'bean_to_bag'],
-        originalPrice: 78000, comboPrice: 65000, savings: 13000,
-        gradient: 'from-emerald-600 to-cyan-500', icon: 'travel_explore', tagline: 'Trace Rwanda coffee from farm to your cup.'
-    },
-    // ultimate: barista_basics(35k) + latte_art(20k) + sensory_tasting(25k) + bean_to_bag(30k) = 110k original → combo 84k → saves 26k
-    {
-        id: 'ultimate', title: 'The Ultimate Experience', activities: ['barista_basics', 'latte_art', 'sensory_tasting', 'bean_to_bag'],
-        originalPrice: 110000, comboPrice: 84000, savings: 26000,
-        gradient: 'from-yellow-500 via-orange-500 to-rose-600', icon: 'stars', tagline: 'The absolute best of everything we offer. Unforgettable.'
-    }
-];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // COMPONENTS
 // ─────────────────────────────────────────────────────────────────────────────
 
-function ActivityCard({ activity, onBook }) {
+function ModuleCard({ module, index }) {
     const { t } = useTranslation();
-    const [expanded, setExpanded] = useState(false);
+    return (
+        <div className="group relative bg-white dark:bg-white/5 rounded-[2.5rem] border border-espresso/5 shadow-xl overflow-hidden transition-all duration-500 hover:-translate-y-2 flex flex-col p-8">
+            <div className={`size-14 rounded-2xl bg-gradient-to-br ${module.gradient} flex items-center justify-center text-white shadow-lg mb-6 group-hover:scale-110 transition-transform`}>
+                <span className="material-symbols-outlined text-2xl">{module.icon}</span>
+            </div>
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-espresso/30 dark:text-[#F5DEB3]/30 mb-1">Module 0{index + 1}</p>
+            <h3 className="font-serif text-xl font-black text-[#4B3832] dark:text-[#F5DEB3] mb-3">{t(`weekendExperience.combo.m${index + 1}.title`)}</h3>
+            <p className="text-[#4B3832]/60 dark:text-[#F5DEB3]/60 leading-relaxed text-sm">{t(`weekendExperience.combo.m${index + 1}.desc`)}</p>
+            <div className={`absolute bottom-0 left-0 h-1 w-0 bg-gradient-to-r ${module.gradient} group-hover:w-full transition-all duration-500`}></div>
+        </div>
+    );
+}
+
+function PricingCard({ days, price, perPersonLabel, bookBtnLabel }) {
+    const { t } = useTranslation();
+    const navigate = useNavigate();
 
     return (
-        <div
-            className={`group relative bg-white dark:bg-white/5 rounded-[2.5rem] border border-espresso/5 shadow-xl overflow-hidden transition-all duration-500 hover:-translate-y-2 cursor-pointer flex flex-col`}
-            onClick={() => setExpanded(!expanded)}
-        >
-            {/* Gradient Header */}
-            <div className={`h-2 w-full bg-gradient-to-r ${activity.gradient}`}></div>
-
-            {/* Ambient Glow */}
-            <div className={`absolute top-0 right-0 w-48 h-48 bg-gradient-to-br ${activity.gradient} opacity-5 rounded-bl-full transform translate-x-16 -translate-y-16 group-hover:scale-150 transition-transform duration-700 pointer-events-none`}></div>
-
-            <div className="p-8 flex-1 flex flex-col">
-                <div className="flex items-start justify-between mb-6">
-                    <div className={`size-14 rounded-2xl bg-gradient-to-br ${activity.gradient} flex items-center justify-center text-white shadow-lg`}>
-                        <span className="material-symbols-outlined text-2xl">{activity.icon}</span>
-                    </div>
-                    <div className="text-right">
-                        {activity.badge && (
-                            <span className={`inline-block px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest bg-gradient-to-r ${activity.gradient} text-white mb-1`}>
-                                {t(`weekendExperience.activities.${activity.id}.badge`, activity.badge)}
-                            </span>
-                        )}
-                        <p className="text-xl font-serif font-black text-espresso dark:text-[#F5DEB3]">
-                            {activity.price.toLocaleString()} <span className="text-sm">RWF</span>
-                        </p>
-                        <p className="text-[9px] text-espresso/40 uppercase tracking-widest">{t('weekendExperience.per_person')}</p>
-                    </div>
+        <div className="relative p-8 rounded-[3rem] bg-white dark:bg-white/5 border-2 border-espresso/5 shadow-2xl overflow-hidden group hover:border-rose-500/30 transition-colors">
+            <div className={`absolute top-0 right-0 p-12 opacity-5 pointer-events-none transform translate-x-8 -translate-y-8 group-hover:scale-125 transition-transform duration-700`}>
+                <span className="material-symbols-outlined text-[8rem] text-rose-500">calendar_today</span>
+            </div>
+            <div className="relative z-10 space-y-4">
+                <p className="text-xs font-black uppercase tracking-widest text-rose-500">{days} {days === 1 ? 'Day' : 'Days'} Course</p>
+                <div className="flex items-baseline gap-2">
+                    <span className="text-5xl font-serif font-black text-espresso dark:text-[#F5DEB3]">{price}</span>
+                    <span className="text-sm text-espresso/40 dark:text-[#F5DEB3]/40 uppercase tracking-widest">{perPersonLabel}</span>
                 </div>
-
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-espresso/30 dark:text-[#F5DEB3]/30 mb-1">{t(`weekendExperience.activities.${activity.id}.subtitle`, activity.subtitle)}</p>
-                <h3 className="font-serif text-xl font-black text-[#4B3832] dark:text-[#F5DEB3] mb-3">{t(`weekendExperience.activities.${activity.id}.title`, activity.title)}</h3>
-                <p className="text-[#4B3832]/60 dark:text-[#F5DEB3]/60 leading-relaxed text-sm mb-4 flex-1">{t(`weekendExperience.activities.${activity.id}.description`, activity.description)}</p>
-
-                {/* Expandable Highlights */}
-                <div className={`overflow-hidden transition-all duration-500 ${expanded ? 'max-h-48 opacity-100 mb-6' : 'max-h-0 opacity-0'}`}>
-                    <div className={`p-4 rounded-2xl bg-gradient-to-br ${activity.lightGradient} border border-espresso/5`}>
-                        <p className="text-[9px] font-black uppercase tracking-widest text-espresso/40 mb-3">{t('weekendExperience.what_youll_do')}</p>
-                        <ul className="space-y-2">
-                            {activity.highlights.map((h, i) => (
-                                <li key={i} className="flex items-center gap-2 text-xs font-bold text-espresso dark:text-[#F5DEB3]">
-                                    <span className={`size-5 rounded-full bg-gradient-to-br ${activity.gradient} flex items-center justify-center flex-shrink-0`}>
-                                        <span className="material-symbols-outlined text-white text-[10px]">check</span>
-                                    </span>
-                                    {t(`weekendExperience.activities.${activity.id}.highlights.${i}`, h)}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
-
-                {/* Footer */}
-                <div className="flex items-center justify-between pt-4 border-t border-espresso/5">
-                    <div className="flex items-center gap-3 text-xs text-espresso/40">
-                        <span className="flex items-center gap-1"><span className="material-symbols-outlined text-sm">schedule</span>{activity.duration}</span>
-                        <span className="flex items-center gap-1"><span className="material-symbols-outlined text-sm">group</span>Max {activity.maxPeople}</span>
-                    </div>
-                    <button
-                        onClick={(e) => { e.stopPropagation(); onBook(activity.id); }}
-                        className={`px-5 py-2.5 bg-gradient-to-r ${activity.gradient} text-white rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg hover:scale-105 active:scale-95 transition-all`}
-                    >
-                        {t('weekendExperience.book_btn')}
-                    </button>
-                </div>
+                <ul className="space-y-3 py-4">
+                    <li className="flex items-center gap-3 text-sm font-medium opacity-70">
+                        <span className="material-symbols-outlined text-rose-500 text-lg">check_circle</span>
+                        All 7 Modules Included
+                    </li>
+                    <li className="flex items-center gap-3 text-sm font-medium opacity-70">
+                        <span className="material-symbols-outlined text-rose-500 text-lg">check_circle</span>
+                        Hands-on Practice
+                    </li>
+                    <li className="flex items-center gap-3 text-sm font-medium opacity-70">
+                        <span className="material-symbols-outlined text-rose-500 text-lg">check_circle</span>
+                        Full Barista Kit Use
+                    </li>
+                </ul>
+                <button
+                    onClick={() => navigate(`/weekend-experience/book?duration=${days}`)}
+                    className="w-full py-4 bg-gradient-to-r from-rose-500 to-amber-500 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl hover:scale-105 active:scale-95 transition-all"
+                >
+                    {bookBtnLabel}
+                </button>
             </div>
         </div>
     );
 }
 
-function ComboCard({ combo, onBook }) {
-    const { t } = useTranslation();
-    const comboActivities = combo.activities.map(id => ACTIVITIES.find(a => a.id === id)).filter(Boolean);
-    const savingsPct = Math.round((combo.savings / combo.originalPrice) * 100);
 
-    return (
-        <div className={`relative rounded-[2.5rem] overflow-hidden group hover:-translate-y-2 transition-all duration-500`}>
-            {/* Gradient Background */}
-            <div className={`absolute inset-0 bg-gradient-to-br ${combo.gradient} opacity-90`}></div>
-            <div className="absolute inset-0 bg-black/10"></div>
 
-            {/* Savings Badge */}
-            <div className="absolute top-6 right-6 z-10">
-                <div className="bg-white text-espresso rounded-2xl px-3 py-1.5 font-black text-xs shadow-xl">
-                    -{savingsPct}% OFF
-                </div>
-            </div>
-
-            <div className="relative z-10 p-8 md:p-10 text-white">
-                <div className="size-14 rounded-2xl bg-white/20 flex items-center justify-center mb-6 backdrop-blur-sm">
-                    <span className="material-symbols-outlined text-2xl">{combo.icon}</span>
-                </div>
-
-                <h3 className="font-serif text-2xl font-black mb-2">{t(`weekendExperience.combos.${combo.id}.title`, combo.title)}</h3>
-                <p className="text-white/70 text-sm mb-6 leading-relaxed">{t(`weekendExperience.combos.${combo.id}.tagline`, combo.tagline)}</p>
-
-                <div className="flex flex-wrap gap-2 mb-8">
-                    {comboActivities.map(a => (
-                        <span key={a.id} className="px-3 py-1 bg-white/15 backdrop-blur-sm rounded-full text-[9px] font-black uppercase tracking-wider border border-white/20">
-                            {t(`weekendExperience.activities.${a.id}.title`, a.title)}
-                        </span>
-                    ))}
-                </div>
-
-                <div className="flex items-end justify-between">
-                    <div>
-                        <p className="text-white/50 text-sm line-through">{combo.originalPrice.toLocaleString()} {t('weekendExperience.original_price', 'RWF')}</p>
-                        <p className="text-3xl font-serif font-black">{combo.comboPrice.toLocaleString()} <span className="text-lg">RWF</span></p>
-                        <p className="text-[9px] text-white/50 uppercase tracking-widest">{t('weekendExperience.combos.you_save', 'You save')} {combo.savings.toLocaleString()} RWF</p>
-                    </div>
-                    <button
-                        onClick={() => onBook(combo.activities[0], combo)}
-                        className="px-6 py-3 bg-white text-espresso rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all"
-                    >
-                        {t('weekendExperience.combos.book_combo', 'Book Combo')}
-                    </button>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-function PeopleDiscountBanner() {
-    const { t } = useTranslation();
-    return (
-        <div className="bg-white dark:bg-white/5 rounded-[2.5rem] p-8 md:p-10 border border-espresso/5 shadow-xl overflow-hidden relative">
-            <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-rose-500/5 to-transparent pointer-events-none"></div>
-            <div className="flex flex-col md:flex-row items-center gap-8">
-                <div className="size-20 rounded-[1.5rem] bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center text-white shrink-0 shadow-xl shadow-rose-500/30">
-                    <span className="material-symbols-outlined text-4xl">group</span>
-                </div>
-                <div className="flex-1 text-center md:text-left">
-                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-rose-500 mb-2">{t('weekendExperience.group_discount.badge')}</p>
-                    <h3 className="font-serif text-2xl font-black text-[#4B3832] dark:text-[#F5DEB3] mb-2">{t('weekendExperience.group_discount.title')}</h3>
-                    <p className="text-espresso/60 dark:text-[#F5DEB3]/60 text-sm">{t('weekendExperience.group_discount.desc')}</p>
-                </div>
-                <div className="flex flex-wrap gap-4 shrink-0">
-                    {[
-                        { people: t('weekendExperience.group_discount.tier1', '2-3 people'), discount: '5%', color: 'from-amber-400 to-orange-500' },
-                        { people: t('weekendExperience.group_discount.tier2', '4-6 people'), discount: '10%', color: 'from-emerald-400 to-teal-500' },
-                        { people: t('weekendExperience.group_discount.tier3', '7+ people'), discount: '15%', color: 'from-violet-500 to-purple-600' }
-                    ].map((tier, i) => (
-                        <div key={i} className={`p-4 rounded-2xl bg-gradient-to-br ${tier.color} text-white text-center min-w-[80px] shadow-lg`}>
-                            <p className="text-2xl font-serif font-black">{tier.discount}</p>
-                            <p className="text-[9px] font-bold uppercase tracking-wider opacity-80">{tier.people}</p>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </div>
-    );
-}
 
 function MediaGallery() {
     const { t } = useTranslation();
@@ -341,27 +169,6 @@ function MediaGallery() {
 export function WeekendExperience() {
     const { t } = useTranslation();
     const navigate = useNavigate();
-    const [activeTab, setActiveTab] = useState('activities'); // 'activities' | 'combos'
-    const [filter, setFilter] = useState('all');
-
-    const handleBook = (activityId, combo = null) => {
-        if (combo) {
-            navigate(`/weekend-experience/book?combo=${combo.id}&activity=${activityId}`);
-        } else {
-            navigate(`/weekend-experience/book?activity=${activityId}`);
-        }
-    };
-
-    const filters = [
-        { id: 'all', label: 'All Experiences' },
-        { id: 'beginner', label: 'Beginner Friendly', ids: ['latte_art', 'sensory_tasting', 'equipment_tour', 'cold_brew'] },
-        { id: 'hands_on', label: 'Hands-On', ids: ['bean_to_bag', 'espresso_workshop', 'coffee_preparation', 'barista_basics'] },
-        { id: 'short', label: 'Under 2 Hours', ids: ['latte_art', 'espresso_workshop', 'equipment_tour', 'cold_brew'] }
-    ];
-
-    const filteredActivities = filter === 'all'
-        ? ACTIVITIES
-        : ACTIVITIES.filter(a => (filters.find(f => f.id === filter)?.ids || []).includes(a.id));
 
     return (
         <div className="flex flex-col min-h-screen bg-[#FAF5E8] dark:bg-[#1c1916] font-display text-espresso dark:text-white">
@@ -380,44 +187,44 @@ export function WeekendExperience() {
                         {t('weekendExperience.hero_badge', 'Every Saturday & Sunday')}
                     </div>
                     <h1 className="font-serif text-5xl md:text-7xl font-black text-[#4B3832] dark:text-[#F5DEB3] mb-6 tracking-tight leading-none">
-                        {t('weekendExperience.title', 'Weekend Coffee Experiences').split(' ').slice(0, -1).join(' ')}
+                        {t('weekendExperience.title').split(' ').slice(0, -1).join(' ')}
                         <span className="block bg-gradient-to-r from-rose-500 via-amber-500 to-emerald-500 bg-clip-text text-transparent">
-                            {t('weekendExperience.title', 'Weekend Coffee Experiences').split(' ').pop()}
+                            {t('weekendExperience.title').split(' ').pop()}
                         </span>
                     </h1>
-                    <p className="text-lg md:text-xl text-[#4B3832]/70 dark:text-[#F5DEB3]/70 leading-relaxed max-w-3xl mx-auto font-medium mb-10">
+                    <p className="text-lg md:text-xl text-[#4B3832]/70 dark:text-[#F5DEB3]/70 leading-relaxed max-w-3xl mx-auto font-medium mb-12">
                         {t('weekendExperience.description')}
                     </p>
 
-                    {/* Stats Row */}
-                    <div className="flex flex-wrap items-center justify-center gap-8 mb-10">
+                    <div className="flex flex-wrap gap-4 justify-center">
+                        <a href="#course-modules" className="px-8 py-4 bg-gradient-to-r from-rose-500 to-amber-500 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl hover:scale-105 transition-all outline-none">
+                            {t('weekendExperience.explore_btn')}
+                        </a>
+                        <Link to="/weekend-experience/book" className="px-8 py-4 bg-white dark:bg-white/10 text-espresso dark:text-[#F5DEB3] rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl hover:scale-105 transition-all border border-espresso/10 flex items-center gap-2">
+                            <span className="material-symbols-outlined text-rose-500 text-sm">event</span>
+                            {t('weekendExperience.book_btn')}
+                        </Link>
+                        <Link to="/guest/login" className="px-8 py-4 bg-transparent text-espresso/40 dark:text-[#F5DEB3]/40 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:text-rose-500 transition-all flex items-center gap-2">
+                            <span className="material-symbols-outlined text-sm">login</span>
+                            {t('weekendExperience.guest_login_btn', 'Guest Login')}
+                        </Link>
+                    </div>
+
+                    {/* Quick Stats */}
+                    <div className="mt-16 pt-10 border-t border-espresso/5 flex flex-wrap items-center justify-center gap-12">
                         {[
-                            { value: '8+', label: t('weekendExperience.stats.activities', 'Unique Activities'), icon: 'local_activity' },
-                            { value: '4', label: t('weekendExperience.stats.combos', 'Combo Packages'), icon: 'workspace_premium' },
-                            { value: '15%', label: t('weekendExperience.stats.discount', 'Group Discount'), icon: 'group' },
-                            { value: '2', label: t('weekendExperience.stats.days', 'Open Weekends'), icon: 'event' }
-                        ].map(stat => (
-                            <div key={stat.label} className="flex items-center gap-3">
-                                <div className="size-10 rounded-xl bg-gradient-to-br from-rose-500/20 to-amber-500/20 flex items-center justify-center">
-                                    <span className="material-symbols-outlined text-rose-500 text-lg">{stat.icon}</span>
-                                </div>
-                                <div className="text-left">
-                                    <p className="font-serif font-black text-xl text-[#4B3832] dark:text-[#F5DEB3]">{stat.value}</p>
-                                    <p className="text-[9px] text-espresso/40 uppercase tracking-widest">{stat.label}</p>
-                                </div>
+                            { label: t('weekendExperience.stats.modules'), value: '07' },
+                            { label: t('weekendExperience.stats.duration'), value: '01-02' },
+                            { label: t('weekendExperience.stats.price_start'), value: '$150' },
+                            { label: t('weekendExperience.stats.days'), value: 'Sat-Sun' }
+                        ].map(s => (
+                            <div key={s.label} className="text-center">
+                                <p className="text-3xl font-serif font-black text-espresso dark:text-[#F5DEB3] mb-1">{s.value}</p>
+                                <p className="text-[10px] font-black uppercase tracking-widest text-rose-500 mb-1">{s.label}</p>
                             </div>
                         ))}
                     </div>
 
-                    <div className="flex flex-wrap gap-4 justify-center">
-                        <a href="#activities" className="px-8 py-4 bg-gradient-to-r from-rose-500 to-amber-500 text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl hover:scale-105 transition-all">
-                            {t('weekendExperience.explore_btn', 'Explore Activities')}
-                        </a>
-                        <Link to="/donate" className="px-8 py-4 bg-white dark:bg-white/10 text-espresso dark:text-[#F5DEB3] rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl hover:scale-105 transition-all border border-espresso/10 flex items-center gap-2">
-                            <span className="material-symbols-outlined text-rose-500 text-sm">favorite</span>
-                            {t('weekendExperience.donate_btn', 'Donate a Scholarship')}
-                        </Link>
-                    </div>
                 </div>
             </section>
 
@@ -441,75 +248,49 @@ export function WeekendExperience() {
                 </div>
             </section>
 
-            {/* ─── GROUP DISCOUNT BANNER ─── */}
-            <section className="container mx-auto px-6 pb-12 max-w-6xl">
-                <PeopleDiscountBanner />
+
+
+            {/* ─── PRICING ─── */}
+            <section className="container mx-auto px-6 py-24 max-w-6xl">
+                <div className="text-center mb-16">
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-rose-500 mb-4">Pricing & Duration</p>
+                    <h2 className="font-serif text-3xl md:text-5xl font-black text-[#4B3832] dark:text-[#F5DEB3] mb-4">Choose Your Intensity</h2>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <PricingCard
+                        days={1}
+                        price={t('weekendExperience.pricing.one_day')}
+                        perPersonLabel={t('weekendExperience.pricing.per_person')}
+                        bookBtnLabel={t('weekendExperience.book_btn')}
+                    />
+                    <PricingCard
+                        days={2}
+                        price={t('weekendExperience.pricing.two_days')}
+                        perPersonLabel={t('weekendExperience.pricing.per_person')}
+                        bookBtnLabel={t('weekendExperience.book_btn')}
+                    />
+                </div>
             </section>
 
-            {/* ─── ACTIVITIES / COMBOS ─── */}
-            <section id="activities" className="container mx-auto px-6 pb-24 max-w-6xl">
-                {/* Tab Switcher */}
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-12">
-                    <div>
-                        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-rose-500 mb-2">{t('weekendExperience.choose_adventure', 'Choose Your Adventure')}</p>
-                        <h2 className="font-serif text-3xl md:text-5xl font-black text-[#4B3832] dark:text-[#F5DEB3]">
-                            {activeTab === 'activities' ? t('weekendExperience.tabs.all_experiences', 'All Experiences') : t('weekendExperience.tabs.combo_packages', 'Combo Packages')}
-                        </h2>
-                    </div>
-                    <div className="flex bg-white dark:bg-white/5 rounded-2xl p-1.5 border border-espresso/5 shadow-lg">
-                        <button
-                            onClick={() => setActiveTab('activities')}
-                            className={`px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all ${activeTab === 'activities' ? 'bg-gradient-to-r from-rose-500 to-amber-500 text-white shadow-lg' : 'text-espresso/40 dark:text-[#F5DEB3]/40'}`}
-                        >
-                            {t('weekendExperience.tabs.single_activities', 'Single Activities')}
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('combos')}
-                            className={`px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all ${activeTab === 'combos' ? 'bg-gradient-to-r from-rose-500 to-amber-500 text-white shadow-lg' : 'text-espresso/40 dark:text-[#F5DEB3]/40'}`}
-                        >
-                            {t('weekendExperience.tabs.combos_and_save', 'Combos & Save')}
-                        </button>
+            {/* ─── COURSE MODULES ─── */}
+            <section id="course-modules" className="container mx-auto px-6 pb-24 max-w-6xl">
+                <div className="text-center mb-16">
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-rose-500 mb-4">{t('weekendExperience.combo.title')}</p>
+                    <h2 className="font-serif text-3xl md:text-5xl font-black text-[#4B3832] dark:text-[#F5DEB3] mb-4">{t('weekendExperience.combo.subtitle')}</h2>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {COMBO_MODULES.map((module, i) => (
+                        <ModuleCard key={module.id} module={module} index={i} />
+                    ))}
+                    <div className="bg-gradient-to-br from-espresso to-[#2A1E1B] rounded-[2.5rem] p-8 flex flex-col justify-center items-center text-center text-[#F5DEB3] shadow-2xl overflow-hidden relative group md:col-span-2 xl:col-span-1">
+                        <div className="absolute inset-0 bg-gradient-to-tr from-rose-500/10 to-transparent pointer-events-none"></div>
+                        <span className="material-symbols-outlined text-5xl mb-4 group-hover:scale-110 transition-transform">star</span>
+                        <h3 className="font-serif text-xl font-black mb-2">And Much More!</h3>
+                        <p className="text-sm opacity-60">Interactive sessions, networking, and a lifetime coffee community access.</p>
                     </div>
                 </div>
-
-                {activeTab === 'activities' && (
-                    <>
-                        {/* Activity Filters */}
-                        <div className="flex flex-wrap gap-3 mb-10">
-                            {filters.map(f => (
-                                <button
-                                    key={f.id}
-                                    onClick={() => setFilter(f.id)}
-                                    className={`px-5 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${filter === f.id ? 'bg-espresso text-white dark:bg-[#F5DEB3] dark:text-espresso shadow-lg' : 'bg-white dark:bg-white/5 text-espresso/50 dark:text-[#F5DEB3]/50 border border-espresso/10 hover:border-espresso/30'}`}
-                                >
-                                    {f.label}
-                                </button>
-                            ))}
-                        </div>
-
-                        <p className="text-xs text-espresso/40 dark:text-[#F5DEB3]/40 mb-8 italic">💡 {t('weekendExperience.click_card_hint', 'Click any card to see what you\'ll do in that experience.')}</p>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                            {filteredActivities.map(activity => (
-                                <ActivityCard key={activity.id} activity={activity} onBook={handleBook} />
-                            ))}
-                        </div>
-                    </>
-                )}
-
-                {activeTab === 'combos' && (
-                    <>
-                        <p className="text-espresso/60 dark:text-[#F5DEB3]/60 mb-10 leading-relaxed max-w-2xl">
-                            {t('weekendExperience.combos_description', 'Our curated combo packages bundle the best experiences together at a special price. Perfect if you want to make a full day of it — or come back again knowing there\'s more to discover.')}
-                        </p>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            {COMBOS.map(combo => (
-                                <ComboCard key={combo.id} combo={combo} onBook={handleBook} />
-                            ))}
-                        </div>
-                    </>
-                )}
             </section>
+
 
             {/* ─── MEDIA GALLERY ─── */}
             <section className="bg-[#4B3832] text-[#F5DEB3] py-24 overflow-hidden relative">

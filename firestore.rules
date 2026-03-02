@@ -43,6 +43,12 @@ service cloud.firestore {
         allow read: if true; // Allow public read for verification page
         allow write: if isAuthenticated() && (request.auth.uid == userId || isStaff());
       }
+      
+      // Weekend guest progress tracking
+      match /weekend_progress/{moduleId} {
+        allow read: if isAuthenticated() && (request.auth.uid == userId || isStaff());
+        allow write: if isAuthenticated() && (request.auth.uid == userId || isStaff());
+      }
     }
     
     // Courses collection (top-level and subcollections)

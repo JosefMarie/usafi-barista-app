@@ -74,7 +74,7 @@ export function AdminLayout() {
         { icon: 'school', label: 'Graduates', path: '/admin/graduates' },
         { icon: 'diversity_3', label: t('admin.nav.job_seekers'), path: '/admin/seekers' },
         { icon: 'admin_panel_settings', label: t('admin.nav.business_students'), path: '/admin/business/users' },
-        { icon: 'menu_book', label: t('admin.nav.business_courses'), path: '/admin/business/courses' },
+        { icon: 'calendar_month', label: 'Weekend Exp', path: '/admin/weekend' },
         { icon: 'person', label: t('admin.nav.my_profile'), path: '/admin/profile' },
     ];
 

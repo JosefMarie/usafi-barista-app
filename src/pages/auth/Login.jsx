@@ -34,6 +34,7 @@ export function Login() {
             else if (role === 'instructor') navigate('/instructor/dashboard');
             else if (role === 'manager') navigate('/manager/dashboard');
             else if (role === 'business_student') navigate('/business/dashboard');
+            else if (role === 'weekend_guest') navigate('/guest/dashboard');
             else navigate('/student/dashboard');
 
         } catch (err) {

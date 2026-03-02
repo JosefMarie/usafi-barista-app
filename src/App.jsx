@@ -45,6 +45,8 @@ import { PrivacySettings } from './pages/common/PrivacySettings';
 import { WeekendExperience } from './pages/public/WeekendExperience';
 import { ExperienceBooking } from './pages/public/ExperienceBooking';
 import { DonationPage } from './pages/public/DonationPage';
+import { GuestDashboard } from './pages/guest/GuestDashboard';
+import { GuestLogin } from './pages/guest/GuestLogin';
 
 // Student Pages
 import { Dashboard as StudentDashboard } from './pages/student/Dashboard';
@@ -63,6 +65,7 @@ import { Testimonials as AdminTestimonials } from './pages/admin/Testimonials';
 import { ActivityLog } from './pages/admin/ActivityLog';
 import { AdminReports } from './pages/admin/AdminReports';
 import { Graduates } from './pages/admin/Graduates';
+import { WeekendManage } from './pages/admin/WeekendManage';
 import { SetupAdmin } from './pages/admin/SetupAdmin';
 import { ForumList } from './pages/forum/ForumList';
 import { CreatePost } from './pages/forum/CreatePost';
@@ -257,6 +260,7 @@ function AppContent({ settings }) {
           <Route path="seekers" element={<AdminSeekers />} />
           <Route path="business/users" element={<AdminBusinessUsers />} />
           <Route path="business/courses" element={<AdminBusinessCourses />} />
+          <Route path="weekend" element={<WeekendManage />} />
           <Route path="business/courses/:courseId" element={<ManageBusinessCourse />} />
           <Route path="profile" element={<CommonProfile />} />
           <Route path="privacy-settings" element={<PrivacySettings />} />
@@ -313,6 +317,12 @@ function AppContent({ settings }) {
           <Route path="dashboard" element={<BusinessDashboard />} />
           <Route path="profile" element={<BusinessProfile />} />
           <Route path="courses/:courseId" element={<BusinessCourseView />} />
+        </Route>
+
+        {/* Guest Routes */}
+        <Route path="/guest" element={<MaintenanceGuard user={user} settings={settings}><OutletContextWrapper /></MaintenanceGuard>}>
+          <Route path="login" element={<GuestLogin />} />
+          <Route path="dashboard" element={<GuestDashboard />} />
         </Route>
       </Routes>
     </BrowserRouter>
