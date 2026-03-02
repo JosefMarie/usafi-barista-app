@@ -249,6 +249,12 @@ service cloud.firestore {
       allow update, delete: if isStaff();
     }
     
+    // Weekend Module Content Cards (admin creates, guests read)
+    match /weekend_module_cards/{moduleId}/cards/{cardId} {
+      allow read: if isAuthenticated();  // All authenticated users (guests + staff)
+      allow write: if isStaff();         // Only staff can create/edit/delete cards
+    }
+    
     // Scholarship Donations
     match /donations/{donationId} {
       allow read: if isStaff();
