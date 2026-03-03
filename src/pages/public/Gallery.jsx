@@ -6,13 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { Newsletter } from '../../components/ui/Newsletter';
 import { SEO } from '../../components/common/SEO';
 
-import hero1 from '../../assets/images/about/hero-image-1.webp';
-import hero2 from '../../assets/images/about/hero-image-2.webp';
-import hero3 from '../../assets/images/about/hero-image-3.webp';
-import hero5 from '../../assets/images/about/hero-image-5.webp';
-import hero6 from '../../assets/images/about/hero-image-6.webp';
-import hero7 from '../../assets/images/about/hero-image-7.webp';
-import hero8 from '../../assets/images/about/hero-image-8.webp';
 
 export function Gallery() {
     const { t } = useTranslation();
@@ -34,37 +27,6 @@ export function Gallery() {
         return () => unsubscribe();
     }, []);
 
-    // 15 New local images from /public/image/
-    const newPhotos = [
-        { url: "/image/image1.jpeg", category: t('gallery.categories.practice'), desc: t('gallery.photos.grind'), type: 'image' },
-        { url: "/image/image2.jpeg", category: t('gallery.categories.mastery'), desc: t('gallery.photos.heart'), type: 'image' },
-        { url: "/image/image3.jpeg", category: t('gallery.categories.classroom'), desc: t('gallery.photos.discussion'), type: 'image' },
-        { url: "/image/image4.jpeg", category: t('gallery.categories.practice'), desc: t('gallery.photos.tamping'), type: 'image' },
-        { url: "/image/image5.jpeg", category: t('gallery.categories.graduation'), desc: t('gallery.photos.class2024'), type: 'image' },
-        { url: "/image/image6.jpeg", category: t('gallery.categories.practice'), desc: "Learning the machine", type: 'image' },
-        { url: "/image/image7.jpeg", category: t('gallery.categories.classroom'), desc: "Theoretical foundations", type: 'image' },
-        { url: "/image/image8.jpeg", category: t('gallery.categories.mastery'), desc: "Steam wand control", type: 'image' },
-        { url: "/image/image9.jpeg", category: t('gallery.categories.practice'), desc: "Precision tamping", type: 'image' },
-        { url: "/image/image10.jpeg", category: t('gallery.categories.classroom'), desc: "Tasting session", type: 'image' },
-        { url: "/image/image11.jpeg", category: t('gallery.categories.mastery'), desc: "Latte art practice", type: 'image' },
-        { url: "/image/image12.jpeg", category: t('gallery.categories.practice'), desc: "Workflow optimization", type: 'image' },
-        { url: "/image/image13.jpeg", category: t('gallery.categories.graduation'), desc: "Celebrating success", type: 'image' },
-        { url: "/image/image14.jpeg", category: t('gallery.categories.classroom'), desc: "Bean selection science", type: 'image' },
-        { url: "/image/image15.jpeg", category: t('gallery.categories.practice'), desc: "Center operations", type: 'image' },
-    ];
-
-    const localHeroPhotos = [
-        { url: hero1, category: t('gallery.categories.practice'), desc: "Hero 1", type: 'image' },
-        { url: hero2, category: t('gallery.categories.mastery'), desc: "Hero 2", type: 'image' },
-        { url: hero3, category: t('gallery.categories.classroom'), desc: "Hero 3", type: 'image' },
-        { url: hero5, category: t('gallery.categories.graduation'), desc: "Hero 5", type: 'image' },
-        { url: hero6, category: t('gallery.categories.practice'), desc: "Hero 6", type: 'image' },
-        { url: hero7, category: t('gallery.categories.classroom'), desc: "Hero 7", type: 'image' },
-        { url: hero8, category: t('gallery.categories.practice'), desc: "Hero 8", type: 'image' },
-    ];
-
-    const allPhotos = [...newPhotos, ...localHeroPhotos];
-
     return (
         <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark font-display text-espresso dark:text-white pb-20 pt-24">
             <SEO
@@ -85,53 +47,19 @@ export function Gallery() {
                 </p>
             </div>
 
-            {/* 2. Section 1: Image Gallery (Grid) */}
+            {/* 2. Main Gallery Grid (Dynamic) */}
             <section className="container mx-auto px-6 mb-20">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {allPhotos.map((photo, index) => (
-                        <div
-                            key={index}
-                            className="group relative break-inside-avoid overflow-hidden rounded-2xl shadow-xl border border-espresso/10 aspect-square bg-[#F5DEB3] dark:bg-white/5 cursor-pointer"
-                            onClick={() => setSelectedMedia({ url: photo.url, type: 'image' })}
-                        >
-                            <div
-                                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                                style={{ backgroundImage: `url("${photo.url}")` }}
-                            ></div>
-                            <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 via-black/40 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                                <p className="text-white font-bold text-sm uppercase tracking-wider">{photo.category}</p>
-                                <p className="text-white/80 text-xs">{photo.desc}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </section>
-
-            {/* 3. Section 2: Video Highlights */}
-            <section className="bg-espresso text-[#FAF5E8] py-20 px-6">
-                <div className="container mx-auto px-6">
-                    <h2 className="font-serif text-3xl font-bold mb-12 text-center">{t('gallery.videos.title')}</h2>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {[1, 2, 3, 4, 5, 6, 7, 8].map((id) => (
-                            <VideoCard key={id} id={id} onOpen={(url) => setSelectedMedia({ url, type: 'video' })} />
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* 3.5 Section 2.5: Dynamic Institutional Moments */}
-            {dynamicItems.length > 0 && (
-                <section className="container mx-auto px-6 py-20">
-                    <div className="flex flex-col items-center text-center mb-16">
-                        <h2 className="font-serif text-3xl md:text-4xl font-bold text-espresso dark:text-white mb-4 border-b-2 border-primary/20 pb-2">
-                            Recent Institutional Highlights
-                        </h2>
-                        <p className="text-espresso/60 dark:text-white/60 text-sm font-bold uppercase tracking-[0.3em]">
-                            Latest Visual Records & Community Archives
+                {dynamicItems.length === 0 && !loading ? (
+                    /* Empty State */
+                    <div className="bg-[#F5DEB3] dark:bg-white/5 border border-espresso/10 rounded-2xl p-16 animate-in fade-in zoom-in-95 duration-500 text-center">
+                        <span className="material-symbols-outlined text-6xl text-espresso/30 dark:text-white/30 mb-4 block">photo_library</span>
+                        <h3 className="font-serif text-2xl font-bold text-espresso dark:text-white mb-2">Visual Archives Syncing</h3>
+                        <p className="text-espresso/60 dark:text-white/60 max-w-md mx-auto">
+                            The gallery is currently being curated. Please check back later for updates to our institutional highlights.
                         </p>
                     </div>
-
+                ) : (
+                    /* Grid Items */
                     <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6 space-y-6">
                         {dynamicItems.map((item) => (
                             <div
@@ -166,8 +94,23 @@ export function Gallery() {
                             </div>
                         ))}
                     </div>
-                </section>
-            )}
+                )}
+            </section>
+
+            {/* 3. Section 2: Video Highlights */}
+            <section className="bg-espresso text-[#FAF5E8] py-20 px-6">
+                <div className="container mx-auto px-6">
+                    <h2 className="font-serif text-3xl font-bold mb-12 text-center">{t('gallery.videos.title')}</h2>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {[1, 2, 3, 4, 5, 6, 7, 8].map((id) => (
+                            <VideoCard key={id} id={id} onOpen={(url) => setSelectedMedia({ url, type: 'video' })} />
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+
 
             {/* 4. Section 3: Call to Action */}
             <section className="container mx-auto px-6 py-20 text-center bg-[#F5DEB3] dark:bg-white/5 border-y border-espresso/10 rounded-3xl mt-20 relative overflow-hidden group">

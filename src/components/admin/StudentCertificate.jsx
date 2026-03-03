@@ -109,7 +109,7 @@ export const StudentCertificate = React.forwardRef(({
             </div>
 
             {/* Main Content Area */}
-            <div className="m-6 border-4 border-[#a77c52]/20 border-double h-[calc(100%-3rem)] flex flex-col items-center text-center relative bg-guilloche px-16 py-8 justify-between z-10">
+            <div className="m-6 border-4 border-[#a77c52]/20 border-double h-[calc(100%-3rem)] flex flex-col items-center text-center relative bg-guilloche px-16 pt-6 pb-8 justify-between z-10">
 
                 {/* Background Watermark */}
                 <div className="absolute inset-0 flex items-center justify-center z-0">
@@ -119,10 +119,10 @@ export const StudentCertificate = React.forwardRef(({
                 {/* Header Section */}
                 <div className="z-10 bg-[#FAF5E8]/80 backdrop-blur-sm print:backdrop-blur-none print:bg-[#FAF5E8] px-12 py-4 rounded-full border border-[#a77c52]/10 mb-2">
                     <div className="flex flex-col items-center">
-                        <div className="flex items-center gap-4 mb-2">
-                            <img src="/logo.jpg" alt="Usafi Logo" className="h-12 w-auto object-contain mix-blend-multiply" />
+                        <div className="flex items-center gap-4 mb-1">
+                            <img src="/logo.jpg" alt="Usafi Logo" className="h-28 w-auto object-contain mix-blend-multiply" />
                         </div>
-                        <p className="text-[14px] font-bold tracking-[0.3em] text-[#a77c52] uppercase">Usafi Barista Training Center</p>
+                        <p className="text-[12px] font-bold tracking-[0.3em] text-[#a77c52] uppercase">Usafi Barista Training Center</p>
                     </div>
                 </div>
 
@@ -133,12 +133,12 @@ export const StudentCertificate = React.forwardRef(({
                 </div>
 
                 {/* Recipient Section */}
-                <div className="z-10 w-full flex flex-col items-center my-4">
-                    <p className="text-sm uppercase tracking-[0.2em] text-[#321C00]/50 font-bold mb-6">This is to certify that</p>
-                    <h2 className="font-serif text-6xl font-bold text-[#321C00] w-full text-center pb-2 border-b-2 border-[#a77c52]/20 max-w-4xl px-8 mb-2 capitalize leading-tight">
+                <div className="z-10 w-full flex flex-col items-center my-2">
+                    <p className="text-[10px] uppercase tracking-[0.2em] text-[#321C00]/50 font-bold mb-4">This is to certify that</p>
+                    <h2 className="font-serif text-5xl font-bold text-[#321C00] w-full text-center pb-2 border-b-2 border-[#a77c52]/20 max-w-4xl px-8 mb-1 capitalize leading-tight">
                         {studentName}
                     </h2>
-                    <p className="text-[10px] uppercase tracking-[0.4em] text-[#a77c52] font-black mt-2">
+                    <p className="text-[9px] uppercase tracking-[0.4em] text-[#a77c52] font-black mt-1">
                         {TARGET_COURSE_ID === 'bar-tender-course' ? 'Professional Mixology & Bar Management' : 'Professional Barista & Coffee Science'}
                     </p>
                 </div>
@@ -163,7 +163,7 @@ export const StudentCertificate = React.forwardRef(({
                 </div>
 
                 {/* Details Grid */}
-                <div className="z-10 w-full max-w-4xl flex justify-center gap-12 py-4 border-t border-b border-dashed border-[#a77c52]/20 my-2 bg-[#FAF5E8]/50">
+                <div className="z-10 w-full max-w-4xl flex justify-center gap-12 py-3 border-t border-b border-dashed border-[#a77c52]/20 my-1 bg-[#FAF5E8]/50">
                     {/* Training Period - Replaces Date Issued */}
                     <div className="flex flex-col items-center">
                         <span className="text-[10px] uppercase tracking-wider text-[#321C00]/40 font-bold mb-1">Training Period</span>
@@ -181,29 +181,39 @@ export const StudentCertificate = React.forwardRef(({
                 </div>
 
                 {/* Footer Signatures */}
-                <div className="z-10 w-full flex items-end justify-between px-20">
+                <div className="z-10 w-full flex items-end justify-between px-20 mb-4">
                     <div className="flex flex-col items-center w-64">
-                        <div className="font-serif italic text-3xl text-[#321C00]/80 -rotate-2 mb-2" style={{ fontFamily: '"Playfair Display", serif' }}>{trainerName}</div>
-                        <div className="h-0.5 w-full bg-[#321C00]/80 mb-2"></div>
-                        <span className="text-[11px] uppercase font-bold text-[#321C00]/50 tracking-widest">Master Trainer</span>
+                        <div className="h-4 w-full flex items-center justify-center">
+                            {/* Space for physical signature */}
+                        </div>
+                        <div className="h-0.5 w-full bg-[#321C00]/80 mb-1"></div>
+                        <div className="flex flex-col items-center">
+                            <span className="font-serif italic text-lg text-[#321C00]/80 mb-1">{trainerName}</span>
+                            <span className="text-[10px] uppercase font-bold text-[#321C00]/50 tracking-widest">Master Trainer</span>
+                        </div>
                     </div>
 
                     {/* QR Code & Verified Badge */}
-                    <div className="flex flex-col items-center justify-end mb-2 gap-3">
-                        <div className="p-2 bg-white rounded-lg shadow-sm border border-[#a77c52]/20">
+                    <div className="flex flex-col items-center justify-end mb-4 gap-2">
+                        <div className="p-2 bg-white rounded-lg shadow-sm border border-[#a77c52]/20 scale-90">
                             <QRCode
-                                value={`https://usafi-barista.com/verify/${student.uid || student.id || student.uid}`}
-                                size={64}
+                                value={`https://usafi-barista.com/verify/${student.uid || student.id}`}
+                                size={60}
                                 fgColor="#321C00"
                             />
                         </div>
-                        <span className="text-[8px] uppercase tracking-widest text-[#a77c52] font-bold print:text-[#a77c52]">Scan to Verify</span>
+                        <span className="text-[7px] uppercase tracking-widest text-[#a77c52] font-bold print:text-[#a77c52]">Scan to Verify</span>
                     </div>
 
                     <div className="flex flex-col items-center w-64">
-                        <div className="font-serif italic text-3xl text-[#321C00]/80 -rotate-2 mb-2" style={{ fontFamily: '"Playfair Display", serif' }}>{ceoName}</div>
-                        <div className="h-0.5 w-full bg-[#321C00]/80 mb-2"></div>
-                        <span className="text-[11px] uppercase font-bold text-[#321C00]/50 tracking-widest">C.E.O Usafi Coffee</span>
+                        <div className="h-4 w-full flex items-center justify-center">
+                            {/* Space for physical signature */}
+                        </div>
+                        <div className="h-0.5 w-full bg-[#321C00]/80 mb-1"></div>
+                        <div className="flex flex-col items-center">
+                            <span className="font-serif italic text-lg text-[#321C00]/80 mb-1">{ceoName}</span>
+                            <span className="text-[10px] uppercase font-bold text-[#321C00]/50 tracking-widest">C.E.O Usafi Coffee</span>
+                        </div>
                     </div>
                 </div>
 
