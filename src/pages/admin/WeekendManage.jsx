@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { collection, query, orderBy, onSnapshot, doc, updateDoc, setDoc, addDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../../lib/firebase';
+import { ref as storageRef, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { db, storage } from '../../lib/firebase';
 import { format } from 'date-fns';
 import { ShapeCard, SHAPES, ANIMATIONS, GRADIENTS } from '../../components/weekend/ShapeCard';
 
@@ -160,6 +161,10 @@ function ContentCardsTab() {
     const [form, setForm] = useState(DEFAULT_CARD);
     const [saving, setSaving] = useState(false);
     const [deleting, setDeleting] = useState(null);
+    const [imageFile, setImageFile] = useState(null);
+    const [imageUploadProgress, setImageUploadProgress] = useState(0);
+    const [imageUploading, setImageUploading] = useState(false);
+    const imageInputRef = useRef(null);
 
     // Load cards for selected module
     useEffect(() => {
@@ -170,15 +175,41 @@ function ContentCardsTab() {
         }, () => setCards([]));
     }, [activeModule.id]);
 
-    const openNew = () => { setForm({ ...DEFAULT_CARD, moduleId: activeModule.id, order: cards.length + 1 }); setEditing('new'); };
-    const openEdit = (card) => { setForm(card); setEditing(card.id); };
-    const closeEditor = () => { setEditing(null); setForm(DEFAULT_CARD); };
+    const openNew = () => { setForm({ ...DEFAULT_CARD, moduleId: activeModule.id, order: cards.length + 1 }); setEditing('new'); setImageFile(null); };
+    const openEdit = (card) => { setForm(card); setEditing(card.id); setImageFile(null); };
+    const closeEditor = () => { setEditing(null); setForm(DEFAULT_CARD); setImageFile(null); setImageUploadProgress(0); };
 
     const handleSave = async () => {
         setSaving(true);
         try {
+            let finalImageUrl = form.imageUrl || '';
+
+            // Upload to Firebase Storage if a new file is selected
+            if (imageFile) {
+                setImageUploading(true);
+                const filePath = `weekend_cards/${activeModule.id}/${Date.now()}_${imageFile.name}`;
+                const fileRef = storageRef(storage, filePath);
+                const uploadTask = uploadBytesResumable(fileRef, imageFile);
+
+                await new Promise((resolve, reject) => {
+                    uploadTask.on('state_changed',
+                        (snap) => {
+                            setImageUploadProgress((snap.bytesTransferred / snap.totalBytes) * 100);
+                        },
+                        reject,
+                        async () => {
+                            finalImageUrl = await getDownloadURL(uploadTask.snapshot.ref);
+                            resolve();
+                        }
+                    );
+                });
+                setImageUploading(false);
+                setImageFile(null);
+                setImageUploadProgress(0);
+            }
+
             const ref = collection(db, 'weekend_module_cards', activeModule.id, 'cards');
-            const payload = { ...form, moduleId: activeModule.id, updatedAt: serverTimestamp() };
+            const payload = { ...form, imageUrl: finalImageUrl, moduleId: activeModule.id, updatedAt: serverTimestamp() };
             if (editing === 'new') {
                 await addDoc(ref, { ...payload, createdAt: serverTimestamp() });
             } else {
@@ -186,7 +217,7 @@ function ContentCardsTab() {
                 await setDoc(doc(db, 'weekend_module_cards', activeModule.id, 'cards', editing), rest, { merge: true });
             }
             closeEditor();
-        } catch (e) { console.error(e); }
+        } catch (e) { console.error(e); setImageUploading(false); }
         setSaving(false);
     };
 
@@ -301,13 +332,73 @@ function ContentCardsTab() {
                                     className="w-full px-4 py-3 rounded-xl border border-espresso/10 bg-espresso/5 dark:bg-white/5 text-espresso dark:text-white resize-none focus:outline-none focus:ring-2 focus:ring-rose-500/30 text-sm" />
                             </div>
 
-                            {/* Image URL (only if text+image) */}
+                            {/* Image Upload (only if text+image) */}
                             {form.type === 'text+image' && (
                                 <div className="space-y-2">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-espresso/40">Image URL</label>
-                                    <input type="url" value={form.imageUrl} onChange={e => setForm(f => ({ ...f, imageUrl: e.target.value }))}
-                                        placeholder="https://..."
-                                        className="w-full px-4 py-3 rounded-xl border border-espresso/10 bg-espresso/5 dark:bg-white/5 text-espresso dark:text-white focus:outline-none focus:ring-2 focus:ring-rose-500/30 text-sm" />
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-espresso/40">Image</label>
+                                    <input
+                                        ref={imageInputRef}
+                                        type="file"
+                                        accept="image/*"
+                                        className="hidden"
+                                        onChange={e => {
+                                            const file = e.target.files[0];
+                                            if (file) {
+                                                setImageFile(file);
+                                                setForm(f => ({ ...f, imageUrl: '' }));
+                                            }
+                                        }}
+                                    />
+
+                                    {/* Preview or drop zone */}
+                                    {(imageFile || form.imageUrl) ? (
+                                        <div className="relative rounded-2xl overflow-hidden border border-espresso/10 bg-espresso/5">
+                                            <img
+                                                src={imageFile ? URL.createObjectURL(imageFile) : form.imageUrl}
+                                                alt="Preview"
+                                                className="w-full h-40 object-cover"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => { setImageFile(null); setForm(f => ({ ...f, imageUrl: '' })); if (imageInputRef.current) imageInputRef.current.value = ''; }}
+                                                className="absolute top-2 right-2 size-7 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-red-600 transition-colors"
+                                            >
+                                                <span className="material-symbols-outlined text-sm">close</span>
+                                            </button>
+                                            {imageFile && !<span> /* not yet uploaded, greyed out */ </span> && (
+                                                <span className="absolute bottom-2 left-2 text-[9px] font-black uppercase tracking-widest bg-amber-500 text-white px-2 py-1 rounded-lg">Not uploaded yet — will save with card</span>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <button
+                                            type="button"
+                                            onClick={() => imageInputRef.current?.click()}
+                                            className="w-full h-32 rounded-2xl border-2 border-dashed border-espresso/10 flex flex-col items-center justify-center gap-2 hover:bg-espresso/5 hover:border-rose-500/40 transition-all cursor-pointer"
+                                        >
+                                            <span className="material-symbols-outlined text-3xl text-espresso/20">photo_camera</span>
+                                            <p className="text-[10px] font-black uppercase tracking-widest text-espresso/30">Upload from Device</p>
+                                            <p className="text-[9px] text-espresso/20">JPG, PNG, WEBP</p>
+                                        </button>
+                                    )}
+
+                                    {imageFile && (
+                                        <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-amber-600">
+                                            <span className="truncate max-w-[70%]">{imageFile.name}</span>
+                                            <span>{(imageFile.size / 1024).toFixed(0)} KB</span>
+                                        </div>
+                                    )}
+
+                                    {imageUploading && (
+                                        <div className="space-y-1">
+                                            <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-rose-500">
+                                                <span>Uploading...</span>
+                                                <span>{Math.round(imageUploadProgress)}%</span>
+                                            </div>
+                                            <div className="h-1.5 w-full bg-rose-100 rounded-full overflow-hidden">
+                                                <div className="h-full bg-gradient-to-r from-rose-500 to-amber-500 transition-all" style={{ width: `${imageUploadProgress}%` }} />
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             )}
 

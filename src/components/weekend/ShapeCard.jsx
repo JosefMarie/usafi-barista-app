@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 // ── Shape configurations ──────────────────────────────────────────────────────
 export const SHAPES = [
@@ -54,6 +54,8 @@ export const GRADIENTS = [
     { id: 'from-[#3c1e0e] to-[#4B3832]', label: 'Coffee', preview: 'linear-gradient(135deg, #3c1e0e, #4B3832)' },
     { id: 'from-slate-700 to-slate-900', label: 'Dark', preview: 'linear-gradient(135deg, #334155, #0f172a)' },
     { id: 'from-lime-400 to-green-600', label: 'Lime', preview: 'linear-gradient(135deg, #a3e635, #16a34a)' },
+    { id: 'from-transparent to-black/40 backdrop-blur-md border border-white/20', label: 'Glass', preview: 'rgba(0,0,0,0.3)' },
+    { id: 'from-white to-gray-50 !text-gray-900 border border-black/10', label: 'Light', preview: '#f8fafc' },
 ];
 
 // ── CSS keyframe animations ───────────────────────────────────────────────────
@@ -112,6 +114,8 @@ export function ShapeCard({ card, isLocked = false, size = 'normal' }) {
         type = 'text',
     } = card;
 
+    const [showFullImage, setShowFullImage] = useState(false);
+
     const cfg = SHAPE_CLASSES[shape] || SHAPE_CLASSES.rectangle;
     const animStyle = ANIM_STYLE[animation] || {};
 
@@ -125,7 +129,7 @@ export function ShapeCard({ card, isLocked = false, size = 'normal' }) {
 
     const inner = (
         <div
-            className={`relative w-full bg-gradient-to-br ${color} text-white flex flex-col items-center justify-center overflow-hidden transition-all duration-500
+            className={`group relative w-full bg-gradient-to-br ${color} text-white flex flex-col items-center justify-center overflow-hidden transition-all duration-500
                 ${cfg.className || ''}
                 ${cfg.padding}
                 ${isLocked ? 'grayscale opacity-40' : ''}`}
@@ -139,11 +143,26 @@ export function ShapeCard({ card, isLocked = false, size = 'normal' }) {
 
             {/* Background image */}
             {type === 'text+image' && imageUrl && !isLocked && (
-                <div className="absolute inset-0">
-                    <img src={imageUrl} alt={title} className="w-full h-full object-cover opacity-25"
-                        onError={e => { e.target.style.display = 'none'; }} />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                </div>
+                <>
+                    <div className="absolute inset-0">
+                        <img src={imageUrl} alt={title} className="w-full h-full object-cover opacity-25 group-hover:opacity-40 transition-opacity duration-500"
+                            onError={e => { e.target.style.display = 'none'; }} />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+                    </div>
+                    {/* View Full Image Button */}
+                    <button
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowFullImage(true); }}
+                        className="absolute bottom-3 right-3 z-30 size-8 rounded-full bg-black/40 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-rose-500 transition-all shadow-lg active:scale-95"
+                        title="View Full Image"
+                    >
+                        <span className="material-symbols-outlined text-sm">fullscreen</span>
+                    </button>
+                    {/* Entire card click area for fallback */}
+                    <div
+                        className="absolute inset-0 z-0 cursor-pointer"
+                        onClick={(e) => { if (!isLocked) { e.preventDefault(); e.stopPropagation(); setShowFullImage(true); } }}
+                    />
+                </>
             )}
 
             {/* Lock */}
@@ -153,7 +172,7 @@ export function ShapeCard({ card, isLocked = false, size = 'normal' }) {
 
             {/* Content */}
             {!isLocked && (
-                <div className="relative z-10 text-center space-y-2 w-full">
+                <div className="relative z-10 text-center space-y-2 w-full pointer-events-none">
                     {title && (
                         <h3 className={`font-serif font-black uppercase tracking-tight leading-tight drop-shadow ${titleSize}`}>
                             {title}
@@ -174,12 +193,39 @@ export function ShapeCard({ card, isLocked = false, size = 'normal' }) {
             <style dangerouslySetInnerHTML={{ __html: ANIMATION_CSS }} />
             {/* For geometric (square-ratio) shapes, wrap in an aspect-square so clip looks correct */}
             {isGeometric ? (
-                <div className="aspect-square w-full max-w-[280px] mx-auto">
+                <div className="aspect-square w-full max-w-[280px] mx-auto relative group">
                     {React.cloneElement(inner, { className: inner.props.className + ' h-full w-full' })}
                 </div>
             ) : (
-                <div className="w-full">
+                <div className="w-full relative group">
                     {inner}
+                </div>
+            )}
+
+            {/* FULLSCREEN IMAGE OVERLAY */}
+            {showFullImage && imageUrl && (
+                <div
+                    className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 md:p-10 cursor-zoom-out animate-in fade-in duration-300"
+                    onClick={(e) => { e.stopPropagation(); setShowFullImage(false); }}
+                >
+                    <img
+                        src={imageUrl}
+                        alt={title || 'Content Image'}
+                        className="max-w-[95vw] max-h-[90vh] object-contain rounded-2xl shadow-2xl animate-in zoom-in-95 duration-500"
+                    />
+                    <button
+                        className="absolute top-6 right-6 size-12 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-rose-500 hover:scale-110 active:scale-95 transition-all shadow-xl"
+                        onClick={(e) => { e.stopPropagation(); setShowFullImage(false); }}
+                    >
+                        <span className="material-symbols-outlined text-xl">close</span>
+                    </button>
+                    {title && (
+                        <div className="absolute bottom-6 left-0 right-0 text-center pointer-events-none">
+                            <span className="inline-block px-6 py-3 bg-black/60 backdrop-blur-md rounded-2xl text-white font-serif font-black uppercase tracking-widest shadow-xl">
+                                {title}
+                            </span>
+                        </div>
+                    )}
                 </div>
             )}
         </>

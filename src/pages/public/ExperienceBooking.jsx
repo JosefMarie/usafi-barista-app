@@ -10,6 +10,7 @@ import { useStripe, useElements, PaymentElement, Elements } from '@stripe/react-
 import { loadStripe } from '@stripe/stripe-js';
 import { SEO } from '../../components/common/SEO';
 import { addDays, format, startOfToday, nextSaturday, nextSunday, isSaturday, isSunday } from 'date-fns';
+import { usePricing } from '../../hooks/usePricing';
 
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_sample');
@@ -22,13 +23,15 @@ const DEFAULT_BNR_RATE = 1463; // Current known BNR rate
 const WEEKEND_COMBO = {
     id: 'weekend_combo',
     title: '7-Point Combo Coffee Course',
+    // Default fallback prices — CEO can override via Pricing Hub
     price1Day: 150,
     price2Days: 300,
     gradient: 'from-rose-500 via-amber-500 to-emerald-500',
     icon: 'workspace_premium'
 };
 
-function getGroupDiscount(numPeople) {
+// Static fallback group discount — overridden by usePricing at runtime
+function getGroupDiscountFallback(numPeople) {
     if (numPeople >= 7) return 0.15;
     if (numPeople >= 4) return 0.10;
     if (numPeople >= 2) return 0.05;
@@ -239,6 +242,7 @@ export function ExperienceBooking() {
     const { t } = useTranslation();
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
+    const { pricing, getGroupDiscount } = usePricing();
 
     const initialDuration = parseInt(searchParams.get('duration')) || 1;
 
@@ -283,9 +287,12 @@ export function ExperienceBooking() {
     const [country, setCountry] = useState('');
     const [password, setPassword] = useState('');
 
-    // Price calculations (USD for display, RWF for Stripe)
-    const pricePerPersonUSD = duration === 1 ? WEEKEND_COMBO.price1Day : WEEKEND_COMBO.price2Days;
-    const finalTotalUSD = pricePerPersonUSD * numPeople;
+    // Price calculations — use dynamic Firestore prices if available, fallback to WEEKEND_COMBO constants
+    const p1Day = pricing?.weekend?.price1Day ?? WEEKEND_COMBO.price1Day;
+    const p2Days = pricing?.weekend?.price2Days ?? WEEKEND_COMBO.price2Days;
+    const pricePerPersonUSD = duration === 1 ? p1Day : p2Days;
+    const groupDiscount = getGroupDiscount(numPeople);
+    const finalTotalUSD = Math.round(pricePerPersonUSD * numPeople * (1 - groupDiscount));
     const finalTotal = Math.round(finalTotalUSD * exchangeRate); // Convert to RWF for Stripe using dynamic rate
 
 
@@ -392,8 +399,8 @@ export function ExperienceBooking() {
                                 </label>
                                 <div className="grid grid-cols-2 gap-4">
                                     {[
-                                        { val: 1, label: '1 Day', price: '$150' },
-                                        { val: 2, label: '2 Days', price: '$300' }
+                                        { val: 1, label: '1 Day', price: `$${pricing?.weekend?.price1Day ?? 150}` },
+                                        { val: 2, label: '2 Days', price: `$${pricing?.weekend?.price2Days ?? 300}` }
                                     ].map(d => (
                                         <button
                                             key={d.val}

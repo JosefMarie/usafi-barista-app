@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { usePricing } from '../../hooks/usePricing';
 
 export function Enrollment({ settings }) {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const { getCourseFee, loading: pricingLoading } = usePricing();
     const [formData, setFormData] = useState({
         fullName: '',
         phone: '',
@@ -102,12 +104,8 @@ export function Enrollment({ settings }) {
                             progress: 0
                         })),
                         totalFee: (() => {
-                            const hasBarista = formData.courses.includes('bean-to-brew');
-                            const hasBartender = formData.courses.includes('bar-tender-course');
-                            if (hasBarista && hasBartender) return 500000;
-                            if (hasBartender) return 300000;
-                            if (hasBarista) return 250000;
-                            return userData.totalFee || 0;
+                            const enrolledIds = formData.courses || [];
+                            return getCourseFee(enrolledIds);
                         })()
                     };
 
@@ -122,13 +120,7 @@ export function Enrollment({ settings }) {
                 const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
                 userId = userCredential.user.uid;
 
-                // Calculate initial totalFee
-                const hasBarista = formData.courses.includes('bean-to-brew');
-                const hasBartender = formData.courses.includes('bar-tender-course');
-                let defaultTotalFee = 0;
-                if (hasBarista && hasBartender) defaultTotalFee = 500000;
-                else if (hasBartender) defaultTotalFee = 300000;
-                else if (hasBarista) defaultTotalFee = 250000;
+                const defaultTotalFee = getCourseFee(formData.courses || []);
 
                 // Create User Document in Firestore
                 setLoadingMessage(t('enrollment.loading.db'));

@@ -5,6 +5,7 @@ import { SEO } from '../../components/common/SEO';
 import { Newsletter } from '../../components/ui/Newsletter';
 import { collection, query, orderBy, limit, onSnapshot } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
+import { usePricing } from '../../hooks/usePricing';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // DATA
@@ -169,6 +170,11 @@ function MediaGallery() {
 export function WeekendExperience() {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const { pricing } = usePricing();
+
+    // Live prices from Firestore, fall back to defaults
+    const price1Day = pricing?.weekend?.price1Day ?? 150;
+    const price2Days = pricing?.weekend?.price2Days ?? 300;
 
     return (
         <div className="flex flex-col min-h-screen bg-[#FAF5E8] dark:bg-[#1c1916] font-display text-espresso dark:text-white">
@@ -215,7 +221,7 @@ export function WeekendExperience() {
                         {[
                             { label: t('weekendExperience.stats.modules'), value: '07' },
                             { label: t('weekendExperience.stats.duration'), value: '01-02' },
-                            { label: t('weekendExperience.stats.price_start'), value: '$150' },
+                            { label: `From $${price1Day}`, value: `$${price1Day}` },
                             { label: t('weekendExperience.stats.days'), value: 'Sat-Sun' }
                         ].map(s => (
                             <div key={s.label} className="text-center">
@@ -259,13 +265,13 @@ export function WeekendExperience() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                     <PricingCard
                         days={1}
-                        price={t('weekendExperience.pricing.one_day')}
+                        price={`$${price1Day}`}
                         perPersonLabel={t('weekendExperience.pricing.per_person')}
                         bookBtnLabel={t('weekendExperience.book_btn')}
                     />
                     <PricingCard
                         days={2}
-                        price={t('weekendExperience.pricing.two_days')}
+                        price={`$${price2Days}`}
                         perPersonLabel={t('weekendExperience.pricing.per_person')}
                         bookBtnLabel={t('weekendExperience.book_btn')}
                     />

@@ -5,6 +5,7 @@ import { cn } from '../../lib/utils';
 import { PortalTopBar } from './PortalTopBar';
 import { useAuth } from '../../context/AuthContext';
 import { Footer } from './Footer';
+import { GlobalAnnouncement } from '../common/GlobalAnnouncement';
 
 export function ManagerLayout() {
     const { t } = useTranslation();
@@ -39,113 +40,116 @@ export function ManagerLayout() {
         { icon: 'construction', label: 'Equipment', path: '/manager/equipment' },
         { icon: 'photo_library', label: 'Gallery', path: '/manager/gallery' },
         { icon: 'weekend', label: 'Weekend Media', path: '/manager/weekend-media' },
-        { icon: 'reviews', label: 'Testimonials', path: '/manager/testimonials' },
+        { icon: 'reviews', label: t('manager.nav.testimonials') || 'Testimonials', path: '/manager/testimonials' },
         { icon: 'person', label: t('manager.nav.my_profile'), path: '/manager/profile' },
     ];
 
     return (
-        <div className="h-screen bg-background-light dark:bg-background-dark flex overflow-hidden">
-            {/* Desktop Sidebar */}
-            <aside className="hidden md:flex w-64 flex-col fixed inset-y-0 left-0 bg-[#F5DEB3] dark:bg-[#1c1916] border-r border-espresso/10 z-20 shadow-xl">
-                <div className="p-6 border-b border-espresso/10 flex items-center justify-between">
-                    <Link to="/" className="flex items-center gap-2 group">
-                        <div className="h-8 w-8 rounded-full bg-white/10 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform overflow-hidden">
-                            <img src="/logo.jpg" alt="Usafi Logo" className="w-full h-full object-cover" />
-                        </div>
-                        <span className="font-serif text-lg font-bold text-espresso dark:text-white">
-                            Usafi Marketing
-                        </span>
-                    </Link>
-                </div>
-
-                <nav className="flex-1 overflow-y-auto py-8 px-4 flex flex-col gap-2">
-                    {navItems.map((item) => (
-                        <Link
-                            key={item.path}
-                            to={item.path}
-                            className={cn(
-                                "relative flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-bold transition-all overflow-hidden group",
-                                location.pathname === item.path
-                                    ? "bg-espresso text-white shadow-lg translate-x-1"
-                                    : "bg-[#7B3F00] text-white hover:bg-white/40 dark:hover:bg-white/5"
-                            )}
-                        >
-                            {location.pathname === item.path && (
-                                <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
-                            )}
-                            <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
-                            {item.label}
-                        </Link>
-                    ))}
-                </nav>
-
-                <div className="p-4 border-t border-espresso/10">
-                    <button
-                        onClick={handleLogout}
-                        className="flex items-center gap-2 w-full px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all active:scale-95"
-                    >
-                        <span className="material-symbols-outlined text-[20px]">logout</span>
-                        {t('manager.nav.sign_out')}
-                    </button>
-                </div>
-            </aside>
-
-            {/* Main Content */}
-            <div className="flex-1 md:ml-64 min-w-0 flex flex-col">
-                <PortalTopBar
-                    user={user}
-                    onLogout={handleLogout}
-                    onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                />
-
-                {/* Mobile Menu Overlay */}
-                {isMobileMenuOpen && (
-                    <div className="fixed inset-0 z-50 bg-[#F5DEB3] dark:bg-[#1c1916] md:hidden flex flex-col">
-                        <div className="p-6 flex items-center justify-between border-b border-espresso/10">
-                            <div className="flex items-center gap-3">
-                                <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center shadow-xl overflow-hidden">
-                                    <img src="/logo.jpg" alt="Usafi Logo" className="w-full h-full object-cover" />
-                                </div>
-                                <span className="font-serif text-lg font-bold text-espresso dark:text-white">{t('manager.nav.marketing_menu')}</span>
+        <div className="h-screen bg-background-light dark:bg-background-dark flex flex-col overflow-hidden">
+            <GlobalAnnouncement />
+            <div className="flex flex-1 overflow-hidden">
+                {/* Desktop Sidebar */}
+                <aside className="hidden md:flex w-64 flex-col fixed inset-y-0 left-0 bg-[#F5DEB3] dark:bg-[#1c1916] border-r border-espresso/10 z-20 shadow-xl">
+                    <div className="p-6 border-b border-espresso/10 flex items-center justify-between">
+                        <Link to="/" className="flex items-center gap-2 group">
+                            <div className="h-8 w-8 rounded-full bg-white/10 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform overflow-hidden">
+                                <img src="/logo.jpg" alt="Usafi Logo" className="w-full h-full object-cover" />
                             </div>
-                            <button onClick={() => setIsMobileMenuOpen(false)} className="h-12 w-12 flex items-center justify-center rounded-2xl bg-espresso/5 text-espresso dark:text-white hover:bg-espresso/10 transition-colors">
-                                <span className="material-symbols-outlined">close</span>
-                            </button>
-                        </div>
-                        <nav className="flex-1 p-6 space-y-2 overflow-y-auto relative z-10 custom-scrollbar">
-                            {navItems.map((item) => (
-                                <Link
-                                    key={item.path}
-                                    to={item.path}
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    className={cn(
-                                        "flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors",
-                                        location.pathname === item.path
-                                            ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
-                                            : "bg-[#7B3F00] text-white hover:bg-black/5 dark:hover:bg-white/5"
-                                    )}
-                                >
-                                    <span className="material-symbols-outlined text-[24px]">{item.icon}</span>
-                                    {item.label}
-                                </Link>
-                            ))}
-                            <button
-                                onClick={handleLogout}
-                                className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors mt-2"
-                            >
-                                <span className="material-symbols-outlined text-[24px]">logout</span>
-                                {t('manager.nav.sign_out')}
-                            </button>
-                        </nav>
+                            <span className="font-serif text-lg font-bold text-espresso dark:text-white">
+                                Usafi Marketing
+                            </span>
+                        </Link>
                     </div>
-                )}
 
-                <main className="flex-1 relative overflow-y-auto custom-scrollbar flex flex-col">
-                    <div className="flex-grow p-4 md:p-8">
-                        <Outlet />
+                    <nav className="flex-1 overflow-y-auto py-8 px-4 flex flex-col gap-2">
+                        {navItems.map((item) => (
+                            <Link
+                                key={item.path}
+                                to={item.path}
+                                className={cn(
+                                    "relative flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-bold transition-all overflow-hidden group",
+                                    location.pathname === item.path
+                                        ? "bg-espresso text-white shadow-lg translate-x-1"
+                                        : "bg-[#7B3F00] text-white hover:bg-espresso/90 hover:scale-[1.02]"
+                                )}
+                            >
+                                {location.pathname === item.path && (
+                                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
+                                )}
+                                <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
+                                {item.label}
+                            </Link>
+                        ))}
+                    </nav>
+
+                    <div className="p-4 border-t border-espresso/10">
+                        <button
+                            onClick={handleLogout}
+                            className="flex items-center gap-2 w-full px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all active:scale-95"
+                        >
+                            <span className="material-symbols-outlined text-[20px]">logout</span>
+                            {t('manager.nav.sign_out')}
+                        </button>
                     </div>
-                    <Footer />
-                </main>
+                </aside>
+
+                {/* Main Content */}
+                <div className="flex-1 md:ml-64 min-w-0 flex flex-col">
+                    <PortalTopBar
+                        user={user}
+                        onLogout={handleLogout}
+                        onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    />
+
+                    {/* Mobile Menu Overlay */}
+                    {isMobileMenuOpen && (
+                        <div className="fixed inset-0 z-50 bg-[#F5DEB3] dark:bg-[#1c1916] md:hidden flex flex-col">
+                            <div className="p-6 flex items-center justify-between border-b border-espresso/10">
+                                <div className="flex items-center gap-3">
+                                    <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center shadow-xl overflow-hidden">
+                                        <img src="/logo.jpg" alt="Usafi Logo" className="w-full h-full object-cover" />
+                                    </div>
+                                    <span className="font-serif text-lg font-bold text-espresso dark:text-white">{t('manager.nav.marketing_menu')}</span>
+                                </div>
+                                <button onClick={() => setIsMobileMenuOpen(false)} className="h-12 w-12 flex items-center justify-center rounded-2xl bg-espresso/5 text-espresso dark:text-white hover:bg-espresso/10 transition-colors">
+                                    <span className="material-symbols-outlined">close</span>
+                                </button>
+                            </div>
+                            <nav className="flex-1 p-6 space-y-2 overflow-y-auto relative z-10 custom-scrollbar">
+                                {navItems.map((item) => (
+                                    <Link
+                                        key={item.path}
+                                        to={item.path}
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className={cn(
+                                            "flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors",
+                                            location.pathname === item.path
+                                                ? "bg-espresso text-white shadow-md shadow-espresso/20"
+                                                : "bg-[#7B3F00] text-white hover:bg-espresso/90"
+                                        )}
+                                    >
+                                        <span className="material-symbols-outlined text-[24px]">{item.icon}</span>
+                                        {item.label}
+                                    </Link>
+                                ))}
+                                <button
+                                    onClick={handleLogout}
+                                    className="flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors mt-2"
+                                >
+                                    <span className="material-symbols-outlined text-[24px]">logout</span>
+                                    {t('manager.nav.sign_out')}
+                                </button>
+                            </nav>
+                        </div>
+                    )}
+
+                    <main className="flex-1 relative overflow-y-auto custom-scrollbar flex flex-col">
+                        <div className="flex-grow p-4 md:p-8">
+                            <Outlet />
+                        </div>
+                        <Footer />
+                    </main>
+                </div>
             </div>
         </div>
     );

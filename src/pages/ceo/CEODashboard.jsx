@@ -4,9 +4,11 @@ import { db } from '../../lib/firebase';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
+import { useAuth } from '../../context/AuthContext';
 
 export function CEODashboard({ settings }) {
     const { t, i18n } = useTranslation();
+    const { user } = useAuth();
     const [loading, setLoading] = useState(true);
     const [stats, setStats] = useState({
         totalRevenue: 0,
@@ -431,54 +433,66 @@ export function CEODashboard({ settings }) {
 
                             {/* Global Announcement Modal */}
                             {actionModal === 'announce' && (
-                                <div className="p-10 space-y-6">
+                                <div className="p-10 space-y-8">
                                     <div className="text-center">
-                                        <div className="size-16 bg-[#D4Af37]/10 rounded-3xl mx-auto flex items-center justify-center text-[#B8860B] mb-4">
-                                            <span className="material-symbols-outlined text-3xl">broadcast_on_home</span>
+                                        <div className="size-20 bg-[#D4Af37]/10 rounded-[2rem] mx-auto flex items-center justify-center text-[#B8860B] mb-6 shadow-inner">
+                                            <span className="material-symbols-outlined text-4xl">broadcast_on_home</span>
                                         </div>
-                                        <h3 className="text-2xl font-serif font-black text-[#4B3832]">{t('ceo.dashboard.global_broadcast_title')}</h3>
-                                        <p className="text-xs text-[#4B3832]/60 mt-1 uppercase tracking-widest font-black">{t('ceo.dashboard.notify_active_users')}</p>
+                                        <h3 className="text-3xl font-serif font-black text-[#4B3832] tracking-tight">Global Broadcast</h3>
+                                        <p className="text-[10px] text-[#4B3832]/60 mt-2 uppercase tracking-[0.3em] font-black">Notify All Active Users</p>
                                     </div>
-                                    <div className="space-y-4">
+                                    <div className="space-y-6">
                                         <div className="space-y-2">
-                                            <label className="text-[10px] font-black uppercase tracking-widest text-[#4B3832]/40">{t('ceo.dashboard.subject_label')}</label>
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-[#4B3832]/40 ml-4">Subject</label>
                                             <input
                                                 type="text"
                                                 value={announcement.title}
                                                 onChange={(e) => setAnnouncement({ ...announcement, title: e.target.value })}
                                                 placeholder="Important System Update"
-                                                className="w-full px-5 py-3 rounded-2xl bg-white border border-[#4B3832]/10 focus:border-[#D4Af37] outline-none font-bold text-sm"
+                                                className="w-full px-6 py-4 rounded-2xl bg-white border border-[#4B3832]/10 focus:border-[#D4Af37] outline-none font-bold text-sm shadow-sm transition-all focus:shadow-md"
                                             />
                                         </div>
                                         <div className="space-y-2">
-                                            <label className="text-[10px] font-black uppercase tracking-widest text-[#4B3832]/40">{t('ceo.dashboard.message_label')}</label>
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-[#4B3832]/40 ml-4">Message</label>
                                             <textarea
                                                 value={announcement.message}
                                                 onChange={(e) => setAnnouncement({ ...announcement, message: e.target.value })}
                                                 rows={4}
                                                 placeholder="Type your executive message here..."
-                                                className="w-full px-5 py-4 rounded-2xl bg-white border border-[#4B3832]/10 focus:border-[#D4Af37] outline-none font-medium text-sm resize-none"
+                                                className="w-full px-6 py-5 rounded-2xl bg-white border border-[#4B3832]/10 focus:border-[#D4Af37] outline-none font-medium text-sm resize-none shadow-sm transition-all focus:shadow-md"
                                             />
                                         </div>
                                         <button
                                             onClick={async () => {
                                                 setProcessing(true);
                                                 try {
-                                                    await addDoc(collection(db, 'announcements'), {
-                                                        ...announcement,
+                                                    // Ensure we mark it as active and use the correct collection
+                                                    await addDoc(collection(db, 'system_announcements'), {
+                                                        subject: announcement.title,
+                                                        message: announcement.message,
+                                                        active: true,
                                                         createdAt: serverTimestamp(),
-                                                        createdBy: 'ceo',
-                                                        type: 'executive'
+                                                        createdBy: user?.uid || 'unknown',
+                                                        type: 'broadcast'
                                                     });
-                                                    alert(t('ceo.dashboard.broadcast_success'));
+                                                    alert("Broadcast successfully launched!");
                                                     setActionModal(null);
-                                                } catch (e) { alert(e.message); }
+                                                    setAnnouncement({ title: '', message: '', priority: 'normal' });
+                                                } catch (e) {
+                                                    console.error(e);
+                                                    alert("Broadcast failed: " + e.message);
+                                                }
                                                 setProcessing(false);
                                             }}
                                             disabled={processing || !announcement.title || !announcement.message}
-                                            className="w-full py-4 rounded-2xl bg-[#4B3832] text-[#F5DEB3] font-black uppercase text-xs tracking-[0.2em] shadow-xl hover:scale-105 transition-transform disabled:opacity-50"
+                                            className="w-full py-5 rounded-2xl bg-[#4B3832] text-[#F5DEB3] font-black uppercase text-xs tracking-[0.3em] shadow-2xl hover:bg-[#3d2d27] active:scale-[0.98] transition-all disabled:opacity-50 mt-4 group"
                                         >
-                                            {processing ? t('ceo.dashboard.broadcasting') : t('ceo.dashboard.launch_broadcast')}
+                                            {processing ? "Launching..." : (
+                                                <span className="flex items-center justify-center gap-2">
+                                                    Launch Broadcast
+                                                    <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">send</span>
+                                                </span>
+                                            )}
                                         </button>
                                     </div>
                                 </div>

@@ -118,6 +118,7 @@ import { CEODashboard } from './pages/ceo/CEODashboard';
 import { CEOStaff } from './pages/ceo/CEOStaff';
 import { CEORevenue } from './pages/ceo/CEORevenue';
 import { CEOSettings } from './pages/ceo/CEOSettings';
+import { CEOPricing } from './pages/ceo/CEOPricing';
 
 // Setup utility
 import { SetupCEO } from './pages/public/SetupCEO';
@@ -308,6 +309,7 @@ function AppContent({ settings }) {
           <Route path="dashboard" element={<CEODashboard settings={settings} />} />
           <Route path="staff" element={<CEOStaff />} />
           <Route path="revenue" element={<CEORevenue />} />
+          <Route path="pricing" element={<CEOPricing />} />
           <Route path="settings" element={<CEOSettings settings={settings} />} />
           <Route path="profile" element={<CommonProfile />} />
         </Route>
