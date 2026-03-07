@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { collection, query, orderBy, onSnapshot, doc, updateDoc, setDoc, addDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, doc, updateDoc, setDoc, addDoc, deleteDoc, serverTimestamp, getDocs, where } from 'firebase/firestore';
 import { ref as storageRef, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../../lib/firebase';
 import { format } from 'date-fns';
@@ -34,10 +34,31 @@ function BookingsTab() {
 
     useEffect(() => {
         const q = query(collection(db, 'weekend_bookings'), orderBy('createdAt', 'desc'));
-        return onSnapshot(q, (snap) => {
-            setBookings(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+        const unsubscribe = onSnapshot(q, async (snapshot) => {
+            const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+            // AUTO-HEAL ORPHANED BOOKINGS
+            for (const booking of data) {
+                if (!booking.userId && booking.email) {
+                    try {
+                        const userQ = query(collection(db, 'users'), where('email', '==', booking.email));
+                        const userSnap = await getDocs(userQ);
+                        if (!userSnap.empty) {
+                            const foundUserId = userSnap.docs[0].id;
+                            await updateDoc(doc(db, 'weekend_bookings', booking.id), { userId: foundUserId });
+                            booking.userId = foundUserId; // update locally for this render
+                            console.log(`Auto-healed orphaned booking for ${booking.email}`);
+                        }
+                    } catch (err) {
+                        console.error("Heal failed for", booking.email, err);
+                    }
+                }
+            }
+
+            setBookings(data);
             setLoading(false);
         });
+        return unsubscribe;
     }, []);
 
     useEffect(() => {
