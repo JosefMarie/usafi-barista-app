@@ -110,6 +110,45 @@ export function Enrollment({ settings }) {
                     };
 
                     await updateDoc(doc(db, 'users', userId), updatedUserData);
+                } else if (userData.role === 'weekend_guest') {
+                    // Upgrade guest to student
+                    setLoadingMessage('Upgrading guest account to student...');
+                    userId = existingUser.id;
+                    isReactivation = true; // flag to skip create
+
+                    // We must authenticate them securely so someone can't just take over an email
+                    try {
+                        await signInWithEmailAndPassword(auth, formData.email, formData.password);
+                    } catch (signInErr) {
+                        throw new Error('This email belongs to a Weekend Guest. Please enter your existing password to upgrade your account to a full student.');
+                    }
+
+                    // Update the existing document with new enrollment data
+                    const updatedUserData = {
+                        fullName: formData.fullName, // update info just in case
+                        phone: formData.phone,
+                        residence: formData.residence,
+                        studyMethod: formData.studyMethod,
+                        startDate: formData.startDate,
+                        shift: formData.shift || '',
+                        referral: formData.referral,
+                        role: 'student', // UPGRADE ROLE here!
+                        courseId: formData.courses[0] || '',
+                        course: formData.courses.length > 1 ? 'Multiple' : 'Single',
+                        status: 'pending', // Set back to pending for admin approval
+                        enrolledCourses: formData.courses.map(courseId => ({
+                            courseId,
+                            status: 'pending',
+                            enrolledAt: new Date(),
+                            progress: 0
+                        })),
+                        totalFee: (() => {
+                            const enrolledIds = formData.courses || [];
+                            return getCourseFee(enrolledIds);
+                        })()
+                    };
+
+                    await updateDoc(doc(db, 'users', userId), updatedUserData);
                 } else {
                     // Account exists and is not deleted - throw error
                     throw { code: 'auth/email-already-in-use' };
