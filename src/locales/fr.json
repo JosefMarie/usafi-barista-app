@@ -28,7 +28,8 @@
       "cta_testimonials": "Témoignages",
       "cta_business": "Cours d'Affaires",
       "cta_equipment": "Outils et Équipements",
-      "cta_login": "Connexion"
+      "cta_login": "Connexion",
+      "cta_weekend_fun": "Expérience Café du Week-end"
     },
     "benefits": {
       "title": "Pourquoi choisir le centre de formation Usafi Barista ?",
@@ -1330,8 +1331,7 @@
       "go_to_dashboard": "Aller au Tableau de Bord",
       "password": "Créer un Mot de Passe",
       "back_home": "Retour à l'Accueil",
-      "explore_more": "Explorer plus",
-      "your_booking": "Votre réservation"
+      "explore_more": "Explorer plus"
     },
     "weekend_picker": {
       "label": "Sélectionnez une date de week-end",

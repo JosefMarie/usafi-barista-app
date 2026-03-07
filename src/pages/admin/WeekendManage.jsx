@@ -59,6 +59,40 @@ function BookingsTab() {
         }, { merge: true });
     };
 
+    const handleApproveBooking = async () => {
+        if (!selectedBooking) return;
+        try {
+            await setDoc(doc(db, 'weekend_bookings', selectedBooking.id), {
+                status: 'confirmed',
+                updatedAt: serverTimestamp(),
+                updatedBy: 'admin'
+            }, { merge: true });
+
+            if (selectedBooking.userId) {
+                await setDoc(doc(db, 'users', selectedBooking.userId), {
+                    status: 'active',
+                    updatedAt: serverTimestamp()
+                }, { merge: true });
+            }
+            setSelected({ ...selectedBooking, status: 'confirmed' });
+        } catch (error) {
+            console.error("Error approving booking:", error);
+            alert("Failed to approve booking.");
+        }
+    };
+
+    const handleDeleteBooking = async () => {
+        if (!selectedBooking) return;
+        if (!window.confirm(`Are you sure you want to delete the booking for ${selectedBooking.fullName}? This cannot be undone.`)) return;
+        try {
+            await deleteDoc(doc(db, 'weekend_bookings', selectedBooking.id));
+            setSelected(null);
+        } catch (error) {
+            console.error("Error deleting booking:", error);
+            alert("Failed to delete booking.");
+        }
+    };
+
     if (loading) return (
         <div className="flex items-center justify-center min-h-[300px]">
             <div className="size-10 border-4 border-espresso/20 border-t-espresso rounded-full animate-spin" />
@@ -90,7 +124,9 @@ function BookingsTab() {
                                             <div className="text-[10px] uppercase font-black text-rose-500">{b.duration} Day(s)</div>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase ${b.status === 'confirmed' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>{b.status}</span>
+                                            <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase ${b.status === 'confirmed' ? 'bg-emerald-100 text-emerald-700' : b.status === 'pending' ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-700'}`}>
+                                                {b.status === 'pending' ? 'Pending Arrival' : b.status}
+                                            </span>
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <button className="size-8 rounded-lg bg-espresso text-white flex items-center justify-center hover:scale-110 transition-transform ml-auto">
@@ -112,8 +148,22 @@ function BookingsTab() {
                 {selectedBooking ? (
                     <div className="bg-espresso text-[#F5DEB3] p-8 rounded-[3rem] shadow-2xl space-y-6 sticky top-32">
                         <div>
-                            <h2 className="font-serif text-2xl font-black uppercase">{selectedBooking.fullName}</h2>
-                            <p className="text-[10px] uppercase tracking-widest opacity-40">Journey Progress</p>
+                            <div className="flex items-start justify-between">
+                                <h2 className="font-serif text-2xl font-black uppercase">{selectedBooking.fullName}</h2>
+                                <div className="flex items-center gap-2">
+                                    {selectedBooking.status === 'pending' && (
+                                        <button onClick={handleApproveBooking} className="px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-black text-[10px] uppercase tracking-widest transition-all flex items-center gap-1 shadow-lg">
+                                            <span className="material-symbols-outlined text-sm">check_circle</span>
+                                            Approve
+                                        </button>
+                                    )}
+                                    <button onClick={handleDeleteBooking} className="px-4 py-2 bg-white/5 hover:bg-red-500/20 text-red-400 hover:text-red-300 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all border border-red-500/20 flex items-center gap-1 shadow-lg">
+                                        <span className="material-symbols-outlined text-sm">delete</span>
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                            <p className="text-[10px] uppercase tracking-widest opacity-40 mt-1">Journey Progress</p>
                         </div>
                         <div className="space-y-3">
                             {MODULES.map((mod, i) => {
@@ -157,7 +207,7 @@ function BookingsTab() {
 function ContentCardsTab() {
     const [activeModule, setActiveModule] = useState(MODULES[0]);
     const [cards, setCards] = useState([]);
-    const [editing, setEditing] = useState(null); // null = closed, {} = new, {id,...} = existing
+    const [editing, setEditing] = useState(null); // null = closed, { } = new, {id,...} = existing
     const [form, setForm] = useState(DEFAULT_CARD);
     const [saving, setSaving] = useState(false);
     const [deleting, setDeleting] = useState(null);

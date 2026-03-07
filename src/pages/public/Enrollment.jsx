@@ -100,7 +100,7 @@ export function Enrollment({ settings }) {
                         enrolledCourses: formData.courses.map(courseId => ({
                             courseId,
                             status: 'pending',
-                            enrolledAt: serverTimestamp(),
+                            enrolledAt: new Date(),
                             progress: 0
                         })),
                         totalFee: (() => {
@@ -144,7 +144,7 @@ export function Enrollment({ settings }) {
                     enrolledCourses: formData.courses.map(courseId => ({
                         courseId,
                         status: 'pending',
-                        enrolledAt: serverTimestamp(),
+                        enrolledAt: new Date(),
                         progress: 0
                     }))
                 };

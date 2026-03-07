@@ -101,6 +101,10 @@ function ModulePanel({ mod, isLocked, onClose, onDone, t }) {
                             <span className="material-symbols-outlined text-5xl mb-3">style</span>
                             <p className="font-bold">No content cards yet for this module.</p>
                             <p className="text-xs mt-1 opacity-60">Admin will add them soon!</p>
+                            <button onClick={handleDone} disabled={finishing} className="mt-6 flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-[10px] font-black uppercase tracking-[0.2em] shadow-lg hover:scale-105 active:scale-95 transition-all">
+                                {finishing ? 'Processing...' : 'Mark as Complete Anyway'}
+                                <span className="material-symbols-outlined text-sm">check_circle</span>
+                            </button>
                         </div>
                     ) : (
                         <>

@@ -1,19 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { collection, addDoc, serverTimestamp, setDoc, doc } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, setDoc, doc, query, where, getDocs } from 'firebase/firestore';
 import { db, auth } from '../../lib/firebase';
 import { useTranslation } from 'react-i18next';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { httpsCallable, getFunctions } from 'firebase/functions';
-import { useStripe, useElements, PaymentElement, Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { SEO } from '../../components/common/SEO';
 import { addDays, format, startOfToday, nextSaturday, nextSunday, isSaturday, isSunday } from 'date-fns';
 import { usePricing } from '../../hooks/usePricing';
-
-
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_sample');
 
 // ─── Data (must match WeekendExperience.jsx) ──────────────────────────────────
 
@@ -63,68 +57,67 @@ const getUpcomingWeekends = (count = 8) => {
 
 function PaymentForm({ formData, totalPrice, finalTotal, bookingDetails, onNext, onBack, loading, setLoading }) {
     const { t } = useTranslation();
-    const stripe = useStripe();
-    const elements = useElements();
+    const [isLogin, setIsLogin] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!stripe || !elements) return;
         setLoading(true);
         try {
-            const result = await stripe.confirmPayment({
-                elements,
-                confirmParams: {
-                    return_url: `${window.location.origin}/thank-you`,
-                    payment_method_data: {
-                        billing_details: {
-                            name: formData.fullName,
-                            email: formData.email,
-                            phone: formData.phone
-                        }
-                    }
-                },
-                redirect: 'if_required'
-            });
-            if (result.error) {
-                alert(result.error.message);
-            } else {
-                // 1. Create Auth User
-                let userId = null;
-                try {
+            // 1. Create Auth User
+            let userId = null;
+            try {
+                if (isLogin) {
+                    // Sign in existing user
+                    const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password);
+                    userId = userCredential.user.uid;
+                } else {
+                    // Register new user
                     const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
                     userId = userCredential.user.uid;
 
-                    // 2. Create/Update User Profile
+                    // Create User Profile (Pending Admin Approval)
                     await setDoc(doc(db, 'users', userId), {
                         fullName: formData.fullName,
                         email: formData.email,
                         role: 'weekend_guest',
-                        status: 'active',
+                        status: 'pending',
                         createdAt: serverTimestamp(),
                         phoneNumber: formData.phone,
-                        country: formData.country
+                        country: formData.country || ''
                     });
-                } catch (authErr) {
-                    console.warn("Auth account creation failed (user might exist):", authErr.message);
-                    // If user exists, we continue with booking but they might need to reset password
-                    // In a production app, we should handle this more gracefully
                 }
-
-                // 3. Save Booking
-                await addDoc(collection(db, 'weekend_bookings'), {
-                    ...formData,
-                    ...bookingDetails,
-                    userId: userId,
-                    totalPrice: finalTotal,
-                    status: 'confirmed',
-                    paymentMethod: 'stripe',
-                    stripePaymentIntentId: result.paymentIntent.id,
-                    createdAt: serverTimestamp()
-                });
-                onNext();
+            } catch (authErr) {
+                console.error("Auth error:", authErr.message);
+                const errorMsg = isLogin
+                    ? t('weekendExperience.booking.login_failed', 'Login failed. Please check your email and password.')
+                    : t('weekendExperience.booking.registration_failed', 'Registration failed. This email might already be in use. Try logging in instead.');
+                throw new Error(errorMsg);
             }
+            // 3. Save Booking (Always pending arrival payment)
+            const { setFullName, setEmail, setPhone, setCountry, setPassword, password, ...cleanFormData } = formData;
+
+            // Only save fullName, phone, and country if they were provided (registration mode)
+            const bookingDataToSave = {
+                ...cleanFormData,
+                ...bookingDetails,
+                userId: userId,
+                totalPrice: finalTotal,
+                status: 'pending',
+                paymentMethod: 'arrival',
+                createdAt: serverTimestamp()
+            };
+
+            if (isLogin) {
+                // If login, don't accidentally overwrite or save empty registration fields onto the booking
+                delete bookingDataToSave.fullName;
+                delete bookingDataToSave.phone;
+                delete bookingDataToSave.country;
+            }
+
+            await addDoc(collection(db, 'weekend_bookings'), bookingDataToSave);
+            onNext();
         } catch (err) {
-            alert(t('weekendExperience.booking.payment_err', 'Payment error:') + ' ' + err.message);
+            alert(t('weekendExperience.booking.payment_err', 'Registration error:') + ' ' + err.message);
         } finally {
             setLoading(false);
         }
@@ -163,73 +156,89 @@ function PaymentForm({ formData, totalPrice, finalTotal, bookingDetails, onNext,
                 </div>
             </div>
 
+            <div className="flex bg-[#FAF5E8] dark:bg-white/5 rounded-2xl p-1 border border-espresso/10">
+                <button type="button" onClick={() => setIsLogin(false)} className={`flex-1 py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all ${!isLogin ? 'bg-white shadow-md text-espresso dark:bg-rose-500 dark:text-white' : 'text-espresso/40 hover:text-espresso dark:text-white/40 dark:hover:text-white'}`}>
+                    {t('weekendExperience.booking.new_guest', 'New Guest')}
+                </button>
+                <button type="button" onClick={() => setIsLogin(true)} className={`flex-1 py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all ${isLogin ? 'bg-white shadow-md text-espresso dark:bg-rose-500 dark:text-white' : 'text-espresso/40 hover:text-espresso dark:text-white/40 dark:hover:text-white'}`}>
+                    {t('weekendExperience.booking.returning_guest', 'Returning Guest')}
+                </button>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-espresso/40">{t('weekendExperience.booking.full_name', 'Full Name')}</label>
-                    <input type="text" required value={formData.fullName}
-                        onChange={e => formData.setFullName(e.target.value)}
-                        className="w-full px-6 py-4 rounded-2xl bg-[#FAF5E8] dark:bg-white/5 border border-espresso/10 focus:border-rose-500 outline-none font-bold"
-                    />
-                </div>
-                <div className="space-y-2">
+                {!isLogin && (
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-espresso/40">{t('weekendExperience.booking.full_name', 'Full Name')}</label>
+                        <input type="text" required={!isLogin} value={formData.fullName}
+                            onChange={e => formData.setFullName(e.target.value)}
+                            className="w-full px-6 py-4 rounded-2xl bg-[#FAF5E8] dark:bg-white/5 border border-espresso/10 focus:border-rose-500 outline-none font-bold"
+                        />
+                    </div>
+                )}
+                <div className={`space-y-2 ${isLogin ? 'md:col-span-2' : ''}`}>
                     <label className="text-[10px] font-black uppercase tracking-widest text-espresso/40">{t('weekendExperience.booking.email', 'Email Address')}</label>
                     <input type="email" required value={formData.email}
                         onChange={e => formData.setEmail(e.target.value)}
                         className="w-full px-6 py-4 rounded-2xl bg-[#FAF5E8] dark:bg-white/5 border border-espresso/10 focus:border-rose-500 outline-none font-bold"
                     />
                 </div>
-                <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-espresso/40">{t('weekendExperience.booking.phone', 'Phone Number')}</label>
-                    <input type="tel" required value={formData.phone}
-                        onChange={e => formData.setPhone(e.target.value)}
-                        className="w-full px-6 py-4 rounded-2xl bg-[#FAF5E8] dark:bg-white/5 border border-espresso/10 focus:border-rose-500 outline-none font-bold"
-                    />
-                </div>
-                <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-espresso/40">{t('weekendExperience.booking.password', 'Create Password')}</label>
+                {!isLogin && (
+                    <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-espresso/40">{t('weekendExperience.booking.phone', 'Phone Number')}</label>
+                        <input type="tel" required={!isLogin} value={formData.phone}
+                            onChange={e => formData.setPhone(e.target.value)}
+                            className="w-full px-6 py-4 rounded-2xl bg-[#FAF5E8] dark:bg-white/5 border border-espresso/10 focus:border-rose-500 outline-none font-bold"
+                        />
+                    </div>
+                )}
+                <div className={`space-y-2 ${isLogin ? 'md:col-span-2' : ''}`}>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-espresso/40">{t('weekendExperience.booking.password', 'Password')}</label>
                     <input type="password" required value={formData.password}
                         onChange={e => formData.setPassword(e.target.value)}
                         minLength={6}
                         className="w-full px-6 py-4 rounded-2xl bg-[#FAF5E8] dark:bg-white/5 border border-espresso/10 focus:border-rose-500 outline-none font-bold"
-                        placeholder="Min. 6 characters"
+                        placeholder={isLogin ? "Enter your password" : "Min. 6 characters"}
                     />
                 </div>
-                <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-espresso/40">{t('weekendExperience.booking.country', 'Country / Origin')}</label>
-                    <input type="text" placeholder={t('weekendExperience.booking.country_placeholder', 'e.g. USA, France, Kenya...')}
-                        value={formData.country}
-                        onChange={e => formData.setCountry(e.target.value)}
-                        className="w-full px-6 py-4 rounded-2xl bg-[#FAF5E8] dark:bg-white/5 border border-espresso/10 focus:border-rose-500 outline-none font-bold"
-                    />
-                </div>
+                {!isLogin && (
+                    <div className="space-y-2 md:col-span-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-espresso/40">{t('weekendExperience.booking.country', 'Country / Origin')}</label>
+                        <input type="text" placeholder={t('weekendExperience.booking.country_placeholder', 'e.g. USA, France, Kenya...')}
+                            value={formData.country}
+                            onChange={e => formData.setCountry(e.target.value)}
+                            className="w-full px-6 py-4 rounded-2xl bg-[#FAF5E8] dark:bg-white/5 border border-espresso/10 focus:border-rose-500 outline-none font-bold"
+                        />
+                    </div>
+                )}
             </div>
 
-            {/* Stripe Card Panel */}
+            {/* Pay on Arrival element */}
             <div className="p-8 rounded-[2.5rem] bg-gradient-to-br from-espresso to-[#2A1E1B] text-[#F5DEB3] shadow-2xl relative overflow-hidden">
                 <div className="absolute -right-10 -bottom-10 p-20 opacity-5 scale-150 rotate-12 pointer-events-none">
-                    <span className="material-symbols-outlined">verified</span>
+                    <span className="material-symbols-outlined">payments</span>
                 </div>
                 <div className="relative z-10 space-y-6">
                     <div className="flex justify-between items-center">
                         <div className="size-12 bg-[#F5DEB3]/10 rounded-xl flex items-center justify-center">
-                            <span className="material-symbols-outlined">credit_card</span>
+                            <span className="material-symbols-outlined">payments</span>
                         </div>
-                        <p className="text-[8px] font-black uppercase tracking-[0.3em] opacity-40">Secured by Stripe</p>
+                        <p className="text-[8px] font-black uppercase tracking-[0.3em] opacity-40">Pay on Arrival</p>
                     </div>
-                    <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
-                        <PaymentElement options={{ layout: 'tabs' }} />
+                    <div className="bg-white/5 p-6 rounded-2xl border border-white/10 text-center space-y-2">
+                        <p className="font-serif font-black text-xl text-emerald-400">Online Payments Coming Soon</p>
+                        <p className="text-sm opacity-80">For now, you can secure your spot by completing registration and safely paying in person when you arrive at our center.</p>
                     </div>
                 </div>
             </div>
 
             <button
-                type="submit" disabled={loading || !stripe}
-                className="w-full py-5 bg-gradient-to-r from-rose-500 to-amber-500 text-white rounded-[2rem] font-black text-xs uppercase tracking-[0.3em] shadow-2xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-4 disabled:opacity-50"
+                type="submit" disabled={loading}
+                className="w-full py-5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-[2rem] font-black text-xs uppercase tracking-[0.3em] shadow-2xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-4 disabled:opacity-50"
             >
                 {loading ? (
                     <><div className="size-5 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>{t('weekendExperience.booking.processing', 'Processing...')}</>
                 ) : (
-                    <>{t('weekendExperience.booking.pay', 'Pay')} {finalTotal.toLocaleString()} RWF <span className="material-symbols-outlined text-sm">lock</span></>
+                    <>{isLogin ? "Login & Secure Spot" : "Complete Registration & Secure Spot"}</>
                 )}
             </button>
         </form>
@@ -310,34 +319,13 @@ export function ExperienceBooking() {
 
 
     const handleContinue = async () => {
-        // Validation now redundant but kept as safety
         const day = new Date(date).getDay();
         if (day !== 0 && day !== 6) {
             alert(t('weekendExperience.booking.alert_weekend', 'Please choose a Saturday or Sunday — we only host on weekends!'));
             return;
         }
 
-        setLoading(true);
-        try {
-            const functions = getFunctions();
-            const createPaymentIntent = httpsCallable(functions, 'createPaymentIntent');
-            const { data } = await createPaymentIntent({
-                amount: finalTotal,
-                currency: 'rwf',
-                metadata: {
-                    type: 'weekend_combo_v2',
-                    duration,
-                    numPeople
-                }
-
-            });
-            setClientSecret(data.clientSecret);
-            setStep(2);
-        } catch (err) {
-            alert(t('weekendExperience.booking.payment_init_err', 'Failed to initialize payment:') + ' ' + err.message);
-        } finally {
-            setLoading(false);
-        }
+        setStep(2);
     };
 
     const progressSteps = [
@@ -546,21 +534,18 @@ export function ExperienceBooking() {
                     )}
 
 
-                    {/* Step 2: Payment */}
-                    {step === 2 && clientSecret && (
-                        <Elements stripe={stripePromise} options={{ clientSecret }}>
-                            <PaymentForm
-                                formData={{ fullName, email, phone, country, password, numPeople, date, setFullName, setEmail, setPhone, setCountry, setPassword }}
-                                totalPrice={finalTotalUSD}
-                                finalTotal={finalTotal}
-                                bookingDetails={bookingDetails}
-                                onNext={() => setStep(3)}
-                                onBack={() => setStep(1)}
-                                loading={loading}
-                                setLoading={setLoading}
-                            />
-
-                        </Elements>
+                    {/* Step 2: Payment/Registration */}
+                    {step === 2 && (
+                        <PaymentForm
+                            formData={{ fullName, email, phone, country, password, numPeople, date, setFullName, setEmail, setPhone, setCountry, setPassword }}
+                            totalPrice={finalTotalUSD}
+                            finalTotal={finalTotal}
+                            bookingDetails={bookingDetails}
+                            onNext={() => setStep(3)}
+                            onBack={() => setStep(1)}
+                            loading={loading}
+                            setLoading={setLoading}
+                        />
                     )}
 
                     {/* Step 3: Confirmation */}
@@ -606,11 +591,9 @@ export function ExperienceBooking() {
                         </div>
                     )}
                 </div>
-
                 <div className="mt-8 flex items-center justify-center gap-6 opacity-30 grayscale pointer-events-none">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/2560px-Visa_Inc._logo.svg.png" className="h-4" alt="Visa" />
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/1280px-Mastercard-logo.svg.png" className="h-8" alt="Mastercard" />
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Stripe_Logo%2C_revised_2016.svg/2560px-Stripe_Logo%2C_revised_2016.svg.png" className="h-6" alt="Stripe" />
+                    <span className="material-symbols-outlined text-4xl">verified_user</span>
+                    <span className="text-sm font-bold uppercase tracking-widest">Usafi Encrypted Booking</span>
                 </div>
             </div>
         </div>
