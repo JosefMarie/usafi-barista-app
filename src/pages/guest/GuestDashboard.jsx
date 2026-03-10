@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { db } from '../../lib/firebase';
-import { collection, query, orderBy, onSnapshot, doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, doc, getDoc, setDoc, serverTimestamp, addDoc } from 'firebase/firestore';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { storage } from '../../lib/firebase';
 import { useTranslation } from 'react-i18next';
 import { Navbar } from '../../components/layout/Navbar';
 import { Footer } from '../../components/layout/Footer';
@@ -175,6 +177,185 @@ function ModulePanel({ mod, isLocked, onClose, onDone, t }) {
                             </div>
                         </>
                     )}
+                </div>
+            </div>
+        </div>
+    );
+}
+
+// ── Feedback Section ─────────────────────────────────────────────────────────
+function FeedbackSection({ user, userData }) {
+    const [rating, setRating] = useState(5);
+    const [comment, setComment] = useState('');
+    const [imageFile, setImageFile] = useState(null);
+    const [submitting, setSubmitting] = useState(false);
+    const [submitted, setSubmitted] = useState(false);
+    const fileInputRef = React.useRef(null);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!comment.trim()) return;
+        setSubmitting(true);
+        try {
+            let imageUrl = '';
+            // Upload image if selected
+            if (imageFile) {
+                const storageRef = ref(storage, `testimonials/${user.uid}_${Date.now()}_${imageFile.name}`);
+                const snapshot = await uploadBytesResumable(storageRef, imageFile);
+                imageUrl = await getDownloadURL(snapshot.ref);
+            }
+
+            await addDoc(collection(db, 'testimonials'), {
+                userId: user.uid,
+                name: userData?.name || userData?.fullName || 'Weekend Guest',
+                role: 'Weekend Guest',
+                rating,
+                text: comment,
+                imageUrl: imageUrl, // Save image URL
+                status: 'pending', // Requires admin approval
+                createdAt: serverTimestamp(),
+                avatar: userData?.avatar || ''
+            });
+            setSubmitted(true);
+        } catch (error) {
+            console.error("Error submitting feedback:", error);
+            alert("Failed to submit feedback. Please try again.");
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    const handleFileChange = (e) => {
+        if (e.target.files && e.target.files[0]) {
+            setImageFile(e.target.files[0]);
+        }
+    };
+
+    if (submitted) {
+        return (
+            <div className="mt-16 bg-emerald-500/10 border border-emerald-500/20 rounded-[3rem] p-10 text-center animate-in fade-in zoom-in duration-500 max-w-4xl mx-auto">
+                <div className="size-20 bg-emerald-500 rounded-full mx-auto flex items-center justify-center text-white mb-6 shadow-xl shadow-emerald-500/20">
+                    <span className="material-symbols-outlined text-4xl">favorite</span>
+                </div>
+                <h3 className="font-serif text-2xl md:text-3xl font-black text-espresso dark:text-white mb-2">Thank you!</h3>
+                <p className="text-espresso/60 dark:text-white/60 font-medium">Your feedback has been received and is highly appreciated.</p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="mt-16 bg-white/40 dark:bg-white/5 border border-espresso/5 rounded-[3rem] p-8 md:p-12 backdrop-blur-xl relative overflow-hidden max-w-4xl mx-auto shadow-2xl">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-rose-500/5 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl -ml-20 -mb-20 pointer-events-none" />
+            <div className="relative z-10 text-center mb-10">
+                <h3 className="font-serif text-3xl font-black text-espresso dark:text-white uppercase tracking-tight">Share Your Experience</h3>
+                <p className="text-[10px] md:text-sm text-espresso/50 dark:text-white/50 tracking-widest uppercase mt-3 font-bold">Let others know about your time with us</p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="relative z-10 space-y-8">
+                <div className="flex justify-center gap-3">
+                    {[1, 2, 3, 4, 5].map(star => (
+                        <button
+                            key={star}
+                            type="button"
+                            onClick={() => setRating(star)}
+                            className={`transition-all duration-300 hover:scale-125 hover:-rotate-6 ${star <= rating ? 'text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]' : 'text-espresso/10 dark:text-white/10 hover:text-amber-400/50'}`}
+                        >
+                            <span className="material-symbols-outlined text-4xl md:text-5xl" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                        </button>
+                    ))}
+                </div>
+
+                <div className="space-y-4">
+                    <textarea
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                        placeholder="What did you love about the Weekend Coffee Experience? Your feedback helps us grow!"
+                        className="w-full h-40 px-6 py-5 rounded-3xl bg-white/60 dark:bg-black/20 border border-espresso/10 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/50 shadow-inner outline-none resize-none transition-all placeholder:text-espresso/30 text-base md:text-lg font-medium text-espresso dark:text-white"
+                        required
+                    />
+
+                    {/* Image Upload Area */}
+                    <div
+                        onClick={() => fileInputRef.current?.click()}
+                        className="w-full p-4 border-2 border-dashed border-espresso/20 rounded-2xl bg-white/40 dark:bg-black/10 hover:bg-white/60 dark:hover:bg-black/20 hover:border-rose-400 transition-all cursor-pointer flex flex-col items-center justify-center gap-2 group"
+                    >
+                        <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            ref={fileInputRef}
+                            onChange={handleFileChange}
+                        />
+                        {imageFile ? (
+                            <div className="flex items-center gap-3 text-emerald-600 dark:text-emerald-400">
+                                <span className="material-symbols-outlined">image</span>
+                                <span className="font-bold text-sm tracking-wide">{imageFile.name} (Ready to upload)</span>
+                                <button
+                                    type="button"
+                                    onClick={(e) => { e.stopPropagation(); setImageFile(null); }}
+                                    className="ml-2 size-6 flex items-center justify-center rounded-full hover:bg-emerald-500/20"
+                                >
+                                    <span className="material-symbols-outlined text-[16px]">close</span>
+                                </button>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="size-10 rounded-full bg-espresso/5 flex items-center justify-center text-espresso/40 group-hover:text-rose-500 group-hover:scale-110 transition-all">
+                                    <span className="material-symbols-outlined">add_photo_alternate</span>
+                                </div>
+                                <span className="text-xs font-black uppercase tracking-widest text-espresso/40 group-hover:text-rose-500">Attach a photo of your experience (Optional)</span>
+                            </>
+                        )}
+                    </div>
+                </div>
+
+                <button
+                    type="submit"
+                    disabled={submitting || !comment.trim()}
+                    className="w-full py-5 rounded-[2rem] bg-gradient-to-r from-rose-500 via-orange-500 to-amber-500 text-white font-black uppercase tracking-[0.2em] shadow-xl hover:shadow-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-3 relative overflow-hidden group"
+                >
+                    <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+                    <span className="relative z-10">{submitting ? 'Submitting...' : 'Submit Feedback'}</span>
+                    {!submitting && <span className="relative z-10 material-symbols-outlined text-base animate-bounce-x">send</span>}
+                </button>
+            </form>
+        </div>
+    );
+}
+
+// ── Donation Call-to-Action Section ──────────────────────────────────────────
+function DonationSection() {
+    const navigate = useNavigate();
+
+    return (
+        <div className="mt-8 bg-gradient-to-br from-espresso to-[#3A2A25] rounded-[3rem] p-8 md:p-12 relative overflow-hidden text-[#F5DEB3] shadow-2xl max-w-4xl mx-auto group">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-rose-500/10 rounded-full blur-3xl translate-x-1/3 -translate-y-1/3 pointer-events-none group-hover:bg-rose-500/20 transition-colors duration-700" />
+            <div className="absolute -left-10 -bottom-10 p-20 opacity-5 scale-150 -rotate-12 pointer-events-none transition-transform duration-1000 group-hover:scale-110">
+                <span className="material-symbols-outlined text-[10rem]">volunteer_activism</span>
+            </div>
+
+            <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 md:gap-12">
+                <div className="size-24 md:size-32 shrink-0 bg-[#F5DEB3]/10 rounded-full flex items-center justify-center border-4 border-[#F5DEB3]/20 shadow-lg relative">
+                    <div className="absolute inset-0 rounded-full border border-rose-500/50 animate-ping" />
+                    <span className="material-symbols-outlined text-5xl md:text-6xl text-rose-400">favorite</span>
+                </div>
+
+                <div className="flex-1 text-center md:text-left space-y-4">
+                    <div>
+                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-rose-400 mb-2 block">Empower a Future Barista</span>
+                        <h3 className="font-serif text-3xl md:text-4xl font-black text-white leading-tight">Support the USAFI Scholarship</h3>
+                    </div>
+                    <p className="text-[#F5DEB3]/70 font-medium leading-relaxed max-w-lg mx-auto md:mx-0">
+                        Help passionate young Africans access professional coffee training. Your contribution funds essentials, intensive training, or full course scholarships.
+                    </p>
+                    <button
+                        onClick={() => navigate('/donate')}
+                        className="mt-4 px-8 py-4 rounded-2xl bg-rose-600 text-white font-black uppercase text-[10px] md:text-xs tracking-[0.2em] shadow-lg hover:shadow-rose-500/30 hover:bg-rose-500 hover:scale-105 active:scale-95 transition-all flex items-center justify-center md:justify-start gap-3 w-full md:w-auto"
+                    >
+                        Make a Donation
+                        <span className="material-symbols-outlined text-base">arrow_forward</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -383,6 +564,12 @@ export function GuestDashboard() {
                             })}
                         </div>
                     </div>
+
+                    {/* Donation CTA */}
+                    <DonationSection />
+
+                    {/* Feedback / Testimonial Section */}
+                    <FeedbackSection user={user} userData={userData} />
                 </div>
             </main>
 
