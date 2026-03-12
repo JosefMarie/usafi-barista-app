@@ -207,17 +207,35 @@ export const StudentTranscript = React.forwardRef(({ student, courseId }, ref) =
                     <div className="flex justify-between items-start mb-2">
                         {/* LEFT SIDE */}
                         <div className="space-y-1">
-                            <div className="space-y-0.5">
+                            <div className="space-y-0.5 relative">
                                 <p className="text-[9px] font-bold uppercase">Trainer: Ebenezer ISHIMWE</p>
-                                <p className="text-[9px] font-bold uppercase">Signature: ............................................</p>
+                                <div className="h-10 w-48 relative">
+                                    <img 
+                                        src="/image/Ebenezer_Signature.png" 
+                                        alt="Trainer Signature" 
+                                        className="h-12 w-auto object-contain mix-blend-multiply opacity-90 absolute bottom-0 left-4" 
+                                    />
+                                </div>
                             </div>
                         </div>
 
                         {/* RIGHT SIDE */}
-                        <div className="space-y-1 flex flex-col items-end text-right">
-                            <div className="space-y-0.5">
+                        <div className="space-y-1 flex flex-col items-end text-right relative">
+                            {/* Stamp */}
+                            <img 
+                                src="/image/Stamp PNg.png" 
+                                alt="Official Stamp" 
+                                className="absolute -top-10 -right-4 w-24 h-24 object-contain opacity-70 mix-blend-multiply pointer-events-none z-0" 
+                            />
+                            <div className="space-y-0.5 relative z-10">
                                 <p className="text-[9px] font-bold uppercase">Manager: Sandrine GASARASI</p>
-                                <p className="text-[9px] font-bold uppercase">Signature: ..................................</p>
+                                <div className="h-10 w-48 relative flex justify-end">
+                                    <img 
+                                        src="/image/GASARASI_Signature.png" 
+                                        alt="CEO Signature" 
+                                        className="h-14 w-auto object-contain mix-blend-multiply opacity-95 absolute bottom-0 right-4" 
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -183,8 +183,12 @@ export const StudentCertificate = React.forwardRef(({
                 {/* Footer Signatures */}
                 <div className="z-10 w-full flex items-end justify-between px-20 mb-4">
                     <div className="flex flex-col items-center w-64">
-                        <div className="h-4 w-full flex items-center justify-center">
-                            {/* Space for physical signature */}
+                        <div className="h-16 w-full flex items-center justify-center relative">
+                            <img 
+                                src="/image/Ebenezer_Signature.png" 
+                                alt="Trainer Signature" 
+                                className="h-16 w-auto object-contain mix-blend-multiply opacity-90 absolute bottom-0 translate-y-1/4" 
+                            />
                         </div>
                         <div className="h-0.5 w-full bg-[#321C00]/80 mb-1"></div>
                         <div className="flex flex-col items-center">
@@ -205,9 +209,19 @@ export const StudentCertificate = React.forwardRef(({
                         <span className="text-[7px] uppercase tracking-widest text-[#a77c52] font-bold print:text-[#a77c52]">Scan to Verify</span>
                     </div>
 
-                    <div className="flex flex-col items-center w-64">
-                        <div className="h-4 w-full flex items-center justify-center">
-                            {/* Space for physical signature */}
+                    <div className="flex flex-col items-center w-64 relative">
+                        {/* Stamp */}
+                        <img 
+                            src="/image/Stamp PNg.png" 
+                            alt="Official Stamp" 
+                            className="absolute -top-12 -right-8 w-32 h-32 object-contain opacity-80 mix-blend-multiply pointer-events-none" 
+                        />
+                        <div className="h-16 w-full flex items-center justify-center relative">
+                            <img 
+                                src="/image/GASARASI_Signature.png" 
+                                alt="CEO Signature" 
+                                className="h-20 w-auto object-contain mix-blend-multiply opacity-95 absolute bottom-0 translate-y-1/4" 
+                            />
                         </div>
                         <div className="h-0.5 w-full bg-[#321C00]/80 mb-1"></div>
                         <div className="flex flex-col items-center">
