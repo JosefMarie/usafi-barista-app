@@ -182,3 +182,161 @@ exports.createPaymentIntent = functions.https.onCall(async (request, context) =>
         throw new functions.https.HttpsError('internal', `Stripe Error: ${error.message}`);
     }
 });
+/**
+ * Cloud Function to broadcast an email to all users and subscribers.
+ */
+exports.broadcastToAll = functions.https.onCall(async (request, context) => {
+    // 1. Authorization Check
+    if (!context.auth) {
+        throw new functions.https.HttpsError('unauthenticated', 'User must be logged in.');
+    }
+
+    const db = admin.firestore();
+    const userDoc = await db.collection('users').doc(context.auth.uid).get();
+    const userData = userDoc.data();
+
+    if (!userData || (userData.role !== 'admin' && userData.role !== 'manager')) {
+        throw new functions.https.HttpsError('permission-denied', 'Unauthorized. Only admins or managers can broadcast.');
+    }
+
+    const data = (request && typeof request === 'object' && 'data' in request) ? request.data : request;
+    const { subject, message, title = 'Usaffi Announcement' } = data || {};
+
+    if (!subject || !message) {
+        throw new functions.https.HttpsError('invalid-argument', 'Subject and message are required.');
+    }
+
+    try {
+        const resendKey = process.env.RESEND_KEY || functions.config().resend?.key;
+        const resend = new Resend(resendKey);
+
+        // 2. Fetch all emails
+        const emails = new Set();
+
+        // From Users
+        const usersSnapshot = await db.collection('users').get();
+        usersSnapshot.forEach(doc => {
+            const email = doc.data().email;
+            if (email) emails.add(email.toLowerCase().trim());
+        });
+
+        // From Subscribers
+        const subsSnapshot = await db.collection('subscribers').where('active', '==', true).get();
+        subsSnapshot.forEach(doc => {
+            const email = doc.data().email;
+            if (email) emails.add(email.toLowerCase().trim());
+        });
+
+        const recipientList = Array.from(emails);
+        
+        if (recipientList.length === 0) {
+            return { success: true, sentCount: 0, message: 'No recipients found.' };
+        }
+
+        // 3. Send via Resend (Using Batch API if possible, or individual sends)
+        // Note: Resend Free tier has limits, for large lists we should use Audiences.
+        // We'll send in batches of 100 to stay safe (Resend limit per batch)
+        const batchSize = 100;
+        let sentCount = 0;
+
+        for (let i = 0; i < recipientList.length; i += batchSize) {
+            const currentBatch = recipientList.slice(i, i + batchSize);
+            
+            const { data: resendData, error } = await resend.emails.send({
+                from: 'Usaffi <no-reply@usafi-barista.com>',
+                to: currentBatch,
+                subject: subject,
+                html: `
+                    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+                        <h2 style="color: #31211b;">${title}</h2>
+                        <div style="color: #555; line-height: 1.6; font-size: 16px;">
+                            ${message.replace(/\n/g, '<br>')}
+                        </div>
+                        <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
+                        <p style="color: #999; font-size: 0.8em; text-align: center;">
+                            Sent from Usaffi Barista International Training Center<br>
+                            If you wish to unsubscribe, please reply to this email.
+                        </p>
+                    </div>
+                `
+            });
+
+            if (error) {
+                console.error('Resend Broadcast Error in batch:', error);
+            } else {
+                sentCount += currentBatch.length;
+            }
+        }
+
+        return { success: true, sentCount, totalRecipients: recipientList.length };
+
+    } catch (error) {
+        console.error('broadcastToAll Error:', error);
+        throw new functions.https.HttpsError('internal', error.message || 'Failed to send broadcast.');
+    }
+});
+
+/**
+ * Cloud Function to securely reply to a contact inquiry.
+ */
+exports.replyToInquiry = functions.https.onCall(async (request, context) => {
+    if (!context.auth) {
+        throw new functions.https.HttpsError('unauthenticated', 'User must be logged in.');
+    }
+
+    const db = admin.firestore();
+    const userDoc = await db.collection('users').doc(context.auth.uid).get();
+    const userData = userDoc.data();
+
+    if (!userData || (userData.role !== 'admin' && userData.role !== 'manager')) {
+        throw new functions.https.HttpsError('permission-denied', 'Unauthorized.');
+    }
+
+    const data = (request && typeof request === 'object' && 'data' in request) ? request.data : request;
+    const { messageId, recipientEmail, recipientName, subject, replyText } = data || {};
+
+    if (!messageId || !recipientEmail || !replyText) {
+        throw new functions.https.HttpsError('invalid-argument', 'Missing required fields.');
+    }
+
+    try {
+        const resendKey = process.env.RESEND_KEY || functions.config().resend?.key;
+        const resend = new Resend(resendKey);
+
+        const { data: resendData, error } = await resend.emails.send({
+            from: 'Usaffi Support <no-reply@usafi-barista.com>',
+            to: [recipientEmail],
+            subject: subject || 'Response to your inquiry - Usaffi',
+            html: `
+                <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+                    <p style="color: #333; font-size: 16px;">Hello ${recipientName || 'there'},</p>
+                    <div style="color: #555; line-height: 1.6; font-size: 16px; margin: 20px 0;">
+                        ${replyText.replace(/\n/g, '<br>')}
+                    </div>
+                    <p style="color: #333; font-size: 16px;">Best regards,<br>The Usaffi Team</p>
+                    <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
+                    <p style="color: #999; font-size: 0.8em;">
+                        This is a response to your inquiry submitted through our website.
+                    </p>
+                </div>
+            `
+        });
+
+        if (error) {
+            throw new functions.https.HttpsError('internal', `Resend Error: ${error.message}`);
+        }
+
+        // Update status in Firestore
+        await db.collection('contact_messages').doc(messageId).update({
+            status: 'replied',
+            repliedAt: admin.firestore.FieldValue.serverTimestamp(),
+            repliedBy: context.auth.uid
+        });
+
+        return { success: true };
+
+    } catch (error) {
+        console.error('replyToInquiry Error:', error);
+        throw new functions.https.HttpsError('internal', error.message || 'Failed to send reply.');
+    }
+});

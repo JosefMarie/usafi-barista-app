@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
+import { broadcastToAll } from '../../lib/resend';
 
 export function ManagerSubscribers() {
     const [subscribers, setSubscribers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [newEmail, setNewEmail] = useState('');
     const [isAdding, setIsAdding] = useState(false);
+    const [isBroadcastModalOpen, setIsBroadcastModalOpen] = useState(false);
+    const [broadcastData, setBroadcastData] = useState({ subject: '', message: '', title: 'Usaffi Announcement' });
+    const [isBroadcasting, setIsBroadcasting] = useState(false);
 
     useEffect(() => {
         const q = query(collection(db, 'subscribers'), orderBy('createdAt', 'desc'));
@@ -59,6 +63,24 @@ export function ManagerSubscribers() {
         alert(`${subscribers.length} emails copied to clipboard!`);
     };
 
+    const handleBroadcast = async (e) => {
+        e.preventDefault();
+        if (!broadcastData.subject || !broadcastData.message) return;
+
+        setIsBroadcasting(true);
+        try {
+            const result = await broadcastToAll(broadcastData);
+            alert(`Broadcast sent successfully to ${result.sentCount} recipients!`);
+            setIsBroadcastModalOpen(false);
+            setBroadcastData({ subject: '', message: '', title: 'Usaffi Announcement' });
+        } catch (error) {
+            console.error("Broadcast error:", error);
+            alert("Failed to send broadcast: " + error.message);
+        } finally {
+            setIsBroadcasting(false);
+        }
+    };
+
     return (
         <div className="max-w-4xl mx-auto space-y-6 px-4 md:px-0 py-4 md:py-0">
             <header className="flex flex-col gap-3 md:gap-4 relative pl-4 md:pl-0">
@@ -72,14 +94,23 @@ export function ManagerSubscribers() {
                             Manage email marketing list
                         </p>
                     </div>
-                    <button
-                        onClick={handleCopyAll}
-                        disabled={subscribers.length === 0}
-                        className="flex items-center gap-1.5 md:gap-2 px-4 md:px-6 py-2 md:py-2.5 bg-[#F5DEB3] dark:bg-white/5 hover:bg-white/40 dark:hover:bg-white/10 text-espresso dark:text-white rounded-xl font-black uppercase tracking-widest text-[10px] transition-all disabled:opacity-50 border border-espresso/10 shadow-sm active:scale-95 w-full sm:w-auto"
-                    >
-                        <span className="material-symbols-outlined text-[16px] md:text-[18px]">content_copy</span>
-                        Copy All Emails
-                    </button>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                        <button
+                            onClick={handleCopyAll}
+                            disabled={subscribers.length === 0}
+                            className="flex items-center justify-center gap-1.5 md:gap-2 px-4 md:px-6 py-2 md:py-2.5 bg-[#F5DEB3] dark:bg-white/5 hover:bg-white/40 dark:hover:bg-white/10 text-espresso dark:text-white rounded-xl font-black uppercase tracking-widest text-[10px] transition-all disabled:opacity-50 border border-espresso/10 shadow-sm active:scale-95"
+                        >
+                            <span className="material-symbols-outlined text-[16px] md:text-[18px]">content_copy</span>
+                            Copy All
+                        </button>
+                        <button
+                            onClick={() => setIsBroadcastModalOpen(true)}
+                            className="flex items-center justify-center gap-1.5 md:gap-2 px-4 md:px-6 py-2 md:py-2.5 bg-espresso text-white rounded-xl font-black uppercase tracking-widest text-[10px] transition-all border border-espresso/10 shadow-xl active:scale-95"
+                        >
+                            <span className="material-symbols-outlined text-[16px] md:text-[18px]">campaign</span>
+                            Broadcast
+                        </button>
+                    </div>
                 </div>
             </header>
 
@@ -191,6 +222,87 @@ export function ManagerSubscribers() {
                     </div>
                 )}
             </div>
+            {/* Broadcast Modal */}
+            {isBroadcastModalOpen && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => !isBroadcasting && setIsBroadcastModalOpen(false)}></div>
+                    <div className="bg-[#F5DEB3] dark:bg-[#1c1916] w-full max-w-2xl rounded-[2.5rem] border border-espresso/20 shadow-2xl relative z-10 overflow-hidden animate-in fade-in zoom-in duration-300">
+                        <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso"></div>
+                        <form onSubmit={handleBroadcast} className="p-8 md:p-10 space-y-6">
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <h2 className="text-2xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight">Compose Broadcast</h2>
+                                    <p className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em] mt-1">Multi-Channel Announcement</p>
+                                </div>
+                                <button type="button" onClick={() => setIsBroadcastModalOpen(false)} className="text-espresso/40 hover:text-espresso">
+                                    <span className="material-symbols-outlined">close</span>
+                                </button>
+                            </div>
+
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-[10px] font-black text-espresso/40 uppercase tracking-widest mb-1.5 ml-1">Email Header Title</label>
+                                    <input 
+                                        type="text" 
+                                        value={broadcastData.title}
+                                        onChange={(e) => setBroadcastData({...broadcastData, title: e.target.value})}
+                                        className="w-full px-5 py-3 rounded-xl bg-white/40 border border-espresso/10 focus:outline-none focus:ring-2 focus:ring-espresso text-espresso font-medium uppercase tracking-tight"
+                                        placeholder="e.g. Usaffi Announcement"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-[10px] font-black text-espresso/40 uppercase tracking-widest mb-1.5 ml-1">Subject Line</label>
+                                    <input 
+                                        type="text" 
+                                        required
+                                        value={broadcastData.subject}
+                                        onChange={(e) => setBroadcastData({...broadcastData, subject: e.target.value})}
+                                        className="w-full px-5 py-3 rounded-xl bg-white/40 border border-espresso/10 focus:outline-none focus:ring-2 focus:ring-espresso text-espresso font-bold"
+                                        placeholder="Enter email subject..."
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-[10px] font-black text-espresso/40 uppercase tracking-widest mb-1.5 ml-1">Message Content</label>
+                                    <textarea 
+                                        required
+                                        value={broadcastData.message}
+                                        onChange={(e) => setBroadcastData({...broadcastData, message: e.target.value})}
+                                        className="w-full h-48 px-5 py-4 rounded-2xl bg-white/40 border border-espresso/10 focus:outline-none focus:ring-2 focus:ring-espresso text-espresso leading-relaxed resize-none"
+                                        placeholder="Type your message here..."
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="pt-4 flex gap-4">
+                                <button 
+                                    type="button"
+                                    onClick={() => setIsBroadcastModalOpen(false)}
+                                    className="flex-1 py-4 rounded-xl border border-espresso/10 text-[10px] font-black uppercase tracking-widest text-espresso/60 hover:bg-white/40 transition-all"
+                                >
+                                    Cancel
+                                </button>
+                                <button 
+                                    type="submit"
+                                    disabled={isBroadcasting}
+                                    className="flex-[2] py-4 rounded-xl bg-espresso text-white text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:shadow-xl transition-all disabled:opacity-50"
+                                >
+                                    {isBroadcasting ? (
+                                        <>
+                                            <span className="animate-spin h-3 w-3 border-2 border-white/30 border-t-white rounded-full"></span>
+                                            TRANSMITTING...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <span className="material-symbols-outlined text-[18px]">send</span>
+                                            DEPLOY BROADCAST
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

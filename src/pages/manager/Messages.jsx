@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { collection, query, orderBy, onSnapshot, updateDoc, doc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
+import { replyToInquiry } from '../../lib/resend';
 
 export function ManagerMessages() {
     const [messages, setMessages] = useState([]);
@@ -8,6 +9,8 @@ export function ManagerMessages() {
     const [error, setError] = useState(null);
     const [selectedMessage, setSelectedMessage] = useState(null);
     const [showMobileDetail, setShowMobileDetail] = useState(false);
+    const [replyText, setReplyText] = useState('');
+    const [sendingReply, setSendingReply] = useState(false);
 
     useEffect(() => {
         // Debugging: Removing orderBy to check if it's an index issue
@@ -29,17 +32,34 @@ export function ManagerMessages() {
         return () => unsubscribe();
     }, []);
 
-    const handleReply = (msg) => {
-        // Mark as replied when opening mail client
-        try {
-            updateDoc(doc(db, 'contact_messages', msg.id), { status: 'replied' });
-        } catch (e) {
-            console.error("Error updating status:", e);
-        }
+    const sendReply = async () => {
+        if (!selectedMessage || !replyText.trim()) return;
 
-        const subject = encodeURIComponent(`Re: ${msg.subject || 'Inquiry'} - Usafi Barista`);
-        const body = encodeURIComponent(`Hi ${msg.firstName},\n\nThank you for reaching out to us regarding "${msg.subject}".\n\n\n\nBest regards,\nUsafi Barista Team`);
-        window.location.href = `mailto:${msg.email}?subject=${subject}&body=${body}`;
+        setSendingReply(true);
+        try {
+            await replyToInquiry({
+                messageId: selectedMessage.id,
+                recipientEmail: selectedMessage.email,
+                recipientName: selectedMessage.firstName,
+                subject: `Re: ${selectedMessage.subject || 'Inquiry'} - Usaffi`,
+                replyText: replyText
+            });
+            
+            // Re-fetch or update local state is handled by onSnapshot
+            setReplyText('');
+            alert('Reply sent successfully!');
+        } catch (err) {
+            console.error("Error sending reply:", err);
+            alert("Failed to send reply: " + err.message);
+        } finally {
+            setSendingReply(false);
+        }
+    };
+
+    const handleReply = (msg) => {
+        // No longer using mailto:, just focus the reply area
+        setSelectedMessage(msg);
+        setReplyText(`Hi ${msg.firstName},\n\nThank you for reaching out...\n\n`);
     };
 
     const toggleStatus = async (e, msg) => {
@@ -157,8 +177,37 @@ export function ManagerMessages() {
                                 </div>
                             </div>
 
-                            <div className="flex-1 text-espresso/80 dark:text-white/80 leading-relaxed whitespace-pre-wrap">
+                            <div className="flex-1 text-espresso/80 dark:text-white/80 leading-relaxed whitespace-pre-wrap mb-10">
                                 {selectedMessage.message}
+                            </div>
+
+                            <div className="mt-auto border-t border-espresso/10 pt-8">
+                                <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-espresso/40 mb-4">Compose Reply</h4>
+                                <textarea
+                                    value={replyText}
+                                    onChange={(e) => setReplyText(e.target.value)}
+                                    placeholder="Type your reply here..."
+                                    className="w-full h-40 p-4 rounded-2xl bg-white/40 dark:bg-black/20 border border-espresso/10 focus:outline-none focus:ring-2 focus:ring-espresso text-sm text-espresso placeholder:text-espresso/30 resize-none transition-all"
+                                />
+                                <div className="flex justify-end mt-4">
+                                    <button
+                                        onClick={sendReply}
+                                        disabled={sendingReply || !replyText.trim()}
+                                        className="px-8 py-3 rounded-xl bg-espresso text-white text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-3 hover:shadow-xl transition-all disabled:opacity-50 active:scale-95"
+                                    >
+                                        {sendingReply ? (
+                                            <>
+                                                <span className="animate-spin h-3 w-3 border-2 border-white/30 border-t-white rounded-full"></span>
+                                                Sending...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <span className="material-symbols-outlined text-[18px]">send</span>
+                                                Send Professional Reply
+                                            </>
+                                        )}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     ) : (

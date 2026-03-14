@@ -52,3 +52,37 @@ export const createResetToken = async (email) => {
 
     return resetToken;
 };
+
+/**
+ * Broadcasts an email to all users and subscribers.
+ * 
+ * @param {Object} data - The announcement data (subject, message, title).
+ * @returns {Promise<Object>} - The Cloud Function response.
+ */
+export const broadcastToAll = async (data) => {
+    try {
+        const broadcastFn = httpsCallable(functions, 'broadcastToAll');
+        const result = await broadcastFn(data);
+        return result.data;
+    } catch (error) {
+        console.error('Error calling broadcastToAll function:', error);
+        throw new Error(error.message || 'Failed to send broadcast.');
+    }
+};
+
+/**
+ * Sends a direct reply to a contact inquiry.
+ * 
+ * @param {Object} data - The reply data (messageId, recipientEmail, recipientName, subject, replyText).
+ * @returns {Promise<Object>} - The Cloud Function response.
+ */
+export const replyToInquiry = async (data) => {
+    try {
+        const replyFn = httpsCallable(functions, 'replyToInquiry');
+        const result = await replyFn(data);
+        return result.data;
+    } catch (error) {
+        console.error('Error calling replyToInquiry function:', error);
+        throw new Error(error.message || 'Failed to send reply via Resend.');
+    }
+};
