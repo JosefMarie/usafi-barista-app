@@ -1,7 +1,61 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+const { Resend } = require('resend');
 
 admin.initializeApp();
+
+/**
+ * Cloud Function to securely send a password reset email using Resend.
+ */
+exports.sendPasswordResetEmail = functions.https.onCall(async (request, context) => {
+    const data = (request && typeof request === 'object' && 'data' in request) ? request.data : request;
+    const { email, resetToken, userName = 'User' } = data || {};
+
+    if (!email || !resetToken) {
+        throw new functions.https.HttpsError('invalid-argument', 'Email and resetToken are required.');
+    }
+
+    try {
+        const resendKey = process.env.RESEND_KEY || functions.config().resend?.key;
+        if (!resendKey) {
+            throw new Error('Resend API key is not configured. Please set RESEND_KEY in .env or via firebase functions:config.');
+        }
+
+        const resend = new Resend(resendKey);
+        const appDomain = process.env.APP_DOMAIN || functions.config().app?.domain || 'usaffi-barista-app.web.app';
+        const resetLink = `https://${appDomain}/reset-password/${resetToken}`;
+
+        const { data: resendData, error } = await resend.emails.send({
+            from: 'Usaffi <no-reply@usafi-barista.com>',
+            to: [email],
+            subject: 'Reset Your password - Usaffi',
+            html: `
+                <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+                    <h2 style="color: #333;">Hello ${userName},</h2>
+                    <p style="color: #555; line-height: 1.6;">We received a request to reset your password for your Usaffi account. Click the button below to choose a new password:</p>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="${resetLink}" style="background-color: #000; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">Reset Password</a>
+                    </div>
+                    <p style="color: #777; font-size: 0.9em;">If you didn't request this, you can safely ignore this email. This link will expire in 1 hour.</p>
+                    <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+                    <p style="color: #999; font-size: 0.8em;">Usaffi Barista App Team</p>
+                </div>
+            `
+        });
+
+        if (error) {
+            console.error('Resend Error:', error);
+            throw new functions.https.HttpsError('internal', `Resend Error: ${error.message}`);
+        }
+
+        console.log(`Password reset email sent to ${email} via Resend. ID: ${resendData.id}`);
+        return { success: true, id: resendData.id };
+
+    } catch (error) {
+        console.error('sendPasswordResetEmail Error:', error);
+        throw new functions.https.HttpsError('internal', error.message || 'Failed to send email.');
+    }
+});
 
 /**
  * Cloud Function to securely reset a user's password using a validated token.

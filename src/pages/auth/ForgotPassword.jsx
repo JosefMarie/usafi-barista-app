@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { auth, db } from '../../lib/firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
-import { initEmailJS, createResetToken, sendPasswordResetEmailJS } from '../../lib/emailjs';
+import { createResetToken, sendPasswordResetEmail } from '../../lib/resend';
 
 export function ForgotPassword() {
     const [email, setEmail] = useState('');
@@ -10,10 +10,6 @@ export function ForgotPassword() {
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState('');
 
-    // Initialize EmailJS
-    React.useEffect(() => {
-        initEmailJS();
-    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -41,8 +37,8 @@ export function ForgotPassword() {
             // 2. Generate secure token
             const token = await createResetToken(email);
 
-            // 3. Send Email via EmailJS
-            await sendPasswordResetEmailJS(email, token, userName);
+            // 3. Send Email via Resend Cloud Function
+            await sendPasswordResetEmail(email, token, userName);
 
             setSuccess(true);
             setEmail('');
