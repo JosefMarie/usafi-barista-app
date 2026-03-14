@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, deleteDoc, doc } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, deleteDoc, doc, where, getDocs, writeBatch } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { broadcastToAll } from '../../lib/resend';
 
@@ -11,6 +11,7 @@ export function ManagerSubscribers() {
     const [isBroadcastModalOpen, setIsBroadcastModalOpen] = useState(false);
     const [broadcastData, setBroadcastData] = useState({ subject: '', message: '', title: 'Usaffi Announcement' });
     const [isBroadcasting, setIsBroadcasting] = useState(false);
+    const [isCleaning, setIsCleaning] = useState(false);
 
     useEffect(() => {
         const q = query(collection(db, 'subscribers'), orderBy('createdAt', 'desc'));
@@ -28,12 +29,23 @@ export function ManagerSubscribers() {
 
     const handleAddSubscriber = async (e) => {
         e.preventDefault();
-        if (!newEmail) return;
+        const email = newEmail.toLowerCase().trim();
+        if (!email) return;
 
         setIsAdding(true);
         try {
+            // Check for duplicates
+            const q = query(collection(db, 'subscribers'), where('email', '==', email));
+            const snapshot = await getDocs(q);
+
+            if (!snapshot.empty) {
+                alert("This email is already subscribed!");
+                setIsAdding(false);
+                return;
+            }
+
             await addDoc(collection(db, 'subscribers'), {
-                email: newEmail,
+                email: email,
                 source: 'manual_manager',
                 createdAt: serverTimestamp(),
                 active: true
@@ -44,6 +56,59 @@ export function ManagerSubscribers() {
             alert("Failed to add subscriber");
         } finally {
             setIsAdding(false);
+        }
+    };
+
+    const handleRemoveDuplicates = async () => {
+        if (!window.confirm('This will search for and remove duplicate email entries. Continue?')) return;
+
+        setIsCleaning(true);
+        try {
+            const emailGroups = {};
+            subscribers.forEach(sub => {
+                const email = sub.email.toLowerCase().trim();
+                if (!emailGroups[email]) emailGroups[email] = [];
+                emailGroups[email].push(sub);
+            });
+
+            const duplicatesToRemove = [];
+            Object.keys(emailGroups).forEach(email => {
+                const group = emailGroups[email];
+                if (group.length > 1) {
+                    // Sort by createdAt (keep oldest)
+                    group.sort((a,b) => {
+                        const timeA = a.createdAt?.seconds || 0;
+                        const timeB = b.createdAt?.seconds || 0;
+                        return timeA - timeB;
+                    });
+                    // Keep the first one, add others to removal list
+                    duplicatesToRemove.push(...group.slice(1).map(s => s.id));
+                }
+            });
+
+            if (duplicatesToRemove.length === 0) {
+                alert("No duplicates found!");
+                return;
+            }
+
+            if (window.confirm(`Found ${duplicatesToRemove.length} duplicate entries. Remove them now?`)) {
+                // Batch delete
+                const batchSize = 500;
+                for (let i = 0; i < duplicatesToRemove.length; i += batchSize) {
+                    const batch = writeBatch(db);
+                    const currentBatch = duplicatesToRemove.slice(i, i + batchSize);
+                    currentBatch.forEach(id => {
+                        batch.delete(doc(db, 'subscribers', id));
+                    });
+                    await batch.commit();
+                }
+                alert(`Successfully removed ${duplicatesToRemove.length} duplicates!`);
+            }
+        } catch (error) {
+            console.error("Error deduplicating:", error);
+            alert("Failed to remove duplicates: " + error.message);
+        } finally {
+            setIsCleaning(false);
         }
     };
 
@@ -65,17 +130,33 @@ export function ManagerSubscribers() {
 
     const handleBroadcast = async (e) => {
         e.preventDefault();
-        if (!broadcastData.subject || !broadcastData.message) return;
+        if (!broadcastData.subject.trim() || !broadcastData.message.trim()) {
+            alert("Subject and message are required for broadcast.");
+            return;
+        }
+
+        if (subscribers.length === 0) {
+            alert("No subscribers found to send to.");
+            return;
+        }
 
         setIsBroadcasting(true);
         try {
+            console.log("Subscribers: Initiating broadcast call...");
             const result = await broadcastToAll(broadcastData);
-            alert(`Broadcast sent successfully to ${result.sentCount} recipients!`);
-            setIsBroadcastModalOpen(false);
-            setBroadcastData({ subject: '', message: '', title: 'Usaffi Announcement' });
+            
+            if (result && result.success) {
+                alert(`Broadcast Success!\n\nSent to: ${result.sentCount} recipients.\nTotal unique emails found: ${result.totalRecipients || 'N/A'}`);
+                setIsBroadcastModalOpen(false);
+                setBroadcastData({ subject: '', message: '', title: 'Usaffi Announcement' });
+            } else {
+                alert("Broadcast returned success but no send confirmation. Please check logs.");
+            }
         } catch (error) {
-            console.error("Broadcast error:", error);
-            alert("Failed to send broadcast: " + error.message);
+            console.error("Subscribers: Broadcast error:", error);
+            // Check for specific firebase error codes or messages
+            const errorMsg = error.message || "Unknown error";
+            alert(`Broadcast Failed\n\nError: ${errorMsg}\n\nTip: Ensure you have deployed the latest Cloud Functions with 'firebase deploy --only functions'`);
         } finally {
             setIsBroadcasting(false);
         }
@@ -95,6 +176,16 @@ export function ManagerSubscribers() {
                         </p>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-2">
+                        <button
+                            onClick={handleRemoveDuplicates}
+                            disabled={isCleaning || subscribers.length === 0}
+                            className="flex items-center justify-center gap-1.5 md:gap-2 px-4 md:px-6 py-2 md:py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-xl font-black uppercase tracking-widest text-[10px] transition-all disabled:opacity-50 border border-red-400 shadow-sm active:scale-95"
+                        >
+                            <span className="material-symbols-outlined text-[16px] md:text-[18px]">
+                                {isCleaning ? 'sync' : 'cleaning_services'}
+                            </span>
+                            {isCleaning ? 'Cleaning...' : 'Deduplicate'}
+                        </button>
                         <button
                             onClick={handleCopyAll}
                             disabled={subscribers.length === 0}

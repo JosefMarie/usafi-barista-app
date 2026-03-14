@@ -10,12 +10,22 @@ export function Newsletter() {
         if (!email) return;
 
         try {
-            const { collection, addDoc, serverTimestamp } = await import('firebase/firestore');
+            const { collection, addDoc, serverTimestamp, query, where, getDocs } = await import('firebase/firestore');
             const { db } = await import('../../lib/firebase');
 
+            // Check if already subscribed
+            const q = query(collection(db, 'subscribers'), where('email', '==', email.toLowerCase().trim()));
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+                alert(t('newsletter.already_subscribed') || 'You are already subscribed to our newsletter!');
+                e.target.reset();
+                return;
+            }
+
             await addDoc(collection(db, 'subscribers'), {
-                email,
-                source: window.location.pathname, // improved tracking
+                email: email.toLowerCase().trim(),
+                source: window.location.pathname,
                 createdAt: serverTimestamp(),
                 active: true
             });

@@ -186,31 +186,43 @@ exports.createPaymentIntent = functions.https.onCall(async (request, context) =>
  * Cloud Function to broadcast an email to all users and subscribers.
  */
 exports.broadcastToAll = functions.https.onCall(async (request, context) => {
-    // 1. Authorization Check
-    if (!context.auth) {
+    // 1. Data and Authorization Extraction (Support for v1 and v2 SDKs)
+    console.log("broadcastToAll: Initializing...");
+    const data = (request && typeof request === 'object' && 'data' in request) ? request.data : request;
+    const auth = (request && request.auth) || (context && context.auth);
+
+    if (!auth) {
+        console.error("broadcastToAll: Unauthenticated access attempt");
         throw new functions.https.HttpsError('unauthenticated', 'User must be logged in.');
     }
 
-    const db = admin.firestore();
-    const userDoc = await db.collection('users').doc(context.auth.uid).get();
-    const userData = userDoc.data();
-
-    if (!userData || (userData.role !== 'admin' && userData.role !== 'manager')) {
-        throw new functions.https.HttpsError('permission-denied', 'Unauthorized. Only admins or managers can broadcast.');
-    }
-
-    const data = (request && typeof request === 'object' && 'data' in request) ? request.data : request;
     const { subject, message, title = 'Usaffi Announcement' } = data || {};
+    console.log(`broadcastToAll: Request from ${auth.uid}. Subject: "${subject}"`);
 
-    if (!subject || !message) {
-        throw new functions.https.HttpsError('invalid-argument', 'Subject and message are required.');
-    }
-
+    const db = admin.firestore();
+    
     try {
+        const userDoc = await db.collection('users').doc(auth.uid).get();
+        const userData = userDoc.data();
+
+        if (!userData || (userData.role !== 'admin' && userData.role !== 'manager')) {
+            console.error(`broadcastToAll: Unauthorized role "${userData?.role}" for user ${auth.uid}`);
+            throw new functions.https.HttpsError('permission-denied', 'Unauthorized. Only admins or managers can broadcast.');
+        }
+
+        if (!subject || !message) {
+            throw new functions.https.HttpsError('invalid-argument', 'Subject and message are required.');
+        }
+
         const resendKey = process.env.RESEND_KEY || functions.config().resend?.key;
+        if (!resendKey) {
+            console.error("broadcastToAll: RESEND_KEY is missing from environment");
+            throw new functions.https.HttpsError('failed-precondition', 'Email service is not configured (missing API key).');
+        }
+        
         const resend = new Resend(resendKey);
 
-        // 2. Fetch all emails
+        // 2. Fetch all unique emails
         const emails = new Set();
 
         // From Users
@@ -228,50 +240,57 @@ exports.broadcastToAll = functions.https.onCall(async (request, context) => {
         });
 
         const recipientList = Array.from(emails);
+        console.log(`broadcastToAll: Found ${recipientList.length} unique recipients.`);
         
         if (recipientList.length === 0) {
             return { success: true, sentCount: 0, message: 'No recipients found.' };
         }
 
-        // 3. Send via Resend (Using Batch API if possible, or individual sends)
-        // Note: Resend Free tier has limits, for large lists we should use Audiences.
-        // We'll send in batches of 100 to stay safe (Resend limit per batch)
+        // 3. Send via Resend in batches of 100
         const batchSize = 100;
         let sentCount = 0;
 
         for (let i = 0; i < recipientList.length; i += batchSize) {
             const currentBatch = recipientList.slice(i, i + batchSize);
+            console.log(`broadcastToAll: Sending batch ${Math.floor(i/batchSize) + 1}...`);
             
-            const { data: resendData, error } = await resend.emails.send({
-                from: 'Usaffi <no-reply@usafi-barista.com>',
-                to: currentBatch,
-                subject: subject,
-                html: `
-                    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
-                        <h2 style="color: #31211b;">${title}</h2>
-                        <div style="color: #555; line-height: 1.6; font-size: 16px;">
-                            ${message.replace(/\n/g, '<br>')}
+            try {
+                const { data: resendData, error } = await resend.emails.send({
+                    from: 'Usaffi <no-reply@usafi-barista.com>',
+                    to: currentBatch,
+                    subject: subject,
+                    html: `
+                        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+                            <h2 style="color: #31211b;">${title}</h2>
+                            <div style="color: #555; line-height: 1.6; font-size: 16px;">
+                                ${message.replace(/\n/g, '<br>')}
+                            </div>
+                            <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
+                            <p style="color: #999; font-size: 0.8em; text-align: center;">
+                                Sent from Usafi Barista International Training Center<br>
+                                If you wish to unsubscribe, please reply to this email.
+                            </p>
                         </div>
-                        <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
-                        <p style="color: #999; font-size: 0.8em; text-align: center;">
-                            Sent from Usaffi Barista International Training Center<br>
-                            If you wish to unsubscribe, please reply to this email.
-                        </p>
-                    </div>
-                `
-            });
+                    `
+                });
 
-            if (error) {
-                console.error('Resend Broadcast Error in batch:', error);
-            } else {
-                sentCount += currentBatch.length;
+                if (error) {
+                    console.error('broadcastToAll: Resend Batch Error:', error);
+                } else {
+                    sentCount += currentBatch.length;
+                    console.log(`broadcastToAll: Batch sent. ID: ${resendData?.id}`);
+                }
+            } catch (resendBatchError) {
+                console.error('broadcastToAll: Unexpected Resend library error in batch:', resendBatchError);
             }
         }
 
+        console.log(`broadcastToAll: Completed. Sent to ${sentCount}/${recipientList.length} recipients.`);
         return { success: true, sentCount, totalRecipients: recipientList.length };
 
     } catch (error) {
-        console.error('broadcastToAll Error:', error);
+        console.error('broadcastToAll: Fatal Error:', error);
+        if (error instanceof functions.https.HttpsError) throw error;
         throw new functions.https.HttpsError('internal', error.message || 'Failed to send broadcast.');
     }
 });
@@ -280,19 +299,22 @@ exports.broadcastToAll = functions.https.onCall(async (request, context) => {
  * Cloud Function to securely reply to a contact inquiry.
  */
 exports.replyToInquiry = functions.https.onCall(async (request, context) => {
-    if (!context.auth) {
+    // 1. Data and Authorization Extraction (Support for v1 and v2 SDKs)
+    const data = (request && typeof request === 'object' && 'data' in request) ? request.data : request;
+    const auth = (request && request.auth) || (context && context.auth);
+
+    if (!auth) {
         throw new functions.https.HttpsError('unauthenticated', 'User must be logged in.');
     }
 
     const db = admin.firestore();
-    const userDoc = await db.collection('users').doc(context.auth.uid).get();
+    const userDoc = await db.collection('users').doc(auth.uid).get();
     const userData = userDoc.data();
 
     if (!userData || (userData.role !== 'admin' && userData.role !== 'manager')) {
         throw new functions.https.HttpsError('permission-denied', 'Unauthorized.');
     }
 
-    const data = (request && typeof request === 'object' && 'data' in request) ? request.data : request;
     const { messageId, recipientEmail, recipientName, subject, replyText } = data || {};
 
     if (!messageId || !recipientEmail || !replyText) {
@@ -330,7 +352,7 @@ exports.replyToInquiry = functions.https.onCall(async (request, context) => {
         await db.collection('contact_messages').doc(messageId).update({
             status: 'replied',
             repliedAt: admin.firestore.FieldValue.serverTimestamp(),
-            repliedBy: context.auth.uid
+            repliedBy: auth.uid
         });
 
         return { success: true };
