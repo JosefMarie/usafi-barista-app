@@ -180,6 +180,7 @@ export function AdminReports() {
             return (
                 <ReevaluationManager
                     student={selectedStudent}
+                    courseId={targetCourseId}
                     onBack={() => {
                         setSelectedStudent(null);
                         setViewMode('list');
@@ -332,21 +333,22 @@ export function AdminReports() {
                                                             <span className="material-symbols-outlined text-lg">verified</span>
                                                         </div>
                                                     ) : null}
+
+                                                    {/* Re-Eval Button Per Course */}
+                                                    <button
+                                                        onClick={() => {
+                                                            setSelectedStudent(student);
+                                                            setTargetCourseId(cs.courseId);
+                                                            setViewMode('reevaluation');
+                                                        }}
+                                                        title="Re-evaluation"
+                                                        className="size-9 flex items-center justify-center bg-amber-500 text-white rounded-xl shadow-sm hover:translate-y-[-2px] hover:shadow-amber-500/20 transition-all active:scale-95"
+                                                    >
+                                                        <span className="material-symbols-outlined text-lg">payments</span>
+                                                    </button>
                                                 </div>
                                             </div>
                                         ))}
-
-                                        <button
-                                            onClick={() => {
-                                                setSelectedStudent(student);
-                                                setTargetCourseId(student.courseId || 'bean-to-brew');
-                                                setViewMode('reevaluation');
-                                            }}
-                                            className="px-4 py-3 bg-amber-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg hover:shadow-amber-500/20 transition-all active:scale-95 flex items-center gap-1"
-                                        >
-                                            <span className="material-symbols-outlined text-[14px]">payments</span>
-                                            Re-eval
-                                        </button>
 
                                         {/* Date Inputs for Training Period */}
                                         <div className="flex items-center gap-2 px-3 py-1 bg-white/40 dark:bg-white/5 rounded-xl border border-espresso/10">
@@ -400,13 +402,13 @@ export function AdminReports() {
     );
 }
 
-function ReevaluationManager({ student, onBack }) {
+function ReevaluationManager({ student, courseId, onBack }) {
     const [loading, setLoading] = useState(true);
     const [modules, setModules] = useState([]);
     const [progress, setProgress] = useState({});
     const [processingId, setProcessingId] = useState(null);
 
-    const COURSE_ID = student?.courseId || 'bean-to-brew';
+    const COURSE_ID = courseId || student?.courseId || 'bean-to-brew';
 
     useEffect(() => {
         const fetchData = async () => {

@@ -500,76 +500,99 @@ export function GuestDashboard() {
                         </div>
                     </div>
 
-                    {/* Journey Map */}
-                    <div className="relative py-10 px-4 md:px-12 bg-white/40 dark:bg-white/5 rounded-[3rem] border border-espresso/5 backdrop-blur-xl">
-                        <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-rose-500 via-amber-500 to-emerald-500 opacity-10 -translate-x-1/2 hidden md:block" />
-
-                        <div className="text-center mb-10">
-                            <h2 className="font-serif font-black text-2xl text-espresso dark:text-white uppercase">Your Coffee Journey</h2>
-                            <p className="text-xs text-espresso/40 uppercase tracking-widest mt-1">Tap a module to explore its content cards</p>
+                    {userData?.status === 'pending' ? (
+                        <div className="relative py-16 px-6 md:px-12 bg-white/40 dark:bg-white/5 rounded-[3rem] border border-espresso/5 backdrop-blur-xl text-center space-y-6 animate-in fade-in zoom-in duration-500 shadow-2xl">
+                            <div className="mx-auto size-24 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center shadow-inner mb-6">
+                                <span className="material-symbols-outlined text-5xl">hourglass_empty</span>
+                            </div>
+                            <h2 className="font-serif font-black text-3xl md:text-4xl text-espresso dark:text-white uppercase">Awaiting Approval</h2>
+                            <p className="text-espresso/60 dark:text-white/60 font-medium max-w-lg mx-auto text-lg leading-relaxed">
+                                Thank you for booking the Weekend Coffee Experience! Your account is currently <strong className="text-amber-500">pending</strong>. 
+                            </p>
+                            <p className="text-espresso/60 dark:text-white/60 font-medium max-w-lg mx-auto">
+                                Once you arrive and complete your payment protocol, the Admin will approve your booking, unlocking full access to your 7-Point Combo Course.
+                            </p>
+                            <div className="pt-8">
+                                <button onClick={() => window.location.reload()} className="px-8 py-4 rounded-2xl bg-espresso text-[#F5DEB3] font-black text-[10px] uppercase tracking-[0.2em] hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center justify-center gap-2 mx-auto">
+                                    <span className="material-symbols-outlined text-sm">refresh</span>
+                                    Refresh Status
+                                </button>
+                            </div>
                         </div>
+                    ) : (
+                        <>
+                            {/* Journey Map */}
+                            <div className="relative py-10 px-4 md:px-12 bg-white/40 dark:bg-white/5 rounded-[3rem] border border-espresso/5 backdrop-blur-xl">
+                                <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-rose-500 via-amber-500 to-emerald-500 opacity-10 -translate-x-1/2 hidden md:block" />
 
-                        <div className="space-y-16 relative">
-                            {MODULES.map((mod, index) => {
-                                const { isCompleted, isCurrent, isLocked } = getModuleState(index);
+                                <div className="text-center mb-10">
+                                    <h2 className="font-serif font-black text-2xl text-espresso dark:text-white uppercase">Your Coffee Journey</h2>
+                                    <p className="text-xs text-espresso/40 uppercase tracking-widest mt-1">Tap a module to explore its content cards</p>
+                                </div>
 
-                                return (
-                                    <div key={mod.id}
-                                        className={`flex flex-col md:flex-row items-center gap-8 ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} relative group cursor-pointer`}
-                                        onClick={() => setSelectedModule({ mod, isLocked })}>
+                                <div className="space-y-16 relative">
+                                    {MODULES.map((mod, index) => {
+                                        const { isCompleted, isCurrent, isLocked } = getModuleState(index);
 
-                                        {/* Module Icon */}
-                                        <div className="relative z-10 flex-shrink-0">
-                                            <div className={`size-24 md:size-32 rounded-[2rem] flex items-center justify-center shadow-2xl transition-all duration-500 group-hover:scale-105 ${isLocked
-                                                ? 'bg-espresso/10 dark:bg-white/5 text-espresso/20'
-                                                : `bg-gradient-to-br ${mod.color} text-white ring-8 ${mod.ring} shadow-rose-500/20`}`}>
-                                                <span className="material-symbols-outlined text-4xl md:text-5xl">
-                                                    {isLocked ? 'lock' : mod.icon}
-                                                </span>
-                                            </div>
-                                            {isCompleted && (
-                                                <div className="absolute -top-2 -right-2 size-9 rounded-full bg-emerald-500 text-white flex items-center justify-center border-4 border-[#FAF5E8] dark:border-[#1c1916] shadow-lg animate-bounce">
-                                                    <span className="material-symbols-outlined text-sm">check</span>
+                                        return (
+                                            <div key={mod.id}
+                                                className={`flex flex-col md:flex-row items-center gap-8 ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} relative group cursor-pointer`}
+                                                onClick={() => setSelectedModule({ mod, isLocked })}>
+
+                                                {/* Module Icon */}
+                                                <div className="relative z-10 flex-shrink-0">
+                                                    <div className={`size-24 md:size-32 rounded-[2rem] flex items-center justify-center shadow-2xl transition-all duration-500 group-hover:scale-105 ${isLocked
+                                                        ? 'bg-espresso/10 dark:bg-white/5 text-espresso/20'
+                                                        : `bg-gradient-to-br ${mod.color} text-white ring-8 ${mod.ring} shadow-rose-500/20`}`}>
+                                                        <span className="material-symbols-outlined text-4xl md:text-5xl">
+                                                            {isLocked ? 'lock' : mod.icon}
+                                                        </span>
+                                                    </div>
+                                                    {isCompleted && (
+                                                        <div className="absolute -top-2 -right-2 size-9 rounded-full bg-emerald-500 text-white flex items-center justify-center border-4 border-[#FAF5E8] dark:border-[#1c1916] shadow-lg animate-bounce">
+                                                            <span className="material-symbols-outlined text-sm">check</span>
+                                                        </div>
+                                                    )}
+                                                    {isCurrent && (
+                                                        <div className="absolute -bottom-2 -right-2 size-7 rounded-full bg-rose-500 border-4 border-[#FAF5E8] dark:border-[#1c1916] animate-pulse" />
+                                                    )}
                                                 </div>
-                                            )}
-                                            {isCurrent && (
-                                                <div className="absolute -bottom-2 -right-2 size-7 rounded-full bg-rose-500 border-4 border-[#FAF5E8] dark:border-[#1c1916] animate-pulse" />
-                                            )}
-                                        </div>
 
-                                        {/* Module Content */}
-                                        <div className={`flex-1 text-center ${index % 2 === 0 ? 'md:text-left' : 'md:text-right'} space-y-2`}>
-                                            <span className={`text-[10px] font-black uppercase tracking-[0.3em] ${isLocked ? 'text-espresso/20' : 'text-rose-500'}`}>
-                                                Module 0{index + 1}
-                                            </span>
-                                            <h3 className={`text-2xl md:text-3xl font-serif font-black uppercase ${isLocked ? 'text-espresso/20 dark:text-white/10' : 'text-espresso dark:text-white'}`}>
-                                                {t(`weekendExperience.combo.m${index + 1}.title`)}
-                                            </h3>
-                                            <p className={`max-w-md ${index % 2 === 0 ? 'md:ml-0 mx-auto' : 'md:mr-0 mx-auto'} font-medium text-sm ${isLocked ? 'text-espresso/10' : 'text-espresso/60 dark:text-white/60'}`}>
-                                                {t(`weekendExperience.combo.m${index + 1}.desc`)}
-                                            </p>
+                                                {/* Module Content */}
+                                                <div className={`flex-1 text-center ${index % 2 === 0 ? 'md:text-left' : 'md:text-right'} space-y-2`}>
+                                                    <span className={`text-[10px] font-black uppercase tracking-[0.3em] ${isLocked ? 'text-espresso/20' : 'text-rose-500'}`}>
+                                                        Module 0{index + 1}
+                                                    </span>
+                                                    <h3 className={`text-2xl md:text-3xl font-serif font-black uppercase ${isLocked ? 'text-espresso/20 dark:text-white/10' : 'text-espresso dark:text-white'}`}>
+                                                        {t(`weekendExperience.combo.m${index + 1}.title`)}
+                                                    </h3>
+                                                    <p className={`max-w-md ${index % 2 === 0 ? 'md:ml-0 mx-auto' : 'md:mr-0 mx-auto'} font-medium text-sm ${isLocked ? 'text-espresso/10' : 'text-espresso/60 dark:text-white/60'}`}>
+                                                        {t(`weekendExperience.combo.m${index + 1}.desc`)}
+                                                    </p>
 
-                                            <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest mt-2 border transition-all group-hover:scale-105
-                                                ${isCompleted ? 'bg-emerald-50 dark:bg-emerald-900/10 border-emerald-200 dark:border-emerald-500/20 text-emerald-600'
-                                                    : isCurrent ? 'bg-rose-50 dark:bg-rose-900/10 border-rose-200 dark:border-rose-500/20 text-rose-600'
-                                                        : 'bg-espresso/5 border-espresso/10 text-espresso/20'}`}>
-                                                <span className="material-symbols-outlined text-sm">
-                                                    {isCompleted ? 'check_circle' : isCurrent ? 'play_circle' : 'lock'}
-                                                </span>
-                                                {isCompleted ? 'Completed' : isCurrent ? 'Tap to Explore →' : 'Locked'}
+                                                    <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest mt-2 border transition-all group-hover:scale-105
+                                                        ${isCompleted ? 'bg-emerald-50 dark:bg-emerald-900/10 border-emerald-200 dark:border-emerald-500/20 text-emerald-600'
+                                                            : isCurrent ? 'bg-rose-50 dark:bg-rose-900/10 border-rose-200 dark:border-rose-500/20 text-rose-600'
+                                                                : 'bg-espresso/5 border-espresso/10 text-espresso/20'}`}>
+                                                        <span className="material-symbols-outlined text-sm">
+                                                            {isCompleted ? 'check_circle' : isCurrent ? 'play_circle' : 'lock'}
+                                                        </span>
+                                                        {isCompleted ? 'Completed' : isCurrent ? 'Tap to Explore →' : 'Locked'}
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-
-                    {/* Donation CTA */}
-                    <DonationSection />
-
-                    {/* Feedback / Testimonial Section */}
-                    <FeedbackSection user={user} userData={userData} />
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                            
+                            {/* Donation CTA */}
+                            <DonationSection />
+                            
+                            {/* Feedback / Testimonial Section */}
+                            <FeedbackSection user={user} userData={userData} />
+                        </>
+                    )}
                 </div>
             </main>
 
