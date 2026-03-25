@@ -90,6 +90,7 @@ import { ELearning } from './pages/student/ELearning';
 import { AdminBusinessUsers } from './pages/admin/business/AdminBusinessUsers';
 import { AdminBusinessCourses } from './pages/admin/business/AdminBusinessCourses';
 import { ManageBusinessCourse } from './pages/admin/business/ManageBusinessCourse';
+import { BusinessAnalytics } from './pages/admin/business/BusinessAnalytics';
 
 // Instructor Pages (placeholders)
 import { InstructorDashboard } from './pages/instructor/Dashboard';
@@ -261,6 +262,7 @@ function AppContent({ settings }) {
           <Route path="seekers" element={<AdminSeekers />} />
           <Route path="business/users" element={<AdminBusinessUsers />} />
           <Route path="business/courses" element={<AdminBusinessCourses />} />
+          <Route path="business/analytics" element={<BusinessAnalytics />} />
           <Route path="weekend" element={<WeekendManage />} />
           <Route path="business/courses/:courseId" element={<ManageBusinessCourse />} />
           <Route path="profile" element={<CommonProfile />} />

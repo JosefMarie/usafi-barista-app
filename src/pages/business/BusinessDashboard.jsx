@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { collection, query, where, onSnapshot, orderBy, doc, getDoc } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, orderBy, doc, getDoc, getDocs } from 'firebase/firestore';
 import { auth, db } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
 
@@ -11,6 +11,7 @@ export function BusinessDashboard() {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [approvalStatus, setApprovalStatus] = useState(null); // 'pending', 'approved', 'rejected'
+    const [earnedBadges, setEarnedBadges] = useState([]);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const navigate = useNavigate();
 
@@ -25,6 +26,20 @@ export function BusinessDashboard() {
                 const userData = snap.data();
                 if (userData.approved) {
                     setApprovalStatus('approved');
+                    
+                    // Fetch earned badges from progress
+                    try {
+                        const progSnap = await getDocs(collection(db, 'users', user.uid, 'business_progress'));
+                        let badgesSet = new Set();
+                        progSnap.forEach(d => {
+                            const data = d.data();
+                            if (data.badges) data.badges.forEach(b => badgesSet.add(b));
+                        });
+                        setEarnedBadges(Array.from(badgesSet));
+                    } catch (err) {
+                        console.error("Error fetching badges:", err);
+                    }
+
                     fetchCourses();
                 } else {
                     setApprovalStatus('pending');
@@ -168,6 +183,34 @@ export function BusinessDashboard() {
                         <p className="text-espresso/50 dark:text-white/50 text-sm md:text-xl font-medium">{t('business.exclusive_content')}</p>
                     </div>
                 </header>
+
+                {/* Achievements Section */}
+                {earnedBadges.length > 0 && (
+                    <div className="mb-10 lg:mb-16">
+                        <h2 className="text-[10px] md:text-xs font-black text-espresso/50 dark:text-white/50 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+                            <span className="material-symbols-outlined text-sm">workspace_premium</span>
+                            Your Achievements
+                        </h2>
+                        <div className="flex flex-wrap gap-4">
+                            {earnedBadges.includes('business_visionary') && (
+                                <div className="flex items-center gap-3 bg-gradient-to-br from-amber-400 to-amber-600 p-1 pl-1 pr-4 rounded-full shadow-lg transform hover:-translate-y-1 transition-transform group cursor-pointer relative">
+                                    <div className="bg-white/20 p-2 rounded-full backdrop-blur-sm group-hover:rotate-12 transition-transform shadow-inner">
+                                        <span className="material-symbols-outlined text-white text-2xl">diamond</span>
+                                    </div>
+                                    <div className="py-1">
+                                        <p className="text-white font-black text-[10px] uppercase tracking-widest leading-none">Business Visionary</p>
+                                        <p className="text-white/80 font-bold text-[8px] uppercase tracking-widest leading-none mt-0.5">Course Champion</p>
+                                    </div>
+                                    {/* Tooltip */}
+                                    <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-black text-white text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                                        Awarded for completing the Business Course
+                                    </div>
+                                </div>
+                            )}
+                            {/* Add more badges here as they are created */}
+                        </div>
+                    </div>
+                )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-10">
                     {courses.map(course => (

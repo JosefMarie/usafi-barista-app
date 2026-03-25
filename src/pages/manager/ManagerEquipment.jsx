@@ -66,6 +66,7 @@ export function ManagerEquipment() {
                 imageUrl,
                 tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
                 icon: formData.icon || (formData.category === 'machinery' ? 'coffee_maker' : 'hardware'),
+                order: editingItem?.order || 999,
                 createdAt: serverTimestamp(),
                 updatedAt: serverTimestamp()
             };

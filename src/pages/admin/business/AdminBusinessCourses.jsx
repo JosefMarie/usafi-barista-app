@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../../lib/firebase';
 import { GradientButton } from '../../../components/ui/GradientButton';
 import { cn } from '../../../lib/utils';
@@ -47,6 +47,19 @@ export function AdminBusinessCourses() {
         }
     };
 
+    const handleDeleteCourse = async (e, courseId, courseTitle) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (window.confirm(`Are you sure you want to delete the course "${courseTitle}"? This action cannot be undone.`)) {
+            try {
+                await deleteDoc(doc(db, 'business_courses', courseId));
+            } catch (error) {
+                console.error("Error deleting course:", error);
+                alert("Failed to delete course");
+            }
+        }
+    };
+
     if (loading) return <div className="p-8">Loading...</div>;
 
     return (
@@ -78,7 +91,7 @@ export function AdminBusinessCourses() {
                                     <span className="material-symbols-outlined text-7xl">menu_book</span>
                                 </div>
                             )}
-                            <div className="absolute top-4 right-4">
+                            <div className="absolute top-4 right-4 flex flex-col items-end gap-2">
                                 <span className={cn(
                                     "px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg backdrop-blur-md",
                                     course.status === 'published'
@@ -87,6 +100,13 @@ export function AdminBusinessCourses() {
                                 )}>
                                     {course.status}
                                 </span>
+                                <button
+                                    onClick={(e) => handleDeleteCourse(e, course.id, course.title)}
+                                    className="px-3 py-1.5 rounded-full bg-red-600/90 hover:bg-red-600 text-white text-[10px] font-black uppercase tracking-widest shadow-lg backdrop-blur-md transition-colors flex items-center gap-1 opacity-0 group-hover:opacity-100"
+                                    title="Delete Course"
+                                >
+                                    <span className="material-symbols-outlined text-[14px]">delete</span>
+                                </button>
                             </div>
                         </div>
                         <div className="p-5 md:p-7">

@@ -14,12 +14,20 @@ export function Equipment() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const q = query(collection(db, 'equipment'), orderBy('order', 'asc'));
+        const q = query(collection(db, 'equipment'));
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const items = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
             }));
+            
+            // Sort in memory to avoid Firebase filtering out items without an 'order' field
+            items.sort((a, b) => {
+                const orderA = a.order !== undefined ? a.order : 999;
+                const orderB = b.order !== undefined ? b.order : 999;
+                return orderA - orderB;
+            });
+
             setDynamicEquipment(items);
             setLoading(false);
         });
@@ -107,6 +115,17 @@ export function Equipment() {
                                                 ))}
                                             </div>
                                         </div>
+                                        
+                                        <div className="mt-8 pt-6 border-t border-espresso/10 flex flex-col sm:flex-row gap-4">
+                                            {item.buyUrl && (
+                                                <a href={item.buyUrl} target="_blank" rel="noreferrer" className="flex-1 inline-flex items-center justify-center gap-2 px-8 py-4 bg-espresso text-white text-xs font-black uppercase tracking-widest rounded-2xl hover:bg-black transition-all shadow-xl hover:-translate-y-1">
+                                                    Source Asset <span className="material-symbols-outlined text-sm">open_in_new</span>
+                                                </a>
+                                            )}
+                                            <button onClick={() => setSelectedImage(item.imageUrl)} className="flex-1 inline-flex items-center justify-center gap-2 px-8 py-4 bg-espresso/5 text-espresso text-xs font-black uppercase tracking-widest rounded-2xl hover:bg-espresso hover:text-white transition-all">
+                                                View Asset <span className="material-symbols-outlined text-sm">visibility</span>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -163,9 +182,12 @@ export function Equipment() {
                                         <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-espresso/5 text-espresso flex items-center justify-center mb-4 transition-colors group-hover:bg-espresso group-hover:text-white">
                                             <span className="material-symbols-outlined text-base md:text-xl">{tool.icon || 'hardware'}</span>
                                         </div>
-                                        <h3 className="font-serif text-lg md:text-xl font-black text-espresso dark:text-white mb-2 leading-tight uppercase tracking-tight">
+                                        <h3 className="font-serif text-lg md:text-xl font-black text-espresso dark:text-white mb-1 leading-tight uppercase tracking-tight">
                                             {tool.name}
                                         </h3>
+                                        <p className="text-primary font-black text-[10px] uppercase tracking-widest mb-3">
+                                            {tool.price || 'Market Rate'}
+                                        </p>
                                         <p className="text-[10px] md:text-sm text-espresso/60 dark:text-white/60 leading-relaxed line-clamp-2 md:line-clamp-3 font-medium">
                                             {tool.description}
                                         </p>
@@ -218,13 +240,28 @@ export function Equipment() {
                                         <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-espresso text-white flex items-center justify-center shrink-0 shadow-lg group-hover:scale-110 transition-transform">
                                             <span className="material-symbols-outlined text-2xl md:text-3xl">{item.icon || 'inventory_2'}</span>
                                         </div>
-                                        <div>
-                                            <h4 className="font-black text-espresso dark:text-white uppercase tracking-widest text-sm md:text-base mb-2">
-                                                {item.name}
-                                            </h4>
-                                            <p className="text-xs md:text-sm text-espresso/60 dark:text-white/60 leading-relaxed font-medium">
+                                        <div className="flex-1 w-full overflow-hidden">
+                                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                                                <h4 className="font-black text-espresso dark:text-white uppercase tracking-widest text-sm md:text-base truncate">
+                                                    {item.name}
+                                                </h4>
+                                                <span className="text-primary font-black text-[10px] uppercase tracking-widest whitespace-nowrap shrink-0">
+                                                    {item.price || 'Market Rate'}
+                                                </span>
+                                            </div>
+                                            <p className="text-xs md:text-sm text-espresso/60 dark:text-white/60 leading-relaxed font-medium mb-4">
                                                 {item.description}
                                             </p>
+                                            <div className="flex gap-4">
+                                                {item.buyUrl && (
+                                                    <a href={item.buyUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-espresso hover:text-primary transition-colors hover:underline">
+                                                        Source Item <span className="material-symbols-outlined text-xs">open_in_new</span>
+                                                    </a>
+                                                )}
+                                                <button onClick={() => setSelectedImage(item.imageUrl)} className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-espresso hover:text-primary transition-colors hover:underline">
+                                                    View Asset <span className="material-symbols-outlined text-xs">visibility</span>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 ))}
@@ -247,13 +284,28 @@ export function Equipment() {
                                         <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-primary text-white flex items-center justify-center shrink-0 shadow-lg group-hover:scale-110 transition-transform">
                                             <span className="material-symbols-outlined text-2xl md:text-3xl">{item.icon || 'shield'}</span>
                                         </div>
-                                        <div>
-                                            <h4 className="font-black text-espresso dark:text-white uppercase tracking-widest text-sm md:text-base mb-2">
-                                                {item.name}
-                                            </h4>
-                                            <p className="text-xs md:text-sm text-espresso/60 dark:text-white/60 leading-relaxed font-medium">
+                                        <div className="flex-1 w-full overflow-hidden">
+                                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                                                <h4 className="font-black text-espresso dark:text-white uppercase tracking-widest text-sm md:text-base truncate">
+                                                    {item.name}
+                                                </h4>
+                                                <span className="text-primary font-black text-[10px] uppercase tracking-widest whitespace-nowrap shrink-0">
+                                                    {item.price || 'Market Rate'}
+                                                </span>
+                                            </div>
+                                            <p className="text-xs md:text-sm text-espresso/60 dark:text-white/60 leading-relaxed font-medium mb-4">
                                                 {item.description}
                                             </p>
+                                            <div className="flex gap-4">
+                                                {item.buyUrl && (
+                                                    <a href={item.buyUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-primary hover:text-espresso transition-colors hover:underline">
+                                                        Source Item <span className="material-symbols-outlined text-xs">open_in_new</span>
+                                                    </a>
+                                                )}
+                                                <button onClick={() => setSelectedImage(item.imageUrl)} className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-primary hover:text-espresso transition-colors hover:underline">
+                                                    View Asset <span className="material-symbols-outlined text-xs">visibility</span>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 ))}

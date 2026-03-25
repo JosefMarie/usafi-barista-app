@@ -36,6 +36,7 @@ const CoffeeWatermark = ({ className }) => (
 export const StudentCertificate = React.forwardRef(({
     student,
     courseId,
+    courseTitle,
     className
 }, ref) => {
     const { t } = useTranslation();
@@ -139,7 +140,7 @@ export const StudentCertificate = React.forwardRef(({
                         {studentName}
                     </h2>
                     <p className="text-[9px] uppercase tracking-[0.4em] text-[#a77c52] font-black mt-1">
-                        {TARGET_COURSE_ID === 'bar-tender-course' ? 'Professional Mixology & Bar Management' : 'Professional Barista & Coffee Science'}
+                        {courseTitle || (TARGET_COURSE_ID === 'bar-tender-course' ? 'Professional Mixology & Bar Management' : 'Professional Barista & Coffee Science')}
                     </p>
                 </div>
 

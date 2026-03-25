@@ -1,14 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate, Navigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { storage, db } from '../../lib/firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { doc, updateDoc, getDoc } from 'firebase/firestore';
+import { doc, updateDoc, getDoc, collection, getDocs } from 'firebase/firestore';
 import { ChangePasswordModal } from '../../components/auth/ChangePasswordModal';
 
 export function BusinessProfile() {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+    const { t } = useTranslation();
     const fileInputRef = useRef(null);
     const [uploading, setUploading] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
@@ -17,7 +19,14 @@ export function BusinessProfile() {
         phone: '',
         location: '',
         companyName: '',
-        position: ''
+        position: '',
+        bio: '',
+        linkedInUrl: ''
+    });
+    const [learningStats, setLearningStats] = useState({
+        enrolled: 0,
+        completed: 0,
+        badges: []
     });
     const [saving, setSaving] = useState(false);
     const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -25,7 +34,7 @@ export function BusinessProfile() {
 
     useEffect(() => {
         if (user) {
-            // Fetch latest user data to get company fields if they exist
+            // Fetch latest user data
             getDoc(doc(db, 'users', user.uid)).then(snap => {
                 if (snap.exists()) {
                     setDisplayUser({ ...user, ...snap.data() });
@@ -33,6 +42,32 @@ export function BusinessProfile() {
                     setDisplayUser(user);
                 }
             });
+
+            // Fetch learning stats
+            const fetchStats = async () => {
+                try {
+                    const progSnap = await getDocs(collection(db, 'users', user.uid, 'business_progress'));
+                    let enrolled = 0;
+                    let completed = 0;
+                    let badgesSet = new Set();
+                    
+                    progSnap.forEach(d => {
+                        const data = d.data();
+                        enrolled++;
+                        if (data.status === 'completed') completed++;
+                        if (data.badges) data.badges.forEach(b => badgesSet.add(b));
+                    });
+                    
+                    setLearningStats({
+                        enrolled,
+                        completed,
+                        badges: Array.from(badgesSet)
+                    });
+                } catch (err) {
+                    console.error("Error fetching learning stats:", err);
+                }
+            };
+            fetchStats();
         }
     }, [user]);
 
@@ -45,7 +80,9 @@ export function BusinessProfile() {
             phone: displayUser?.phone || '',
             location: displayUser?.location || '',
             companyName: displayUser?.companyName || '',
-            position: displayUser?.position || ''
+            position: displayUser?.position || '',
+            bio: displayUser?.bio || '',
+            linkedInUrl: displayUser?.linkedInUrl || ''
         });
         setShowEditModal(true);
     };
@@ -61,6 +98,8 @@ export function BusinessProfile() {
                 location: editData.location,
                 companyName: editData.companyName,
                 position: editData.position,
+                bio: editData.bio,
+                linkedInUrl: editData.linkedInUrl,
                 updatedAt: new Date()
             };
             await updateDoc(userRef, updates);
@@ -219,109 +258,190 @@ export function BusinessProfile() {
 
                 <div className="p-6 md:p-12 w-full max-w-6xl mx-auto space-y-10">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12">
-                        {/* Left Column: Avatar and Quick Info */}
-                        <div className="lg:col-span-4 flex flex-col items-center">
-                            <div className="bg-white/60 dark:bg-[#1c1916] rounded-[2rem] md:rounded-[3rem] p-8 md:p-12 shadow-xl border border-espresso/5 w-full flex flex-col items-center relative overflow-hidden group">
-                                <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-espresso/10 group-hover:bg-espresso transition-colors"></div>
+                        {/* Left Column: Digital Membership Card & Actions */}
+                        <div className="lg:col-span-5 flex flex-col items-center">
+                            {/* The Card */}
+                            <div className="relative w-full max-w-[340px] aspect-[5/8] rounded-[2.5rem] bg-gradient-to-br from-[#1c1916] to-black p-1 shadow-2xl overflow-hidden group perspective-1000 mb-8 transform hover:-translate-y-2 transition-transform duration-500">
+                                <div className="absolute inset-0 bg-gradient-to-br from-espresso/40 via-transparent to-espresso/10 opacity-50 group-hover:opacity-100 transition-opacity duration-700"></div>
+                                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 group-hover:bg-primary/40 transition-colors duration-700"></div>
+                                
+                                <div className="relative h-full w-full bg-[#1c1916]/80 backdrop-blur-xl rounded-[2.4rem] p-8 flex flex-col items-center border border-white/10 group-hover:border-white/20 transition-colors duration-500 overflow-hidden shadow-inner">
+                                    
+                                    {/* Top Branding */}
+                                    <div className="w-full flex justify-between items-start mb-10">
+                                        <span className="material-symbols-outlined text-white text-3xl opacity-80">domain_verification</span>
+                                        <div className="text-right">
+                                            <p className="text-[8px] font-black text-white/50 uppercase tracking-[0.3em] leading-none mb-1">USAFI Barista</p>
+                                            <p className="text-[10px] font-black text-[#F5DEB3] uppercase tracking-[0.2em] leading-none">Business Class</p>
+                                        </div>
+                                    </div>
 
-                                <div
-                                    onClick={handleAvatarClick}
-                                    className="relative mb-6 md:mb-10 group/avatar cursor-pointer"
+                                    {/* Avatar */}
+                                    <div 
+                                        onClick={handleAvatarClick}
+                                        className="relative mb-6 group/avatar cursor-pointer shrink-0"
+                                    >
+                                        <div 
+                                            className="size-32 md:size-36 rounded-full border-4 border-[#F5DEB3]/20 shadow-2xl bg-cover bg-center overflow-hidden flex items-center justify-center transition-transform duration-500 group-hover/avatar:scale-105"
+                                            style={{ backgroundImage: uploading ? 'none' : `url('${avatarUrl}')` }}
+                                        >
+                                            {uploading && (
+                                                <div className="animate-spin rounded-full size-8 border-b-2 border-[#F5DEB3]"></div>
+                                            )}
+                                        </div>
+                                        <div className="absolute bottom-0 right-0 size-10 bg-[#F5DEB3] text-[#1c1916] rounded-full shadow-xl flex items-center justify-center border-[3px] border-[#1c1916] group-hover/avatar:scale-110 transition-transform">
+                                            <span className="material-symbols-outlined text-lg">edit</span>
+                                        </div>
+                                        <input type="file" ref={fileInputRef} onChange={handleAvatarUpload} className="hidden" accept="image/*" />
+                                    </div>
+
+                                    {/* Identity */}
+                                    <div className="text-center w-full mt-auto flex flex-col items-center">
+                                        <h1 className="text-2xl md:text-3xl font-black text-white mb-2 font-serif leading-tight truncate px-2 w-full">
+                                            {displayName}
+                                        </h1>
+                                        <p className="text-[#F5DEB3]/80 font-bold text-xs uppercase tracking-widest mb-8 truncate px-2 w-full">
+                                            {displayUser?.position || displayUser?.companyName || 'Business Student'}
+                                        </p>
+                                        
+                                        {/* ID Strip */}
+                                        <div className="w-full bg-black/50 rounded-2xl p-4 border border-white/5 backdrop-blur-md flex justify-between items-center group-hover:bg-black/70 transition-colors mt-auto">
+                                            <div className="text-left">
+                                                <p className="text-[8px] text-white/40 font-black uppercase tracking-[0.2em] mb-1">Global ID</p>
+                                                <p className="text-xs text-white font-mono tracking-widest">{userId}</p>
+                                            </div>
+                                            <span className="material-symbols-outlined text-white/20 text-3xl rotate-90">qr_code_2</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Actions */}
+                            <div className="w-full max-w-[340px] flex flex-col gap-3">
+                                <button
+                                    onClick={handleLogout}
+                                    className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-white/60 dark:bg-white/5 text-espresso dark:text-white border border-espresso/10 hover:bg-white transition-all font-black text-[10px] uppercase tracking-widest shadow-sm active:scale-95 group/logout"
                                 >
-                                    <div
-                                        className="size-36 md:size-52 rounded-2xl md:rounded-3xl border-4 md:border-8 border-white dark:border-[#2c2825] shadow-2xl bg-cover bg-center overflow-hidden flex items-center justify-center bg-white/50 backdrop-blur-sm transition-transform duration-500 group-hover/avatar:scale-105"
-                                        style={{ backgroundImage: uploading ? 'none' : `url('${avatarUrl}')` }}
-                                    >
-                                        {uploading && (
-                                            <div className="animate-spin rounded-full size-10 md:size-14 border-b-2 border-espresso"></div>
-                                        )}
-                                    </div>
-                                    <div className="absolute -bottom-2 -right-2 size-10 md:size-14 bg-espresso text-white rounded-xl md:rounded-2xl shadow-xl flex items-center justify-center border-4 border-[#F5DEB3] dark:border-[#1c1916] group-hover/avatar:scale-110 transition-transform">
-                                        <span className="material-symbols-outlined text-[20px] md:text-[24px]">photo_camera</span>
-                                    </div>
-                                    <input type="file" ref={fileInputRef} onChange={handleAvatarUpload} className="hidden" accept="image/*" />
-                                </div>
-
-                                <h1 className="text-xl md:text-3xl font-black text-espresso dark:text-white text-center mb-1 font-serif leading-tight">
-                                    {displayName}
-                                </h1>
-                                <p className="text-espresso/40 font-black text-[8px] md:text-[10px] tracking-[0.2em] uppercase mb-6 bg-white dark:bg-black/20 px-4 py-1.5 rounded-full border border-espresso/5">
-                                    Global ID: {userId}
-                                </p>
-
-                                <div className="px-5 py-2 bg-espresso text-white rounded-full mb-10 shadow-lg">
-                                    <p className="text-[9px] md:text-[10px] font-black tracking-[0.2em] uppercase">
-                                        {t('business.business_class_title')}
-                                    </p>
-                                </div>
-
-                                <div className="flex flex-col gap-3 w-full">
-                                    <button
-                                        onClick={handleLogout}
-                                        className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-white/40 dark:bg-white/5 text-espresso dark:text-white border border-espresso/10 hover:bg-white/60 transition-all font-black text-[10px] uppercase tracking-widest shadow-sm active:scale-95 group/logout"
-                                    >
-                                        <span className="material-symbols-outlined text-[18px] group-hover:rotate-12 transition-transform">logout</span>
-                                        {t('business.sign_out')}
-                                    </button>
-                                </div>
+                                    <span className="material-symbols-outlined text-[18px] group-hover:-translate-x-1 transition-transform text-red-500">logout</span>
+                                    {t('business.sign_out')}
+                                </button>
                             </div>
                         </div>
 
-                        {/* Right Column: Key Details */}
-                        <div className="lg:col-span-8 space-y-6 md:space-y-10">
-                            {/* Company Card */}
-                            <div className="bg-white/60 dark:bg-[#1c1916] rounded-[2rem] md:rounded-[3rem] shadow-xl border border-espresso/5 overflow-hidden relative group">
-                                <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-espresso/10 group-hover:bg-primary transition-colors"></div>
-                                <div className="px-8 md:px-10 py-5 md:py-6 border-b border-espresso/10 flex items-center justify-between bg-white/30">
+                        {/* Right Column: Key Details & Stats */}
+                        <div className="lg:col-span-7 space-y-6 md:space-y-8">
+                            
+                            {/* Learning & Achievements */}
+                            <div className="bg-white/60 dark:bg-[#1c1916] rounded-[2rem] md:rounded-[2.5rem] shadow-xl border border-espresso/5 overflow-hidden relative group">
+                                <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-gradient-to-b from-amber-400 to-amber-600 transition-colors"></div>
+                                <div className="px-8 md:px-10 py-5 md:py-6 border-b border-espresso/10 flex items-center justify-between bg-white/30 dark:bg-white/5">
                                     <div className="flex items-center gap-3">
-                                        <span className="material-symbols-outlined text-espresso/40">domain</span>
-                                        <h3 className="font-black text-espresso dark:text-white uppercase tracking-widest text-[10px] md:text-xs">{t('business.organization')}</h3>
+                                        <span className="material-symbols-outlined text-amber-500">school</span>
+                                        <h3 className="font-black text-espresso dark:text-white uppercase tracking-widest text-[10px] md:text-xs">Learning & Achievements</h3>
                                     </div>
                                 </div>
-                                <div className="p-8 md:p-12 grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-12 relative z-10">
-                                    <div className="space-y-2">
-                                        <p className="text-[9px] md:text-[10px] text-espresso/40 dark:text-white/40 font-black uppercase tracking-[0.2em]">{t('business.company_name')}</p>
-                                        <p className="text-espresso dark:text-white font-black text-base md:text-xl font-serif">{displayUser?.companyName || 'Not Listed'}</p>
+                                <div className="p-8 md:p-10 flex flex-col md:flex-row gap-8 relative z-10 w-full">
+                                    {/* Stats */}
+                                    <div className="flex gap-8 md:w-1/2">
+                                        <div className="space-y-2 flex-1 text-center md:text-left">
+                                            <p className="text-[9px] md:text-[10px] text-espresso/40 dark:text-white/40 font-black uppercase tracking-[0.2em]">Enrolled</p>
+                                            <p className="text-espresso dark:text-white font-black text-4xl md:text-5xl font-serif">{learningStats.enrolled}</p>
+                                        </div>
+                                        <div className="space-y-2 flex-1 text-center md:text-left">
+                                            <p className="text-[9px] md:text-[10px] text-espresso/40 dark:text-white/40 font-black uppercase tracking-[0.2em]">Completed</p>
+                                            <p className="text-espresso dark:text-white font-black text-4xl md:text-5xl font-serif">{learningStats.completed}</p>
+                                        </div>
                                     </div>
-                                    <div className="space-y-2">
-                                        <p className="text-[9px] md:text-[10px] text-espresso/40 dark:text-white/40 font-black uppercase tracking-[0.2em]">{t('business.position')}</p>
-                                        <p className="text-espresso dark:text-white font-black text-base md:text-xl font-serif">{displayUser?.position || 'Not Listed'}</p>
+                                    
+                                    {/* Badges */}
+                                    <div className="md:w-1/2 md:border-l border-espresso/10 dark:border-white/10 md:pl-8 flex flex-col items-center md:items-start pt-6 md:pt-0 border-t md:border-t-0">
+                                        <p className="text-[9px] md:text-[10px] text-espresso/40 dark:text-white/40 font-black uppercase tracking-[0.2em] mb-4">Earned Badges</p>
+                                        <div className="flex flex-wrap gap-3">
+                                            {learningStats.badges.length > 0 ? (
+                                                learningStats.badges.map((badge, idx) => (
+                                                    <div key={idx} className="flex items-center gap-2 bg-gradient-to-br from-amber-400 to-amber-600 px-3 py-1.5 rounded-full shadow-lg group cursor-pointer relative hover:-translate-y-1 transition-transform" title="Business Visionary">
+                                                        <span className="material-symbols-outlined text-white text-base">diamond</span>
+                                                        <span className="text-white font-black text-[9px] uppercase tracking-widest leading-none">Visionary</span>
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <span className="text-[10px] font-bold text-espresso/40 dark:text-white/40 italic flex items-center gap-2"><span className="material-symbols-outlined text-sm">info</span>Complete courses to earn badges</span>
+                                            )}
+                                        </div>
                                     </div>
-                                    <div className="space-y-2">
-                                        <p className="text-[9px] md:text-[10px] text-espresso/40 dark:text-white/40 font-black uppercase tracking-[0.2em]">{t('business.work_email')}</p>
-                                        <p className="text-espresso dark:text-white font-black text-base md:text-xl font-serif truncate">{displayUser?.email}</p>
+                                </div>
+                            </div>
+
+                            {/* Professional Identity Card */}
+                            <div className="bg-white/60 dark:bg-[#1c1916] rounded-[2rem] md:rounded-[2.5rem] shadow-xl border border-espresso/5 overflow-hidden relative group">
+                                <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-espresso/10 group-hover:bg-primary transition-colors"></div>
+                                <div className="px-8 md:px-10 py-5 md:py-6 border-b border-espresso/10 flex items-center justify-between bg-white/30 dark:bg-white/5">
+                                    <div className="flex items-center gap-3">
+                                        <span className="material-symbols-outlined text-espresso/40 dark:text-white/40">assignment_ind</span>
+                                        <h3 className="font-black text-espresso dark:text-white uppercase tracking-widest text-[10px] md:text-xs">Professional Details</h3>
                                     </div>
-                                    <div className="space-y-2">
-                                        <p className="text-[9px] md:text-[10px] text-espresso/40 dark:text-white/40 font-black uppercase tracking-[0.2em]">{t('business.contact_phone')}</p>
-                                        <p className="text-espresso dark:text-white font-black text-base md:text-xl font-serif">{displayUser?.phone || 'Not provided'}</p>
+                                    <button onClick={handleEditClick} className="text-[9px] font-black tracking-[0.2em] uppercase text-primary hover:text-primary/70 transition-colors">Edit</button>
+                                </div>
+                                <div className="p-8 md:p-10 space-y-8 relative z-10">
+                                    {/* Bio */}
+                                    <div>
+                                        <p className="text-[9px] md:text-[10px] text-espresso/40 dark:text-white/40 font-black uppercase tracking-[0.2em] mb-3">Professional Bio</p>
+                                        <p className="text-sm md:text-base text-espresso/80 dark:text-white/80 font-medium leading-relaxed italic border-l-2 border-espresso/20 dark:border-white/20 pl-4 py-1.5 bg-white/20 dark:bg-white/5 rounded-r-xl pr-4">
+                                            {displayUser?.bio ? `"${displayUser.bio}"` : 'No professional summary provided.'}
+                                        </p>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-10">
+                                        <div className="space-y-2">
+                                            <p className="text-[9px] md:text-[10px] text-espresso/40 dark:text-white/40 font-black uppercase tracking-[0.2em]">{t('business.organization')}</p>
+                                            <p className="text-espresso dark:text-white font-black text-sm md:text-lg font-serif">{displayUser?.companyName || 'Not Listed'}</p>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <p className="text-[9px] md:text-[10px] text-espresso/40 dark:text-white/40 font-black uppercase tracking-[0.2em]">{t('business.work_email')}</p>
+                                            <p className="text-espresso dark:text-white font-black text-sm md:text-lg font-serif truncate">{displayUser?.email}</p>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <p className="text-[9px] md:text-[10px] text-espresso/40 dark:text-white/40 font-black uppercase tracking-[0.2em]">{t('business.contact_phone')}</p>
+                                            <p className="text-espresso dark:text-white font-black text-sm md:text-lg font-serif">{displayUser?.phone || 'Not provided'}</p>
+                                        </div>
+                                        <div className="space-y-2 flex flex-col">
+                                            <p className="text-[9px] md:text-[10px] text-espresso/40 dark:text-white/40 font-black uppercase tracking-[0.2em]">LinkedIn</p>
+                                            {displayUser?.linkedInUrl ? (
+                                                <a href={displayUser.linkedInUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 mt-0.5 text-primary hover:text-primary/70 font-black text-xs md:text-sm uppercase tracking-widest transition-colors w-fit">
+                                                    <span className="material-symbols-outlined text-base">link</span> View Profile
+                                                </a>
+                                            ) : (
+                                                <p className="text-espresso/50 dark:text-white/50 font-black text-sm md:text-lg font-serif italic">Not Linked</p>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Security Card */}
-                            <div className="bg-white/60 dark:bg-[#1c1916] rounded-[2rem] md:rounded-[3rem] shadow-xl border border-espresso/5 overflow-hidden relative group">
+                            <div className="bg-white/60 dark:bg-[#1c1916] rounded-[2rem] md:rounded-[2.5rem] shadow-xl border border-espresso/5 overflow-hidden relative group">
                                 <div className="absolute left-0 top-0 bottom-0 w-1.5 md:w-2 bg-espresso/10 group-hover:bg-primary transition-colors"></div>
-                                <div className="px-8 md:px-10 py-5 md:py-6 border-b border-espresso/10 bg-white/30">
+                                <div className="px-8 md:px-10 py-5 md:py-6 border-b border-espresso/10 bg-white/30 dark:bg-white/5">
                                     <div className="flex items-center gap-3">
-                                        <span className="material-symbols-outlined text-espresso/40">admin_panel_settings</span>
+                                        <span className="material-symbols-outlined text-espresso/40 dark:text-white/40">admin_panel_settings</span>
                                         <h3 className="font-black text-espresso dark:text-white uppercase tracking-widest text-[10px] md:text-xs">{t('business.security')}</h3>
                                     </div>
                                 </div>
-                                <div className="divide-y divide-espresso/5 relative z-10">
+                                <div className="divide-y divide-espresso/5 relative z-10 w-full">
                                     <button
                                         onClick={() => setShowPasswordModal(true)}
-                                        className="w-full flex items-center justify-between px-8 md:px-12 py-6 md:py-10 hover:bg-white/40 dark:hover:bg-white/5 transition-all group/item"
+                                        className="w-full flex items-center justify-between px-8 md:px-10 py-6 md:py-8 hover:bg-white/40 dark:hover:bg-white/5 transition-all group/item"
                                     >
-                                        <div className="flex items-center gap-5 md:gap-8 text-left">
-                                            <div className="size-12 md:size-16 rounded-2xl md:rounded-3xl bg-espresso text-white flex items-center justify-center group-hover/item:scale-110 group-hover/item:rotate-12 transition-all shadow-xl shadow-espresso/20 shrink-0">
+                                        <div className="flex items-center gap-5 md:gap-6 text-left">
+                                            <div className="size-12 md:size-14 rounded-2xl bg-espresso text-white flex items-center justify-center group-hover/item:scale-110 group-hover/item:rotate-12 transition-all shadow-xl shadow-espresso/20 shrink-0">
                                                 <span className="material-symbols-outlined text-2xl md:text-3xl">lock_reset</span>
                                             </div>
                                             <div>
                                                 <p className="font-black text-espresso dark:text-white text-[11px] md:text-[13px] uppercase tracking-[0.1em] md:tracking-[0.2em] leading-none mb-1 md:mb-2">{t('profile.update_password')}</p>
-                                                <p className="text-espresso/50 dark:text-white/40 text-xs md:text-base font-medium">{t('profile.reset_security_desc')}</p>
+                                                <p className="text-espresso/50 dark:text-white/40 text-xs md:text-sm font-medium">{t('profile.reset_security_desc')}</p>
                                             </div>
                                         </div>
-                                        <span className="material-symbols-outlined text-espresso/20 group-hover/item:translate-x-3 transition-all text-2xl md:text-4xl">arrow_right_alt</span>
+                                        <span className="material-symbols-outlined text-espresso/20 group-hover/item:translate-x-2 transition-all text-2xl md:text-3xl">arrow_right_alt</span>
                                     </button>
                                 </div>
                             </div>
@@ -338,6 +458,30 @@ export function BusinessProfile() {
                             </h3>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6">
+                                <div className="md:col-span-2 space-y-1.5 md:space-y-2">
+                                    <label className="block text-[10px] font-black text-espresso/40 dark:text-white/60 mb-1 md:mb-2 uppercase tracking-widest">
+                                        Professional Bio
+                                    </label>
+                                    <textarea
+                                        value={editData.bio}
+                                        onChange={e => setEditData({ ...editData, bio: e.target.value })}
+                                        placeholder="A short summary of your professional background..."
+                                        rows="3"
+                                        className="w-full px-5 md:px-6 py-3 md:py-4 rounded-xl md:rounded-2xl border border-espresso/10 bg-white dark:bg-black/20 text-espresso dark:text-white placeholder:text-espresso/20 focus:outline-none focus:ring-2 focus:ring-espresso focus:border-transparent transition-all font-bold text-sm md:text-base shadow-inner resize-none"
+                                    />
+                                </div>
+                                <div className="md:col-span-2 space-y-1.5 md:space-y-2">
+                                    <label className="block text-[10px] font-black text-espresso/40 dark:text-white/60 mb-1 md:mb-2 uppercase tracking-widest">
+                                        LinkedIn Profile URL
+                                    </label>
+                                    <input
+                                        type="url"
+                                        value={editData.linkedInUrl}
+                                        onChange={e => setEditData({ ...editData, linkedInUrl: e.target.value })}
+                                        placeholder="https://linkedin.com/in/..."
+                                        className="w-full px-5 md:px-6 py-3 md:py-4 rounded-xl md:rounded-2xl border border-espresso/10 bg-white dark:bg-black/20 text-espresso dark:text-white placeholder:text-espresso/20 focus:outline-none focus:ring-2 focus:ring-espresso focus:border-transparent transition-all font-bold text-sm md:text-base shadow-inner"
+                                    />
+                                </div>
                                 <div className="md:col-span-2 space-y-1.5 md:space-y-2">
                                     <label className="block text-[10px] font-black text-espresso/40 dark:text-white/60 mb-1 md:mb-2 uppercase tracking-widest">
                                         {t('business.company_name') || 'Company / Organization'}

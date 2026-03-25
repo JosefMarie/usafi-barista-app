@@ -78,6 +78,7 @@ export function ManageBusinessCourse() {
         title: '',
         content: '',
         imageUrl: '', // Deprecated in UI but kept for state shape compat if needed temp
+        videoUrl: '', // URL for YouTube/Vimeo embed
         media: [], // Array of { url, caption }
         status: 'draft',
         order: 0,
@@ -221,6 +222,7 @@ export function ManageBusinessCourse() {
                 title: chapter.title,
                 content: chapter.content,
                 imageUrl: chapter.imageUrl || '',
+                videoUrl: chapter.videoUrl || '',
                 media: initialMedia,
                 status: chapter.status,
                 order: chapter.order || 0,
@@ -234,6 +236,7 @@ export function ManageBusinessCourse() {
                 title: '',
                 content: '',
                 imageUrl: '',
+                videoUrl: '',
                 media: [],
                 status: 'draft',
                 order: chapters.length + 1,
@@ -536,6 +539,22 @@ export function ManageBusinessCourse() {
                                                 placeholder="Write your chapter content here..."
                                                 className="border-none"
                                                 minHeight="300px"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-2 ml-1">Video Lesson URL (YouTube/Vimeo)</label>
+                                        <div className="relative">
+                                            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-espresso/40">
+                                                <span className="material-symbols-outlined text-lg">play_circle</span>
+                                            </div>
+                                            <input
+                                                type="text"
+                                                className="w-full px-4 pl-12 py-3 rounded-xl border border-espresso/10 bg-white/40 dark:bg-black/20 focus:outline-none focus:ring-2 focus:ring-espresso transition-all shadow-sm text-sm"
+                                                value={chapterForm.videoUrl}
+                                                onChange={e => setChapterForm({ ...chapterForm, videoUrl: e.target.value })}
+                                                placeholder="https://www.youtube.com/watch?v=..."
                                             />
                                         </div>
                                     </div>

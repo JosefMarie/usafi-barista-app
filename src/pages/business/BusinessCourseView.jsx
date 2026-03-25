@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { doc, getDoc, collection, query, orderBy, onSnapshot, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, collection, query, orderBy, onSnapshot, setDoc, serverTimestamp, arrayUnion } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 import { GradientButton } from '../../components/ui/GradientButton';
 import { NoteEditor } from '../../components/common/NoteEditor';
 import { useAuth } from '../../context/AuthContext';
 import { cn } from '../../lib/utils';
+import { BusinessAIAssistant } from '../../components/business/BusinessAIAssistant';
+import { StudentCertificate } from '../../components/admin/StudentCertificate';
+import { useReactToPrint } from 'react-to-print';
 
 export function BusinessCourseView() {
     const { courseId } = useParams();
@@ -15,7 +18,25 @@ export function BusinessCourseView() {
     const [activeChapter, setActiveChapter] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showNotes, setShowNotes] = useState(false);
+    const [showAI, setShowAI] = useState(false);
     const [isProgressLoaded, setIsProgressLoaded] = useState(false);
+    const [isPrinting, setIsPrinting] = useState(false);
+    const certRef = useRef();
+    const navigate = useNavigate();
+    const scrollRef = useRef(null);
+
+    const handlePrint = useReactToPrint({
+        contentRef: certRef,
+        documentTitle: `USAFI_Business_Certificate_${courseId}`,
+        onAfterPrint: () => setIsPrinting(false),
+    });
+
+    const onDownloadCertificate = () => {
+        setIsPrinting(true);
+        setTimeout(() => {
+            handlePrint();
+        }, 500);
+    };
 
     // TTS State
     const [isSpeaking, setIsSpeaking] = useState(false);
@@ -286,12 +307,21 @@ export function BusinessCourseView() {
                 // Logic: "lastChapterId" represents the FURTHEST unlocked chapter.
                 // We only update if nextChapterId > current saved lastChapterId (simplified: just update for now)
 
-                await setDoc(doc(db, 'users', user.uid, 'business_progress', courseId), {
+                const isCompleted = currentIndex === chapters.length - 1;
+
+                const progressData = {
                     courseId,
                     lastChapterId: nextChapterId,
                     updatedAt: serverTimestamp(),
-                    status: currentIndex === chapters.length - 1 ? 'completed' : 'in-progress'
-                }, { merge: true });
+                    status: isCompleted ? 'completed' : 'in-progress'
+                };
+
+                // Award Gamification Badge
+                if (isCompleted) {
+                    progressData.badges = arrayUnion('business_visionary');
+                }
+
+                await setDoc(doc(db, 'users', user.uid, 'business_progress', courseId), progressData, { merge: true });
 
             } catch (err) {
                 console.error("Error unlocking chapter:", err);
@@ -417,10 +447,23 @@ export function BusinessCourseView() {
                                             </button>
                                         </>
                                     )}
-                                    <button onClick={() => setShowNotes(!showNotes)} className={cn("flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 rounded-xl font-black text-[10px] md:text-xs uppercase tracking-widest transition-all active:scale-95 shrink-0", showNotes ? "bg-espresso text-white shadow-xl shadow-espresso/20" : "bg-espresso/5 text-espresso")}>
+                                    <button onClick={() => setShowAI(!showAI)} className={cn("flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 rounded-xl font-black text-[10px] md:text-xs uppercase tracking-widest transition-all active:scale-95 shrink-0", showAI ? "bg-espresso text-white shadow-xl shadow-espresso/20" : "bg-espresso/5 text-espresso hover:bg-espresso/10")}>
+                                        <span className="material-symbols-outlined text-lg">{showAI ? 'smart_toy' : 'chat_bubble'}</span>
+                                        {showAI ? 'Hide AI' : 'Ask AI'}
+                                    </button>
+                                    <button onClick={() => { setShowNotes(!showNotes); setShowAI(false); }} className={cn("flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 rounded-xl font-black text-[10px] md:text-xs uppercase tracking-widest transition-all active:scale-95 shrink-0", showNotes ? "bg-espresso text-white shadow-xl shadow-espresso/20" : "bg-espresso/5 text-espresso")}>
                                         <span className="material-symbols-outlined text-lg">{showNotes ? 'edit_note' : 'note_add'}</span>
                                         {showNotes ? 'Hide' : 'Notes'}
                                     </button>
+                                    {userProgress?.status === 'completed' && (
+                                        <button 
+                                            onClick={onDownloadCertificate}
+                                            className="flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 rounded-xl font-black text-[10px] md:text-xs uppercase tracking-widest transition-all active:scale-95 shrink-0 bg-green-600 text-white shadow-xl shadow-green-600/20 hover:bg-green-700"
+                                        >
+                                            <span className="material-symbols-outlined text-lg">workspace_premium</span>
+                                            {isPrinting ? 'Generating...' : 'Certificate'}
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         </header>
@@ -428,6 +471,22 @@ export function BusinessCourseView() {
                         {/* MODE SWITCHER: READ / QUIZ */}
                         {activeMode === 'read' ? (
                             <>
+                                {/* Video Section */}
+                                {activeChapter.videoUrl && (
+                                    <div className="mb-10 rounded-[2.5rem] overflow-hidden bg-black aspect-video shadow-2xl border-4 border-espresso/10 relative group">
+                                        <iframe
+                                            src={activeChapter.videoUrl.replace('watch?v=', 'embed/')}
+                                            title={activeChapter.title}
+                                            className="w-full h-full"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowFullScreen
+                                        ></iframe>
+                                        <div className="absolute top-4 left-4 bg-espresso/80 backdrop-blur-sm text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
+                                            Video Lesson
+                                        </div>
+                                    </div>
+                                )}
+
                                 <article className="prose prose-stone dark:prose-invert max-w-none">
                                     {activeChapter.imageUrl && (
                                         <div className="relative group overflow-hidden rounded-[2rem] md:rounded-[3rem] shadow-2xl mb-12 border-8 border-white/20">
@@ -685,6 +744,57 @@ export function BusinessCourseView() {
                     className="fixed inset-0 bg-espresso/20 backdrop-blur-sm z-[90] transition-opacity duration-500 animate-fade-in"
                     onClick={() => setShowNotes(false)}
                 />
+            )}
+
+            {/* AI Assistant Drawer */}
+            <BusinessAIAssistant 
+                isOpen={showAI} 
+                onClose={() => setShowAI(false)} 
+                chapterTitle={activeChapter?.title}
+                chapterContent={activeChapter?.content}
+            />
+
+            {/* Overlay for AI */}
+            {showAI && (
+                <div
+                    className="fixed inset-0 bg-espresso/20 backdrop-blur-sm z-[100] transition-opacity duration-500 animate-fade-in"
+                    onClick={() => setShowAI(false)}
+                />
+            )}
+
+            {/* Hidden Certificate for Printing */}
+            <div className="hidden">
+                <div className="print:block">
+                    <StudentCertificate 
+                        ref={certRef}
+                        student={{
+                            fullName: user?.displayName || user?.email,
+                            uid: user?.uid,
+                            courseStartDate: userProgress?.startedAt,
+                            courseEndDate: userProgress?.completedAt || new Date()
+                        }}
+                        courseId={courseId}
+                        courseTitle={course?.title}
+                    />
+                </div>
+            </div>
+
+            {/* Printing Loader Overlay */}
+            {isPrinting && (
+                <div className="fixed inset-0 bg-espresso/40 backdrop-blur-md z-[200] flex items-center justify-center animate-fade-in">
+                    <div className="bg-white dark:bg-[#1c1916] p-8 rounded-[2.5rem] shadow-2xl text-center space-y-6 max-w-sm mx-4 transform animate-scale-up">
+                        <div className="size-20 bg-espresso text-white rounded-2xl mx-auto flex items-center justify-center shadow-xl rotate-3">
+                            <span className="material-symbols-outlined text-4xl animate-bounce">workspace_premium</span>
+                        </div>
+                        <div>
+                            <h3 className="font-serif text-2xl font-black text-espresso dark:text-white uppercase tracking-wider">Preparing Credentials</h3>
+                            <p className="text-espresso/40 dark:text-white/40 text-xs font-bold uppercase tracking-widest mt-2">USAFI Protocol in Progress</p>
+                        </div>
+                        <div className="w-full bg-espresso/5 h-1.5 rounded-full overflow-hidden">
+                            <div className="bg-espresso h-full w-1/2 animate-progress-indeterminate"></div>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );
