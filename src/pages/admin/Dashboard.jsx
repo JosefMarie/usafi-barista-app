@@ -3,6 +3,8 @@ import { collection, query, where, getDocs, orderBy, limit, getCountFromServer, 
 import { useTranslation } from 'react-i18next';
 import { db } from '../../lib/firebase';
 import { Link } from 'react-router-dom';
+import { cn } from '../../lib/utils';
+import { seedSystemData } from '../../lib/dataSeeder';
 
 export function AdminDashboard() {
     const { t, i18n } = useTranslation();
@@ -17,6 +19,22 @@ export function AdminDashboard() {
     const [enrollmentData, setEnrollmentData] = useState([]);
     const [courseStats, setCourseStats] = useState([]);
     const [recentEnrollments, setRecentEnrollments] = useState([]);
+    const [isSyncing, setIsSyncing] = useState(false);
+
+    const handleSync = async () => {
+        if (!window.confirm("Update system content? This will ensure all mandatory modules (like Syrup's Tips) are present.")) return;
+        setIsSyncing(true);
+        try {
+            const results = await seedSystemData(false); // false here because my new logic in dataSeeder handles the check
+            alert(`System updated! Added ${results.courses} courses and ${results.modules} modules.`);
+            window.location.reload(); // Reload to show changes
+        } catch (error) {
+            console.error("Sync failed:", error);
+            alert("Failed to update system content.");
+        } finally {
+            setIsSyncing(false);
+        }
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -210,12 +228,26 @@ export function AdminDashboard() {
                 {/* Header */}
                 <div className="relative">
                     <div className="absolute left-0 top-0 bottom-0 w-2 bg-espresso/20 -ml-4 md:-ml-10"></div>
-                    <p className="text-espresso/40 dark:text-white/40 font-black text-[10px] uppercase tracking-[0.4em] mb-2">
-                        {new Date().toLocaleDateString(i18n.language, { weekday: 'long', month: 'short', day: 'numeric' })}
-                    </p>
-                    <h1 className="text-2xl md:text-4xl lg:text-5xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none">
-                        {t('admin.dashboard.metrics_analytics').split('&')[0]} & <span className="text-espresso/60">{t('admin.dashboard.metrics_analytics').split('&')[1]}</span>
-                    </h1>
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                        <div>
+                            <p className="text-espresso/40 dark:text-white/40 font-black text-[10px] uppercase tracking-[0.4em] mb-2">
+                                {new Date().toLocaleDateString(i18n.language, { weekday: 'long', month: 'short', day: 'numeric' })}
+                            </p>
+                            <h1 className="text-2xl md:text-4xl lg:text-5xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none">
+                                {t('admin.dashboard.metrics_analytics').split('&')[0]} & <span className="text-espresso/60">{t('admin.dashboard.metrics_analytics').split('&')[1]}</span>
+                            </h1>
+                        </div>
+                        <button
+                            onClick={handleSync}
+                            disabled={isSyncing}
+                            className="flex items-center gap-2 px-6 py-3 bg-espresso text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-xl hover:shadow-espresso/40 active:scale-95 transition-all disabled:opacity-50 shrink-0"
+                        >
+                            <span className={cn("material-symbols-outlined text-[18px]", isSyncing && "animate-spin")}>
+                                {isSyncing ? 'progress_activity' : 'sync'}
+                            </span>
+                            {isSyncing ? 'Updating...' : 'Update System Content'}
+                        </button>
+                    </div>
                 </div>
 
                 {/* Top Stats Scrollable Row */}

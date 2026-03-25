@@ -13,11 +13,15 @@ export function ManagerEquipment() {
     const [uploading, setUploading] = useState(false);
 
     const [formData, setFormData] = useState({
+        name: '',
+        category: 'smallwares',
         description: '',
         price: '',
         buyUrl: '',
         image: null,
-        imageUrl: ''
+        imageUrl: '',
+        tags: '',
+        icon: ''
     });
 
     useEffect(() => {
@@ -54,10 +58,14 @@ export function ManagerEquipment() {
             }
 
             const equipmentData = {
+                name: formData.name,
+                category: formData.category,
                 description: formData.description,
                 price: formData.price,
                 buyUrl: formData.buyUrl,
                 imageUrl,
+                tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+                icon: formData.icon || (formData.category === 'machinery' ? 'coffee_maker' : 'hardware'),
                 createdAt: serverTimestamp(),
                 updatedAt: serverTimestamp()
             };
@@ -83,11 +91,15 @@ export function ManagerEquipment() {
     const handleEdit = (item) => {
         setEditingItem(item);
         setFormData({
+            name: item.name || '',
+            category: item.category || 'smallwares',
             description: item.description,
             price: item.price || '',
             buyUrl: item.buyUrl || '',
             image: null,
-            imageUrl: item.imageUrl
+            imageUrl: item.imageUrl,
+            tags: item.tags ? item.tags.join(', ') : '',
+            icon: item.icon || ''
         });
         setIsAdding(true);
     };
@@ -110,11 +122,15 @@ export function ManagerEquipment() {
 
     const resetForm = () => {
         setFormData({
+            name: '',
+            category: 'smallwares',
             description: '',
             price: '',
             buyUrl: '',
             image: null,
-            imageUrl: ''
+            imageUrl: '',
+            tags: '',
+            icon: ''
         });
         setEditingItem(null);
         setIsAdding(false);
@@ -146,6 +162,34 @@ export function ManagerEquipment() {
                         <form onSubmit={handleSubmit} className="space-y-8">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div className="space-y-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em] ml-2">Tool Name (Required)</label>
+                                            <input
+                                                type="text"
+                                                required
+                                                value={formData.name}
+                                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                                className="w-full p-4 bg-white/60 dark:bg-black/40 border border-espresso/10 rounded-2xl focus:ring-2 focus:ring-espresso focus:border-transparent outline-none transition-all"
+                                                placeholder="e.g. Espresso Machine"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em] ml-2">Category (Required)</label>
+                                            <select
+                                                required
+                                                value={formData.category}
+                                                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                                                className="w-full p-4 bg-white/60 dark:bg-black/40 border border-espresso/10 rounded-2xl focus:ring-2 focus:ring-espresso focus:border-transparent outline-none transition-all"
+                                            >
+                                                <option value="machinery">Core Machinery</option>
+                                                <option value="smallwares">Barista Smallwares</option>
+                                                <option value="serving">Serving & Inventory</option>
+                                                <option value="hygiene">Hygiene & Safety</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
                                     <div className="space-y-2">
                                         <label className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em] ml-2">Tool Description (Required)</label>
                                         <textarea
@@ -176,6 +220,29 @@ export function ManagerEquipment() {
                                                 onChange={(e) => setFormData({ ...formData, buyUrl: e.target.value })}
                                                 className="w-full p-4 bg-white/60 dark:bg-black/40 border border-espresso/10 rounded-2xl focus:ring-2 focus:ring-espresso focus:border-transparent outline-none transition-all"
                                                 placeholder="https://..."
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em] ml-2">Tags (Comma Separated)</label>
+                                            <input
+                                                type="text"
+                                                value={formData.tags}
+                                                onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+                                                className="w-full p-4 bg-white/60 dark:bg-black/40 border border-espresso/10 rounded-2xl focus:ring-2 focus:ring-espresso focus:border-transparent outline-none transition-all"
+                                                placeholder="Core Essential, Precision"
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black text-espresso/40 uppercase tracking-[0.3em] ml-2">Icon Name (Material Symbol)</label>
+                                            <input
+                                                type="text"
+                                                value={formData.icon}
+                                                onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
+                                                className="w-full p-4 bg-white/60 dark:bg-black/40 border border-espresso/10 rounded-2xl focus:ring-2 focus:ring-espresso focus:border-transparent outline-none transition-all"
+                                                placeholder="e.g. coffee_maker"
                                             />
                                         </div>
                                     </div>
@@ -259,13 +326,25 @@ export function ManagerEquipment() {
 
                                 <div className="p-8 space-y-4">
                                     <div className="flex justify-between items-start">
-                                        <p className="text-[8px] font-black text-espresso/30 uppercase tracking-[0.4em]">SPECIFICATION</p>
-                                        {item.price && (
-                                            <span className="px-3 py-1 bg-espresso/5 border border-espresso/10 rounded-lg text-espresso text-[9px] font-black uppercase tracking-widest">
-                                                {item.price}
+                                        <div>
+                                            <p className="text-[8px] font-black text-espresso/30 uppercase tracking-[0.4em] mb-1">SPECIFICATION</p>
+                                            <h3 className="font-serif text-xl font-black text-espresso dark:text-white uppercase tracking-tight">{item.name || 'Unnamed Tool'}</h3>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-[8px] font-black text-espresso/30 uppercase tracking-[0.4em] mb-1">CATEGORY</p>
+                                            <span className="px-3 py-1 bg-espresso/5 border border-espresso/10 rounded-lg text-espresso text-[9px] font-black uppercase tracking-widest block">
+                                                {item.category?.toUpperCase() || 'SMALLWARES'}
                                             </span>
-                                        )}
+                                        </div>
                                     </div>
+                                    
+                                    {item.price && (
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-[8px] font-black text-primary/60 uppercase tracking-[0.2em]">EST. VALUE:</span>
+                                            <span className="text-sm font-black text-primary">{item.price}</span>
+                                        </div>
+                                    )}
+
                                     <p className="text-espresso/70 dark:text-white/70 text-sm font-medium leading-relaxed line-clamp-3 group-hover:line-clamp-none transition-all">
                                         {item.description}
                                     </p>

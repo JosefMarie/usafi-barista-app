@@ -435,6 +435,46 @@ export function StudentCourseView() {
         handleAnswer(qIdx, newOrder);
     };
 
+    const finalizeNoExamModule = async () => {
+        if (!user || !moduleId || !module) return;
+        try {
+            const score = 80;
+            const passed = true;
+            setQuizResult({ score, passed });
+
+            const updateData = {
+                courseId,
+                moduleId,
+                score,
+                passed,
+                completedAt: serverTimestamp(),
+                status: 'completed',
+                attempts: (stats.attempts || 0) + 1,
+                isNoExamModule: true
+            };
+
+            await setDoc(doc(db, 'users', user.uid, 'progress', moduleId), updateData, { merge: true });
+
+            // Log completion activity
+            await addDoc(collection(db, 'activity'), {
+                userId: user.uid,
+                userName: user.name || user.fullName || user.email,
+                action: `Completed informational module: ${module.title}`,
+                status: 'passed',
+                score,
+                type: 'module_completion',
+                icon: 'auto_stories',
+                timestamp: serverTimestamp(),
+                moduleId,
+                courseId
+            });
+
+            setStats(prev => ({ ...prev, passed: true, attempts: (prev.attempts || 0) + 1 }));
+        } catch (error) {
+            console.error("Error finalizing module:", error);
+        }
+    };
+
     const progressPercent = activeContent.length
         ? Math.round(((currentSlide + 1) / activeContent.length) * 100)
         : 0;
@@ -578,60 +618,95 @@ export function StudentCourseView() {
                                                 <span className="material-symbols-outlined text-4xl md:text-5xl">quiz</span>
                                             </div>
                                             <div className="text-center md:text-left">
-                                                <h2 className="text-xl md:text-4xl font-serif font-black text-espresso dark:text-white mb-2 md:mb-4">{t('student.quiz.title')}</h2>
-                                                <p className="text-[8px] md:text-sm font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.2em] mb-6 md:mb-8">{t('student.quiz.subtitle')}</p>
-                                                <div className="space-y-3 md:space-y-4 text-left">
-                                                    <div className="flex items-center gap-3 md:gap-5 p-3 md:p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
-                                                        <div className="size-8 md:size-12 rounded-xl bg-espresso/5 flex items-center justify-center shrink-0">
-                                                            <span className="material-symbols-outlined text-espresso text-xl md:text-2xl">timer_10_alt_1</span>
+                                                {module.noExam ? (
+                                                    <>
+                                                        <h2 className="text-xl md:text-4xl font-serif font-black text-espresso dark:text-white mb-2 md:mb-4">Content Mastery Finalization</h2>
+                                                        <p className="text-[8px] md:text-sm font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.2em] mb-6 md:mb-8">Informational Module Completion</p>
+                                                        <div className="space-y-3 md:space-y-4 text-left">
+                                                            <div className="flex items-center gap-3 md:gap-5 p-3 md:p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
+                                                                <div className="size-8 md:size-12 rounded-xl bg-espresso/5 flex items-center justify-center shrink-0">
+                                                                    <span className="material-symbols-outlined text-espresso text-xl md:text-2xl">auto_stories</span>
+                                                                </div>
+                                                                <div>
+                                                                    <p className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-0.5">Static Content Module</p>
+                                                                    <p className="text-[10px] md:text-sm font-bold text-espresso dark:text-white leading-tight">This module is for informative purposes and does not require a formal assessment.</p>
+                                                                </div>
+                                                            </div>
+                                                            <div className="flex items-center gap-3 md:gap-5 p-3 md:p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
+                                                                <div className="size-8 md:size-12 rounded-xl bg-espresso/5 flex items-center justify-center shrink-0">
+                                                                    <span className="material-symbols-outlined text-espresso text-xl md:text-2xl">workspace_premium</span>
+                                                                </div>
+                                                                <div>
+                                                                    <p className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-0.5">Fixed Scoring</p>
+                                                                    <p className="text-[10px] md:text-sm font-bold text-espresso dark:text-white leading-tight">Completing this module will award you 80% marks on your official transcript.</p>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div>
-                                                            <p className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-0.5">{t('student.quiz.rules.timer.title')}</p>
-                                                            <p className="text-[10px] md:text-sm font-bold text-espresso dark:text-white leading-tight">{t('student.quiz.rules.timer.desc')}</p>
+                                                        <button onClick={finalizeNoExamModule} className="mt-8 w-full py-4 md:py-6 bg-espresso text-white font-black uppercase tracking-[0.3em] text-[10px] md:text-sm rounded-2xl shadow-xl active:scale-95 transition-all hover:bg-black hover:shadow-espresso/20 flex items-center justify-center gap-3">
+                                                            Finalize Content Mastery
+                                                            <span className="material-symbols-outlined text-lg">check_circle</span>
+                                                        </button>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <h2 className="text-xl md:text-4xl font-serif font-black text-espresso dark:text-white mb-2 md:mb-4">{t('student.quiz.title')}</h2>
+                                                        <p className="text-[8px] md:text-sm font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.2em] mb-6 md:mb-8">{t('student.quiz.subtitle')}</p>
+                                                        <div className="space-y-3 md:space-y-4 text-left">
+                                                            <div className="flex items-center gap-3 md:gap-5 p-3 md:p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
+                                                                <div className="size-8 md:size-12 rounded-xl bg-espresso/5 flex items-center justify-center shrink-0">
+                                                                    <span className="material-symbols-outlined text-espresso text-xl md:text-2xl">timer_10_alt_1</span>
+                                                                </div>
+                                                                <div>
+                                                                    <p className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-0.5">{t('student.quiz.rules.timer.title')}</p>
+                                                                    <p className="text-[10px] md:text-sm font-bold text-espresso dark:text-white leading-tight">{t('student.quiz.rules.timer.desc')}</p>
+                                                                </div>
+                                                            </div>
+                                                            <div className="flex items-center gap-3 md:gap-5 p-3 md:p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
+                                                                <div className="size-8 md:size-12 rounded-xl bg-espresso/5 flex items-center justify-center shrink-0">
+                                                                    <span className="material-symbols-outlined text-espresso text-xl md:text-2xl">workspace_premium</span>
+                                                                </div>
+                                                                <div>
+                                                                    <p className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-0.5">{t('student.quiz.rules.pass_mark.title')}</p>
+                                                                    <p className="text-[10px] md:text-sm font-bold text-espresso dark:text-white leading-tight" dangerouslySetInnerHTML={{ __html: t('student.quiz.rules.pass_mark.desc', { passMark: activeQuiz?.passMark || 70 }) }} />
+                                                                </div>
+                                                            </div>
+                                                            <div className="flex items-center gap-3 md:gap-5 p-3 md:p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
+                                                                <div className="size-8 md:size-12 rounded-xl bg-espresso/5 flex items-center justify-center shrink-0">
+                                                                    <span className="material-symbols-outlined text-espresso text-xl md:text-2xl">event_repeat</span>
+                                                                </div>
+                                                                <div>
+                                                                    <p className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-0.5">{t('student.quiz.rules.attempt_limit.title')}</p>
+                                                                    <p className="text-[10px] md:text-sm font-bold text-espresso dark:text-white leading-tight">{t('student.quiz.rules.attempt_limit.desc')}</p>
+                                                                </div>
+                                                            </div>
+                                                            <div className="flex items-center gap-3 md:gap-5 p-3 md:p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
+                                                                <div className="size-8 md:size-12 rounded-xl bg-espresso/5 flex items-center justify-center shrink-0">
+                                                                    <span className="material-symbols-outlined text-espresso text-xl md:text-2xl">payments</span>
+                                                                </div>
+                                                                <div>
+                                                                    <p className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-0.5">{t('student.quiz.rules.retake_policy.title')}</p>
+                                                                    <p className="text-[10px] md:text-sm font-bold text-espresso dark:text-white leading-tight">{t('student.quiz.rules.retake_policy.desc')}</p>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div className="flex items-center gap-3 md:gap-5 p-3 md:p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
-                                                        <div className="size-8 md:size-12 rounded-xl bg-espresso/5 flex items-center justify-center shrink-0">
-                                                            <span className="material-symbols-outlined text-espresso text-xl md:text-2xl">workspace_premium</span>
-                                                        </div>
-                                                        <div>
-                                                            <p className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-0.5">{t('student.quiz.rules.pass_mark.title')}</p>
-                                                            <p className="text-[10px] md:text-sm font-bold text-espresso dark:text-white leading-tight" dangerouslySetInnerHTML={{ __html: t('student.quiz.rules.pass_mark.desc', { passMark: activeQuiz?.passMark || 70 }) }} />
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex items-center gap-3 md:gap-5 p-3 md:p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
-                                                        <div className="size-8 md:size-12 rounded-xl bg-espresso/5 flex items-center justify-center shrink-0">
-                                                            <span className="material-symbols-outlined text-espresso text-xl md:text-2xl">event_repeat</span>
-                                                        </div>
-                                                        <div>
-                                                            <p className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-0.5">{t('student.quiz.rules.attempt_limit.title')}</p>
-                                                            <p className="text-[10px] md:text-sm font-bold text-espresso dark:text-white leading-tight">{t('student.quiz.rules.attempt_limit.desc')}</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex items-center gap-3 md:gap-5 p-3 md:p-6 rounded-2xl bg-white/40 dark:bg-white/5 border border-espresso/5 shadow-sm">
-                                                        <div className="size-8 md:size-12 rounded-xl bg-espresso/5 flex items-center justify-center shrink-0">
-                                                            <span className="material-symbols-outlined text-espresso text-xl md:text-2xl">payments</span>
-                                                        </div>
-                                                        <div>
-                                                            <p className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-0.5">{t('student.quiz.rules.retake_policy.title')}</p>
-                                                            <p className="text-[10px] md:text-sm font-bold text-espresso dark:text-white leading-tight">{t('student.quiz.rules.retake_policy.desc')}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                    </>
+                                                )}
                                             </div>
                                         </div>
-                                        {!stats.passed ? (
-                                            <button onClick={startQuiz} className="w-full py-4 md:py-6 bg-espresso text-white font-black uppercase tracking-[0.3em] text-[10px] md:text-sm rounded-2xl shadow-xl active:scale-95 transition-all hover:bg-black hover:shadow-espresso/20 flex items-center justify-center gap-3">
-                                                {t('student.quiz.start_btn')}
-                                                <span className="material-symbols-outlined text-lg">play_arrow</span>
-                                            </button>
-                                        ) : (
-                                            <div className="p-6 md:p-8 bg-green-500/10 border border-green-500/20 rounded-2xl text-center">
-                                                <span className="material-symbols-outlined text-4xl text-green-600 mb-2">verified</span>
-                                                <p className="text-green-700 font-bold uppercase tracking-widest text-[10px] md:text-xs">You have already mastered this module.</p>
-                                                <p className="text-green-600/60 text-[9px] md:text-[10px] mt-1 uppercase tracking-tight">Accessing notes is permitted, but evaluation is finalized.</p>
-                                            </div>
-                                        )}
+                                            {!module.noExam && (
+                                                !stats.passed ? (
+                                                    <button onClick={startQuiz} className="w-full py-4 md:py-6 bg-espresso text-white font-black uppercase tracking-[0.3em] text-[10px] md:text-sm rounded-2xl shadow-xl active:scale-95 transition-all hover:bg-black hover:shadow-espresso/20 flex items-center justify-center gap-3">
+                                                        {t('student.quiz.start_btn')}
+                                                        <span className="material-symbols-outlined text-lg">play_arrow</span>
+                                                    </button>
+                                                ) : (
+                                                    <div className="p-6 md:p-8 bg-green-500/10 border border-green-500/20 rounded-2xl text-center">
+                                                        <span className="material-symbols-outlined text-4xl text-green-600 mb-2">verified</span>
+                                                        <p className="text-green-700 font-bold uppercase tracking-widest text-[10px] md:text-xs">You have already mastered this module.</p>
+                                                        <p className="text-green-600/60 text-[9px] md:text-[10px] mt-1 uppercase tracking-tight">Accessing notes is permitted, but evaluation is finalized.</p>
+                                                    </div>
+                                                )
+                                            )}
                                     </div>
                                 ) : (
                                     <div className="space-y-6">

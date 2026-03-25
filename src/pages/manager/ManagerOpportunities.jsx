@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc, serverTimestamp, getDocs, where } from 'firebase/firestore';
-import { ref, deleteObject } from 'firebase/storage';
+import { collection, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc, serverTimestamp, getDocs, where, addDoc } from 'firebase/firestore';
+import { ref, deleteObject, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../../lib/firebase';
 import { GradientButton } from '../../components/ui/GradientButton';
 import { cn } from '../../lib/utils';
@@ -11,6 +11,25 @@ export function ManagerOpportunities() {
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState('pending'); // 'pending', 'approved', 'rejected'
     const [previewImage, setPreviewImage] = useState(null);
+    const [showCreateForm, setShowCreateForm] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+    const [imageFile, setImageFile] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
+    
+    // Form state for new opportunity
+    const [formData, setFormData] = useState({
+        orgName: '',
+        location: '',
+        contactPhone: '',
+        contactEmail: '',
+        type: 'Barista',
+        salaryRange: '',
+        genderPreference: 'Any',
+        jobType: 'Full Time',
+        experience: '',
+        applicationLink: '',
+        deadline: ''
+    });
 
     useEffect(() => {
         const q = query(collection(db, 'opportunities'), orderBy('createdAt', 'desc'));
@@ -97,6 +116,69 @@ export function ManagerOpportunities() {
         }
     };
 
+    const handleCreateChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setImageFile(file);
+            const reader = new FileReader();
+            reader.onloadend = () => setImagePreview(reader.result);
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleCreateSubmit = async (e) => {
+        e.preventDefault();
+        setSubmitting(true);
+
+        try {
+            let imageUrl = '';
+            if (imageFile) {
+                const storageRef = ref(storage, `opportunities/${Date.now()}_${imageFile.name}`);
+                const uploadResult = await uploadBytes(storageRef, imageFile);
+                imageUrl = await getDownloadURL(uploadResult.ref);
+            }
+
+            await addDoc(collection(db, 'opportunities'), {
+                ...formData,
+                imageUrl,
+                status: 'approved',
+                createdAt: serverTimestamp(),
+                approvedAt: serverTimestamp(),
+                deadline: formData.deadline ? new Date(formData.deadline) : null,
+                targetAudience: ['public']
+            });
+
+            // Reset form
+            setFormData({
+                orgName: '',
+                location: '',
+                contactPhone: '',
+                contactEmail: '',
+                type: 'Barista',
+                salaryRange: '',
+                genderPreference: 'Any',
+                jobType: 'Full Time',
+                experience: '',
+                applicationLink: '',
+                deadline: ''
+            });
+            setImageFile(null);
+            setImagePreview(null);
+            setShowCreateForm(false);
+            alert("Opportunity created and published successfully!");
+        } catch (error) {
+            console.error("Error creating opportunity:", error);
+            alert("Failed to create opportunity");
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
     const handleDelete = async (job) => {
         if (!window.confirm("Are you sure you want to delete this opportunity?")) return;
         try {
@@ -130,7 +212,196 @@ export function ManagerOpportunities() {
                         <h1 className="text-2xl md:text-4xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight leading-none">Professional Opportunities</h1>
                         <p className="text-[9px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] mt-1 md:mt-2">Career Support & Institutional Placement Oversight</p>
                     </div>
+
+                    <button
+                        onClick={() => setShowCreateForm(!showCreateForm)}
+                        className={cn(
+                            "flex items-center gap-2 px-6 py-4 rounded-2xl font-serif font-black uppercase tracking-tight transition-all",
+                            showCreateForm 
+                                ? "bg-white/40 text-espresso border border-espresso/10" 
+                                : "bg-espresso text-white shadow-xl shadow-espresso/20 hover:-translate-y-1"
+                        )}
+                    >
+                        <span className="material-symbols-outlined">{showCreateForm ? 'close' : 'add'}</span>
+                        {showCreateForm ? 'Cancel Creation' : 'New Opportunity'}
+                    </button>
                 </div>
+
+                {/* Creation Form */}
+                {showCreateForm && (
+                    <div className="bg-white/60 dark:bg-black/40 rounded-[2.5rem] border border-espresso/10 p-8 md:p-12 shadow-2xl animate-in slide-in-from-top duration-500">
+                        <div className="flex items-center gap-4 mb-10 pb-6 border-b border-espresso/5">
+                            <div className="w-12 h-12 rounded-xl bg-espresso text-white flex items-center justify-center">
+                                <span className="material-symbols-outlined">post_add</span>
+                            </div>
+                            <div>
+                                <h2 className="text-xl md:text-2xl font-serif font-black text-espresso dark:text-white uppercase tracking-tight">Post New Opportunity</h2>
+                                <p className="text-[8px] md:text-[9px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.3em] mt-1">Automatic Authorization Enabled</p>
+                            </div>
+                        </div>
+
+                        <form onSubmit={handleCreateSubmit} className="space-y-10">
+                            {/* Section: Core Logistics */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                <div className="space-y-2">
+                                    <label className="text-[9px] font-black text-espresso/40 uppercase tracking-[0.4em] ml-2">Organization Name</label>
+                                    <input
+                                        required
+                                        type="text"
+                                        name="orgName"
+                                        value={formData.orgName}
+                                        onChange={handleCreateChange}
+                                        placeholder="e.g. Usafi Kigali Lounge"
+                                        className="w-full h-14 bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-2xl px-6 font-black text-espresso dark:text-white placeholder:text-espresso/20 outline-none focus:border-espresso transition-all"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-[9px] font-black text-espresso/40 uppercase tracking-[0.4em] ml-2">Geographical Vector (Location)</label>
+                                    <input
+                                        required
+                                        type="text"
+                                        name="location"
+                                        value={formData.location}
+                                        onChange={handleCreateChange}
+                                        placeholder="e.g. Kimihurura, Kigali"
+                                        className="w-full h-14 bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-2xl px-6 font-black text-espresso dark:text-white placeholder:text-espresso/20 outline-none focus:border-espresso transition-all"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-[9px] font-black text-espresso/40 uppercase tracking-[0.4em] ml-2">Role Stream</label>
+                                    <select
+                                        name="type"
+                                        value={formData.type}
+                                        onChange={handleCreateChange}
+                                        className="w-full h-14 bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-2xl px-6 font-black text-espresso dark:text-white outline-none focus:border-espresso transition-all"
+                                    >
+                                        <option value="Barista">BARISTA CORE</option>
+                                        <option value="Bartender">BARTENDER UNIT</option>
+                                        <option value="Service">SERVICE / WAIT STAFF</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            {/* Section: Operational Specifics */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                <div className="space-y-2">
+                                    <label className="text-[9px] font-black text-espresso/40 uppercase tracking-[0.4em] ml-2">Contact Primary (Phone)</label>
+                                    <input
+                                        required
+                                        type="tel"
+                                        name="contactPhone"
+                                        value={formData.contactPhone}
+                                        onChange={handleCreateChange}
+                                        placeholder="+250..."
+                                        className="w-full h-14 bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-2xl px-6 font-black text-espresso dark:text-white placeholder:text-espresso/20 outline-none focus:border-espresso transition-all"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-[9px] font-black text-espresso/40 uppercase tracking-[0.4em] ml-2">Contact Digital (Email)</label>
+                                    <input
+                                        required
+                                        type="email"
+                                        name="contactEmail"
+                                        value={formData.contactEmail}
+                                        onChange={handleCreateChange}
+                                        placeholder="liaison@org.rw"
+                                        className="w-full h-14 bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-2xl px-6 font-black text-espresso dark:text-white placeholder:text-espresso/20 outline-none focus:border-espresso transition-all"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-[9px] font-black text-espresso/40 uppercase tracking-[0.4em] ml-2">Salary Range / Compensation</label>
+                                    <input
+                                        type="text"
+                                        name="salaryRange"
+                                        value={formData.salaryRange}
+                                        onChange={handleCreateChange}
+                                        placeholder="e.g. 200k - 400k RWF"
+                                        className="w-full h-14 bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-2xl px-6 font-black text-espresso dark:text-white placeholder:text-espresso/20 outline-none focus:border-espresso transition-all"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Section: Institutional Requirements */}
+                            <div className="space-y-2">
+                                <label className="text-[9px] font-black text-espresso/40 uppercase tracking-[0.4em] ml-2">Institutional Requirements / Experience</label>
+                                <textarea
+                                    required
+                                    name="experience"
+                                    rows="4"
+                                    value={formData.experience}
+                                    onChange={handleCreateChange}
+                                    placeholder="Define the technical and professional profile required..."
+                                    className="w-full bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-[2rem] p-8 font-serif italic text-espresso dark:text-white placeholder:text-espresso/20 outline-none focus:border-espresso transition-all resize-none"
+                                ></textarea>
+                            </div>
+
+                            {/* Section: Assets & Extensions */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
+                                <div className="space-y-6">
+                                    <div className="space-y-2">
+                                        <label className="text-[9px] font-black text-espresso/40 uppercase tracking-[0.4em] ml-2">Application Link (Digital Portal)</label>
+                                        <input
+                                            type="url"
+                                            name="applicationLink"
+                                            value={formData.applicationLink}
+                                            onChange={handleCreateChange}
+                                            placeholder="https://..."
+                                            className="w-full h-14 bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-2xl px-6 font-black text-espresso dark:text-white placeholder:text-espresso/20 outline-none focus:border-espresso transition-all"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[9px] font-black text-espresso/40 uppercase tracking-[0.4em] ml-2">Submission Deadline</label>
+                                        <input
+                                            type="date"
+                                            name="deadline"
+                                            value={formData.deadline}
+                                            onChange={handleCreateChange}
+                                            className="w-full h-14 bg-white/40 dark:bg-black/20 border border-espresso/10 rounded-2xl px-6 font-black text-espresso dark:text-white outline-none focus:border-espresso transition-all"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-[9px] font-black text-espresso/40 uppercase tracking-[0.4em] ml-2">Visual Asset (Opportunity Flier)</label>
+                                    <div 
+                                        onClick={() => document.getElementById('mgr-image-upload').click()}
+                                        className="h-full min-h-[160px] bg-white text-espresso border-2 border-dashed border-espresso/10 rounded-[2rem] flex flex-col items-center justify-center cursor-pointer hover:border-espresso transition-all group overflow-hidden relative"
+                                    >
+                                        {imagePreview ? (
+                                            <>
+                                                <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <span className="text-white text-[10px] font-black uppercase tracking-widest">Swap Asset</span>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <span className="material-symbols-outlined text-4xl opacity-10">add_a_photo</span>
+                                                <span className="text-[9px] font-black uppercase tracking-widest opacity-30 mt-2">Upload Visual Vector</span>
+                                            </>
+                                        )}
+                                    </div>
+                                    <input 
+                                        id="mgr-image-upload"
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleImageChange}
+                                        className="hidden"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="flex justify-end pt-10">
+                                <GradientButton 
+                                    disabled={submitting} 
+                                    className="!h-16 !px-16 !rounded-2xl shadow-2xl hover:scale-105 transition-transform"
+                                >
+                                    {submitting ? 'PROCESSING LEDGER...' : 'AUTHORIZE & PUBLISH'}
+                                </GradientButton>
+                            </div>
+                        </form>
+                    </div>
+                )}
 
                 {/* Filter Matrix */}
                 <div className="flex gap-2 md:gap-4 p-1 md:p-1.5 bg-white/40 dark:bg-black/20 rounded-xl md:rounded-[1.5rem] border border-espresso/10 backdrop-blur-md w-full sm:w-fit shadow-sm overflow-x-auto no-scrollbar">
