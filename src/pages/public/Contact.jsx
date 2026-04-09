@@ -112,7 +112,7 @@ export function Contact() {
                                 <div>
                                     <h4 className="font-bold text-lg text-espresso dark:text-white mb-1">{t('contact.info.email')}</h4>
                                     <p className="text-espresso/70 dark:text-white/70">
-                                        <a href="mailto:info@usafibarista.com" className="hover:text-primary transition-colors">info@usafibarista.com</a>
+                                        <a href="mailto:info@usafi-barista.com" className="hover:text-primary transition-colors">info@usafi-barista.com</a>
                                     </p>
                                 </div>
                             </div>

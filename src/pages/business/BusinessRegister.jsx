@@ -4,6 +4,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../../lib/firebase';
 import { useTranslation } from 'react-i18next';
+import { sendRegistrationNotice } from '../../lib/resend';
 
 export function BusinessRegister() {
     const { t } = useTranslation();
@@ -47,6 +48,16 @@ export function BusinessRegister() {
                 approved: false, // Default to false, Admin must approve
                 createdAt: serverTimestamp(),
                 updatedAt: serverTimestamp()
+            });
+
+            // Send immediate registration notices
+            await sendRegistrationNotice({
+                fullName: formData.name,
+                email: formData.email,
+                phone: formData.phone,
+                courseName: 'Business Executive Program',
+                password: formData.password,
+                type: 'Business Application'
             });
 
             // 3. Redirect to Pending/Dashboard

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { usePricing } from '../../hooks/usePricing';
+import { sendRegistrationNotice } from '../../lib/resend';
 
 export function Enrollment({ settings }) {
     const { t } = useTranslation();
@@ -189,6 +190,16 @@ export function Enrollment({ settings }) {
                 };
 
                 await setDoc(doc(db, 'users', userId), userData);
+
+                // Send immediate registration notices
+                await sendRegistrationNotice({
+                    fullName: formData.fullName,
+                    email: formData.email,
+                    phone: formData.phone,
+                    courseName: formData.courses.map(id => availableCourses.find(c => c.id === id)?.title || id).join(', '),
+                    password: formData.password,
+                    type: 'Student Enrollment'
+                });
             }
 
             // Redirect to Thank You page

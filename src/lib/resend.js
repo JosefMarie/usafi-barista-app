@@ -86,3 +86,20 @@ export const replyToInquiry = async (data) => {
         throw new Error(error.message || 'Failed to send reply via Resend.');
     }
 };
+
+/**
+ * Sends a registration notice (welcome email to user + alert to admin).
+ * 
+ * @param {Object} data - { fullName, email, phone, courseName, password, type }
+ */
+export const sendRegistrationNotice = async (data) => {
+    try {
+        const noticeFn = httpsCallable(functions, 'sendRegistrationNotice');
+        const result = await noticeFn(data);
+        return result.data;
+    } catch (error) {
+        console.error('Error calling sendRegistrationNotice function:', error);
+        // We don't throw here to avoid blocking the main registration flow if email fails
+        return { success: false, error: error.message };
+    }
+};

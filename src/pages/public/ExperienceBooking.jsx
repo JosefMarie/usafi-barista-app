@@ -8,6 +8,7 @@ import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'fire
 import { SEO } from '../../components/common/SEO';
 import { addDays, format, startOfToday, nextSaturday, nextSunday, isSaturday, isSunday } from 'date-fns';
 import { usePricing } from '../../hooks/usePricing';
+import { sendRegistrationNotice } from '../../lib/resend';
 
 // ─── Data (must match WeekendExperience.jsx) ──────────────────────────────────
 
@@ -84,6 +85,16 @@ function PaymentForm({ formData, totalPrice, finalTotal, bookingDetails, onNext,
                         createdAt: serverTimestamp(),
                         phoneNumber: formData.phone,
                         country: formData.country || ''
+                    });
+
+                    // Send immediate registration notices (only for new guests)
+                    await sendRegistrationNotice({
+                        fullName: formData.fullName,
+                        email: formData.email,
+                        phone: formData.phone,
+                        courseName: 'Weekend Coffee Experience',
+                        password: formData.password,
+                        type: 'Weekend Guest Registration'
                     });
                 }
             } catch (authErr) {

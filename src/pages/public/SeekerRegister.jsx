@@ -4,6 +4,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../../lib/firebase';
 import { GradientButton } from '../../components/ui/GradientButton';
+import { sendRegistrationNotice } from '../../lib/resend';
 
 export function SeekerRegister() {
     const navigate = useNavigate();
@@ -51,6 +52,16 @@ export function SeekerRegister() {
                 paymentStatus: 'pending',
                 createdAt: serverTimestamp(),
                 status: 'active'
+            });
+
+            // Send immediate registration notices
+            await sendRegistrationNotice({
+                fullName: formData.name,
+                email: formData.email,
+                phone: formData.phone,
+                courseName: 'Career Seeker Profile',
+                password: formData.password,
+                type: 'Job Seeker Registration'
             });
 
             // 3. Navigate to Payment Pending Page

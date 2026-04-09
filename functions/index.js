@@ -1,40 +1,263 @@
-const functions = require('firebase-functions');
+const { onCall, HttpsError } = require("firebase-functions/v2/https");
+const { onDocumentUpdated } = require("firebase-functions/v2/firestore");
+const { setGlobalOptions } = require("firebase-functions/v2");
 const admin = require('firebase-admin');
 const { Resend } = require('resend');
+const { PDFDocument, rgb, StandardFonts } = require('pdf-lib');
 
+// Initialize Firebase Admin
 admin.initializeApp();
+
+// Set global options for all v2 functions
+setGlobalOptions({ maxInstances: 10, region: 'us-central1' });
+
+/**
+ * Shared branding constants for emails and documents
+ */
+const BRAND = {
+    espresso: '#31211b',
+    cream: '#F5DEB3',
+    gold: '#D4Af37',
+    white: '#FFFFFF',
+    font: 'serif',
+    sender: 'Usaffi Barista <info@usafi-barista.com>',
+    adminEmail: 'usaficoffee@gmail.com'
+};
+
+/**
+ * Returns a high-fidelity HTML template for emails
+ */
+function getBrandedTemplate(type, data) {
+    const header = `
+        <div style="background-color: ${BRAND.espresso}; padding: 40px 20px; text-align: center; border-radius: 20px 20px 0 0;">
+            <h1 style="color: ${BRAND.white}; margin: 0; font-family: 'Playfair Display', serif; letter-spacing: 2px; text-transform: uppercase; font-size: 28px;">Usaffi Barista</h1>
+            <p style="color: ${BRAND.gold}; margin: 10px 0 0; font-family: sans-serif; letter-spacing: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase;">International Training Center</p>
+        </div>
+    `;
+
+    const footer = `
+        <div style="background-color: #f9f7f2; padding: 30px 20px; text-align: center; border-radius: 0 0 20px 20px; border-top: 1px solid ${BRAND.cream};">
+            <p style="color: ${BRAND.espresso}; margin: 0; font-family: sans-serif; font-size: 14px; font-weight: bold;">Authenticity. Artistry. Excellence.</p>
+            <p style="color: #999; margin: 10px 0 0; font-family: sans-serif; font-size: 11px;">
+                Rubangura Plaza, Kigali, Rwanda<br>
+                www.usafi-barista.com | info@usafi-barista.com
+            </p>
+        </div>
+    `;
+
+    let content = '';
+
+    switch (type) {
+        case 'welcome_pending':
+            content = `
+                <div style="padding: 40px; background-color: ${BRAND.white}; font-family: sans-serif;">
+                    <h2 style="color: ${BRAND.espresso}; margin-top: 0;">Hello ${data.fullName},</h2>
+                    <p style="color: #444; line-height: 1.6; font-size: 16px;">
+                        Thank you for applying to the <b>Usaffi Barista International Training Center</b>. Your application for the <b>${data.courseName || 'program'}</b> has been received and is currently under review by our admissions team.
+                    </p>
+                    
+                    <div style="background-color: #fcfaf5; padding: 25px; border-radius: 15px; border-left: 5px solid ${BRAND.gold}; margin: 30px 0;">
+                        <h4 style="color: ${BRAND.espresso}; margin-top: 0; text-transform: uppercase; font-size: 12px; letter-spacing: 1px;">Your Login Credentials</h4>
+                        <p style="color: #666; margin: 5px 0; font-size: 14px;">Email: <b>${data.email}</b></p>
+                        <p style="color: #666; margin: 5px 0; font-size: 14px;">Password: <b>${data.password}</b></p>
+                        <p style="color: #999; margin-top: 15px; font-size: 11px; font-style: italic;">Note: Keep these credentials safe. You will be able to access the student portal once your application is approved.</p>
+                    </div>
+
+                    <p style="color: #444; line-height: 1.6; font-size: 16px;">
+                        <b>Next Steps:</b><br>
+                        Our team will verify your details and payment (if submitted). You will receive another email the moment your account is activated.
+                    </p>
+                </div>
+            `;
+            break;
+
+        case 'admin_alert':
+            content = `
+                <div style="padding: 40px; background-color: ${BRAND.white}; font-family: sans-serif;">
+                    <h2 style="color: ${BRAND.espresso}; margin-top: 0;">New Registration Alert</h2>
+                    <p style="color: #444; line-height: 1.6; font-size: 16px;">
+                        A new application has been submitted on the platform.
+                    </p>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                        <tr><td style="padding: 10px; border-bottom: 1px solid #eee; color: #999; font-size: 12px; text-transform: uppercase;">Applicant</td><td style="padding: 10px; border-bottom: 1px solid #eee; font-weight: bold; color: ${BRAND.espresso};">${data.fullName}</td></tr>
+                        <tr><td style="padding: 10px; border-bottom: 1px solid #eee; color: #999; font-size: 12px; text-transform: uppercase;">Email</td><td style="padding: 10px; border-bottom: 1px solid #eee;">${data.email}</td></tr>
+                        <tr><td style="padding: 10px; border-bottom: 1px solid #eee; color: #999; font-size: 12px; text-transform: uppercase;">Phone</td><td style="padding: 10px; border-bottom: 1px solid #eee;">${data.phone}</td></tr>
+                        <tr><td style="padding: 10px; border-bottom: 1px solid #eee; color: #999; font-size: 12px; text-transform: uppercase;">Program</td><td style="padding: 10px; border-bottom: 1px solid #eee; color: ${BRAND.gold}; font-weight: bold;">${data.courseName || 'N/A'}</td></tr>
+                    </table>
+                    <div style="text-align: center; margin-top: 30px;">
+                        <a href="https://usafi-barista.com/admin/students" style="display: inline-block; background-color: ${BRAND.espresso}; color: ${BRAND.white}; padding: 12px 30px; border-radius: 10px; text-decoration: none; font-weight: bold; font-size: 14px;">Review in Dashboard</a>
+                    </div>
+                </div>
+            `;
+            break;
+
+        case 'activation':
+            content = `
+                <div style="padding: 40px; background-color: ${BRAND.white}; font-family: sans-serif;">
+                    <h2 style="color: ${BRAND.espresso}; margin-top: 0;">Account Activated!</h2>
+                    <p style="color: #444; line-height: 1.6; font-size: 16px;">
+                        Congratulations, <b>${data.fullName}</b>! Your application has been approved and your account is now **fully active**.
+                    </p>
+                    <p style="color: #444; line-height: 1.6; font-size: 16px;">
+                        You can now log in to the Usaffi Student Portal to access your course materials, track your progress, and join our community of world-class baristas.
+                    </p>
+                    
+                    <div style="text-align: center; margin: 40px 0;">
+                        <a href="https://usafi-barista.com/login" style="display: inline-block; background-color: ${BRAND.espresso}; color: ${BRAND.white}; padding: 15px 40px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 16px; box-shadow: 0 4px 15px rgba(49, 33, 27, 0.2);">Enter Student Portal</a>
+                    </div>
+
+                    <div style="background-color: #f7f3f1; padding: 20px; border-radius: 12px; text-align: center;">
+                        <p style="color: ${BRAND.espresso}; font-size: 14px; margin: 0;"><b>Attached:</b> Your official Usaffi Welcome Letter (PDF)</p>
+                    </div>
+                </div>
+            `;
+            break;
+
+        default:
+            content = `<div style="padding: 40px;">${data.message || ''}</div>`;
+    }
+
+    return `
+        <html>
+            <body style="margin: 0; padding: 20px; background-color: #f0f0f0;">
+                <div style="max-width: 600px; margin: 0 auto; background-color: ${BRAND.white}; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    ${header}
+                    ${content}
+                    ${footer}
+                </div>
+            </body>
+        </html>
+    `;
+}
+
+/**
+ * Utility to generate a beautiful, personalized Welcome PDF
+ */
+async function generateWelcomePDF(userData) {
+    const pdfDoc = await PDFDocument.create();
+    const page = pdfDoc.addPage([600, 800]);
+    const { width, height } = page.getSize();
+    
+    const fontPrimary = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
+    const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+    // Background Color
+    page.drawRectangle({
+        x: 0,
+        y: 0,
+        width,
+        height,
+        color: rgb(0.98, 0.96, 0.92), // Soft Cream
+    });
+
+    // Border
+    page.drawRectangle({
+        x: 20,
+        y: 20,
+        width: width - 40,
+        height: height - 40,
+        borderWidth: 2,
+        borderColor: rgb(0.19, 0.13, 0.11), // Espresso
+    });
+
+    // Header Title
+    page.drawText('USAFFI BARISTA', {
+        x: 50,
+        y: height - 100,
+        size: 40,
+        font: fontPrimary,
+        color: rgb(0.19, 0.13, 0.11),
+    });
+
+    page.drawText('INTERNATIONAL TRAINING CENTER', {
+        x: 50,
+        y: height - 130,
+        size: 14,
+        font: fontRegular,
+        color: rgb(0.83, 0.68, 0.21), // Gold
+    });
+
+    // Body
+    page.drawText('LETTER OF ADMISSION', {
+        x: width / 2 - 100,
+        y: height - 250,
+        size: 20,
+        font: fontPrimary,
+        color: rgb(0.19, 0.13, 0.11),
+    });
+
+    const bodyText = [
+        `Dear ${userData.fullName},`,
+        '',
+        'It is with great pleasure that we welcome you to the Usaffi Barista International Training Center.',
+        'Your application has been reviewed and approved for the following program:',
+        '',
+        `Program: ${userData.courseName || 'Professional Barista Certification'}`,
+        `Role: ${userData.role || 'Student'}`,
+        `Date: ${new Date().toLocaleDateString()}`,
+        '',
+        'At Usaffi, we believe that coffee is more than just a beverage—it is an art, a science, and a community.',
+        'You are now part of a network of elite professionals dedicated to the pursuit of excellence in every cup.',
+        '',
+        'We look forward to seeing you thrive in our operational facilities.',
+        '',
+        'Best regards,',
+        '',
+        'The Usaffi Admissions Team',
+        'Kigali, Rwanda'
+    ];
+
+    let currentY = height - 320;
+    for (const line of bodyText) {
+        page.drawText(line, {
+            x: 50,
+            y: currentY,
+            size: 12,
+            font: fontRegular,
+            color: rgb(0.3, 0.3, 0.3),
+        });
+        currentY -= 20;
+    }
+
+    // Footer decoration
+    page.drawRectangle({
+        x: 20,
+        y: 20,
+        width: width - 40,
+        height: 10,
+        color: rgb(0.19, 0.13, 0.11),
+    });
+
+    const pdfBytes = await pdfDoc.save();
+    return pdfBytes;
+}
 
 /**
  * Cloud Function to securely send a password reset email using Resend.
  */
-exports.sendPasswordResetEmail = functions.https.onCall(async (request, context) => {
-    const data = (request && typeof request === 'object' && 'data' in request) ? request.data : request;
-    const { email, resetToken, userName = 'User' } = data || {};
+exports.sendPasswordResetEmail = onCall(async (request) => {
+    const { email, resetToken, userName = 'User' } = request.data || {};
 
     if (!email || !resetToken) {
-        throw new functions.https.HttpsError('invalid-argument', 'Email and resetToken are required.');
+        throw new HttpsError('invalid-argument', 'Email and resetToken are required.');
     }
 
     try {
-        const resendKey = process.env.RESEND_KEY || functions.config().resend?.key;
-        if (!resendKey) {
-            throw new Error('Resend API key is not configured. Please set RESEND_KEY in .env or via firebase functions:config.');
-        }
-
+        const resendKey = process.env.RESEND_KEY;
         const resend = new Resend(resendKey);
-        const appDomain = process.env.APP_DOMAIN || functions.config().app?.domain || 'usaffi-barista-app.web.app';
+        const appDomain = process.env.APP_DOMAIN || 'usafi-barista.com';
         const resetLink = `https://${appDomain}/reset-password/${resetToken}`;
 
         const { data: resendData, error } = await resend.emails.send({
-            from: 'Usaffi <no-reply@usafi-barista.com>',
+            from: BRAND.sender,
             to: [email],
             subject: 'Reset Your password - Usaffi',
             html: `
                 <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
-                    <h2 style="color: #333;">Hello ${userName},</h2>
+                    <h2 style="color: ${BRAND.espresso};">Hello ${userName},</h2>
                     <p style="color: #555; line-height: 1.6;">We received a request to reset your password for your Usaffi account. Click the button below to choose a new password:</p>
                     <div style="text-align: center; margin: 30px 0;">
-                        <a href="${resetLink}" style="background-color: #000; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">Reset Password</a>
+                        <a href="${resetLink}" style="background-color: ${BRAND.espresso}; color: ${BRAND.white}; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">Reset Password</a>
                     </div>
                     <p style="color: #777; font-size: 0.9em;">If you didn't request this, you can safely ignore this email. This link will expire in 1 hour.</p>
                     <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
@@ -45,310 +268,161 @@ exports.sendPasswordResetEmail = functions.https.onCall(async (request, context)
 
         if (error) {
             console.error('Resend Error:', error);
-            throw new functions.https.HttpsError('internal', `Resend Error: ${error.message}`);
+            throw new HttpsError('internal', `Resend Error: ${error.message}`);
         }
 
-        console.log(`Password reset email sent to ${email} via Resend. ID: ${resendData.id}`);
         return { success: true, id: resendData.id };
-
     } catch (error) {
         console.error('sendPasswordResetEmail Error:', error);
-        throw new functions.https.HttpsError('internal', error.message || 'Failed to send email.');
+        throw new HttpsError('internal', error.message || 'Failed to send email.');
     }
 });
 
 /**
  * Cloud Function to securely reset a user's password using a validated token.
- * Only callable if the token is valid, unused, and unexpired.
  */
-exports.finalizePasswordReset = functions.https.onCall(async (request, context) => {
-    // In newer SDKs (v4+, v6+), the first argument is a 'CallableRequest' object.
-    // In older SDKs, it's the raw data.
-    const data = (request && typeof request === 'object' && 'data' in request) ? request.data : request;
-
-    console.log("finalizePasswordReset triggered. Token provided:", !!data?.token);
-
-    const { token, newPassword } = data || {};
+exports.finalizePasswordReset = onCall(async (request) => {
+    const { token, newPassword } = request.data || {};
 
     if (!token || !newPassword) {
-        console.error("Missing fields. Token exists:", !!token, "Password exists:", !!newPassword);
-        throw new functions.https.HttpsError('invalid-argument', 'Token and new password are required.');
-    }
-
-    if (newPassword.length < 6) {
-        throw new functions.https.HttpsError('invalid-argument', 'Password must be at least 6 characters.');
+        throw new HttpsError('invalid-argument', 'Token and new password are required.');
     }
 
     const db = admin.firestore();
     const tokenRef = db.collection('password_reset_tokens').doc(token);
 
     try {
-        // 1. Transaction to verifying token and ensure atomicity
         const email = await db.runTransaction(async (transaction) => {
             const tokenDoc = await transaction.get(tokenRef);
-
-            if (!tokenDoc.exists) {
-                throw new functions.https.HttpsError('not-found', 'Invalid reset token.');
-            }
-
+            if (!tokenDoc.exists) throw new HttpsError('not-found', 'Invalid reset token.');
             const tokenData = tokenDoc.data();
-
-            if (tokenData.used) {
-                throw new functions.https.HttpsError('failed-precondition', 'Link already used.');
-            }
-
-            // Check expiration (Timestamp handling)
+            if (tokenData.used) throw new HttpsError('failed-precondition', 'Link already used.');
             const expiresAtMs = tokenData.expiresAt.toMillis ? tokenData.expiresAt.toMillis() : new Date(tokenData.expiresAt).getTime();
-            if (expiresAtMs < Date.now()) {
-                throw new functions.https.HttpsError('failed-precondition', 'Link expired.');
-            }
-
-            // Mark as used immediately to prevent race conditions
+            if (expiresAtMs < Date.now()) throw new HttpsError('failed-precondition', 'Link expired.');
             transaction.update(tokenRef, { used: true });
-
             return tokenData.email;
         });
 
-        // 2. Find User by Email (normalize for lookup)
-        let userRecord;
-        try {
-            userRecord = await admin.auth().getUserByEmail(email.toLowerCase());
-        } catch (authError) {
-            console.error('Auth User Lookup Error:', authError);
-            throw new functions.https.HttpsError('not-found', `No user found for email: ${email}`);
-        }
-
-        // 3. Update Password
-        try {
-            await admin.auth().updateUser(userRecord.uid, {
-                password: newPassword,
-                emailVerified: true
-            });
-        } catch (updateError) {
-            console.error('Auth User Update Error:', updateError);
-            throw new functions.https.HttpsError('internal', `Failed to update password: ${updateError.message}`);
-        }
+        const userRecord = await admin.auth().getUserByEmail(email.toLowerCase());
+        await admin.auth().updateUser(userRecord.uid, { password: newPassword, emailVerified: true });
 
         return { success: true, message: 'Password successfully updated.' };
-
     } catch (error) {
         console.error('Reset Password Function Error:', error);
-
-        // Re-throw standardized errors
-        if (error instanceof functions.https.HttpsError) {
-            throw error;
-        }
-
-        throw new functions.https.HttpsError('internal', error.message || 'Internal server error processing reset.');
+        if (error instanceof HttpsError) throw error;
+        throw new HttpsError('internal', error.message || 'Internal server error processing reset.');
     }
 });
 
 /**
  * Cloud Function to create a Stripe Payment Intent.
- * This securely creates a transaction and returns a client_secret for the frontend.
  */
-exports.createPaymentIntent = functions.https.onCall(async (request, context) => {
-    // Newer SDKs (v1.x for Callable) wrap data in 'request.data'
-    const data = (request && typeof request === 'object' && 'data' in request) ? request.data : request;
-    const { amount, currency = 'rwf', metadata = {} } = data || {};
-
-    if (!amount || amount < 500) {
-        throw new functions.https.HttpsError('invalid-argument', 'Amount must be at least 500 RWF.');
-    }
+exports.createPaymentIntent = onCall(async (request) => {
+    const { amount, currency = 'rwf', metadata = {} } = request.data || {};
+    
+    // In v2, config is typically passed via environment variables or secret Manager
+    // Using process.env for simplicity as the project has a .env
+    const stripeSecret = process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET;
 
     try {
-        const stripe = require('stripe')(functions.config().stripe.secret);
-
+        const stripe = require('stripe')(stripeSecret);
         const paymentIntent = await stripe.paymentIntents.create({
-            amount: Math.round(amount), // Stripe requires integers
+            amount: Math.round(amount),
             currency: currency.toLowerCase(),
-            metadata: {
-                ...metadata,
-                timestamp: new Date().toISOString()
-            },
-            automatic_payment_methods: {
-                enabled: true,
-            },
+            metadata: { ...metadata, timestamp: new Date().toISOString() },
+            automatic_payment_methods: { enabled: true },
         });
 
-        console.log(`PaymentIntent created: ${paymentIntent.id} for amount: ${amount}`);
-
-        return {
-            clientSecret: paymentIntent.client_secret,
-            id: paymentIntent.id
-        };
+        return { clientSecret: paymentIntent.client_secret, id: paymentIntent.id };
     } catch (error) {
         console.error('Stripe PaymentIntent Error:', error);
-        throw new functions.https.HttpsError('internal', `Stripe Error: ${error.message}`);
+        throw new HttpsError('internal', `Stripe Error: ${error.message}`);
     }
 });
+
 /**
  * Cloud Function to broadcast an email to all users and subscribers.
  */
-exports.broadcastToAll = functions.https.onCall(async (request, context) => {
-    // 1. Data and Authorization Extraction (Support for v1 and v2 SDKs)
-    console.log("broadcastToAll: Initializing...");
-    const data = (request && typeof request === 'object' && 'data' in request) ? request.data : request;
-    const auth = (request && request.auth) || (context && context.auth);
-
-    if (!auth) {
-        console.error("broadcastToAll: Unauthenticated access attempt");
-        throw new functions.https.HttpsError('unauthenticated', 'User must be logged in.');
-    }
+exports.broadcastToAll = onCall(async (request) => {
+    const { auth, data } = request;
+    if (!auth) throw new HttpsError('unauthenticated', 'User must be logged in.');
 
     const { subject, message, title = 'Usaffi Announcement' } = data || {};
-    console.log(`broadcastToAll: Request from ${auth.uid}. Subject: "${subject}"`);
-
     const db = admin.firestore();
     
     try {
         const userDoc = await db.collection('users').doc(auth.uid).get();
         const userData = userDoc.data();
-
         if (!userData || (userData.role !== 'admin' && userData.role !== 'manager')) {
-            console.error(`broadcastToAll: Unauthorized role "${userData?.role}" for user ${auth.uid}`);
-            throw new functions.https.HttpsError('permission-denied', 'Unauthorized. Only admins or managers can broadcast.');
+            throw new HttpsError('permission-denied', 'Unauthorized.');
         }
 
-        if (!subject || !message) {
-            throw new functions.https.HttpsError('invalid-argument', 'Subject and message are required.');
-        }
-
-        const resendKey = process.env.RESEND_KEY || functions.config().resend?.key;
-        if (!resendKey) {
-            console.error("broadcastToAll: RESEND_KEY is missing from environment");
-            throw new functions.https.HttpsError('failed-precondition', 'Email service is not configured (missing API key).');
-        }
-        
+        const resendKey = process.env.RESEND_KEY;
         const resend = new Resend(resendKey);
 
-        // 2. Fetch all unique emails
         const emails = new Set();
-
-        // From Users
         const usersSnapshot = await db.collection('users').get();
-        usersSnapshot.forEach(doc => {
-            const email = doc.data().email;
-            if (email) emails.add(email.toLowerCase().trim());
-        });
+        usersSnapshot.forEach(doc => { if (doc.data().email) emails.add(doc.data().email.toLowerCase().trim()); });
 
-        // From Subscribers
         const subsSnapshot = await db.collection('subscribers').where('active', '==', true).get();
-        subsSnapshot.forEach(doc => {
-            const email = doc.data().email;
-            if (email) emails.add(email.toLowerCase().trim());
-        });
+        subsSnapshot.forEach(doc => { if (doc.data().email) emails.add(doc.data().email.toLowerCase().trim()); });
 
         const recipientList = Array.from(emails);
-        console.log(`broadcastToAll: Found ${recipientList.length} unique recipients.`);
-        
-        if (recipientList.length === 0) {
-            return { success: true, sentCount: 0, message: 'No recipients found.' };
-        }
+        if (recipientList.length === 0) return { success: true, sentCount: 0 };
 
-        // 3. Send via Resend in batches of 100
         const batchSize = 100;
         let sentCount = 0;
-
         for (let i = 0; i < recipientList.length; i += batchSize) {
             const currentBatch = recipientList.slice(i, i + batchSize);
-            console.log(`broadcastToAll: Sending batch ${Math.floor(i/batchSize) + 1}...`);
-            
-            try {
-                const { data: resendData, error } = await resend.emails.send({
-                    from: 'Usaffi <no-reply@usafi-barista.com>',
-                    to: currentBatch,
-                    subject: subject,
-                    html: `
-                        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
-                            <h2 style="color: #31211b;">${title}</h2>
-                            <div style="color: #555; line-height: 1.6; font-size: 16px;">
-                                ${message.replace(/\n/g, '<br>')}
-                            </div>
-                            <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
-                            <p style="color: #999; font-size: 0.8em; text-align: center;">
-                                Sent from Usafi Barista International Training Center<br>
-                                If you wish to unsubscribe, please reply to this email.
-                            </p>
-                        </div>
-                    `
-                });
-
-                if (error) {
-                    console.error('broadcastToAll: Resend Batch Error:', error);
-                } else {
-                    sentCount += currentBatch.length;
-                    console.log(`broadcastToAll: Batch sent. ID: ${resendData?.id}`);
-                }
-            } catch (resendBatchError) {
-                console.error('broadcastToAll: Unexpected Resend library error in batch:', resendBatchError);
-            }
+            const { data: resendData, error } = await resend.emails.send({
+                from: BRAND.sender,
+                to: currentBatch,
+                subject: subject,
+                html: getBrandedTemplate('generic', { title, message })
+            });
+            if (!error) sentCount += currentBatch.length;
         }
 
-        console.log(`broadcastToAll: Completed. Sent to ${sentCount}/${recipientList.length} recipients.`);
         return { success: true, sentCount, totalRecipients: recipientList.length };
-
     } catch (error) {
-        console.error('broadcastToAll: Fatal Error:', error);
-        if (error instanceof functions.https.HttpsError) throw error;
-        throw new functions.https.HttpsError('internal', error.message || 'Failed to send broadcast.');
+        console.error('broadcastToAll Error:', error);
+        if (error instanceof HttpsError) throw error;
+        throw new HttpsError('internal', error.message || 'Failed to send broadcast.');
     }
 });
 
 /**
  * Cloud Function to securely reply to a contact inquiry.
  */
-exports.replyToInquiry = functions.https.onCall(async (request, context) => {
-    // 1. Data and Authorization Extraction (Support for v1 and v2 SDKs)
-    const data = (request && typeof request === 'object' && 'data' in request) ? request.data : request;
-    const auth = (request && request.auth) || (context && context.auth);
-
-    if (!auth) {
-        throw new functions.https.HttpsError('unauthenticated', 'User must be logged in.');
-    }
+exports.replyToInquiry = onCall(async (request) => {
+    const { auth, data } = request;
+    if (!auth) throw new HttpsError('unauthenticated', 'User must be logged in.');
 
     const db = admin.firestore();
     const userDoc = await db.collection('users').doc(auth.uid).get();
     const userData = userDoc.data();
-
     if (!userData || (userData.role !== 'admin' && userData.role !== 'manager')) {
-        throw new functions.https.HttpsError('permission-denied', 'Unauthorized.');
+        throw new HttpsError('permission-denied', 'Unauthorized.');
     }
 
     const { messageId, recipientEmail, recipientName, subject, replyText } = data || {};
-
-    if (!messageId || !recipientEmail || !replyText) {
-        throw new functions.https.HttpsError('invalid-argument', 'Missing required fields.');
-    }
+    if (!messageId || !recipientEmail || !replyText) throw new HttpsError('invalid-argument', 'Missing fields.');
 
     try {
-        const resendKey = process.env.RESEND_KEY || functions.config().resend?.key;
+        const resendKey = process.env.RESEND_KEY;
         const resend = new Resend(resendKey);
 
-        const { data: resendData, error } = await resend.emails.send({
-            from: 'Usaffi Support <no-reply@usafi-barista.com>',
+        const { error } = await resend.emails.send({
+            from: BRAND.sender,
             to: [recipientEmail],
             subject: subject || 'Response to your inquiry - Usaffi',
-            html: `
-                <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
-                    <p style="color: #333; font-size: 16px;">Hello ${recipientName || 'there'},</p>
-                    <div style="color: #555; line-height: 1.6; font-size: 16px; margin: 20px 0;">
-                        ${replyText.replace(/\n/g, '<br>')}
-                    </div>
-                    <p style="color: #333; font-size: 16px;">Best regards,<br>The Usaffi Team</p>
-                    <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
-                    <p style="color: #999; font-size: 0.8em;">
-                        This is a response to your inquiry submitted through our website.
-                    </p>
-                </div>
-            `
+            html: getBrandedTemplate('generic', { 
+                message: `Hello ${recipientName || 'there'},\n\n${replyText}\n\nBest regards,\nThe Usaffi Team` 
+            })
         });
 
-        if (error) {
-            throw new functions.https.HttpsError('internal', `Resend Error: ${error.message}`);
-        }
+        if (error) throw new HttpsError('internal', `Resend Error: ${error.message}`);
 
-        // Update status in Firestore
         await db.collection('contact_messages').doc(messageId).update({
             status: 'replied',
             repliedAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -356,9 +430,81 @@ exports.replyToInquiry = functions.https.onCall(async (request, context) => {
         });
 
         return { success: true };
-
     } catch (error) {
         console.error('replyToInquiry Error:', error);
-        throw new functions.https.HttpsError('internal', error.message || 'Failed to send reply.');
+        throw new HttpsError('internal', error.message || 'Failed to send reply.');
+    }
+});
+
+/**
+ * Cloud Function to send immediate registration notice.
+ */
+exports.sendRegistrationNotice = onCall(async (request) => {
+    const { fullName, email, phone, courseName, password, type } = request.data || {};
+    if (!email || !fullName) throw new HttpsError('invalid-argument', 'Missing fields.');
+
+    const resendKey = process.env.RESEND_KEY;
+    const resend = new Resend(resendKey);
+
+    try {
+        await resend.emails.send({
+            from: BRAND.sender,
+            to: [email],
+            subject: 'Application Received - Usaffi Barista',
+            html: getBrandedTemplate('welcome_pending', { fullName, email, password, courseName })
+        });
+
+        await resend.emails.send({
+            from: BRAND.sender,
+            to: [BRAND.adminEmail],
+            subject: `New Application: ${fullName} (${type || 'Student'})`,
+            html: getBrandedTemplate('admin_alert', { fullName, email, phone, courseName })
+        });
+
+        return { success: true };
+    } catch (error) {
+        console.error('sendRegistrationNotice Error:', error);
+        throw new HttpsError('internal', error.message);
+    }
+});
+
+/**
+ * Cloud Function Trigger: When user status changes to 'active'.
+ */
+exports.onUserStatusChange = onDocumentUpdated("users/{userId}", async (event) => {
+    const before = event.data.before.data();
+    const after = event.data.after.data();
+
+    if ((before.status === 'pending' || !before.status) && after.status === 'active') {
+        const userId = event.params.userId;
+        console.log(`onUserStatusChange: Activating user ${userId}`);
+
+        try {
+            const resendKey = process.env.RESEND_KEY;
+            const resend = new Resend(resendKey);
+
+            const pdfBytes = await generateWelcomePDF({
+                fullName: after.fullName || after.name,
+                role: after.role,
+                courseName: after.courseId || 'Professional Barista Course'
+            });
+
+            await resend.emails.send({
+                from: BRAND.sender,
+                to: [after.email],
+                subject: 'Your Usaffi Account is Active!',
+                html: getBrandedTemplate('activation', { fullName: after.fullName || after.name }),
+                attachments: [
+                    {
+                        filename: 'Usaffi_Welcome_Letter.pdf',
+                        content: Buffer.from(pdfBytes).toString('base64')
+                    }
+                ]
+            });
+
+            console.log(`Activation email sent to ${after.email}`);
+        } catch (error) {
+            console.error('onUserStatusChange Error:', error);
+        }
     }
 });
