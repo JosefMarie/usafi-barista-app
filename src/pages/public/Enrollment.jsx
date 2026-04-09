@@ -198,7 +198,8 @@ export function Enrollment({ settings }) {
                     phone: formData.phone,
                     courseName: formData.courses.map(id => availableCourses.find(c => c.id === id)?.title || id).join(', '),
                     password: formData.password,
-                    type: 'Student Enrollment'
+                    type: 'Student Enrollment',
+                    startDate: formData.startDate
                 });
             }
 

@@ -178,7 +178,7 @@ export function WeekendExperience() {
 
     return (
         <div className="flex flex-col min-h-screen bg-[#FAF5E8] dark:bg-[#1c1916] font-display text-espresso dark:text-white">
-            <SEO title="Weekend Coffee Experiences | USAFFI" description="Join us every Saturday & Sunday for hands-on coffee workshops, tastings, and barista training sessions in Rwanda." />
+            <SEO title="Weekend Coffee Experiences | USAFI" description="Join us every Saturday & Sunday for hands-on coffee workshops, tastings, and barista training sessions in Rwanda." />
 
             {/* ─── HERO ─── */}
             <section className="relative pt-32 pb-24 overflow-hidden">

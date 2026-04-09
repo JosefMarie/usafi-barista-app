@@ -41,7 +41,7 @@ export function ManagerMessages() {
                 messageId: selectedMessage.id,
                 recipientEmail: selectedMessage.email,
                 recipientName: selectedMessage.firstName,
-                subject: `Re: ${selectedMessage.subject || 'Inquiry'} - Usaffi`,
+                subject: `Re: ${selectedMessage.subject || 'Inquiry'} - Usafi`,
                 replyText: replyText
             });
             

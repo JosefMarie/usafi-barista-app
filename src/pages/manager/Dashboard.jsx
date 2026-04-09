@@ -14,7 +14,7 @@ export function ManagerDashboard() {
     });
     const [loading, setLoading] = useState(true);
     const [isBroadcastModalOpen, setIsBroadcastModalOpen] = useState(false);
-    const [broadcastData, setBroadcastData] = useState({ subject: '', message: '', title: 'Usaffi Announcement' });
+    const [broadcastData, setBroadcastData] = useState({ subject: '', message: '', title: 'Usafi Announcement' });
     const [isBroadcasting, setIsBroadcasting] = useState(false);
 
     useEffect(() => {
@@ -69,7 +69,7 @@ export function ManagerDashboard() {
             const result = await broadcastToAll(broadcastData);
             alert(`Broadcast sent successfully to ${result.sentCount} recipients!`);
             setIsBroadcastModalOpen(false);
-            setBroadcastData({ subject: '', message: '', title: 'Usaffi Announcement' });
+            setBroadcastData({ subject: '', message: '', title: 'Usafi Announcement' });
         } catch (error) {
             console.error("Broadcast error:", error);
             alert("Failed to send broadcast: " + error.message);
@@ -173,7 +173,7 @@ export function ManagerDashboard() {
                                         value={broadcastData.title}
                                         onChange={(e) => setBroadcastData({...broadcastData, title: e.target.value})}
                                         className="w-full px-5 py-3 rounded-xl bg-white/40 border border-espresso/10 focus:outline-none focus:ring-2 focus:ring-espresso text-espresso font-medium uppercase tracking-tight"
-                                        placeholder="e.g. Usaffi Announcement"
+                                        placeholder="e.g. Usafi Announcement"
                                     />
                                 </div>
                                 <div>

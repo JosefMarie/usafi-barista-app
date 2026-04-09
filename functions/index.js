@@ -4,6 +4,7 @@ const { setGlobalOptions } = require("firebase-functions/v2");
 const admin = require('firebase-admin');
 const { Resend } = require('resend');
 const { PDFDocument, rgb, StandardFonts } = require('pdf-lib');
+const https = require('https');
 
 // Initialize Firebase Admin
 admin.initializeApp();
@@ -20,9 +21,36 @@ const BRAND = {
     gold: '#D4Af37',
     white: '#FFFFFF',
     font: 'serif',
-    sender: 'Usaffi Barista <info@usafi-barista.com>',
-    adminEmail: 'usaficoffee@gmail.com'
+    sender: 'Usafi Barista <info@usafi-barista.com>',
+    adminEmail: 'usaficoffee@gmail.com',
+    logo: 'https://usafi-barista.com/logo.jpg',
+    signature: 'https://usafi-barista.com/image/GASARASI_Signature.png',
+    stamp: 'https://usafi-barista.com/image/Stamp%20PNg.png'
 };
+
+/**
+ * Helper to fetch image bytes from a URL
+ */
+function fetchImageBytes(url) {
+    return new Promise((resolve, reject) => {
+        const options = {
+            headers: { 'User-Agent': 'Usafi-Barista-App' }
+        };
+        https.get(url, options, (res) => {
+            if (res.statusCode === 301 || res.statusCode === 302) {
+                // Handle basic redirects
+                return fetchImageBytes(res.headers.location).then(resolve).catch(reject);
+            }
+            if (res.statusCode !== 200) {
+                reject(new Error(`Failed to fetch image: ${res.statusCode} at ${url}`));
+                return;
+            }
+            const data = [];
+            res.on('data', (chunk) => data.push(chunk));
+            res.on('end', () => resolve(Buffer.concat(data)));
+        }).on('error', (err) => reject(err));
+    });
+}
 
 /**
  * Returns a high-fidelity HTML template for emails
@@ -30,7 +58,10 @@ const BRAND = {
 function getBrandedTemplate(type, data) {
     const header = `
         <div style="background-color: ${BRAND.espresso}; padding: 40px 20px; text-align: center; border-radius: 20px 20px 0 0;">
-            <h1 style="color: ${BRAND.white}; margin: 0; font-family: 'Playfair Display', serif; letter-spacing: 2px; text-transform: uppercase; font-size: 28px;">Usaffi Barista</h1>
+            <div style="margin-bottom: 20px;">
+                <img src="${BRAND.logo}" alt="Usafi Logo" style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid ${BRAND.gold};">
+            </div>
+            <h1 style="color: ${BRAND.white}; margin: 0; font-family: 'Playfair Display', serif; letter-spacing: 2px; text-transform: uppercase; font-size: 28px;">Usafi Barista</h1>
             <p style="color: ${BRAND.gold}; margin: 10px 0 0; font-family: sans-serif; letter-spacing: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase;">International Training Center</p>
         </div>
     `;
@@ -53,7 +84,7 @@ function getBrandedTemplate(type, data) {
                 <div style="padding: 40px; background-color: ${BRAND.white}; font-family: sans-serif;">
                     <h2 style="color: ${BRAND.espresso}; margin-top: 0;">Hello ${data.fullName},</h2>
                     <p style="color: #444; line-height: 1.6; font-size: 16px;">
-                        Thank you for applying to the <b>Usaffi Barista International Training Center</b>. Your application for the <b>${data.courseName || 'program'}</b> has been received and is currently under review by our admissions team.
+                        Thank you for applying to the <b>Usafi Barista International Training Center</b>. Your application for the <b>${data.courseName || 'program'}</b> has been received and is currently under review by our admissions team.
                     </p>
                     
                     <div style="background-color: #fcfaf5; padding: 25px; border-radius: 15px; border-left: 5px solid ${BRAND.gold}; margin: 30px 0;">
@@ -83,6 +114,7 @@ function getBrandedTemplate(type, data) {
                         <tr><td style="padding: 10px; border-bottom: 1px solid #eee; color: #999; font-size: 12px; text-transform: uppercase;">Email</td><td style="padding: 10px; border-bottom: 1px solid #eee;">${data.email}</td></tr>
                         <tr><td style="padding: 10px; border-bottom: 1px solid #eee; color: #999; font-size: 12px; text-transform: uppercase;">Phone</td><td style="padding: 10px; border-bottom: 1px solid #eee;">${data.phone}</td></tr>
                         <tr><td style="padding: 10px; border-bottom: 1px solid #eee; color: #999; font-size: 12px; text-transform: uppercase;">Program</td><td style="padding: 10px; border-bottom: 1px solid #eee; color: ${BRAND.gold}; font-weight: bold;">${data.courseName || 'N/A'}</td></tr>
+                        ${data.startDate ? `<tr><td style="padding: 10px; border-bottom: 1px solid #eee; color: #999; font-size: 12px; text-transform: uppercase;">Desired Start</td><td style="padding: 10px; border-bottom: 1px solid #eee; font-weight: bold;">${data.startDate}</td></tr>` : ''}
                     </table>
                     <div style="text-align: center; margin-top: 30px;">
                         <a href="https://usafi-barista.com/admin/students" style="display: inline-block; background-color: ${BRAND.espresso}; color: ${BRAND.white}; padding: 12px 30px; border-radius: 10px; text-decoration: none; font-weight: bold; font-size: 14px;">Review in Dashboard</a>
@@ -99,7 +131,7 @@ function getBrandedTemplate(type, data) {
                         Congratulations, <b>${data.fullName}</b>! Your application has been approved and your account is now **fully active**.
                     </p>
                     <p style="color: #444; line-height: 1.6; font-size: 16px;">
-                        You can now log in to the Usaffi Student Portal to access your course materials, track your progress, and join our community of world-class baristas.
+                        You can now log in to the Usafi Student Portal to access your course materials, track your progress, and join our community of world-class professionals.
                     </p>
                     
                     <div style="text-align: center; margin: 40px 0;">
@@ -107,7 +139,7 @@ function getBrandedTemplate(type, data) {
                     </div>
 
                     <div style="background-color: #f7f3f1; padding: 20px; border-radius: 12px; text-align: center;">
-                        <p style="color: ${BRAND.espresso}; font-size: 14px; margin: 0;"><b>Attached:</b> Your official Usaffi Welcome Letter (PDF)</p>
+                        <p style="color: ${BRAND.espresso}; font-size: 14px; margin: 0;"><b>Attached:</b> Your official Usafi Welcome Letter (PDF)</p>
                     </div>
                 </div>
             `;
@@ -131,7 +163,7 @@ function getBrandedTemplate(type, data) {
 }
 
 /**
- * Utility to generate a beautiful, personalized Welcome PDF
+ * Utility to generate a beautiful, personalized Welcome PDF with Brand Assets
  */
 async function generateWelcomePDF(userData) {
     const pdfDoc = await PDFDocument.create();
@@ -140,6 +172,23 @@ async function generateWelcomePDF(userData) {
     
     const fontPrimary = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
     const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+    const isBartender = (userData.courseName || '').toLowerCase().includes('bartender') || (userData.courseName || '').toLowerCase().includes('mixology');
+
+    // Load Images
+    let logoImage, signatureImage, stampImage;
+    try {
+        const [logoBytes, sigBytes, stampBytes] = await Promise.all([
+            fetchImageBytes(BRAND.logo),
+            fetchImageBytes(BRAND.signature),
+            fetchImageBytes(BRAND.stamp)
+        ]);
+        logoImage = await pdfDoc.embedJpg(logoBytes);
+        signatureImage = await pdfDoc.embedPng(sigBytes);
+        stampImage = await pdfDoc.embedPng(stampBytes);
+    } catch (err) {
+        console.error("Image loading failed for PDF:", err);
+    }
 
     // Background Color
     page.drawRectangle({
@@ -160,19 +209,30 @@ async function generateWelcomePDF(userData) {
         borderColor: rgb(0.19, 0.13, 0.11), // Espresso
     });
 
+    // Draw Logo if available
+    if (logoImage) {
+        const logoDims = logoImage.scale(0.4);
+        page.drawImage(logoImage, {
+            x: 50,
+            y: height - 120,
+            width: logoDims.width,
+            height: logoDims.height,
+        });
+    }
+
     // Header Title
-    page.drawText('USAFFI BARISTA', {
-        x: 50,
-        y: height - 100,
-        size: 40,
+    page.drawText('USAFI BARISTA', {
+        x: 120,
+        y: height - 90,
+        size: 32,
         font: fontPrimary,
         color: rgb(0.19, 0.13, 0.11),
     });
 
     page.drawText('INTERNATIONAL TRAINING CENTER', {
-        x: 50,
-        y: height - 130,
-        size: 14,
+        x: 120,
+        y: height - 110,
+        size: 12,
         font: fontRegular,
         color: rgb(0.83, 0.68, 0.21), // Gold
     });
@@ -189,22 +249,23 @@ async function generateWelcomePDF(userData) {
     const bodyText = [
         `Dear ${userData.fullName},`,
         '',
-        'It is with great pleasure that we welcome you to the Usaffi Barista International Training Center.',
+        'It is with great pleasure that we welcome you to the Usafi Barista International Training Center.',
         'Your application has been reviewed and approved for the following program:',
         '',
-        `Program: ${userData.courseName || 'Professional Barista Certification'}`,
+        `Program: ${userData.courseName || 'Professional Training Certification'}`,
         `Role: ${userData.role || 'Student'}`,
-        `Date: ${new Date().toLocaleDateString()}`,
+        `Start Date: ${userData.startDate || 'To Be Scheduled'}`,
         '',
-        'At Usaffi, we believe that coffee is more than just a beverage—it is an art, a science, and a community.',
-        'You are now part of a network of elite professionals dedicated to the pursuit of excellence in every cup.',
+        isBartender 
+            ? 'At Usafi, we believe that mixology is an delicate balance of flavor, technique, and presentation.'
+            : 'At Usafi, we believe that coffee is more than just a beverage—it is an art, a science, and a community.',
+        isBartender
+            ? 'You are now part of a network of elite beverage professionals dedicated to the mastery of the bar.'
+            : 'You are now part of a network of elite professionals dedicated to the pursuit of excellence in every cup.',
         '',
         'We look forward to seeing you thrive in our operational facilities.',
         '',
         'Best regards,',
-        '',
-        'The Usaffi Admissions Team',
-        'Kigali, Rwanda'
     ];
 
     let currentY = height - 320;
@@ -218,6 +279,35 @@ async function generateWelcomePDF(userData) {
         });
         currentY -= 20;
     }
+
+    // Signatures and Stamp Section
+    const sigY = currentY - 60;
+    
+    if (signatureImage) {
+        const sigDims = signatureImage.scale(0.3);
+        page.drawImage(signatureImage, {
+            x: 50,
+            y: sigY,
+            width: sigDims.width,
+            height: sigDims.height,
+        });
+    }
+
+    if (stampImage) {
+        const stampDims = stampImage.scale(0.35);
+        page.drawImage(stampImage, {
+            x: 230,
+            y: sigY - 10,
+            width: stampDims.width,
+            height: stampDims.height,
+            opacity: 0.85
+        });
+    }
+
+    page.drawText('________________________', { x: 50, y: sigY - 10, size: 12, font: fontRegular, color: rgb(0.19, 0.13, 0.11) });
+    page.drawText('Gasarasi', { x: 50, y: sigY - 30, size: 14, font: fontPrimary, color: rgb(0.19, 0.13, 0.11) });
+    page.drawText('CEO & Founder', { x: 50, y: sigY - 45, size: 10, font: fontRegular, color: rgb(0.4, 0.4, 0.4) });
+    page.drawText('Usafi International Training Center', { x: 50, y: sigY - 60, size: 10, font: fontRegular, color: rgb(0.4, 0.4, 0.4) });
 
     // Footer decoration
     page.drawRectangle({
@@ -251,17 +341,17 @@ exports.sendPasswordResetEmail = onCall(async (request) => {
         const { data: resendData, error } = await resend.emails.send({
             from: BRAND.sender,
             to: [email],
-            subject: 'Reset Your password - Usaffi',
+            subject: 'Reset Your password - Usafi',
             html: `
                 <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
                     <h2 style="color: ${BRAND.espresso};">Hello ${userName},</h2>
-                    <p style="color: #555; line-height: 1.6;">We received a request to reset your password for your Usaffi account. Click the button below to choose a new password:</p>
+                    <p style="color: #555; line-height: 1.6;">We received a request to reset your password for your Usafi account. Click the button below to choose a new password:</p>
                     <div style="text-align: center; margin: 30px 0;">
                         <a href="${resetLink}" style="background-color: ${BRAND.espresso}; color: ${BRAND.white}; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">Reset Password</a>
                     </div>
                     <p style="color: #777; font-size: 0.9em;">If you didn't request this, you can safely ignore this email. This link will expire in 1 hour.</p>
                     <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-                    <p style="color: #999; font-size: 0.8em;">Usaffi Barista App Team</p>
+                    <p style="color: #999; font-size: 0.8em;">Usafi Barista App Team</p>
                 </div>
             `
         });
@@ -319,9 +409,6 @@ exports.finalizePasswordReset = onCall(async (request) => {
  */
 exports.createPaymentIntent = onCall(async (request) => {
     const { amount, currency = 'rwf', metadata = {} } = request.data || {};
-    
-    // In v2, config is typically passed via environment variables or secret Manager
-    // Using process.env for simplicity as the project has a .env
     const stripeSecret = process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET;
 
     try {
@@ -347,7 +434,7 @@ exports.broadcastToAll = onCall(async (request) => {
     const { auth, data } = request;
     if (!auth) throw new HttpsError('unauthenticated', 'User must be logged in.');
 
-    const { subject, message, title = 'Usaffi Announcement' } = data || {};
+    const { subject, message, title = 'Usafi Announcement' } = data || {};
     const db = admin.firestore();
     
     try {
@@ -415,9 +502,9 @@ exports.replyToInquiry = onCall(async (request) => {
         const { error } = await resend.emails.send({
             from: BRAND.sender,
             to: [recipientEmail],
-            subject: subject || 'Response to your inquiry - Usaffi',
+            subject: subject || 'Response to your inquiry - Usafi',
             html: getBrandedTemplate('generic', { 
-                message: `Hello ${recipientName || 'there'},\n\n${replyText}\n\nBest regards,\nThe Usaffi Team` 
+                message: `Hello ${recipientName || 'there'},\n\n${replyText}\n\nBest regards,\nThe Usafi Team` 
             })
         });
 
@@ -440,7 +527,7 @@ exports.replyToInquiry = onCall(async (request) => {
  * Cloud Function to send immediate registration notice.
  */
 exports.sendRegistrationNotice = onCall(async (request) => {
-    const { fullName, email, phone, courseName, password, type } = request.data || {};
+    const { fullName, email, phone, courseName, password, type, startDate } = request.data || {};
     if (!email || !fullName) throw new HttpsError('invalid-argument', 'Missing fields.');
 
     const resendKey = process.env.RESEND_KEY;
@@ -450,15 +537,15 @@ exports.sendRegistrationNotice = onCall(async (request) => {
         await resend.emails.send({
             from: BRAND.sender,
             to: [email],
-            subject: 'Application Received - Usaffi Barista',
-            html: getBrandedTemplate('welcome_pending', { fullName, email, password, courseName })
+            subject: 'Application Received - Usafi Barista',
+            html: getBrandedTemplate('welcome_pending', { fullName, email, password, courseName, startDate })
         });
 
         await resend.emails.send({
             from: BRAND.sender,
             to: [BRAND.adminEmail],
             subject: `New Application: ${fullName} (${type || 'Student'})`,
-            html: getBrandedTemplate('admin_alert', { fullName, email, phone, courseName })
+            html: getBrandedTemplate('admin_alert', { fullName, email, phone, courseName, startDate })
         });
 
         return { success: true };
@@ -486,17 +573,18 @@ exports.onUserStatusChange = onDocumentUpdated("users/{userId}", async (event) =
             const pdfBytes = await generateWelcomePDF({
                 fullName: after.fullName || after.name,
                 role: after.role,
-                courseName: after.courseId || 'Professional Barista Course'
+                courseName: after.courseName || after.courseId || 'Professional Training Course',
+                startDate: after.startDate
             });
 
             await resend.emails.send({
                 from: BRAND.sender,
                 to: [after.email],
-                subject: 'Your Usaffi Account is Active!',
-                html: getBrandedTemplate('activation', { fullName: after.fullName || after.name }),
+                subject: 'Your Usafi Account is Active!',
+                html: getBrandedTemplate('activation', { fullName: after.fullName || after.name, courseName: after.courseName || after.courseId }),
                 attachments: [
                     {
-                        filename: 'Usaffi_Welcome_Letter.pdf',
+                        filename: 'Usafi_Welcome_Letter.pdf',
                         content: Buffer.from(pdfBytes).toString('base64')
                     }
                 ]

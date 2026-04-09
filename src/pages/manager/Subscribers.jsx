@@ -9,7 +9,7 @@ export function ManagerSubscribers() {
     const [newEmail, setNewEmail] = useState('');
     const [isAdding, setIsAdding] = useState(false);
     const [isBroadcastModalOpen, setIsBroadcastModalOpen] = useState(false);
-    const [broadcastData, setBroadcastData] = useState({ subject: '', message: '', title: 'Usaffi Announcement' });
+    const [broadcastData, setBroadcastData] = useState({ subject: '', message: '', title: 'Usafi Announcement' });
     const [isBroadcasting, setIsBroadcasting] = useState(false);
     const [isCleaning, setIsCleaning] = useState(false);
 
@@ -148,7 +148,7 @@ export function ManagerSubscribers() {
             if (result && result.success) {
                 alert(`Broadcast Success!\n\nSent to: ${result.sentCount} recipients.\nTotal unique emails found: ${result.totalRecipients || 'N/A'}`);
                 setIsBroadcastModalOpen(false);
-                setBroadcastData({ subject: '', message: '', title: 'Usaffi Announcement' });
+                setBroadcastData({ subject: '', message: '', title: 'Usafi Announcement' });
             } else {
                 alert("Broadcast returned success but no send confirmation. Please check logs.");
             }
@@ -338,7 +338,7 @@ export function ManagerSubscribers() {
                                         value={broadcastData.title}
                                         onChange={(e) => setBroadcastData({...broadcastData, title: e.target.value})}
                                         className="w-full px-5 py-3 rounded-xl bg-white/40 border border-espresso/10 focus:outline-none focus:ring-2 focus:ring-espresso text-espresso font-medium uppercase tracking-tight"
-                                        placeholder="e.g. Usaffi Announcement"
+                                        placeholder="e.g. Usafi Announcement"
                                     />
                                 </div>
                                 <div>

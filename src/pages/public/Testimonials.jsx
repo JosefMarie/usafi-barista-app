@@ -331,7 +331,7 @@ export function Testimonials() {
                                         value={formData.content}
                                         onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                                         className="w-full p-4 bg-white/60 dark:bg-black/40 border border-espresso/10 rounded-2xl outline-none focus:ring-2 focus:ring-primary transition-all min-h-[150px]"
-                                        placeholder="Describe your experience with USAFFI..."
+                                        placeholder="Describe your experience with USAFI..."
                                     />
                                 </div>
 
