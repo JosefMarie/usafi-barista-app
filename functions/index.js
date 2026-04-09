@@ -79,13 +79,19 @@ function getBrandedTemplate(type, data) {
     let content = '';
 
     switch (type) {
-        case 'welcome_pending':
+        case 'welcome_pending': {
+            const isBartender = data.courseName?.toLowerCase().includes('bartender') || data.courseId === 'bar-tender';
+            const centerName = isBartender ? 'Usafi International Training Center' : 'Usafi Barista International Training Center';
             content = `
                 <div style="padding: 40px; background-color: ${BRAND.white}; font-family: sans-serif;">
                     <h2 style="color: ${BRAND.espresso}; margin-top: 0;">Hello ${data.fullName},</h2>
                     <p style="color: #444; line-height: 1.6; font-size: 16px;">
-                        Thank you for applying to the <b>Usafi Barista International Training Center</b>. Your application for the <b>${data.courseName || 'program'}</b> has been received and is currently under review by our admissions team.
+                        Thank you for applying to the <b>${centerName}</b>. Your application for the <b>${data.courseName || 'program'}</b> has been received and is currently under review by our admissions team.
                     </p>
+                    ${isBartender 
+                        ? `<p style="color: #666; font-style: italic; font-size: 14px;">"Master the art of mixology and cocktail excellence."</p>`
+                        : `<p style="color: #666; font-style: italic; font-size: 14px;">"Brew your future with the masters of Rwandan coffee."</p>`
+                    }
                     
                     <div style="background-color: #fcfaf5; padding: 25px; border-radius: 15px; border-left: 5px solid ${BRAND.gold}; margin: 30px 0;">
                         <h4 style="color: ${BRAND.espresso}; margin-top: 0; text-transform: uppercase; font-size: 12px; letter-spacing: 1px;">Your Login Credentials</h4>
@@ -101,6 +107,7 @@ function getBrandedTemplate(type, data) {
                 </div>
             `;
             break;
+        }
 
         case 'admin_alert':
             content = `
@@ -211,10 +218,10 @@ async function generateWelcomePDF(userData) {
 
     // Draw Logo if available
     if (logoImage) {
-        const logoDims = logoImage.scale(0.4);
+        const logoDims = logoImage.scale(0.07); // Reduced by half again
         page.drawImage(logoImage, {
             x: 50,
-            y: height - 120,
+            y: height - 95, // Aligned with the title text
             width: logoDims.width,
             height: logoDims.height,
         });
@@ -222,15 +229,15 @@ async function generateWelcomePDF(userData) {
 
     // Header Title
     page.drawText('USAFI BARISTA', {
-        x: 120,
-        y: height - 90,
+        x: 130, // Pushed right to avoid interference
+        y: height - 90, // Aligned with logo center
         size: 32,
         font: fontPrimary,
         color: rgb(0.19, 0.13, 0.11),
     });
 
     page.drawText('INTERNATIONAL TRAINING CENTER', {
-        x: 120,
+        x: 130,
         y: height - 110,
         size: 12,
         font: fontRegular,
@@ -294,10 +301,10 @@ async function generateWelcomePDF(userData) {
     }
 
     if (stampImage) {
-        const stampDims = stampImage.scale(0.35);
+        const stampDims = stampImage.scale(0.1); // Micro scale
         page.drawImage(stampImage, {
-            x: 230,
-            y: sigY - 10,
+            x: 140, 
+            y: sigY - 45, // Aligned down a little as requested
             width: stampDims.width,
             height: stampDims.height,
             opacity: 0.85
