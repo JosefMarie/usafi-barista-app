@@ -12,6 +12,7 @@ export function AdminReports() {
     const [students, setStudents] = useState([]);
     const [courses, setCourses] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [filterType, setFilterType] = useState('all'); // 'all', 'barista', 'bartender', 'combined'
     const [loading, setLoading] = useState(true);
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [targetCourseId, setTargetCourseId] = useState(null);
@@ -116,11 +117,29 @@ export function AdminReports() {
         fetchAllData();
     }, []);
 
-    const filteredStudents = students.filter(s =>
-        (s.fullName || s.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        s.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        s.uid?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const counts = {
+        all: students.length,
+        barista: students.filter(s => s.coursesStatus?.length === 1 && s.coursesStatus[0].courseId === 'bean-to-brew').length,
+        bartender: students.filter(s => s.coursesStatus?.length === 1 && s.coursesStatus[0].courseId === 'bar-tender-course').length,
+        combined: students.filter(s => s.coursesStatus?.length > 1).length,
+    };
+
+    const filteredStudents = students.filter(s => {
+        const matchesSearch = (s.fullName || s.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            s.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            s.uid?.toLowerCase().includes(searchTerm.toLowerCase());
+            
+        let matchesFilter = true;
+        if (filterType === 'barista') {
+            matchesFilter = s.coursesStatus?.length === 1 && s.coursesStatus[0].courseId === 'bean-to-brew';
+        } else if (filterType === 'bartender') {
+            matchesFilter = s.coursesStatus?.length === 1 && s.coursesStatus[0].courseId === 'bar-tender-course';
+        } else if (filterType === 'combined') {
+            matchesFilter = s.coursesStatus?.length > 1;
+        }
+
+        return matchesSearch && matchesFilter;
+    });
 
     const handleMarkGraduated = async (student, courseId, avg) => {
         const courseTitle = courses.find(c => c.id === courseId)?.title || courseId;
@@ -263,6 +282,55 @@ export function AdminReports() {
                     />
                 </div>
 
+                {/* Filters */}
+                <div className="flex flex-wrap items-center gap-2 mb-6">
+                    <button
+                        onClick={() => setFilterType('all')}
+                        className={cn(
+                            "px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all border",
+                            filterType === 'all' 
+                                ? "bg-espresso text-white border-espresso shadow-md" 
+                                : "bg-white/40 border-espresso/10 text-espresso/60 hover:bg-white/60 hover:text-espresso"
+                        )}
+                    >
+                        All Students <span className="opacity-60 ml-1">({counts.all})</span>
+                    </button>
+                    <button
+                        onClick={() => setFilterType('barista')}
+                        className={cn(
+                            "px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all border",
+                            filterType === 'barista' 
+                                ? "bg-[#a77c52] text-white border-[#a77c52] shadow-md" 
+                                : "bg-white/40 border-espresso/10 text-espresso/60 hover:bg-white/60 hover:text-espresso"
+                        )}
+                    >
+                        Barista Only <span className="opacity-60 ml-1">({counts.barista})</span>
+                    </button>
+                    <button
+                        onClick={() => setFilterType('bartender')}
+                        className={cn(
+                            "px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all border",
+                            filterType === 'bartender' 
+                                ? "bg-amber-600 text-white border-amber-600 shadow-md" 
+                                : "bg-white/40 border-espresso/10 text-espresso/60 hover:bg-white/60 hover:text-espresso"
+                        )}
+                    >
+                        Bartender Only <span className="opacity-60 ml-1">({counts.bartender})</span>
+                    </button>
+                    <button
+                        onClick={() => setFilterType('combined')}
+                        className={cn(
+                            "flex items-center gap-1 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all border",
+                            filterType === 'combined' 
+                                ? "bg-gradient-to-r from-[#a77c52] to-espresso text-white border-transparent shadow-md" 
+                                : "bg-white/40 border-espresso/10 text-espresso/60 hover:bg-white/60 hover:text-espresso"
+                        )}
+                    >
+                        <span className="material-symbols-outlined text-[12px] mr-1">workspace_premium</span>
+                        Dual Program <span className="opacity-80 ml-1">({counts.combined})</span>
+                    </button>
+                </div>
+
                 {/* List */}
                 <div className="bg-white/40 dark:bg-white/5 rounded-[2rem] overflow-hidden border border-espresso/10 shadow-xl">
                     {loading ? (
@@ -354,7 +422,7 @@ export function AdminReports() {
                                         {student.coursesStatus?.length > 1 && student.coursesStatus.every(cs => cs.isFinished) && (
                                             <div className="flex items-center gap-3 ml-2 border-l border-espresso/10 pl-3">
                                                 {/* Dual Dates */}
-                                                <div className="flex items-center gap-2 px-2 py-1 bg-gradient-to-r from-[#a77c52]/10 to-transparent rounded-xl border border-[#a77c52]/20">
+                                                <div className="flex items-center gap-2 px-2 py-1 bg-gradient-to-r from-[#a77c52]/10 to-transparent rounded-xl border border-[#a77c52]/20 relative group">
                                                     <div className="flex flex-col">
                                                         <span className="text-[7px] font-black text-[#a77c52] uppercase">Dual Start</span>
                                                         <input
@@ -365,6 +433,7 @@ export function AdminReports() {
                                                                 if (newVal === (student.dualStartDate?.toDate ? student.dualStartDate.toDate().toISOString().split('T')[0] : student.dualStartDate)) return;
                                                                 try {
                                                                     await updateDoc(doc(db, 'users', student.id), { dualStartDate: newVal });
+                                                                    setStudents(prev => prev.map(s => s.id === student.id ? { ...s, dualStartDate: newVal } : s));
                                                                 } catch (err) { console.error("Error saving dual start date:", err); }
                                                             }}
                                                             className="bg-transparent text-[9px] font-bold text-espresso dark:text-white focus:outline-none"
@@ -381,11 +450,24 @@ export function AdminReports() {
                                                                 if (newVal === (student.dualEndDate?.toDate ? student.dualEndDate.toDate().toISOString().split('T')[0] : student.dualEndDate)) return;
                                                                 try {
                                                                     await updateDoc(doc(db, 'users', student.id), { dualEndDate: newVal });
+                                                                    setStudents(prev => prev.map(s => s.id === student.id ? { ...s, dualEndDate: newVal } : s));
                                                                 } catch (err) { console.error("Error saving dual end date:", err); }
                                                             }}
                                                             className="bg-transparent text-[9px] font-bold text-espresso dark:text-white focus:outline-none"
                                                         />
                                                     </div>
+                                                    
+                                                    {/* Save Checkmark */}
+                                                    <button 
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            if (document.activeElement) document.activeElement.blur();
+                                                        }}
+                                                        className="ml-1 size-5 flex items-center justify-center bg-green-500 text-white rounded-full shadow-md hover:bg-green-600 transition-all opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 active:scale-95"
+                                                        title="Approve Dates"
+                                                    >
+                                                        <span className="material-symbols-outlined text-[12px] font-black">check</span>
+                                                    </button>
                                                 </div>
                                                 <button
                                                     onClick={() => {
@@ -403,7 +485,7 @@ export function AdminReports() {
                                         )}
 
                                         {/* Global/Single Course Date Inputs */}
-                                        <div className="flex items-center gap-2 px-3 py-1 bg-white/40 dark:bg-white/5 rounded-xl border border-espresso/10">
+                                        <div className="flex items-center gap-2 px-3 py-1 bg-white/40 dark:bg-white/5 rounded-xl border border-espresso/10 relative group">
                                             <div className="flex flex-col">
                                                 <span className="text-[7px] font-black uppercase opacity-40">Start Date</span>
                                                 <input
@@ -414,8 +496,7 @@ export function AdminReports() {
                                                         if (newVal === (student.courseStartDate?.toDate ? student.courseStartDate.toDate().toISOString().split('T')[0] : student.courseStartDate)) return;
                                                         try {
                                                             await updateDoc(doc(db, 'users', student.id), { courseStartDate: newVal });
-                                                            // We could update local state here but for a simple date field, 
-                                                            // blur-save is often enough for admin tools.
+                                                            setStudents(prev => prev.map(s => s.id === student.id ? { ...s, courseStartDate: newVal } : s));
                                                         } catch (err) { console.error("Error saving start date:", err); }
                                                     }}
                                                     className="bg-transparent text-[10px] font-bold text-espresso dark:text-white focus:outline-none"
@@ -432,11 +513,24 @@ export function AdminReports() {
                                                         if (newVal === (student.courseEndDate?.toDate ? student.courseEndDate.toDate().toISOString().split('T')[0] : student.courseEndDate)) return;
                                                         try {
                                                             await updateDoc(doc(db, 'users', student.id), { courseEndDate: newVal });
+                                                            setStudents(prev => prev.map(s => s.id === student.id ? { ...s, courseEndDate: newVal } : s));
                                                         } catch (err) { console.error("Error saving end date:", err); }
                                                     }}
                                                     className="bg-transparent text-[10px] font-bold text-espresso dark:text-white focus:outline-none"
                                                 />
                                             </div>
+                                            
+                                            {/* Save Checkmark */}
+                                            <button 
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    if (document.activeElement) document.activeElement.blur();
+                                                }}
+                                                className="ml-1 size-5 flex items-center justify-center bg-green-500 text-white rounded-full shadow-md hover:bg-green-600 transition-all opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 active:scale-95"
+                                                title="Approve Dates"
+                                            >
+                                                <span className="material-symbols-outlined text-[12px] font-black">check</span>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
