@@ -350,7 +350,59 @@ export function AdminReports() {
                                             </div>
                                         ))}
 
-                                        {/* Date Inputs for Training Period */}
+                                        {/* Combined Certificate Button & Dates for Multi-Course Students */}
+                                        {student.coursesStatus?.length > 1 && student.coursesStatus.every(cs => cs.isFinished) && (
+                                            <div className="flex items-center gap-3 ml-2 border-l border-espresso/10 pl-3">
+                                                {/* Dual Dates */}
+                                                <div className="flex items-center gap-2 px-2 py-1 bg-gradient-to-r from-[#a77c52]/10 to-transparent rounded-xl border border-[#a77c52]/20">
+                                                    <div className="flex flex-col">
+                                                        <span className="text-[7px] font-black text-[#a77c52] uppercase">Dual Start</span>
+                                                        <input
+                                                            type="date"
+                                                            defaultValue={student.dualStartDate ? (student.dualStartDate.toDate ? student.dualStartDate.toDate().toISOString().split('T')[0] : student.dualStartDate) : ""}
+                                                            onBlur={async (e) => {
+                                                                const newVal = e.target.value;
+                                                                if (newVal === (student.dualStartDate?.toDate ? student.dualStartDate.toDate().toISOString().split('T')[0] : student.dualStartDate)) return;
+                                                                try {
+                                                                    await updateDoc(doc(db, 'users', student.id), { dualStartDate: newVal });
+                                                                } catch (err) { console.error("Error saving dual start date:", err); }
+                                                            }}
+                                                            className="bg-transparent text-[9px] font-bold text-espresso dark:text-white focus:outline-none"
+                                                        />
+                                                    </div>
+                                                    <div className="w-px h-6 bg-[#a77c52]/20"></div>
+                                                    <div className="flex flex-col">
+                                                        <span className="text-[7px] font-black text-[#a77c52] uppercase">Dual End</span>
+                                                        <input
+                                                            type="date"
+                                                            defaultValue={student.dualEndDate ? (student.dualEndDate.toDate ? student.dualEndDate.toDate().toISOString().split('T')[0] : student.dualEndDate) : ""}
+                                                            onBlur={async (e) => {
+                                                                const newVal = e.target.value;
+                                                                if (newVal === (student.dualEndDate?.toDate ? student.dualEndDate.toDate().toISOString().split('T')[0] : student.dualEndDate)) return;
+                                                                try {
+                                                                    await updateDoc(doc(db, 'users', student.id), { dualEndDate: newVal });
+                                                                } catch (err) { console.error("Error saving dual end date:", err); }
+                                                            }}
+                                                            className="bg-transparent text-[9px] font-bold text-espresso dark:text-white focus:outline-none"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <button
+                                                    onClick={() => {
+                                                        setSelectedStudent(student);
+                                                        setTargetCourseId('combined');
+                                                        setViewMode('certificate');
+                                                    }}
+                                                    title="Combined Dual Certificate"
+                                                    className="flex items-center gap-1 px-3 py-2 bg-gradient-to-r from-[#a77c52] to-espresso text-white rounded-xl shadow-md hover:scale-105 transition-all text-[10px] font-black uppercase tracking-wider"
+                                                >
+                                                    <span className="material-symbols-outlined text-sm">workspace_premium</span>
+                                                    Dual Cert
+                                                </button>
+                                            </div>
+                                        )}
+
+                                        {/* Global/Single Course Date Inputs */}
                                         <div className="flex items-center gap-2 px-3 py-1 bg-white/40 dark:bg-white/5 rounded-xl border border-espresso/10">
                                             <div className="flex flex-col">
                                                 <span className="text-[7px] font-black uppercase opacity-40">Start Date</span>

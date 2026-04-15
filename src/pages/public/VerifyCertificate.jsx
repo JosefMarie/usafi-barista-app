@@ -72,6 +72,14 @@ export function VerifyCertificate() {
 
     const certificateId = `USF-${student.id.slice(0, 8).toUpperCase()}`;
 
+    // Determine all courses the student is enrolled in
+    let enrolledRaw = student.enrolledCourses;
+    if (!enrolledRaw || enrolledRaw.length === 0) {
+        enrolledRaw = student.courseId ? [{ courseId: student.courseId }] : [{ courseId: 'bean-to-brew' }];
+    }
+    const coursesList = enrolledRaw.map(item => typeof item === 'string' ? { courseId: item } : item);
+    const isDualCertification = coursesList.length > 1;
+
     return (
         <div className="min-h-screen bg-[#FAF5E8] py-12 px-4 flex flex-col items-center">
             {/* Logo */}
@@ -109,7 +117,13 @@ export function VerifyCertificate() {
                     </div>
                     <div className="flex justify-between items-center">
                         <span className="text-xs uppercase tracking-widest text-[#321C00]/40 font-bold">Curriculum</span>
-                        <span className="text-[#321C00] font-bold text-right max-w-[200px]">{student.courseId === 'bar-tender-course' ? 'Professional Bartender' : 'Full Barista (Bean to Brew)'}</span>
+                        <span className="text-[#321C00] font-bold text-right max-w-[200px]">
+                            {isDualCertification 
+                                ? 'Dual Certification: Barista & Mixology' 
+                                : student.courseId === 'bar-tender-course' 
+                                    ? 'Professional Bartender' 
+                                    : 'Full Barista (Bean to Brew)'}
+                        </span>
                     </div>
                     <div className="flex justify-between items-center">
                         <span className="text-xs uppercase tracking-widest text-[#321C00]/40 font-bold">Certificate ID</span>
@@ -139,11 +153,18 @@ export function VerifyCertificate() {
                     <p className="text-[#321C00]/60 text-sm">Official Transcript of Completed Modules</p>
                 </div>
 
-                <div className="w-full overflow-x-auto pb-8 flex justify-center px-4">
-                    <div className="transform scale-[0.6] sm:scale-[0.8] md:scale-100 origin-top">
-                        <StudentTranscript student={student} />
+                {coursesList.map((courseItem) => (
+                    <div key={courseItem.courseId} className="w-full flex flex-col items-center mb-12">
+                        <h3 className="text-xl font-serif text-[#a77c52] mb-4 text-center mt-4">
+                            {courseItem.courseId === 'bar-tender-course' ? 'Professional Mixology' : 'Professional Barista'}
+                        </h3>
+                        <div className="w-full overflow-x-auto pb-4 flex justify-center px-4">
+                            <div className="transform scale-[0.6] sm:scale-[0.8] md:scale-100 origin-top">
+                                <StudentTranscript student={student} courseId={courseItem.courseId} />
+                            </div>
+                        </div>
                     </div>
-                </div>
+                ))}
             </div>
 
             <div className="mt-8 text-center pb-12">

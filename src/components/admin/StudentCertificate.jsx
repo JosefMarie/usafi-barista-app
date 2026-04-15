@@ -140,14 +140,26 @@ export const StudentCertificate = React.forwardRef(({
                         {studentName}
                     </h2>
                     <p className="text-[9px] uppercase tracking-[0.4em] text-[#a77c52] font-black mt-1">
-                        {courseTitle || (TARGET_COURSE_ID === 'bar-tender-course' ? 'Professional Mixology & Bar Management' : 'Professional Barista & Coffee Science')}
+                        {courseTitle || (
+                            TARGET_COURSE_ID === 'combined' 
+                                ? 'Dual Certification: Barista & Mixology Program'
+                                : TARGET_COURSE_ID === 'bar-tender-course' 
+                                    ? 'Professional Mixology & Bar Management' 
+                                    : 'Professional Barista & Coffee Science'
+                        )}
                     </p>
                 </div>
 
                 {/* Achievement Description */}
                 <div className="z-10 max-w-4xl mx-auto">
-                    <p className="text-lg text-[#321C00]/80 font-serif italic leading-relaxed">
-                        {TARGET_COURSE_ID === 'bar-tender-course' ? (
+                    <p className="text-lg text-[#321C00]/80 font-serif italic leading-relaxed px-4">
+                        {TARGET_COURSE_ID === 'combined' ? (
+                            <>
+                                Has successfully completed the comprehensive dual-certification training program,
+                                demonstrating exceptional proficiency in espresso extraction, milk texturing,
+                                brewing methods, mixology, cocktail crafting, and beverage service excellence.
+                            </>
+                        ) : TARGET_COURSE_ID === 'bar-tender-course' ? (
                             <>
                                 Has successfully completed the comprehensive professional bartender training program,
                                 demonstrating exceptional proficiency in mixology, cocktail crafting,
@@ -169,9 +181,19 @@ export const StudentCertificate = React.forwardRef(({
                     <div className="flex flex-col items-center">
                         <span className="text-[10px] uppercase tracking-wider text-[#321C00]/40 font-bold mb-1">Training Period</span>
                         <span className="font-serif text-xl text-[#321C00] font-semibold leading-tight">
-                            {student.courseStartDate ? (student.courseStartDate.toDate ? student.courseStartDate.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : student.courseStartDate) : '...'}
-                            {' - '}
-                            {student.courseEndDate ? (student.courseEndDate.toDate ? student.courseEndDate.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : student.courseEndDate) : '...'}
+                            {TARGET_COURSE_ID === 'combined' && student.dualStartDate ? (
+                                <>
+                                    {student.dualStartDate.toDate ? student.dualStartDate.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : new Date(student.dualStartDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                    {' - '}
+                                    {student.dualEndDate ? (student.dualEndDate.toDate ? student.dualEndDate.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : new Date(student.dualEndDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })) : '...'}
+                                </>
+                            ) : (
+                                <>
+                                    {student.courseStartDate ? (student.courseStartDate.toDate ? student.courseStartDate.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : new Date(student.courseStartDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })) : '...'}
+                                    {' - '}
+                                    {student.courseEndDate ? (student.courseEndDate.toDate ? student.courseEndDate.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : new Date(student.courseEndDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })) : '...'}
+                                </>
+                            )}
                         </span>
                     </div>
 
