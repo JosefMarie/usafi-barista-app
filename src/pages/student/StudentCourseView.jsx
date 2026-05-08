@@ -512,12 +512,12 @@ export function StudentCourseView() {
                         <span className="material-symbols-outlined text-[18px] md:text-[24px]">arrow_back</span>
                     </button>
                     <div className="min-w-0 flex-1">
-                        <h1 className="inline-block bg-espresso text-white px-3 py-1 md:px-5 md:py-1.5 rounded-lg md:rounded-xl font-serif font-bold text-xs md:text-xl leading-tight truncate max-w-full shadow-sm">{module.title}</h1>
+                        <h1 className="inline-block bg-espresso text-white px-3 py-1 md:px-5 md:py-1.5 rounded-lg md:rounded-xl font-serif font-bold text-sm md:text-xl leading-tight truncate max-w-full shadow-sm">{module.title}</h1>
                         <div className="flex items-center gap-2 md:gap-4 mt-1">
-                            <div className="w-12 md:w-32 h-1 md:h-2 bg-espresso/10 dark:bg-white/10 rounded-full overflow-hidden shadow-inner">
+                            <div className="w-16 md:w-32 h-1.5 md:h-2 bg-espresso/10 dark:bg-white/10 rounded-full overflow-hidden shadow-inner">
                                 <div className="h-full bg-espresso transition-all duration-1000 ease-out" style={{ width: `${showQuiz ? 100 : progressPercent}%` }} />
                             </div>
-                            <p className="text-[7px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-tighter md:tracking-[0.2em] truncate">
+                            <p className="text-[8px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-tighter md:tracking-[0.2em] truncate">
                                 {showQuiz ? t('student.course_view.assessment_phase') : t('student.course_view.extraction', { percent: progressPercent })}
                             </p>
                         </div>
@@ -556,7 +556,7 @@ export function StudentCourseView() {
                         <div className="w-px h-5 bg-espresso/10 hidden sm:block"></div>
 
                         {/* Language Selector */}
-                        <div className="flex gap-1 md:gap-1.5 overflow-x-auto no-scrollbar shrink-0">
+                        <div className="flex gap-1.5 md:gap-1.5 overflow-x-auto no-scrollbar shrink-0">
                             {languages.map(lang => {
                                 const hasContent = module.languages?.[lang.code]?.content?.length > 0 || (lang.code === 'en' && module.content?.length > 0);
                                 if (!hasContent && lang.code !== 'en') return null;
@@ -565,10 +565,10 @@ export function StudentCourseView() {
                                         key={lang.code}
                                         onClick={() => handleLanguageToggle(lang.code)}
                                         className={cn(
-                                            "px-2 py-1.5 rounded-md md:rounded-lg text-[7px] md:text-[9px] font-black uppercase tracking-tighter md:tracking-widest transition-all whitespace-nowrap",
+                                            "px-3 py-2 md:px-2 md:py-1.5 rounded-md md:rounded-lg text-[9px] md:text-[9px] font-black uppercase tracking-tighter md:tracking-widest transition-all whitespace-nowrap",
                                             studyLanguage === lang.code
-                                                ? "bg-espresso text-white shadow-sm"
-                                                : "text-espresso/60 hover:bg-espresso/5 hover:text-espresso"
+                                                ? "bg-espresso text-white shadow-sm scale-105"
+                                                : "bg-white/50 dark:bg-white/5 text-espresso/60 hover:bg-espresso/5 hover:text-espresso"
                                         )}
                                     >
                                         {lang.name.charAt(0).toUpperCase() + lang.name.slice(1, 2)}
@@ -586,7 +586,7 @@ export function StudentCourseView() {
                 </div>
             </header>
 
-            <main className="flex-1 w-full p-4 md:p-6 pb-28 md:pb-24 max-w-6xl mx-auto">
+            <main className="flex-1 w-full p-0 md:p-4 pb-28 md:pb-24 mx-auto">
                 {showQuiz ? (
                     (!stats.passed && (stats.attempts >= 3 || user?.status === 'pending' || user?.status === 'unknown') && !isQuizAllowed) ? (
                         <div className="animate-fade-in flex flex-col items-center justify-center min-h-[50vh] text-center space-y-6 max-w-2xl mx-auto px-6">
@@ -867,11 +867,11 @@ export function StudentCourseView() {
                         </div>
                     )
                 ) : (
-                    <div className="animate-fade-in max-w-6xl mx-auto w-full h-full flex flex-col">
+                    <div className="animate-fade-in w-full h-full flex flex-col">
                         {activeContent[currentSlide] ? (
-                            <div className="flex-1 bg-white/40 dark:bg-[#2c2825] p-2 md:p-4 rounded-[2rem] border border-espresso/10 shadow-2xl flex flex-col overflow-hidden relative group">
+                            <div className="flex-1 bg-white/40 dark:bg-[#2c2825] p-0 md:p-2 rounded-none md:rounded-3xl border-x-0 md:border border-espresso/10 shadow-2xl flex flex-col overflow-hidden relative group">
                                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                                <div className="flex-1 min-h-[50vh] md:min-h-[80vh] w-full rounded-2xl overflow-hidden bg-espresso/5 shadow-inner flex items-center justify-center relative">
+                                <div className="flex-1 min-h-[75vh] md:min-h-[85vh] w-full rounded-none md:rounded-2xl overflow-hidden bg-espresso/5 shadow-inner flex flex-col relative">
                                     {activeContent[currentSlide].text ? (
                                         <div className="w-full h-full p-4 md:p-12 overflow-y-auto bg-white/80 dark:bg-black/40 custom-scrollbar">
                                             <div className="prose prose-sm md:prose-base dark:prose-invert max-w-none">
@@ -895,10 +895,10 @@ export function StudentCourseView() {
                                             const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
                                             const finalUrl = isPdf && isMobile
                                                 ? `https://docs.google.com/viewer?url=${encodeURIComponent(slideUrl)}&embedded=true`
-                                                : isPdf ? `${slideUrl}#toolbar=0` : slideUrl;
+                                                : isPdf ? `${slideUrl}#toolbar=0&view=FitH` : slideUrl;
                                             return isPdf ? (
                                                 <div
-                                                    className="w-full h-[60vh] md:h-[80vh] relative overflow-y-auto overflow-x-hidden custom-scrollbar bg-white"
+                                                    className="w-full h-[75vh] md:h-[80vh] relative overflow-y-auto overflow-x-hidden custom-scrollbar bg-white"
                                                     onContextMenu={(e) => {
                                                         e.preventDefault();
                                                         alert("SECURITY ALERT: Direct interaction with protected documents is restricted.");
@@ -908,8 +908,13 @@ export function StudentCourseView() {
                                                     <div className="relative w-full" style={{ height: '3000px' }}>
                                                         <iframe
                                                             src={finalUrl}
-                                                            className="absolute inset-0 w-full h-full border-none pointer-events-none"
-                                                            style={{ pointerEvents: 'none' }}
+                                                            className="absolute inset-0 w-full h-full border-none pointer-events-none origin-top"
+                                                            style={{ 
+                                                                pointerEvents: 'none',
+                                                                transform: isMobile ? 'scale(1.02)' : 'scale(1.0)',
+                                                                width: '100%',
+                                                                left: '0'
+                                                            }}
                                                             title={`Page ${currentSlide + 1}`}
                                                         />
                                                         
@@ -967,19 +972,19 @@ export function StudentCourseView() {
                 !showQuiz && (
                     <footer className="fixed bottom-0 left-0 right-0 bg-[#F5DEB3]/90 dark:bg-[#1e1e1e]/90 backdrop-blur-md border-t border-espresso/10 px-3 md:px-6 py-3 md:py-6 z-30">
                         <div className="w-full max-w-6xl mx-auto flex justify-between items-center gap-2 md:gap-4">
-                            <button onClick={handlePrev} disabled={currentSlide === 0} className="h-9 md:h-12 px-3 md:px-8 rounded-lg md:rounded-2xl border border-espresso/10 bg-white/40 hover:bg-white text-espresso font-black uppercase tracking-widest text-[7px] md:text-[10px] disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm active:scale-95 shrink-0">
+                            <button onClick={handlePrev} disabled={currentSlide === 0} className="h-10 md:h-12 px-4 md:px-8 rounded-lg md:rounded-2xl border border-espresso/10 bg-white/40 hover:bg-white text-espresso font-black uppercase tracking-widest text-[9px] md:text-[10px] disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm active:scale-95 shrink-0">
                                 <span className="hidden sm:inline">{t('student.course_view.prev_btn')}</span>
-                                <span className="sm:hidden">PREV</span>
+                                <span className="sm:hidden">PREVIOUS</span>
                             </button>
                             <div className="flex gap-1 md:gap-2 overflow-x-auto no-scrollbar py-1">
                                 {activeContent.map((_, idx) => (
-                                    <div key={idx} className={cn("h-1 md:h-2 rounded-full transition-all duration-500 shadow-inner shrink-0", idx === currentSlide ? "bg-espresso w-4 md:w-10 shadow-lg" : "bg-espresso/10 dark:bg-white/20 w-1 md:w-4")} />
+                                    <div key={idx} className={cn("h-1.5 md:h-2 rounded-full transition-all duration-500 shadow-inner shrink-0", idx === currentSlide ? "bg-espresso w-6 md:w-10 shadow-lg" : "bg-espresso/10 dark:bg-white/20 w-1.5 md:w-4")} />
                                 ))}
                             </div>
-                            <button onClick={handleNext} className="h-9 md:h-12 px-3 md:px-8 rounded-lg md:rounded-2xl bg-espresso text-white font-black uppercase tracking-widest text-[7px] md:text-[10px] hover:shadow-2xl transition-all shadow-xl flex items-center gap-1.5 md:gap-3 active:scale-95 shrink-0">
+                            <button onClick={handleNext} className="h-10 md:h-12 px-4 md:px-8 rounded-lg md:rounded-2xl bg-espresso text-white font-black uppercase tracking-widest text-[9px] md:text-[10px] hover:shadow-2xl transition-all shadow-xl flex items-center gap-2 md:gap-3 active:scale-95 shrink-0">
                                 <span className="hidden sm:inline">{currentSlide === (activeContent.length || 0) - 1 ? t('student.course_view.begin_eval_btn') : t('student.course_view.next_btn')}</span>
-                                <span className="sm:hidden">{currentSlide === (activeContent.length || 0) - 1 ? 'EVAL' : 'NEXT'}</span>
-                                <span className="material-symbols-outlined text-[16px] md:text-[20px]">{currentSlide === (activeContent.length || 0) - 1 ? 'school' : 'arrow_forward'}</span>
+                                <span className="sm:hidden">{currentSlide === (activeContent.length || 0) - 1 ? 'EVALUATE' : 'NEXT'}</span>
+                                <span className="material-symbols-outlined text-[18px] md:text-[20px]">{currentSlide === (activeContent.length || 0) - 1 ? 'school' : 'arrow_forward'}</span>
                             </button>
                         </div>
                     </footer>

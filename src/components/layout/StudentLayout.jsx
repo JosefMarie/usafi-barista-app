@@ -248,7 +248,11 @@ export function StudentLayout() {
 
                     {/* Page Content */}
                     <main className="flex-1 overflow-y-auto overflow-x-hidden relative flex flex-col w-full custom-scrollbar">
-                        <div className="flex-grow p-6 flex flex-col items-start w-full">
+                        <div className={cn(
+                            "flex-grow flex flex-col w-full",
+                            // Only apply padding and alignment if NOT in the course viewer or chat
+                            (!location.pathname.match(/\/student\/courses\/.+/) && !location.pathname.includes('/chat/')) ? "p-4 md:p-6 items-start" : "p-0 items-stretch"
+                        )}>
                             <Outlet />
                         </div>
                         <Footer />

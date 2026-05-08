@@ -424,33 +424,35 @@ export function BusinessCourseView() {
 
                         <header className="mb-10 md:mb-16 border-b border-espresso/5 pb-8 md:pb-12">
                             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-                                <div className="space-y-2">
-                                    <span className="text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.2em]">Chapter {(activeIndex + 1).toString().padStart(2, '0')}</span>
-                                    <h1 className="font-serif text-3xl md:text-5xl font-black text-espresso dark:text-white leading-tight">
+                                <div className="space-y-1">
+                                    <span className="text-[9px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.2em]">Chapter {(activeIndex + 1).toString().padStart(2, '0')}</span>
+                                    <h1 className="font-serif text-2xl md:text-5xl font-black text-espresso dark:text-white leading-tight">
                                         {activeChapter.title}
                                     </h1>
                                 </div>
 
-                                <div className="flex items-center gap-2 md:gap-3 bg-white/60 dark:bg-white/5 p-2 md:p-3 rounded-2xl shadow-xl border border-espresso/5 backdrop-blur-md self-start lg:self-center">
+                                <div className="flex flex-wrap items-center gap-2 md:gap-3 bg-white/60 dark:bg-white/5 p-2 md:p-3 rounded-2xl shadow-xl border border-espresso/5 backdrop-blur-md w-full sm:w-auto overflow-x-auto no-scrollbar">
                                     {activeMode === 'read' && (
-                                        <>
-                                            <div className="flex bg-espresso/5 dark:bg-white/5 rounded-xl p-1 shrink-0">
-                                                <button onClick={() => setSelectedGender('male')} className={`px-3 md:px-4 py-1.5 text-[10px] md:text-xs font-black rounded-lg transition-all ${selectedGender === 'male' ? 'bg-white dark:bg-espresso text-espresso dark:text-white shadow-md' : 'text-espresso/40 dark:text-white/40'}`}>MALE</button>
-                                                <button onClick={() => setSelectedGender('female')} className={`px-3 md:px-4 py-1.5 text-[10px] md:text-xs font-black rounded-lg transition-all ${selectedGender === 'female' ? 'bg-white dark:bg-espresso text-espresso dark:text-white shadow-md' : 'text-espresso/40 dark:text-white/40'}`}>FEMALE</button>
+                                        <div className="flex items-center gap-2">
+                                            <div className="flex bg-espresso/5 dark:bg-white/5 rounded-xl p-0.5 md:p-1 shrink-0">
+                                                <button onClick={() => setSelectedGender('male')} className={`px-2.5 md:px-4 py-1.5 text-[9px] md:text-xs font-black rounded-lg transition-all ${selectedGender === 'male' ? 'bg-white dark:bg-espresso text-espresso dark:text-white shadow-md' : 'text-espresso/40 dark:text-white/40'}`}>MALE</button>
+                                                <button onClick={() => setSelectedGender('female')} className={`px-2.5 md:px-4 py-1.5 text-[9px] md:text-xs font-black rounded-lg transition-all ${selectedGender === 'female' ? 'bg-white dark:bg-espresso text-espresso dark:text-white shadow-md' : 'text-espresso/40 dark:text-white/40'}`}>FEMALE</button>
                                             </div>
-                                            <button onClick={handleSpeak} className={`flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 rounded-xl font-black text-[10px] md:text-xs uppercase tracking-widest text-white transition-all active:scale-95 shrink-0 ${isSpeaking ? 'bg-red-500 shadow-red-500/20' : 'bg-espresso shadow-espresso/20'}`}>
-                                                <span className="material-symbols-outlined text-lg">{isSpeaking ? 'stop' : 'volume_up'}</span>
+                                            <button onClick={handleSpeak} className={`flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 rounded-xl font-black text-[9px] md:text-xs uppercase tracking-widest text-white transition-all active:scale-95 shrink-0 ${isSpeaking ? 'bg-red-500 shadow-red-500/20' : 'bg-espresso shadow-espresso/20'}`}>
+                                                <span className="material-symbols-outlined text-base md:text-lg">{isSpeaking ? 'stop' : 'volume_up'}</span>
                                                 {isSpeaking ? 'Stop' : 'Listen'}
                                             </button>
-                                        </>
+                                        </div>
                                     )}
-                                    <button onClick={() => setShowAI(!showAI)} className={cn("flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 rounded-xl font-black text-[10px] md:text-xs uppercase tracking-widest transition-all active:scale-95 shrink-0", showAI ? "bg-espresso text-white shadow-xl shadow-espresso/20" : "bg-espresso/5 text-espresso hover:bg-espresso/10")}>
-                                        <span className="material-symbols-outlined text-lg">{showAI ? 'smart_toy' : 'chat_bubble'}</span>
-                                        {showAI ? 'Hide AI' : 'Ask AI'}
+                                    <button onClick={() => setShowAI(!showAI)} className={cn("flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 rounded-xl font-black text-[9px] md:text-xs uppercase tracking-widest transition-all active:scale-95 shrink-0", showAI ? "bg-espresso text-white shadow-xl shadow-espresso/20" : "bg-espresso/5 text-espresso hover:bg-espresso/10")}>
+                                        <span className="material-symbols-outlined text-base md:text-lg">{showAI ? 'smart_toy' : 'chat_bubble'}</span>
+                                        <span className="hidden xs:inline">{showAI ? 'Hide AI' : 'Ask AI'}</span>
+                                        <span className="xs:hidden">{showAI ? 'Hide' : 'AI'}</span>
                                     </button>
-                                    <button onClick={() => { setShowNotes(!showNotes); setShowAI(false); }} className={cn("flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 rounded-xl font-black text-[10px] md:text-xs uppercase tracking-widest transition-all active:scale-95 shrink-0", showNotes ? "bg-espresso text-white shadow-xl shadow-espresso/20" : "bg-espresso/5 text-espresso")}>
-                                        <span className="material-symbols-outlined text-lg">{showNotes ? 'edit_note' : 'note_add'}</span>
-                                        {showNotes ? 'Hide' : 'Notes'}
+                                    <button onClick={() => { setShowNotes(!showNotes); setShowAI(false); }} className={cn("flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 rounded-xl font-black text-[9px] md:text-xs uppercase tracking-widest transition-all active:scale-95 shrink-0", showNotes ? "bg-espresso text-white shadow-xl shadow-espresso/20" : "bg-espresso/5 text-espresso")}>
+                                        <span className="material-symbols-outlined text-base md:text-lg">{showNotes ? 'edit_note' : 'note_add'}</span>
+                                        <span className="hidden xs:inline">{showNotes ? 'Hide Notes' : 'Add Notes'}</span>
+                                        <span className="xs:hidden">Notes</span>
                                     </button>
                                     {userProgress?.status === 'completed' && (
                                         <button 

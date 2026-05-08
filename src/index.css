@@ -75,7 +75,7 @@
 .watermark-text {
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: 4vw;
+  font-size: 8vmin;
   color: var(--color-espresso);
   transform: rotate(-30deg);
   white-space: nowrap;
