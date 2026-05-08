@@ -191,6 +191,19 @@ export function BusinessCourseView() {
         return () => clearInterval(timer);
     }, [activeMode, quizStarted, quizResult, timeLeft, currentQuestionIndex]);
 
+    // Content Protection Shortcuts
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.ctrlKey && (e.key === 'c' || e.key === 'p' || e.key === 's' || e.key === 'u')) {
+                e.preventDefault();
+                alert("PROTECTED CONTENT: Copying, printing, and saving are disabled for security.");
+                return false;
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
+
     const handleSpeak = () => {
         if (isSpeaking) {
             synth.current.cancel();
@@ -227,11 +240,6 @@ export function BusinessCourseView() {
     const progressPercent = chapters.length > 0
         ? Math.round(((activeIndex + 1) / chapters.length) * 100)
         : 0;
-
-    // Progress Helper
-    const isChapterCompleted = (chapterId) => {
-        return true;
-    };
 
     const startQuiz = () => {
         if (!activeChapter?.quiz?.enabled) return;
@@ -300,12 +308,8 @@ export function BusinessCourseView() {
 
                 if (currentIndex !== -1 && currentIndex < chapters.length - 1) {
                     const nextChapter = chapters[currentIndex + 1];
-                    nextChapterId = nextChapter.id; // Advance progress to next chapter ID
+                    nextChapterId = nextChapter.id;
                 }
-
-                // Update Progress (Always update lastChapterId if advanced)
-                // Logic: "lastChapterId" represents the FURTHEST unlocked chapter.
-                // We only update if nextChapterId > current saved lastChapterId (simplified: just update for now)
 
                 const isCompleted = currentIndex === chapters.length - 1;
 
@@ -353,14 +357,11 @@ export function BusinessCourseView() {
     if (loading) return <div className="h-screen flex items-center justify-center"><span className="material-symbols-outlined animate-spin text-4xl text-primary">progress_activity</span></div>;
     if (!course) return <div className="p-8">Course not found</div>;
 
-
-
     return (
         <div
             className="min-h-screen bg-[#FAF5E8] dark:bg-background-dark flex flex-col md:flex-row select-none overflow-hidden"
             onContextMenu={(e) => e.preventDefault()}
         >
-            {/* Sidebar / Chapter List */}
             <aside className="w-full md:w-80 lg:w-96 bg-[#F5DEB3] dark:bg-[#1c1916] border-b md:border-b-0 md:border-r border-espresso/10 flex flex-col h-auto md:h-screen sticky top-0 shadow-xl z-20 shrink-0">
                 <div className="p-6 md:p-8 border-b border-espresso/10 bg-white/20 backdrop-blur-sm">
                     <Link to="/business/dashboard" className="text-[9px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-[0.2em] mb-4 flex items-center gap-1 hover:text-espresso transition-colors group">
@@ -371,7 +372,6 @@ export function BusinessCourseView() {
                         {course.title}
                     </h2>
 
-                    {/* Progress Bar in Sidebar */}
                     <div className="space-y-2 p-4 bg-white/40 dark:bg-white/5 rounded-2xl border border-white/10 shadow-sm">
                         <div className="flex justify-between items-end">
                             <span className="text-[9px] md:text-[10px] font-black text-espresso/40 dark:text-white/40 uppercase tracking-widest text-[8px]">Current Progress</span>
@@ -418,12 +418,10 @@ export function BusinessCourseView() {
                 </div>
             </aside>
 
-            {/* Main Content Area */}
             <main className="flex-1 md:h-screen overflow-y-auto scroll-smooth">
                 {activeChapter ? (
                     <div className="p-6 md:p-12 lg:p-16 max-w-4xl mx-auto animate-fade-in">
 
-                        {/* HEADER */}
                         <header className="mb-10 md:mb-16 border-b border-espresso/5 pb-8 md:pb-12">
                             <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                                 <div className="space-y-2">
@@ -433,7 +431,6 @@ export function BusinessCourseView() {
                                     </h1>
                                 </div>
 
-                                {/* TTS & Tools */}
                                 <div className="flex items-center gap-2 md:gap-3 bg-white/60 dark:bg-white/5 p-2 md:p-3 rounded-2xl shadow-xl border border-espresso/5 backdrop-blur-md self-start lg:self-center">
                                     {activeMode === 'read' && (
                                         <>
@@ -468,10 +465,8 @@ export function BusinessCourseView() {
                             </div>
                         </header>
 
-                        {/* MODE SWITCHER: READ / QUIZ */}
                         {activeMode === 'read' ? (
                             <>
-                                {/* Video Section */}
                                 {activeChapter.videoUrl && (
                                     <div className="mb-10 rounded-[2.5rem] overflow-hidden bg-black aspect-video shadow-2xl border-4 border-espresso/10 relative group">
                                         <iframe
@@ -481,23 +476,34 @@ export function BusinessCourseView() {
                                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                             allowFullScreen
                                         ></iframe>
-                                        <div className="absolute top-4 left-4 bg-espresso/80 backdrop-blur-sm text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
-                                            Video Lesson
-                                        </div>
                                     </div>
                                 )}
 
-                                <article className="prose prose-stone dark:prose-invert max-w-none">
-                                    {activeChapter.imageUrl && (
-                                        <div className="relative group overflow-hidden rounded-[2rem] md:rounded-[3rem] shadow-2xl mb-12 border-8 border-white/20">
-                                            <img src={activeChapter.imageUrl} alt={activeChapter.title} className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-105" />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <article 
+                                    className="prose prose-stone dark:prose-invert max-w-none protected-content"
+                                    onContextMenu={(e) => {
+                                        e.preventDefault();
+                                        alert("SECURITY ALERT: Content interaction is restricted.");
+                                    }}
+                                >
+                                    <div className="relative group">
+                                        {activeChapter.imageUrl && (
+                                            <div className="relative group overflow-hidden rounded-[2rem] md:rounded-[3rem] shadow-2xl mb-12 border-8 border-white/20">
+                                                <img src={activeChapter.imageUrl} alt={activeChapter.title} className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-105" />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                            </div>
+                                        )}
+                                        <div className="text-lg md:text-xl md:leading-relaxed text-espresso/80 dark:text-white/80 font-serif leading-relaxed relative z-10" dangerouslySetInnerHTML={{ __html: activeChapter.content }} />
+                                        
+                                        {/* Watermark Overlay stays on top but allows scroll events through */}
+                                        <div className="watermark-overlay opacity-5 z-50 pointer-events-none">
+                                            <div className="watermark-text text-[2vw]">
+                                                PRIVATE PROPERTY OF USAFI • {user?.displayName || user?.name || user?.email} • ID: {user?.uid?.substring(0, 8)}
+                                            </div>
                                         </div>
-                                    )}
-                                    <div className="text-lg md:text-xl md:leading-relaxed text-espresso/80 dark:text-white/80 font-serif leading-relaxed" dangerouslySetInnerHTML={{ __html: activeChapter.content }} />
+                                    </div>
                                 </article>
 
-                                {/* NEXT / QUIZ ACTION */}
                                 <div className="mt-16 md:mt-24 p-8 md:p-16 bg-white dark:bg-white/5 rounded-[2.5rem] md:rounded-[4rem] text-center border border-espresso/5 shadow-2xl relative overflow-hidden group">
                                     <div className="absolute top-0 left-0 w-full h-1.5 bg-espresso/10 group-hover:bg-espresso transition-colors"></div>
                                     {activeChapter.quiz?.enabled ? (

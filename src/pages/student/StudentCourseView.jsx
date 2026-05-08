@@ -62,6 +62,12 @@ export function StudentCourseView() {
                     navigate('/student/courses');
                     return;
                 }
+                
+                // Enforce noExam for the "Tools and Equipment" module
+                if (data.title && data.title.toLowerCase().includes('tools and equipment')) {
+                    data.noExam = true;
+                }
+
                 setModule({ id: docSnap.id, ...data });
                 setIsQuizAllowed(data.quizAllowedStudents?.includes(user.uid) || false);
 
@@ -203,6 +209,20 @@ export function StudentCourseView() {
         }
         return () => clearInterval(timer);
     }, [showQuiz, quizStarted, quizResult, timeLeft, currentQuestionIndex]);
+
+    // Content Protection Shortcuts
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            // Block Ctrl+C (Copy), Ctrl+P (Print), Ctrl+S (Save), Ctrl+U (Source)
+            if (e.ctrlKey && (e.key === 'c' || e.key === 'p' || e.key === 's' || e.key === 'u')) {
+                e.preventDefault();
+                alert("PROTECTED CONTENT: Copying, printing, and saving are disabled for security.");
+                return false;
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
 
     const startQuiz = () => {
         // Redundant safety check with race-condition guard
@@ -438,7 +458,8 @@ export function StudentCourseView() {
     const finalizeNoExamModule = async () => {
         if (!user || !moduleId || !module) return;
         try {
-            const score = 80;
+            const isToolsAndEquipment = module.title && module.title.toLowerCase().includes('tools and equipment');
+            const score = isToolsAndEquipment ? 89 : 80;
             const passed = true;
             setQuizResult({ score, passed });
 
@@ -638,7 +659,7 @@ export function StudentCourseView() {
                                                                 </div>
                                                                 <div>
                                                                     <p className="text-[7px] md:text-[10px] font-black uppercase tracking-widest text-espresso/40 mb-0.5">Fixed Scoring</p>
-                                                                    <p className="text-[10px] md:text-sm font-bold text-espresso dark:text-white leading-tight">Completing this module will award you 80% marks on your official transcript.</p>
+                                                                    <p className="text-[10px] md:text-sm font-bold text-espresso dark:text-white leading-tight">Completing this module will award you {module.title && module.title.toLowerCase().includes('tools and equipment') ? 89 : 80}% marks on your official transcript.</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -875,39 +896,55 @@ export function StudentCourseView() {
                                             const finalUrl = isPdf && isMobile
                                                 ? `https://docs.google.com/viewer?url=${encodeURIComponent(slideUrl)}&embedded=true`
                                                 : isPdf ? `${slideUrl}#toolbar=0` : slideUrl;
-
                                             return isPdf ? (
                                                 <div
-                                                    className="w-full h-[50vh] md:h-full relative"
-                                                    onDoubleClick={() => window.open(slideUrl, '_blank')}
+                                                    className="w-full h-[60vh] md:h-[80vh] relative overflow-y-auto overflow-x-hidden custom-scrollbar bg-white"
+                                                    onContextMenu={(e) => {
+                                                        e.preventDefault();
+                                                        alert("SECURITY ALERT: Direct interaction with protected documents is restricted.");
+                                                    }}
                                                 >
-                                                    <iframe
-                                                        src={finalUrl}
-                                                        className="w-full h-full border-none bg-white"
-                                                        title={`Page ${currentSlide + 1}`}
-                                                    />
-                                                    {/* Interaction Layer */}
-                                                    <div className="absolute top-2 left-2 flex gap-2 pointer-events-auto">
-                                                        <button
-                                                            onClick={(e) => { e.stopPropagation(); window.open(slideUrl, '_blank'); }}
-                                                            className="size-8 md:size-10 bg-espresso/60 hover:bg-espresso text-white rounded-lg md:rounded-xl flex items-center justify-center backdrop-blur-md shadow-lg transition-all active:scale-90"
-                                                            title="Open in Full Screen"
-                                                        >
-                                                            <span className="material-symbols-outlined text-lg">open_in_new</span>
-                                                        </button>
+                                                    {/* Deep Shield Wrapper: Makes iframe non-interactive while allowing parent to scroll */}
+                                                    <div className="relative w-full" style={{ height: '3000px' }}>
+                                                        <iframe
+                                                            src={finalUrl}
+                                                            className="absolute inset-0 w-full h-full border-none pointer-events-none"
+                                                            style={{ pointerEvents: 'none' }}
+                                                            title={`Page ${currentSlide + 1}`}
+                                                        />
+                                                        
+                                                        {/* Interactive Shield for right-click on the "scrollable" area */}
+                                                        <div className="absolute inset-0 z-40 bg-transparent" />
                                                     </div>
-                                                    {isMobile && (
-                                                        <div className="absolute bottom-2 left-2 right-2 pointer-events-none">
-                                                            <p className="text-[6px] font-black text-espresso/30 dark:text-white/30 uppercase tracking-[0.2em] text-center">Double tap to view full screen</p>
+
+                                                    {/* Watermark stays on top */}
+                                                    <div className="watermark-overlay z-50 pointer-events-none fixed">
+                                                        <div className="watermark-text">
+                                                            PRIVATE PROPERTY OF USAFI • {user?.displayName || user?.name || user?.email} • ID: {user?.uid?.substring(0, 8)}
                                                         </div>
-                                                    )}
+                                                    </div>
                                                 </div>
                                             ) : (
-                                                <img
-                                                    src={slideUrl}
-                                                    alt={`Page ${currentSlide + 1}`}
-                                                    className="max-w-full max-h-full object-contain"
-                                                />
+                                                <div 
+                                                    className="relative w-full h-full flex items-center justify-center overflow-hidden"
+                                                    onContextMenu={(e) => {
+                                                        e.preventDefault();
+                                                        alert("SECURITY ALERT: Image interaction is restricted.");
+                                                    }}
+                                                >
+                                                    <img
+                                                        src={slideUrl}
+                                                        alt={`Page ${currentSlide + 1}`}
+                                                        className="max-w-full max-h-full object-contain relative z-10"
+                                                    />
+
+                                                    {/* Watermark stays on top but allows clicks through */}
+                                                    <div className="watermark-overlay z-50 pointer-events-none">
+                                                        <div className="watermark-text">
+                                                            PRIVATE PROPERTY OF USAFI • {user?.displayName || user?.name || user?.email} • ID: {user?.uid?.substring(0, 8)}
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             );
                                         })()
                                     )}
