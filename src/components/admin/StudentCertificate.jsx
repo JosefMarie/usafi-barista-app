@@ -5,7 +5,7 @@ import QRCode from "react-qr-code";
 
 
 const CoffeeWatermark = ({ className }) => (
-    <svg viewBox="0 0 200 200" className={cn("w-[700px] h-[700px] text-[#a77c52] opacity-10 pointer-events-none select-none", className)} fill="currentColor">
+    <svg viewBox="0 0 200 200" className={cn("w-[700px] h-[700px] text-[#a77c52] opacity-[0.08] pointer-events-none select-none", className)} fill="currentColor">
         {/* Cup Body */}
         <path d="M40,60 C40,110 50,135 90,135 C130,135 140,110 140,60 L40,60 Z" />
         {/* Handle */}
@@ -45,18 +45,17 @@ export const StudentCertificate = React.forwardRef(({
 
     // Fallback data if student object is missing or incomplete
     const studentName = student?.fullName || student?.name || "Student Name";
-    const certificateId = student?.uid || student?.id ? `USF-${(student.uid || student.id).slice(0, 8).toUpperCase()}` : "USF-CERT-0000";
-    const completionDate = new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
-
+    const certificateId = student?.uid || student?.id ? `USF-${(student.uid || student.id).slice(-8).toUpperCase()}` : "USF-GDI8LRNJ";
+    
     const trainerName = "EBENEZER Ishimwe";
     const ceoName = "Sandrine GASARASI";
 
     return (
-        <div ref={ref} className={cn("certificate-sheet w-[297mm] h-[210mm] bg-[#FAF5E8] text-[#321C00] font-sans relative overflow-hidden mx-auto shadow-2xl print:shadow-none print:w-[297mm] print:h-[210mm] print:absolute print:top-0 print:left-0 print:m-0", className)}>
+        <div 
+            ref={ref} 
+            className={cn("certificate-sheet bg-[#FAF5E8] text-[#321C00] font-sans relative mx-auto shadow-2xl print:shadow-none print:m-0 overflow-hidden", className)}
+            style={{ width: '297mm', height: '210mm' }}
+        >
             {/* Styles matching the reference Tailwind config and Font setup */}
             <style>
                 {`
@@ -64,32 +63,35 @@ export const StudentCertificate = React.forwardRef(({
                     .font-serif { font-family: 'Playfair Display', serif; }
                     .font-display { font-family: 'Lexend', sans-serif; }
                     .bg-guilloche { background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIiBvcGFjaXR5PSIwLjAzIj48cGF0aCBkPSJNMjAgMjBMMCAwSDQwTDIwIDIwek0yMCAyMEw0MCA0MEgwTDIwIDIweiIgZmlsbD0iIzMyMUMwMCIvPjwvc3ZnPg=="); }
-                    @page { size: A4 landscape !important; margin: 0 !important; }
+                    
+                    @page { 
+                        size: A4 landscape; 
+                        margin: 0 !important; 
+                    }
+
                     @media print {
+                        * {
+                            -webkit-print-color-adjust: exact !important;
+                            print-color-adjust: exact !important;
+                        }
                         html, body { 
                             margin: 0 !important; 
                             padding: 0 !important; 
                             background: white !important;
-                            -webkit-print-color-adjust: exact !important;
-                            print-color-adjust: exact !important;
+                            overflow: hidden !important;
+                            height: 210mm !important;
                         }
                         .certificate-sheet {
-                            position: absolute !important;
-                            top: 0 !important;
-                            left: 0 !important;
+                            display: block !important;
+                            position: relative !important;
                             width: 297mm !important;
                             height: 210mm !important;
                             margin: 0 !important;
                             padding: 0 !important;
                             box-shadow: none !important;
-                            transform: none !important;
                             background-color: #FAF5E8 !important;
-                            z-index: 1000 !important;
-                        }
-                        /* Reset visibility for print */
-                        .certificate-sheet * {
-                            color: #321C00 !important;
-                            -webkit-print-color-adjust: exact !important;
+                            overflow: hidden !important;
+                            page-break-after: avoid !important;
                         }
                     }
                 `}
@@ -110,7 +112,7 @@ export const StudentCertificate = React.forwardRef(({
             </div>
 
             {/* Main Content Area */}
-            <div className="m-6 border-4 border-[#a77c52]/20 border-double h-[calc(100%-3rem)] flex flex-col items-center text-center relative bg-guilloche px-16 pt-6 pb-8 justify-between z-10">
+            <div className="m-6 border-4 border-[#a77c52]/20 border-double h-[calc(210mm-3rem)] flex flex-col items-center text-center relative bg-guilloche px-16 pt-6 pb-8 justify-between z-10 overflow-hidden">
 
                 {/* Background Watermark */}
                 <div className="absolute inset-0 flex items-center justify-center z-0">
@@ -118,7 +120,7 @@ export const StudentCertificate = React.forwardRef(({
                 </div>
 
                 {/* Header Section */}
-                <div className="z-10 bg-[#FAF5E8]/80 backdrop-blur-sm print:backdrop-blur-none print:bg-[#FAF5E8] px-12 py-4 rounded-full border border-[#a77c52]/10 mb-2">
+                <div className="z-10 bg-[#FAF5E8]/80 backdrop-blur-sm print:bg-[#FAF5E8] px-12 py-4 rounded-full border border-[#a77c52]/10 mb-2">
                     <div className="flex flex-col items-center">
                         <div className="flex items-center gap-4 mb-1">
                             <img src="/logo.jpg" alt="Usafi Logo" className="h-28 w-auto object-contain mix-blend-multiply" />
@@ -133,13 +135,11 @@ export const StudentCertificate = React.forwardRef(({
                     <p className="font-serif text-2xl italic text-[#321C00]/60 tracking-wider">of Appreciation</p>
                 </div>
 
-                {/* Recipient Section */}
-                <div className="z-10 w-full flex flex-col items-center my-2">
-                    <p className="text-[10px] uppercase tracking-[0.2em] text-[#321C00]/50 font-bold mb-4">This is to certify that</p>
-                    <h2 className="font-serif text-5xl font-bold text-[#321C00] w-full text-center pb-2 border-b-2 border-[#a77c52]/20 max-w-4xl px-8 mb-1 capitalize leading-tight">
-                        {studentName}
-                    </h2>
-                    <p className="text-[9px] uppercase tracking-[0.4em] text-[#a77c52] font-black mt-1">
+                {/* Presentation Section */}
+                <div className="z-10 flex flex-col items-center w-full">
+                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#a77c52] mb-6">This is to certify that</p>
+                    <h2 className="font-serif text-6xl font-black text-[#321C00] mb-3 tracking-tight border-b-2 border-[#a77c52]/30 px-12 pb-2">{studentName}</h2>
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#a77c52] mb-6">
                         {courseTitle || (
                             TARGET_COURSE_ID === 'combined' 
                                 ? 'Dual Certification: Barista & Mixology Program'
@@ -148,63 +148,19 @@ export const StudentCertificate = React.forwardRef(({
                                     : 'Professional Barista & Coffee Science'
                         )}
                     </p>
-                </div>
-
-                {/* Achievement Description */}
-                <div className="z-10 max-w-4xl mx-auto">
-                    <p className="text-lg text-[#321C00]/80 font-serif italic leading-relaxed px-4">
+                    <p className="max-w-2xl text-[11px] leading-relaxed text-[#321C00]/80 font-medium italic">
                         {TARGET_COURSE_ID === 'combined' ? (
-                            <>
-                                Has successfully completed the comprehensive dual-certification training program,
-                                demonstrating exceptional proficiency in espresso extraction, milk texturing,
-                                brewing methods, mixology, cocktail crafting, and beverage service excellence.
-                            </>
+                            "Has successfully completed the comprehensive dual-certification training program, demonstrating exceptional proficiency in espresso extraction, milk texturing, brewing methods, mixology, cocktail crafting, and beverage service excellence."
                         ) : TARGET_COURSE_ID === 'bar-tender-course' ? (
-                            <>
-                                Has successfully completed the comprehensive professional bartender training program,
-                                demonstrating exceptional proficiency in mixology, cocktail crafting,
-                                bar operations, and beverage service excellence.
-                            </>
+                            "Has successfully completed the comprehensive professional bartender training program, demonstrating exceptional proficiency in mixology, cocktail crafting, bar operations, and beverage service excellence."
                         ) : (
-                            <>
-                                Has successfully completed the comprehensive professional barista training program,
-                                demonstrating exceptional proficiency in espresso extraction, milk texturing,
-                                brewing methods, and customer service excellence.
-                            </>
+                            "Has successfully completed the comprehensive professional barista training program, demonstrating exceptional proficiency in espresso extraction, milk texturing, brewing methods, and customer service excellence."
                         )}
                     </p>
                 </div>
 
-                {/* Details Grid */}
-                <div className="z-10 w-full max-w-4xl flex justify-center gap-12 py-3 border-t border-b border-dashed border-[#a77c52]/20 my-1 bg-[#FAF5E8]/50">
-                    {/* Training Period - Replaces Date Issued */}
-                    <div className="flex flex-col items-center">
-                        <span className="text-[10px] uppercase tracking-wider text-[#321C00]/40 font-bold mb-1">Training Period</span>
-                        <span className="font-serif text-xl text-[#321C00] font-semibold leading-tight">
-                            {TARGET_COURSE_ID === 'combined' && student.dualStartDate ? (
-                                <>
-                                    {student.dualStartDate.toDate ? student.dualStartDate.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : new Date(student.dualStartDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                                    {' - '}
-                                    {student.dualEndDate ? (student.dualEndDate.toDate ? student.dualEndDate.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : new Date(student.dualEndDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })) : '...'}
-                                </>
-                            ) : (
-                                <>
-                                    {student.courseStartDate ? (student.courseStartDate.toDate ? student.courseStartDate.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : new Date(student.courseStartDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })) : '...'}
-                                    {' - '}
-                                    {student.courseEndDate ? (student.courseEndDate.toDate ? student.courseEndDate.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : new Date(student.courseEndDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })) : '...'}
-                                </>
-                            )}
-                        </span>
-                    </div>
-
-                    <div className="flex flex-col items-center border-l border-[#a77c52]/10 pl-12">
-                        <span className="text-[10px] uppercase tracking-wider text-[#321C00]/40 font-bold mb-1">Certificate ID</span>
-                        <span className="font-display text-lg text-[#321C00] font-semibold tracking-wide">{certificateId}</span>
-                    </div>
-                </div>
-
-                {/* Footer Signatures */}
-                <div className="z-10 w-full flex items-end justify-between px-20 mb-4">
+                {/* Footer Details */}
+                <div className="z-10 w-full flex justify-between items-end mt-4 px-4">
                     <div className="flex flex-col items-center w-64">
                         <div className="h-16 w-full flex items-center justify-center relative">
                             <img 
@@ -251,6 +207,32 @@ export const StudentCertificate = React.forwardRef(({
                             <span className="font-serif italic text-lg text-[#321C00]/80 mb-1">{ceoName}</span>
                             <span className="text-[10px] uppercase font-bold text-[#321C00]/50 tracking-widest">C.E.O Usafi Coffee</span>
                         </div>
+                    </div>
+                </div>
+
+                {/* Training Period & ID */}
+                <div className="z-10 w-full flex justify-around items-center pt-4 border-t border-[#a77c52]/10">
+                    <div className="text-center">
+                        <p className="text-[7px] font-black uppercase tracking-widest text-[#a77c52] mb-1">Training Period</p>
+                        <p className="text-[9px] font-bold text-[#321C00]">
+                            {TARGET_COURSE_ID === 'combined' && student.dualStartDate ? (
+                                <>
+                                    {student.dualStartDate.toDate ? student.dualStartDate.toDate().toLocaleDateString() : new Date(student.dualStartDate).toLocaleDateString()}
+                                    {' - '}
+                                    {student.dualEndDate ? (student.dualEndDate.toDate ? student.dualEndDate.toDate().toLocaleDateString() : new Date(student.dualEndDate).toLocaleDateString()) : "---"}
+                                </>
+                            ) : (
+                                <>
+                                    {student.courseStartDate ? (student.courseStartDate.toDate ? student.courseStartDate.toDate().toLocaleDateString() : new Date(student.courseStartDate).toLocaleDateString()) : "---"}
+                                    {' - '}
+                                    {student.courseEndDate ? (student.courseEndDate.toDate ? student.courseEndDate.toDate().toLocaleDateString() : new Date(student.courseEndDate).toLocaleDateString()) : "---"}
+                                </>
+                            )}
+                        </p>
+                    </div>
+                    <div className="text-center">
+                        <p className="text-[7px] font-black uppercase tracking-widest text-[#a77c52] mb-1">Certificate ID</p>
+                        <p className="text-[9px] font-bold text-[#321C00] uppercase">{certificateId}</p>
                     </div>
                 </div>
 

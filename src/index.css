@@ -52,12 +52,7 @@
   }
 }
 
-/* Content Protection */
-@media print {
-  body {
-    display: none !important;
-  }
-}
+
 
 .watermark-overlay {
   pointer-events: none;
