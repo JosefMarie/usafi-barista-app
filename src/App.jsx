@@ -37,6 +37,7 @@ import { SeekerDashboard } from './pages/seeker/SeekerDashboard';
 import { SeekerProfile } from './pages/seeker/SeekerProfile';
 import { VerifyCertificate } from './pages/public/VerifyCertificate';
 import { MaintenanceMode } from './pages/public/MaintenanceMode';
+import { InsufficientPermissions } from './pages/public/InsufficientPermissions';
 // Auth Pages
 import { Login } from './pages/auth/Login';
 import { ForgotPassword } from './pages/auth/ForgotPassword';
@@ -131,6 +132,18 @@ function MaintenanceGuard({ children, user, settings }) {
   return children;
 }
 
+function StudentAccessGuard({ children, user, settings, type }) {
+  if (user?.role === 'student') {
+    if (settings?.disableStudentLogin) {
+      return <Navigate to="/insufficient-permissions?type=login" replace />;
+    }
+    if (type === 'courses' && settings?.disableStudentCourses) {
+      return <Navigate to="/insufficient-permissions?type=courses" replace />;
+    }
+  }
+  return children;
+}
+
 function App() {
   const [settings, setSettings] = React.useState(null);
 
@@ -206,6 +219,7 @@ function AppContent({ settings }) {
           <Route path="business/register" element={<BusinessRegister />} />
           <Route path="business/login" element={<BusinessLogin />} />
           <Route path="verify/:id" element={<VerifyCertificate />} />
+          <Route path="insufficient-permissions" element={<InsufficientPermissions />} />
           <Route path="weekend-experience" element={<WeekendExperience />} />
           <Route path="weekend-experience/book" element={<ExperienceBooking />} />
           <Route path="donate" element={<DonationPage />} />
@@ -221,12 +235,12 @@ function AppContent({ settings }) {
         </Route>
 
         {/* Student Routes */}
-        <Route path="/student" element={<MaintenanceGuard user={user} settings={settings}><StudentLayout /></MaintenanceGuard>}>
+        <Route path="/student" element={<MaintenanceGuard user={user} settings={settings}><StudentAccessGuard user={user} settings={settings}><StudentLayout /></StudentAccessGuard></MaintenanceGuard>}>
           <Route index element={<Navigate to="/student/dashboard" replace />} />
           <Route path="dashboard" element={<StudentDashboard />} />
           <Route path="opportunities" element={<StudentOpportunities />} />
-          <Route path="courses" element={<MyCourses />} />
-          <Route path="e-learning" element={<ELearning />} />
+          <Route path="courses" element={<StudentAccessGuard user={user} settings={settings} type="courses"><MyCourses /></StudentAccessGuard>} />
+          <Route path="e-learning" element={<StudentAccessGuard user={user} settings={settings} type="courses"><ELearning /></StudentAccessGuard>} />
           <Route path="cv-builder" element={<CVBuilder />} />
           <Route path="certificates" element={<StudentCertificates />} />
           <Route path="profile" element={<StudentProfile />} />
@@ -236,7 +250,7 @@ function AppContent({ settings }) {
           <Route path="forum/:id" element={<PostDetails />} />
           <Route path="chat" element={<StudentChatList />} />
           <Route path="chat/:recipientId" element={<ChatWindow />} />
-          <Route path="courses/:courseId" element={<StudentCourseView />} />
+          <Route path="courses/:courseId" element={<StudentAccessGuard user={user} settings={settings} type="courses"><StudentCourseView /></StudentAccessGuard>} />
         </Route>
 
         {/* Admin Routes */}

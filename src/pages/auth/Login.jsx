@@ -12,7 +12,7 @@ export function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const { login } = useAuth();
+    const { login, logout } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -28,6 +28,19 @@ export function Login() {
             const userDoc = await getDoc(doc(db, 'users', user.uid));
             const userData = userDoc.data();
             const role = userData?.role || 'student';
+
+            if (role === 'student') {
+                const settingsDoc = await getDoc(doc(db, 'system_settings', 'global'));
+                if (settingsDoc.exists()) {
+                    const settingsData = settingsDoc.data();
+                    if (settingsData?.disableStudentLogin) {
+                        await logout();
+                        setError('Insufficient permission: Student portal access is temporarily disabled by the Executive Board.');
+                        setLoading(false);
+                        return;
+                    }
+                }
+            }
 
             if (role === 'ceo') navigate('/ceo/dashboard');
             else if (role === 'admin') navigate('/admin/dashboard');

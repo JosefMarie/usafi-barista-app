@@ -9,6 +9,8 @@ export function CEOSettings({ settings: initialSettings }) {
         maintenanceMode: false,
         autoApproveStudents: false,
         notifyOnNewUser: true,
+        disableStudentLogin: false,
+        disableStudentCourses: false,
         systemVersion: '2.4.0-EXEC'
     });
     const [saving, setSaving] = useState(false);
@@ -58,7 +60,9 @@ export function CEOSettings({ settings: initialSettings }) {
                         {[
                             { key: 'registrationsOpen', title: 'Public Registrations', desc: 'Allow new users to create accounts' },
                             { key: 'maintenanceMode', title: 'Maintenance Mode', desc: 'Restrict access to Admins & Executives only', danger: true },
-                            { key: 'autoApproveStudents', title: 'Auto-Approve Students', desc: 'Automatically activate new student accounts' }
+                            { key: 'autoApproveStudents', title: 'Auto-Approve Students', desc: 'Automatically activate new student accounts' },
+                            { key: 'disableStudentLogin', title: 'Disable Student Login', desc: 'Block students from logging in and show insufficient permission error', danger: true },
+                            { key: 'disableStudentCourses', title: 'Disable Student Course Access', desc: 'Block student access to courses and learning pages', danger: true }
                         ].map((item) => (
                             <div key={item.key} className="p-4 md:p-6 flex items-center justify-between hover:bg-white/20 transition-colors gap-4">
                                 <div className="min-w-0 flex-1">
