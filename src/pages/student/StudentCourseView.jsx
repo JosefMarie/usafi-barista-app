@@ -505,8 +505,8 @@ export function StudentCourseView() {
     if (!module) return null;
 
     return (
-        <div className="min-h-screen bg-[#F5DEB3] dark:bg-background-dark flex flex-col select-none" onContextMenu={(e) => e.preventDefault()}>
-            <header className="bg-[#F5DEB3]/80 dark:bg-[#1e1e1e]/80 backdrop-blur-md border-b border-espresso/10 sticky top-0 z-30 px-3 md:px-6 py-3 md:py-5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 md:gap-6">
+        <div className="h-[100dvh] bg-[#F5DEB3] dark:bg-background-dark flex flex-col select-none overflow-hidden" onContextMenu={(e) => e.preventDefault()}>
+            <header className="bg-[#F5DEB3]/80 dark:bg-[#1e1e1e]/80 backdrop-blur-md border-b border-espresso/10 z-30 px-3 md:px-6 py-3 md:py-5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 md:gap-6 shrink-0">
                 <div className="flex items-center gap-3 md:gap-6">
                     <button onClick={() => navigate('/student/courses')} className="size-9 md:size-12 flex items-center justify-center bg-white/40 hover:bg-white text-espresso rounded-lg md:rounded-2xl transition-all shadow-sm active:scale-95 shrink-0">
                         <span className="material-symbols-outlined text-[18px] md:text-[24px]">arrow_back</span>
@@ -586,7 +586,7 @@ export function StudentCourseView() {
                 </div>
             </header>
 
-            <main className="flex-1 w-full p-0 md:p-4 pb-28 md:pb-24 mx-auto">
+            <main className="flex-1 w-full p-0 md:p-4 pb-24 mx-auto overflow-y-auto custom-scrollbar relative">
                 {showQuiz ? (
                     (!stats.passed && (stats.attempts >= 3 || user?.status === 'pending' || user?.status === 'unknown') && !isQuizAllowed) ? (
                         <div className="animate-fade-in flex flex-col items-center justify-center min-h-[50vh] text-center space-y-6 max-w-2xl mx-auto px-6">
@@ -871,7 +871,7 @@ export function StudentCourseView() {
                         {activeContent[currentSlide] ? (
                             <div className="flex-1 bg-white/40 dark:bg-[#2c2825] p-0 md:p-2 rounded-none md:rounded-3xl border-x-0 md:border border-espresso/10 shadow-2xl flex flex-col overflow-hidden relative group">
                                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-espresso/20 group-hover:bg-espresso transition-colors"></div>
-                                <div className="flex-1 min-h-[75vh] md:min-h-[85vh] w-full rounded-none md:rounded-2xl overflow-hidden bg-espresso/5 shadow-inner flex flex-col relative">
+                                <div className="flex-1 h-full min-h-[50vh] w-full rounded-none md:rounded-2xl overflow-hidden bg-espresso/5 shadow-inner flex flex-col relative">
                                     {activeContent[currentSlide].text ? (
                                         <div className="w-full h-full p-4 md:p-12 overflow-y-auto bg-white/80 dark:bg-black/40 custom-scrollbar">
                                             <div className="prose prose-sm md:prose-base dark:prose-invert max-w-none">
@@ -898,28 +898,23 @@ export function StudentCourseView() {
                                                 : isPdf ? `${slideUrl}#toolbar=0&view=FitH` : slideUrl;
                                             return isPdf ? (
                                                 <div
-                                                    className="w-full h-[75vh] md:h-[80vh] relative overflow-y-auto overflow-x-hidden custom-scrollbar bg-white"
+                                                    className="w-full h-full relative overflow-hidden bg-white"
                                                     onContextMenu={(e) => {
                                                         e.preventDefault();
                                                         alert("SECURITY ALERT: Direct interaction with protected documents is restricted.");
                                                     }}
                                                 >
-                                                    {/* Deep Shield Wrapper: Makes iframe non-interactive while allowing parent to scroll */}
-                                                    <div className="relative w-full" style={{ height: '3000px' }}>
+                                                    <div className="relative w-full h-full">
                                                         <iframe
                                                             src={finalUrl}
-                                                            className="absolute inset-0 w-full h-full border-none pointer-events-none origin-top"
+                                                            className="absolute inset-0 w-full h-full border-none origin-top"
                                                             style={{ 
-                                                                pointerEvents: 'none',
                                                                 transform: isMobile ? 'scale(1.02)' : 'scale(1.0)',
                                                                 width: '100%',
                                                                 left: '0'
                                                             }}
                                                             title={`Page ${currentSlide + 1}`}
                                                         />
-                                                        
-                                                        {/* Interactive Shield for right-click on the "scrollable" area */}
-                                                        <div className="absolute inset-0 z-40 bg-transparent" />
                                                     </div>
 
                                                     {/* Watermark stays on top */}
