@@ -33,6 +33,16 @@ const CoffeeWatermark = ({ className }) => (
     </svg>
 );
 
+const formatTrainingDate = (dateValue) => {
+    if (!dateValue) return "---";
+    try {
+        const date = dateValue.toDate ? dateValue.toDate() : new Date(dateValue);
+        return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    } catch {
+        return "---";
+    }
+};
+
 export const StudentCertificate = React.forwardRef(({
     student,
     courseId,
@@ -217,15 +227,15 @@ export const StudentCertificate = React.forwardRef(({
                         <p className="text-[9px] font-bold text-[#321C00]">
                             {TARGET_COURSE_ID === 'combined' && student.dualStartDate ? (
                                 <>
-                                    {student.dualStartDate.toDate ? student.dualStartDate.toDate().toLocaleDateString() : new Date(student.dualStartDate).toLocaleDateString()}
+                                    {formatTrainingDate(student.dualStartDate)}
                                     {' - '}
-                                    {student.dualEndDate ? (student.dualEndDate.toDate ? student.dualEndDate.toDate().toLocaleDateString() : new Date(student.dualEndDate).toLocaleDateString()) : "---"}
+                                    {formatTrainingDate(student.dualEndDate)}
                                 </>
                             ) : (
                                 <>
-                                    {student.courseStartDate ? (student.courseStartDate.toDate ? student.courseStartDate.toDate().toLocaleDateString() : new Date(student.courseStartDate).toLocaleDateString()) : "---"}
+                                    {formatTrainingDate(student.courseStartDate)}
                                     {' - '}
-                                    {student.courseEndDate ? (student.courseEndDate.toDate ? student.courseEndDate.toDate().toLocaleDateString() : new Date(student.courseEndDate).toLocaleDateString()) : "---"}
+                                    {formatTrainingDate(student.courseEndDate)}
                                 </>
                             )}
                         </p>
