@@ -70,7 +70,7 @@ export function VerifyCertificate() {
         );
     }
 
-    const certificateId = `USF-${student.id.slice(0, 8).toUpperCase()}`;
+    const certificateId = `USF-${student.id.slice(-8).toUpperCase()}`;
 
     // Determine all courses the student is enrolled in
     let enrolledRaw = student.enrolledCourses;
@@ -79,6 +79,14 @@ export function VerifyCertificate() {
     }
     const coursesList = enrolledRaw.map(item => typeof item === 'string' ? { courseId: item } : item);
     const isDualCertification = coursesList.length > 1;
+    const hasBarista = coursesList.some(c => c.courseId === 'bean-to-brew');
+    const hasBartender = coursesList.some(c => c.courseId === 'bar-tender-course');
+
+    const curriculumLabel = (hasBarista && hasBartender) || isDualCertification
+        ? 'Dual Certification: Barista & Mixology'
+        : hasBartender && !hasBarista
+            ? 'Professional Bartender'
+            : 'Full Barista (Bean to Brew)';
 
     return (
         <div className="min-h-screen bg-[#FAF5E8] py-12 px-4 flex flex-col items-center">
@@ -118,11 +126,7 @@ export function VerifyCertificate() {
                     <div className="flex justify-between items-center">
                         <span className="text-xs uppercase tracking-widest text-[#321C00]/40 font-bold">Curriculum</span>
                         <span className="text-[#321C00] font-bold text-right max-w-[200px]">
-                            {isDualCertification 
-                                ? 'Dual Certification: Barista & Mixology' 
-                                : student.courseId === 'bar-tender-course' 
-                                    ? 'Professional Bartender' 
-                                    : 'Full Barista (Bean to Brew)'}
+                            {curriculumLabel}
                         </span>
                     </div>
                     <div className="flex justify-between items-center">
