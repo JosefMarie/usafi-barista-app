@@ -10,7 +10,11 @@ const https = require('https');
 admin.initializeApp();
 
 // Set global options for all v2 functions
-setGlobalOptions({ maxInstances: 10, region: 'us-central1' });
+setGlobalOptions({ 
+    maxInstances: 10, 
+    region: 'us-central1',
+    serviceAccount: 'firebase-adminsdk-fbsvc@usafi-barista-web.iam.gserviceaccount.com' 
+});
 
 /**
  * Shared branding constants for emails and documents
@@ -98,6 +102,16 @@ function getBrandedTemplate(type, data) {
                         <p style="color: #666; margin: 5px 0; font-size: 14px;">Email: <b>${data.email}</b></p>
                         <p style="color: #666; margin: 5px 0; font-size: 14px;">Password: <b>${data.password}</b></p>
                         <p style="color: #999; margin-top: 15px; font-size: 11px; font-style: italic;">Note: Keep these credentials safe. You will be able to access the student portal once your application is approved.</p>
+                    </div>
+
+                    <div style="background-color: #e8f5e9; padding: 25px; border-radius: 15px; border-left: 5px solid #25D366; margin: 30px 0;">
+                        <h4 style="color: #128C7E; margin-top: 0; text-transform: uppercase; font-size: 12px; letter-spacing: 1px;">Need More Information?</h4>
+                        <p style="color: #444; line-height: 1.6; font-size: 14px; margin-bottom: 15px;">
+                            For more information about the price, starting date, what is needed to start, or any other details about the course, please reach out to us on WhatsApp.
+                        </p>
+                        <a href="https://wa.me/250787709171?text=${encodeURIComponent(`Hello, I would like more information about the price, starting date, and what is needed to start the ${data.courseName || 'course'}.`)}" style="display: inline-block; background-color: #25D366; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px;">
+                            Chat on WhatsApp (+250 787 709 171)
+                        </a>
                     </div>
 
                     <p style="color: #444; line-height: 1.6; font-size: 16px;">
