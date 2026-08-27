@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../../lib/utils';
 import { useAuth } from '../../context/AuthContext';
+import { seedSystemData } from '../../lib/dataSeeder';
 
 export function CEODashboard({ settings }) {
     const { t, i18n } = useTranslation();
@@ -169,7 +170,6 @@ export function CEODashboard({ settings }) {
                             onClick={async () => {
                                 setProcessing(true);
                                 try {
-                                    const { seedSystemData } = await import('../../lib/dataSeeder');
                                     await seedSystemData(true);
                                     window.location.reload();
                                 } catch (e) {
@@ -462,22 +462,46 @@ export function CEODashboard({ settings }) {
                                                 className="w-full px-6 py-5 rounded-2xl bg-white border border-[#4B3832]/10 focus:border-[#D4Af37] outline-none font-medium text-sm resize-none shadow-sm transition-all focus:shadow-md"
                                             />
                                         </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-[#4B3832]/40 ml-4">Broadcast Duration</label>
+                                            <select
+                                                value={announcement.durationHours || '24'}
+                                                onChange={(e) => setAnnouncement({ ...announcement, durationHours: e.target.value })}
+                                                className="w-full px-6 py-4 rounded-2xl bg-white border border-[#4B3832]/10 focus:border-[#D4Af37] outline-none font-bold text-sm shadow-sm transition-all focus:shadow-md text-[#4B3832]"
+                                            >
+                                                <option value="1">Expire in 1 Hour</option>
+                                                <option value="6">Expire in 6 Hours</option>
+                                                <option value="24">Expire in 24 Hours (Default)</option>
+                                                <option value="72">Expire in 3 Days</option>
+                                                <option value="168">Expire in 7 Days</option>
+                                                <option value="never">Permanent (No Auto-Expiration)</option>
+                                            </select>
+                                        </div>
                                         <button
                                             onClick={async () => {
                                                 setProcessing(true);
                                                 try {
-                                                    // Ensure we mark it as active and use the correct collection
+                                                    let expiresAt = null;
+                                                    if (announcement.durationHours && announcement.durationHours !== 'never') {
+                                                        const hours = parseInt(announcement.durationHours, 10);
+                                                        expiresAt = new Date(Date.now() + hours * 60 * 60 * 1000);
+                                                    } else if (!announcement.durationHours) {
+                                                        expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+                                                    }
+
                                                     await addDoc(collection(db, 'system_announcements'), {
                                                         subject: announcement.title,
                                                         message: announcement.message,
                                                         active: true,
                                                         createdAt: serverTimestamp(),
+                                                        expiresAt: expiresAt,
+                                                        durationHours: announcement.durationHours || '24',
                                                         createdBy: user?.uid || 'unknown',
                                                         type: 'broadcast'
                                                     });
                                                     alert("Broadcast successfully launched!");
                                                     setActionModal(null);
-                                                    setAnnouncement({ title: '', message: '', priority: 'normal' });
+                                                    setAnnouncement({ title: '', message: '', priority: 'normal', durationHours: '24' });
                                                 } catch (e) {
                                                     console.error(e);
                                                     alert("Broadcast failed: " + e.message);

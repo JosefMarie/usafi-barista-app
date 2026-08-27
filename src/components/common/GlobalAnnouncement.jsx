@@ -26,13 +26,28 @@ export function GlobalAnnouncement() {
                     return timeB - timeA;
                 });
 
-                const data = docs[0];
+                // Filter out expired announcements
+                const now = Date.now();
+                const validDocs = docs.filter(item => {
+                    if (!item.expiresAt) return true; // No expiration set = permanent until deactivated
+                    const expTime = item.expiresAt?.toMillis ? item.expiresAt.toMillis() : new Date(item.expiresAt).getTime();
+                    return expTime > now;
+                });
 
-                // Check if this specific announcement version was dismissed in this session
-                const dismissedId = sessionStorage.getItem('dismissed_announcement_id');
-                if (dismissedId !== data.id) {
-                    setAnnouncement(data);
-                    setIsVisible(true);
+                if (validDocs.length > 0) {
+                    const data = validDocs[0];
+                    // Check if dismissed persistently via localStorage
+                    const isDismissed = localStorage.getItem(`dismissed_announcement_${data.id}`);
+                    if (!isDismissed) {
+                        setAnnouncement(data);
+                        setIsVisible(true);
+                    } else {
+                        setAnnouncement(null);
+                        setIsVisible(false);
+                    }
+                } else {
+                    setAnnouncement(null);
+                    setIsVisible(false);
                 }
             } else {
                 setAnnouncement(null);
@@ -45,7 +60,7 @@ export function GlobalAnnouncement() {
 
     const handleDismiss = () => {
         if (announcement) {
-            sessionStorage.setItem('dismissed_announcement_id', announcement.id);
+            localStorage.setItem(`dismissed_announcement_${announcement.id}`, 'true');
             setIsVisible(false);
         }
     };

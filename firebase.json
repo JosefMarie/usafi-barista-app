@@ -4,11 +4,13 @@
     "runtime": "nodejs20"
   },
   "hosting": {
+    "site": "usafi-barista-web",
     "public": "dist",
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**"
+      "**/node_modules/**",
+      "**/Video/**"
     ],
     "rewrites": [
       {
@@ -18,8 +20,7 @@
     ]
   },
   "firestore": {
-    "database": "(default)",
-    "location": "nam5",
+    "database": "default",
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },

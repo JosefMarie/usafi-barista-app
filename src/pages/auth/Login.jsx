@@ -29,16 +29,22 @@ export function Login() {
             const userData = userDoc.data();
             const role = userData?.role || 'student';
 
+            const settingsDoc = await getDoc(doc(db, 'system_settings', 'global'));
+            const settingsData = settingsDoc.exists() ? settingsDoc.data() : null;
+
             if (role === 'student') {
-                const settingsDoc = await getDoc(doc(db, 'system_settings', 'global'));
-                if (settingsDoc.exists()) {
-                    const settingsData = settingsDoc.data();
-                    if (settingsData?.disableStudentLogin) {
-                        await logout();
-                        setError('Insufficient permission: Student portal access is temporarily disabled by the Executive Board.');
-                        setLoading(false);
-                        return;
-                    }
+                if (settingsData?.disableStudentLogin) {
+                    await logout();
+                    setError('Insufficient permission: Student portal access is temporarily disabled by the Executive Board.');
+                    setLoading(false);
+                    return;
+                }
+            } else if (role !== 'ceo') {
+                if (settingsData?.disableStaffLogin) {
+                    await logout();
+                    setError('Insufficient permission: Staff portal access is temporarily disabled by Executive Management.');
+                    setLoading(false);
+                    return;
                 }
             }
 

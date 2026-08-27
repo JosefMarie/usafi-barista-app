@@ -144,6 +144,15 @@ function StudentAccessGuard({ children, user, settings, type }) {
   return children;
 }
 
+function StaffAccessGuard({ children, user, settings }) {
+  if (user && user.role !== 'student' && user.role !== 'ceo') {
+    if (settings?.disableStaffLogin) {
+      return <Navigate to="/insufficient-permissions?type=staff_login" replace />;
+    }
+  }
+  return children;
+}
+
 function App() {
   const [settings, setSettings] = React.useState(null);
 
@@ -254,7 +263,7 @@ function AppContent({ settings }) {
         </Route>
 
         {/* Admin Routes */}
-        <Route path="/admin" element={<AdminLayout />}>
+        <Route path="/admin" element={<StaffAccessGuard user={user} settings={settings}><AdminLayout /></StaffAccessGuard>}>
           <Route index element={<Navigate to="/admin/dashboard" replace />} />
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="courses" element={<AdminCourses />} />
@@ -284,7 +293,7 @@ function AppContent({ settings }) {
         </Route>
 
         {/* Instructor Routes */}
-        <Route path="/instructor" element={<InstructorLayout />}>
+        <Route path="/instructor" element={<StaffAccessGuard user={user} settings={settings}><InstructorLayout /></StaffAccessGuard>}>
           <Route index element={<Navigate to="/instructor/dashboard" replace />} />
           <Route path="dashboard" element={<InstructorDashboard />} />
           <Route path="courses" element={<InstructorCourses />} />
@@ -304,7 +313,7 @@ function AppContent({ settings }) {
         </Route>
 
         {/* Manager Routes */}
-        <Route path="/manager" element={<ManagerLayout />}>
+        <Route path="/manager" element={<StaffAccessGuard user={user} settings={settings}><ManagerLayout /></StaffAccessGuard>}>
           <Route index element={<Navigate to="/manager/dashboard" replace />} />
           <Route path="dashboard" element={<ManagerDashboard />} />
           <Route path="contacts" element={<ManagerContacts />} />
